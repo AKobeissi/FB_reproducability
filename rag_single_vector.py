@@ -4,6 +4,11 @@ from collections import defaultdict
 from .pdf_utils import load_pdf_with_fallback
 from .vectorstore import build_chroma_store
 
+try:
+    from langchain.chains import RetrievalQA
+except Exception:
+    RetrievalQA = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -151,33 +156,37 @@ def _process_single_sample(
 
 def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]]]:
     """Run RetrievalQA using the experiment's LangChain LLM wrapper."""
-    from langchain.chains import RetrievalQA
-
     if retriever is None:
         return "", []
 
     experiment.ensure_langchain_llm()
-    qa = RetrievalQA.from_chain_type(
-        llm=experiment.langchain_llm,
-        chain_type="stuff",
-        retriever=retriever,
-        return_source_documents=True,
-    )
+    if RetrievalQA is not None:
+        try:
+            qa = RetrievalQA.from_chain_type(
+                llm=experiment.langchain_llm,
+                chain_type="stuff",
+                retriever=retriever,
+                return_source_documents=True,
+            )
 
-    result = qa(question)
-    source_docs = result.get('source_documents', []) or []
-    chunks = [
-        {
-            'rank': rank + 1,
-            'text': _get_doc_text(doc),
-            'score': None,
-            'length': len(_get_doc_text(doc)),
-            'metadata': getattr(doc, 'metadata', {})
-        }
-        for rank, doc in enumerate(source_docs)
-    ]
-    answer = result.get('result', '') or ""
-    return answer.strip(), chunks
+            result = qa(question)
+            source_docs = result.get('source_documents', []) or []
+            chunks = [
+                {
+                    'rank': rank + 1,
+                    'text': _get_doc_text(doc),
+                    'score': None,
+                    'length': len(_get_doc_text(doc)),
+                    'metadata': getattr(doc, 'metadata', {}) or {}
+                }
+                for rank, doc in enumerate(source_docs)
+            ]
+            answer = result.get('result', '') or ""
+            return answer.strip(), chunks
+        except Exception as exc:
+            logger.warning("RetrievalQA chain failed (%s); falling back to manual retrieval.", exc)
+
+    return _fallback_retrieval_qa(experiment, question, retriever)
 
 
 def _get_doc_text(doc) -> str:
@@ -185,6 +194,86 @@ def _get_doc_text(doc) -> str:
     return (getattr(doc, 'page_content', None) or 
             getattr(doc, 'content', None) or 
             str(doc))
+
+
+def _fallback_retrieval_qa(experiment, question: str, retriever):
+    documents = _invoke_retriever(retriever, question)
+    if not documents:
+        logger.warning("Retriever returned no documents during fallback path.")
+        return "", []
+
+    chunks = []
+    for rank, doc in enumerate(documents):
+        text = _get_doc_text(doc)
+        if not text:
+            continue
+        chunks.append(
+            {
+                'rank': rank + 1,
+                'text': text,
+                'score': getattr(doc, 'score', None),
+                'length': len(text),
+                'metadata': getattr(doc, 'metadata', {}) or {}
+            }
+        )
+
+    context = "\n\n".join(chunk['text'] for chunk in chunks)
+    prompt = experiment._build_financebench_prompt(question, context)
+    answer = _generate_with_pipeline(experiment, prompt)
+    return answer, chunks
+
+
+def _invoke_retriever(retriever, question: str):
+    for method_name in ("get_relevant_documents", "invoke"):
+        method = getattr(retriever, method_name, None)
+        if callable(method):
+            try:
+                docs = method(question)
+                docs = _normalize_retriever_output(docs)
+                if docs:
+                    return docs
+            except Exception as exc:
+                logger.debug("Retriever method '%s' failed: %s", method_name, exc)
+    try:
+        docs = retriever(question)
+        docs = _normalize_retriever_output(docs)
+        if docs:
+            return docs
+    except Exception as exc:
+        logger.debug("Retriever call failed: %s", exc)
+    return []
+
+
+def _normalize_retriever_output(docs):
+    if docs is None:
+        return []
+    if isinstance(docs, dict):
+        for key in ("documents", "source_documents", "result"):
+            value = docs.get(key)
+            if value:
+                return value
+        return []
+    if isinstance(docs, list):
+        return docs
+    return [docs]
+
+
+def _generate_with_pipeline(experiment, prompt: str) -> str:
+    pipeline = getattr(experiment, "llm_pipeline", None)
+    if pipeline is None:
+        logger.warning("LLM pipeline not initialized; returning empty answer.")
+        return ""
+    try:
+        outputs = pipeline(prompt)
+        if isinstance(outputs, list) and outputs:
+            result = outputs[0]
+            if isinstance(result, dict):
+                return (result.get("generated_text") or "").strip()
+            return str(result).strip()
+        return str(outputs).strip()
+    except Exception as exc:
+        logger.error("LLM pipeline generation failed: %s", exc)
+        return ""
 
 
 def _create_skipped_results(
