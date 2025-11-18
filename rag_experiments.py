@@ -217,35 +217,35 @@ try:
     from .rag_shared_vector import run_shared_vector as _run_shared_vector
     from .rag_open_book import run_open_book as _run_open_book
 except Exception:
-    # If package-style import fails (e.g., running as script), try local imports
+    # If package-style import fails (e.g., running as script), try absolute imports
     try:
-        from .rag_closed_book import run_closed_book as _run_closed_book
-        from .rag_single_vector import run_single_vector as _run_single_vector
-        from .rag_shared_vector import run_shared_vector as _run_shared_vector
-        from .rag_open_book import run_open_book as _run_open_book
+        from rag_closed_book import run_closed_book as _run_closed_book
+        from rag_single_vector import run_single_vector as _run_single_vector
+        from rag_shared_vector import run_shared_vector as _run_shared_vector
+        from rag_open_book import run_open_book as _run_open_book
     except Exception:
-            # As a last resort, try dynamic import by file path so the script can be
-            # executed both as a package and as a standalone script from the project root.
-            try:
-                import importlib.util
-                base_dir = Path(__file__).resolve().parent
+        # As a last resort, try dynamic import by file path so the script can be
+        # executed both as a package and as a standalone script from the project root.
+        try:
+            import importlib.util
+            base_dir = Path(__file__).resolve().parent
 
-                def _load_runner(path: Path, name: str):
-                    spec = importlib.util.spec_from_file_location(name, str(path))
-                    mod = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(mod)  # type: ignore
-                    return mod
+            def _load_runner(path: Path, name: str):
+                spec = importlib.util.spec_from_file_location(name, str(path))
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)  # type: ignore
+                return mod
 
-                _run_closed_book = _load_runner(base_dir / 'rag_closed_book.py', 'rag_closed_book').run_closed_book
-                _run_single_vector = _load_runner(base_dir / 'rag_single_vector.py', 'rag_single_vector').run_single_vector
-                _run_shared_vector = _load_runner(base_dir / 'rag_shared_vector.py', 'rag_shared_vector').run_shared_vector
-                _run_open_book = _load_runner(base_dir / 'rag_open_book.py', 'rag_open_book').run_open_book
-            except Exception:
-                # If even dynamic loading fails, set to None and let callers raise clearer errors
-                _run_closed_book = None
-                _run_single_vector = None
-                _run_shared_vector = None
-                _run_open_book = None
+            _run_closed_book = _load_runner(base_dir / 'rag_closed_book.py', 'rag_closed_book').run_closed_book
+            _run_single_vector = _load_runner(base_dir / 'rag_single_vector.py', 'rag_single_vector').run_single_vector
+            _run_shared_vector = _load_runner(base_dir / 'rag_shared_vector.py', 'rag_shared_vector').run_shared_vector
+            _run_open_book = _load_runner(base_dir / 'rag_open_book.py', 'rag_open_book').run_open_book
+        except Exception:
+            # If even dynamic loading fails, set to None and let callers raise clearer errors
+            _run_closed_book = None
+            _run_single_vector = None
+            _run_shared_vector = None
+            _run_open_book = None
 
 
 # Set up logging
