@@ -9,6 +9,28 @@ try:
 except Exception:
     RetrievalQA = None
 
+# Modern LangChain retrieval chain utilities (preferred in >=0.1.17)
+create_retrieval_chain = None
+create_stuff_documents_chain = None
+try:
+    from langchain.chains import create_retrieval_chain as _create_retrieval_chain
+    from langchain.chains.combine_documents import create_stuff_documents_chain as _create_stuff_documents_chain
+    create_retrieval_chain = _create_retrieval_chain
+    create_stuff_documents_chain = _create_stuff_documents_chain
+except Exception:
+    pass
+
+ChatPromptTemplate = None
+try:
+    from langchain_core.prompts import ChatPromptTemplate as _ChatPromptTemplate
+    ChatPromptTemplate = _ChatPromptTemplate
+except Exception:
+    try:
+        from langchain.prompts import ChatPromptTemplate as _ChatPromptTemplate
+        ChatPromptTemplate = _ChatPromptTemplate
+    except Exception:
+        ChatPromptTemplate = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -160,6 +182,29 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
         return "", []
 
     experiment.ensure_langchain_llm()
+
+    if _supports_modern_retrieval():
+        try:
+            prompt = _get_or_create_retrieval_prompt(experiment)
+            doc_chain = _get_or_create_documents_chain(experiment, prompt)
+            if prompt is not None and doc_chain is not None:
+                chain = create_retrieval_chain(retriever, doc_chain)
+                result = chain.invoke({"input": question})
+                source_docs = (
+                    result.get("context")
+                    or result.get("source_documents")
+                    or []
+                )
+                chunks = _build_chunks_from_docs(source_docs)
+                answer = result.get("answer") or result.get("result") or ""
+                if isinstance(answer, dict):
+                    answer = answer.get("answer") or answer.get("result") or ""
+                if not answer and isinstance(result, str):
+                    answer = result
+                return str(answer).strip(), chunks
+        except Exception as exc:
+            logger.warning("Modern retrieval chain failed (%s); falling back to legacy chain.", exc)
+
     if RetrievalQA is not None:
         try:
             qa = RetrievalQA.from_chain_type(
@@ -171,16 +216,7 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
 
             result = qa(question)
             source_docs = result.get('source_documents', []) or []
-            chunks = [
-                {
-                    'rank': rank + 1,
-                    'text': _get_doc_text(doc),
-                    'score': None,
-                    'length': len(_get_doc_text(doc)),
-                    'metadata': getattr(doc, 'metadata', {}) or {}
-                }
-                for rank, doc in enumerate(source_docs)
-            ]
+            chunks = _build_chunks_from_docs(source_docs)
             answer = result.get('result', '') or ""
             return answer.strip(), chunks
         except Exception as exc:
@@ -196,14 +232,52 @@ def _get_doc_text(doc) -> str:
             str(doc))
 
 
-def _fallback_retrieval_qa(experiment, question: str, retriever):
-    documents = _invoke_retriever(retriever, question)
-    if not documents:
-        logger.warning("Retriever returned no documents during fallback path.")
-        return "", []
+def _supports_modern_retrieval() -> bool:
+    return all([
+        create_retrieval_chain is not None,
+        create_stuff_documents_chain is not None,
+        ChatPromptTemplate is not None,
+    ])
 
+
+def _get_or_create_retrieval_prompt(experiment):
+    if ChatPromptTemplate is None:
+        return None
+    prompt = getattr(experiment, "_lc_retrieval_prompt", None)
+    if prompt is None:
+        system_prompt = (
+            "Use the provided context to answer the user's question. "
+            "If the context is insufficient, reply with \"I don't know.\" "
+            "Keep answers concise (<=3 sentences) and reference only the supplied context."
+        )
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt + " Context: {context}"),
+                ("human", "{input}"),
+            ]
+        )
+        experiment._lc_retrieval_prompt = prompt
+    return prompt
+
+
+def _get_or_create_documents_chain(experiment, prompt):
+    if prompt is None or create_stuff_documents_chain is None:
+        return None
+    doc_chain = getattr(experiment, "_lc_documents_chain", None)
+    doc_chain_llm = getattr(experiment, "_lc_documents_chain_llm", None)
+    if doc_chain is None or doc_chain_llm is not experiment.langchain_llm:
+        doc_chain = create_stuff_documents_chain(
+            experiment.langchain_llm,
+            prompt,
+        )
+        experiment._lc_documents_chain = doc_chain
+        experiment._lc_documents_chain_llm = experiment.langchain_llm
+    return doc_chain
+
+
+def _build_chunks_from_docs(documents):
     chunks = []
-    for rank, doc in enumerate(documents):
+    for rank, doc in enumerate(documents or []):
         text = _get_doc_text(doc)
         if not text:
             continue
@@ -216,6 +290,16 @@ def _fallback_retrieval_qa(experiment, question: str, retriever):
                 'metadata': getattr(doc, 'metadata', {}) or {}
             }
         )
+    return chunks
+
+
+def _fallback_retrieval_qa(experiment, question: str, retriever):
+    documents = _invoke_retriever(retriever, question)
+    if not documents:
+        logger.warning("Retriever returned no documents during fallback path.")
+        return "", []
+
+    chunks = _build_chunks_from_docs(documents)
 
     context = "\n\n".join(chunk['text'] for chunk in chunks)
     prompt = experiment._build_financebench_prompt(question, context)
