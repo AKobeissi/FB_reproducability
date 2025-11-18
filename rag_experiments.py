@@ -142,14 +142,25 @@ except Exception:
             self.chunk_overlap = chunk_overlap
             self.length_function = length_function
 
+        def _coerce_text(self, text: Any) -> str:
+            if text is None:
+                return ""
+            if isinstance(text, (bytes, bytearray)):
+                try:
+                    return text.decode("utf-8")
+                except Exception:
+                    return text.decode("utf-8", errors="replace")
+            return str(text)
+
         def _chunk_text(self, text: str) -> List[str]:
-            if not text:
+            normalized = self._coerce_text(text)
+            if not normalized:
                 return []
             chunks = []
             i = 0
             step = self.chunk_size - self.chunk_overlap if self.chunk_size > self.chunk_overlap else self.chunk_size
-            while i < len(text):
-                chunks.append(text[i:i + self.chunk_size])
+            while i < len(normalized):
+                chunks.append(normalized[i:i + self.chunk_size])
                 i += step
             return chunks
 
@@ -157,8 +168,28 @@ except Exception:
             docs = []
             for text, meta in zip(texts, metadatas):
                 for chunk in self._chunk_text(text):
-                    docs.append(Document(page_content=chunk, metadata=meta or {}))
+                    docs.append(
+                        Document(
+                            page_content=chunk,
+                            metadata=dict(meta or {}),
+                        )
+                    )
             return docs
+
+        def split_documents(self, documents: List[Document]):
+            """Mimic LangChain's split_documents for Document inputs."""
+            split_docs: List[Document] = []
+            for doc in documents or []:
+                content = getattr(doc, "page_content", "") or ""
+                base_metadata = dict(getattr(doc, "metadata", None) or {})
+                for chunk in self._chunk_text(content):
+                    split_docs.append(
+                        Document(
+                            page_content=chunk,
+                            metadata=dict(base_metadata),
+                        )
+                    )
+            return split_docs
 
     RecursiveCharacterTextSplitter = _MinimalTextSplitter
 

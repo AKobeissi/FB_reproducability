@@ -8,9 +8,12 @@ import re
 from urllib.parse import urlparse
 
 try:
-    from langchain.document_loaders import PyMuPDFLoader
+    from langchain_community.document_loaders import PyMuPDFLoader
 except Exception:  # pragma: no cover - surfaced at runtime with clear error
-    PyMuPDFLoader = None
+    try:
+        from langchain.document_loaders import PyMuPDFLoader
+    except Exception:
+        PyMuPDFLoader = None
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +73,7 @@ def load_pdf_with_fallback(
     """Load a PDF strictly from the local directory using PyMuPDFLoader."""
     if PyMuPDFLoader is None:
         raise RuntimeError(
-            "PyMuPDFLoader (langchain.document_loaders) is required but not installed."
+            "PyMuPDFLoader (langchain_community.document_loaders / langchain.document_loaders) is required but not installed."
         )
 
     local_path = _find_local_pdf(doc_name, local_dir)
