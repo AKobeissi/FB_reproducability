@@ -109,12 +109,19 @@ try:
 except Exception:
     RetrievalQA = None
 
+# HuggingFacePipeline moved to langchain_community in LangChain >= 0.2
+HuggingFacePipeline = None
 try:
-    from langchain.llms import HuggingFacePipeline
-    HuggingFacePipeline = HuggingFacePipeline
+    from langchain_community.llms import HuggingFacePipeline as _LC_HFP
+    HuggingFacePipeline = _LC_HFP
     _HAS_LANGCHAIN = True
 except Exception:
-    HuggingFacePipeline = None
+    try:
+        from langchain.llms import HuggingFacePipeline as _LC_HFP
+        HuggingFacePipeline = _LC_HFP
+        _HAS_LANGCHAIN = True
+    except Exception:
+        HuggingFacePipeline = None
 
 if not _HAS_LANGCHAIN:
     _logger.warning("langchain or langchain_community not available (or some subpackages missing); using minimal fallbacks. Install 'langchain' and 'langchain-community' for full functionality.")
