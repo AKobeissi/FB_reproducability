@@ -10,9 +10,10 @@ interface as `RAGExperiment` in this repo, i.e. it should provide:
 """
 from __future__ import annotations
 
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Iterable
 import os
 import logging
+from uuid import uuid4
 
 logger = logging.getLogger(__name__)
 
@@ -21,16 +22,21 @@ logger = logging.getLogger(__name__)
 Chroma = None
 FAISS = None
 
-# Try community package first (newer style)
+# Try langchain-chroma package first (newest distribution)
 try:  # pragma: no cover - import robustness
-    from langchain_community.vectorstores import Chroma as _Chroma  # type: ignore
+    from langchain_chroma import Chroma as _Chroma  # type: ignore
     Chroma = _Chroma
 except Exception:
+    # Try community package next
     try:
-        from langchain.vectorstores import Chroma as _Chroma  # type: ignore
+        from langchain_community.vectorstores import Chroma as _Chroma  # type: ignore
         Chroma = _Chroma
     except Exception:
-        Chroma = None
+        try:
+            from langchain.vectorstores import Chroma as _Chroma  # type: ignore
+            Chroma = _Chroma
+        except Exception:
+            Chroma = None
 
 try:  # pragma: no cover - import robustness
     from langchain_community.vectorstores import FAISS as _FAISS  # type: ignore
@@ -41,6 +47,56 @@ except Exception:
         FAISS = _FAISS
     except Exception:
         FAISS = None
+
+
+def _ensure_documents_have_ids(documents: Iterable[Any], namespace: str) -> List[Any]:
+    """
+    Ensure every document exposes an `id` attribute required by recent Chroma versions.
+    """
+    safe_docs: List[Any] = []
+
+    for idx, doc in enumerate(documents or []):
+        if doc is None:
+            continue
+
+        metadata = getattr(doc, "metadata", None)
+        if metadata is None:
+            metadata = {}
+        elif not isinstance(metadata, dict):
+            metadata = dict(metadata)
+
+        doc_id = (
+            getattr(doc, "id", None)
+            or metadata.get("id")
+            or metadata.get("doc_id")
+            or metadata.get("chunk_id")
+        )
+        if not doc_id:
+            doc_name = metadata.get("doc_name", "doc")
+            doc_id = f"{namespace}-{doc_name}-{idx}-{uuid4().hex[:8]}"
+
+        try:
+            setattr(doc, "id", doc_id)
+            safe_docs.append(doc)
+            continue
+        except Exception:
+            pass
+
+        page_content = getattr(doc, "page_content", None) or getattr(doc, "content", "")
+        if isinstance(page_content, (bytes, bytearray)):
+            page_content = page_content.decode("utf-8", errors="replace")
+
+        class _DocShim:
+            __slots__ = ("page_content", "metadata", "id")
+
+            def __init__(self, content, meta, doc_id_value):
+                self.page_content = content
+                self.metadata = meta
+                self.id = doc_id_value
+
+        safe_docs.append(_DocShim(page_content, metadata, doc_id))
+
+    return safe_docs
 
 
 def build_chroma_store(
@@ -112,7 +168,8 @@ def build_chroma_store(
                 f"{len(documents)} precomputed chunks"
             )
             try:
-                vectordb.add_documents(list(documents))
+                safe_documents = _ensure_documents_have_ids(documents, db_name)
+                vectordb.add_documents(safe_documents)
                 vectordb.persist()
             except Exception as e:  # pragma: no cover
                 exp_logger.error(
