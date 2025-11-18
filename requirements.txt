@@ -1,0 +1,28 @@
+# Requirements inferred from project imports (no pinned versions).
+# Review and pin versions as needed before installing.
+
+numpy
+pandas
+datasets
+transformers
+torch
+bitsandbytes
+langchain
+langchain-text-splitters
+langchain-huggingface
+langchain-community
+chromadb
+faiss-cpu
+requests
+PyPDF2
+sacrebleu
+rouge-score
+bert-score
+accelerate
+tqdm
+scikit-learn
+matplotlib
+seaborn
+
+# Note: Some packages (faiss, bitsandbytes, torch) have CPU/GPU variants
+# and additional system requirements. Adjust accordingly.
