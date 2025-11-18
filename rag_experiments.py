@@ -172,28 +172,6 @@ except Exception:
 
 # HuggingFace transformers for LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
-import io
-import hashlib
-
-# Optional PDF fetching/parsing
-try:
-    import requests
-except Exception:
-    requests = None
-
-try:
-    import PyPDF2
-except Exception:
-    PyPDF2 = None
-
-# Prefer LangChain's PyMuPDFLoader when available (used in evaluation_playground.ipynb)
-PyMuPDFLoader = None
-try:
-    from langchain.document_loaders import PyMuPDFLoader
-    PyMuPDFLoader = PyMuPDFLoader
-    _HAS_LANGCHAIN = True
-except Exception:
-    PyMuPDFLoader = None
 
 # Import local modules (support running as package or script)
 try:
@@ -326,7 +304,7 @@ class RAGExperiment:
                  chunk_size: int = 1024,
                  chunk_overlap: int = 30,
                  top_k: int = 5,
-                 embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+                 embedding_model: str = "sentence-transformers/all-mpnet-base-v2",
                  use_bertscore: bool = False,
                  use_llm_judge: bool = False,
                  output_dir: Optional[str] = None,
@@ -370,8 +348,8 @@ class RAGExperiment:
             output_dir = str(base_dir / "outputs")
         if vector_store_dir is None:
             vector_store_dir = str(base_dir / "vector_stores")
-        self.output_dir = output_dir
-        self.vector_store_dir = vector_store_dir
+        self.output_dir = str(Path(output_dir).resolve())
+        self.vector_store_dir = str(Path(vector_store_dir).resolve())
         # Local PDF directory: prefer this for PDF extraction if available
         # Default to the package-local `pdfs` directory so that
         # uploaded PDFs inside the package are preferred.
@@ -411,6 +389,8 @@ class RAGExperiment:
         self.embeddings = None
         self.text_splitter = None
         self.vector_stores = {}
+        self.langchain_llm = None
+        self.max_context_chars = 12000
         # Persist generation config on the instance
         self.max_new_tokens = max_new_tokens
         # Batch size for generation calls to the pipeline (helps GPU efficiency)
@@ -465,14 +445,8 @@ class RAGExperiment:
         """Initialize LangChain embeddings and text splitter"""
         self.logger.info("\nInitializing LangChain components...")
         
-        # Initialize embeddings using LangChain
-        self.logger.info(f"Loading embeddings: {self.embedding_model}")
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name=self.embedding_model,
-            model_kwargs={'device': self.device},
-            encode_kwargs={'normalize_embeddings': True}
-        )
-        self.logger.info("✓ Embeddings loaded")
+        self.embeddings = self._build_embeddings()
+        self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         
         # Initialize text splitter using LangChain
         self.text_splitter = RecursiveCharacterTextSplitter(
@@ -482,6 +456,20 @@ class RAGExperiment:
             separators=["\n\n", "\n", ". ", " ", ""]
         )
         self.logger.info(f"✓ Text splitter initialized (chunk_size={self.chunk_size}, overlap={self.chunk_overlap})")
+
+    def _build_embeddings(self):
+        """Create FinanceBench-style embeddings using HuggingFace sentence transformers."""
+        if HuggingFaceEmbeddings is None:
+            raise RuntimeError(
+                "langchain-huggingface is required for embeddings. Install it before running experiments."
+            )
+
+        self.logger.info(f"Loading HuggingFace embeddings: {self.embedding_model}")
+        return HuggingFaceEmbeddings(
+            model_name=self.embedding_model,
+            model_kwargs={'device': self.device},
+            encode_kwargs={'normalize_embeddings': True}
+        )
     
     def _initialize_llm(self):
         """Initialize HuggingFace LLM for generation"""
@@ -559,19 +547,27 @@ class RAGExperiment:
             self.logger.info(f"✓ LLM initialized successfully")
             # If LangChain's HuggingFacePipeline wrapper is available, create a
             # LangChain LLM wrapper so RetrievalQA can be used directly.
-            try:
-                if HuggingFacePipeline is not None:
+            if HuggingFacePipeline is not None:
+                try:
                     self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
                     self.logger.info("✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA")
-                else:
-                    self.langchain_llm = None
-            except Exception:
-                self.langchain_llm = None
+                except Exception as exc:
+                    self.logger.error(f"Failed to wrap pipeline for LangChain: {exc}")
+                    raise
+            else:
+                raise RuntimeError(
+                    "HuggingFacePipeline is not available. Install 'langchain' to enable RetrievalQA."
+                )
             
         except Exception as e:
             self.logger.error(f"Failed to initialize LLM: {str(e)}")
             self.logger.error("Make sure you have sufficient GPU memory or try load_in_8bit=True")
             raise
+
+    def ensure_langchain_llm(self):
+        """Ensure a LangChain-compatible LLM wrapper exists."""
+        if getattr(self, 'langchain_llm', None) is None:
+            self._initialize_llm()
 
     def _build_vectorstore_chroma(self, docs, embeddings=None):
         """
@@ -642,35 +638,42 @@ class RAGExperiment:
             self.logger.warning("Continuing without LLM judge")
             self.evaluator.use_llm_judge = False
     
-    def _chunk_text_langchain(self, text: str, metadata: Dict[str, Any] = None) -> List[Document]:
+    def _chunk_text_langchain(self, text, metadata: Dict[str, Any] = None) -> List[Document]:
         """
         Chunk text using LangChain's RecursiveCharacterTextSplitter
         
         Args:
-            text: Text to chunk
+            text: Text to chunk (str) or list of LangChain Documents
             metadata: Metadata to attach to each chunk
             
         Returns:
             List of LangChain Document objects
         """
-        # Safely coerce bytes to string (some dataset fields may be bytes)
-        if isinstance(text, (bytes, bytearray)):
-            try:
-                text = text.decode('utf-8')
-            except Exception:
-                text = text.decode('utf-8', errors='replace')
-
-        if not text or len(text) == 0:
-            return []
-        
         metadata = metadata or {}
-        
-        # Use LangChain text splitter
-        # Ensure we pass str objects into the text splitter
-        documents = self.text_splitter.create_documents(
-            texts=[str(text)],
-            metadatas=[metadata]
-        )
+
+        if isinstance(text, list):
+            documents_input = []
+            for doc in text:
+                doc_meta = dict(metadata)
+                doc_meta.update(doc.metadata or {})
+                doc.metadata = doc_meta
+                documents_input.append(doc)
+            documents = self.text_splitter.split_documents(documents_input)
+        else:
+            # Safely coerce bytes to string (some dataset fields may be bytes)
+            if isinstance(text, (bytes, bytearray)):
+                try:
+                    text = text.decode('utf-8')
+                except Exception:
+                    text = text.decode('utf-8', errors='replace')
+
+            if not text or len(text) == 0:
+                return []
+            
+            documents = self.text_splitter.create_documents(
+                texts=[str(text)],
+                metadatas=[metadata]
+            )
         
         # Log chunking statistics
         # Defensive: coerce any bytes page_content to str before computing lengths
@@ -811,250 +814,12 @@ class RAGExperiment:
             self.logger.warning(f"FAISS retrieval helper failed: {e}")
             return []
 
-    def _load_pdf_text(self, url: str, timeout: int = 20, force_refresh: bool = False) -> Optional[str]:
-        """
-        Fetch PDF from URL and extract text. Returns None if fetching or parsing fails.
-
-        This helper prefers PyPDF2 (pure-python). If `requests` or `PyPDF2` are
-        not available, this function logs and returns None so callers can fall back
-        to using the `evidence` field from the dataset.
-        """
-        if not url:
-            return None
-
-        if requests is None:
-            self.logger.warning("requests not available; cannot fetch PDF from URL")
-            return None
-
-        if PyPDF2 is None:
-            self.logger.warning("PyPDF2 not available; install it to extract PDF text")
-            return None
-
-        # Prepare cache location (under vector_store_dir/pdf_text_cache)
-        cache_dir = os.path.join(self.vector_store_dir, 'pdf_text_cache')
-        try:
-            os.makedirs(cache_dir, exist_ok=True)
-        except Exception:
-            # If we cannot create cache dir, continue without caching
-            cache_dir = None
-
-        # Use a deterministic filename derived from the URL hash
-        try:
-            url_hash = hashlib.sha256(url.encode('utf-8')).hexdigest()
-            cache_path = os.path.join(cache_dir, f"{url_hash}.txt") if cache_dir else None
-        except Exception:
-            cache_path = None
-
-        if PyPDF2 is None:
-            self.logger.warning("PyPDF2 not available; install it to extract PDF text")
-            return None
-
-        # Prepare cache location (under vector_store_dir/pdf_text_cache)
-        cache_dir = os.path.join(self.vector_store_dir, 'pdf_text_cache')
-        try:
-            os.makedirs(cache_dir, exist_ok=True)
-        except Exception:
-            cache_dir = None
-
-        # Helper: attempt to read PDF from a local path
-        def _read_local_pdf(path: Path) -> Optional[str]:
-            try:
-                if not path.exists():
-                    return None
-                # Use a cache key derived from the absolute path
-                try:
-                    key = hashlib.sha256(str(path.resolve()).encode('utf-8')).hexdigest()
-                    local_cache = os.path.join(cache_dir, f"{key}.txt") if cache_dir else None
-                except Exception:
-                    local_cache = None
-
-                # Return cached text if present
-                if local_cache and not force_refresh and os.path.exists(local_cache):
-                    try:
-                        with open(local_cache, 'r', encoding='utf-8') as f:
-                            cached = f.read()
-                        if cached:
-                            self.logger.info(f"Loaded cached PDF text for local file: {path}")
-                            return cached
-                    except Exception:
-                        pass
-                # Prefer PyMuPDFLoader if available (more robust for many PDFs)
-                full_text = None
-                if PyMuPDFLoader is not None:
-                    try:
-                        loader = PyMuPDFLoader(str(path))
-                        pages = loader.load()
-                        texts = [getattr(p, 'page_content', '') or '' for p in pages]
-                        full_text = "\n\n".join([t for t in texts if t])
-                    except Exception:
-                        full_text = None
-
-                # Fallback to PyPDF2 if PyMuPDFLoader not available or failed
-                if not full_text and PyPDF2 is not None:
-                    try:
-                        with open(path, 'rb') as fh:
-                            reader = PyPDF2.PdfReader(fh)
-                            texts = []
-                            for page in reader.pages:
-                                try:
-                                    page_text = page.extract_text() or ""
-                                except Exception:
-                                    page_text = ""
-                                texts.append(page_text)
-                        full_text = "\n\n".join([t for t in texts if t])
-                    except Exception:
-                        full_text = None
-                if full_text and local_cache:
-                    try:
-                        tmp = local_cache + ".tmp"
-                        with open(tmp, 'w', encoding='utf-8') as f:
-                            f.write(full_text)
-                        os.replace(tmp, local_cache)
-                        self.logger.info(f"Cached PDF text to: {local_cache}")
-                    except Exception:
-                        pass
-                return full_text if full_text else None
-            except Exception as e:
-                self.logger.warning(f"Failed to read local PDF {path}: {e}")
-                return None
-
-        # 1) If url is a local path or file:// URL, try to read it directly
-        try:
-            if url and (url.startswith('file://') or os.path.exists(url)):
-                local_path = Path(url.replace('file://', ''))
-                self.logger.info(f"Reading local PDF from: {local_path}")
-                text = _read_local_pdf(local_path)
-                if text:
-                    return text
-        except Exception:
-            # Continue to other fallbacks
-            pass
-
-        # 2) If a local PDF directory is configured, look for a matching file there
-        try:
-            if self.pdf_local_dir is not None:
-                pdf_dir = Path(self.pdf_local_dir)
-                if pdf_dir.exists() and pdf_dir.is_dir():
-                    # Derive a candidate filename from the URL (last path segment)
-                    fname = os.path.basename((url or '').split('?')[0]) if url else ''
-                    candidates = []
-                    if fname:
-                        candidates.append(pdf_dir / fname)
-                        if not fname.lower().endswith('.pdf'):
-                            candidates.append(pdf_dir / (fname + '.pdf'))
-                        # Also try stem-based fuzzy match
-                        stem = os.path.splitext(fname)[0]
-                        if stem:
-                            for p in pdf_dir.iterdir():
-                                if p.is_file() and p.suffix.lower() == '.pdf' and stem.lower() in p.name.lower():
-                                    candidates.append(p)
-                    # If no fname or no candidates matched, attempt to take the first PDF that contains any part
-                    if not candidates:
-                        for p in pdf_dir.iterdir():
-                            if p.is_file() and p.suffix.lower() == '.pdf':
-                                candidates.append(p)
-
-                    # Try candidates in order
-                    for cand in candidates:
-                        if cand and cand.exists():
-                            self.logger.info(f"Attempting to load local PDF candidate: {cand}")
-                            text = _read_local_pdf(cand)
-                            if text:
-                                return text
-        except Exception as e:
-            self.logger.warning(f"Error while searching local PDF directory: {e}")
-
-        # 3) Fall back to fetching from URL (if requests available)
-        if not url:
-            return None
-
-        if requests is None:
-            self.logger.warning("requests not available; cannot fetch PDF from URL and no local PDF found")
-            return None
-
-        # Use a deterministic filename derived from the URL hash
-        try:
-            url_hash = hashlib.sha256(url.encode('utf-8')).hexdigest()
-            cache_path = os.path.join(cache_dir, f"{url_hash}.txt") if cache_dir else None
-        except Exception:
-            cache_path = None
-
-        # Return cached text if present (unless force_refresh requested)
-        if cache_path and not force_refresh and os.path.exists(cache_path):
-            try:
-                with open(cache_path, 'r', encoding='utf-8') as f:
-                    cached = f.read()
-                if cached:
-                    self.logger.info(f"Loaded PDF text from cache for URL: {url}")
-                    return cached
-            except Exception:
-                pass
-
-        try:
-            self.logger.info(f"Fetching PDF from URL: {url}")
-            resp = requests.get(url, timeout=timeout)
-            resp.raise_for_status()
-            # Try PyMuPDFLoader on the downloaded bytes (write to a temp file)
-            full_text = None
-            try:
-                import tempfile
-                with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmpf:
-                    tmpf.write(resp.content)
-                    tmp_path = tmpf.name
-                if PyMuPDFLoader is not None:
-                    try:
-                        loader = PyMuPDFLoader(tmp_path)
-                        pages = loader.load()
-                        texts = [getattr(p, 'page_content', '') or '' for p in pages]
-                        full_text = "\n\n".join([t for t in texts if t])
-                    except Exception:
-                        full_text = None
-                if not full_text and PyPDF2 is not None:
-                    try:
-                        bio = io.BytesIO(resp.content)
-                        reader = PyPDF2.PdfReader(bio)
-                        texts = []
-                        for page in reader.pages:
-                            try:
-                                page_text = page.extract_text() or ""
-                            except Exception:
-                                page_text = ""
-                            texts.append(page_text)
-                        full_text = "\n\n".join([t for t in texts if t])
-                    except Exception:
-                        full_text = None
-                # Attempt to remove temporary file
-                try:
-                    os.remove(tmp_path)
-                except Exception:
-                    pass
-            except Exception:
-                full_text = None
-            if full_text:
-                self.logger.info(f"Extracted {len(full_text)} characters from PDF")
-                # Save to cache if available
-                if cache_path:
-                    try:
-                        tmp_path = cache_path + ".tmp"
-                        with open(tmp_path, 'w', encoding='utf-8') as f:
-                            f.write(full_text)
-                        os.replace(tmp_path, cache_path)
-                        self.logger.info(f"Cached PDF text to: {cache_path}")
-                    except Exception as e:
-                        self.logger.warning(f"Failed to write PDF cache for {url}: {e}")
-                return full_text
-            else:
-                self.logger.warning("PDF parsed but no text was extracted")
-                return None
-
-        except Exception as e:
-            self.logger.warning(f"Failed to fetch/parse PDF at {url}: {e}")
-            return None
     
     def _build_financebench_prompt(
         self,
         question: str,
         context: Optional[str] = None,
+        mode: Optional[str] = None,
     ) -> str:
         """
         Build prompts in the same style as FinanceBench's evaluation_playground:
@@ -1064,15 +829,24 @@ class RAGExperiment:
         """
         question = (question or "").strip()
         context = (context or "").strip()
+        prompt_mode = mode or self.experiment_type
+
+        if context:
+            context = context[: self.max_context_chars]
 
         # No context: closed-book behavior
         if not context:
             return f"Answer this question: {question}"
 
         # With context: oracle / in-context / RAG behavior
+        if prompt_mode in {self.OPEN_BOOK, "oracle"}:
+            header = "Here is the relevant evidence that you need to answer the question:"
+        else:
+            header = "Here is the relevant filing that you need to answer the question:"
+
         return (
             f"Answer this question: {question}\n"
-            "Here is the context to answer the question:\n"
+            f"{header}\n"
             "[START OF FILING]\n"
             f"{context}\n"
             "[END OF FILING]"
@@ -1082,6 +856,7 @@ class RAGExperiment:
         self,
         question: str,
         context: Optional[str] = None,
+        mode: Optional[str] = None,
         ) -> str:
         """
         Generate an answer using the configured LLM.
@@ -1093,7 +868,7 @@ class RAGExperiment:
         We still keep your local Llama / Qwen models and the existing HF Router API option.
         """
         # Build FinanceBench-style prompt
-        prompt = self._build_financebench_prompt(question, context)
+        prompt = self._build_financebench_prompt(question, context, mode=mode)
 
         # ---------------- API mode (HF Router / OpenAI) ---------------- #
         if self.use_api:
