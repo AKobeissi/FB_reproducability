@@ -1,9 +1,8 @@
 from typing import List, Dict, Any
 import logging
-import os
 from collections import defaultdict
 from .pdf_utils import load_pdf_with_fallback
-from .vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks
+from .vectorstore import build_chroma_store
 
 logger = logging.getLogger(__name__)
 
@@ -33,15 +32,14 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         doc_link = samples[0].get('doc_link', '')
         
         # Use centralized PDF loading
-        pdf_text, pdf_source = load_pdf_with_fallback(
+        pdf_docs, pdf_source = load_pdf_with_fallback(
             doc_name=doc_name,
             doc_link=doc_link,
             local_dir=getattr(experiment, 'pdf_local_dir', None),
-            pdf_loader_func=experiment._load_pdf_text
         )
 
-        if not pdf_text:
-            logger.warning(f"No PDF text for '{doc_name}'. Skipping {len(samples)} samples.")
+        if not pdf_docs:
+            logger.warning(f"No PDF pages for '{doc_name}'. Skipping {len(samples)} samples.")
             results.extend(_create_skipped_results(
                 samples, doc_name, doc_link, pdf_source, 
                 experiment.SINGLE_VECTOR, len(results)
@@ -52,7 +50,7 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
         # Chunk the PDF text
         documents = experiment._chunk_text_langchain(
-            pdf_text,
+            pdf_docs,
             metadata={
                 'doc_name': doc_name,
                 'source': 'pdf',
@@ -61,22 +59,19 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
             }
         )
 
-        # Build vector store (prefer Chroma). Allow FAISS fallback only if env var set.
-        retriever = None
-        vectordb = None
-        allow_faiss = os.environ.get('ALLOW_FAISS_FALLBACK', 'false').lower() in ('1', 'true', 'yes')
         try:
-            retriever, vectordb = build_chroma_store(experiment, doc_name)
-        except Exception as e:
-            logger.warning(f"Chroma build failed for '{doc_name}': {e}")
-            if allow_faiss:
-                try:
-                    vectordb = create_faiss_store(experiment, documents, index_name=doc_name)
-                except Exception as e2:
-                    logger.error(f"FAISS fallback failed for '{doc_name}': {e2}")
-                    vectordb = None
-            else:
-                logger.error("Chroma unavailable and FAISS fallback not allowed; skipping document store creation.")
+            retriever, _ = build_chroma_store(
+                experiment,
+                doc_name,
+                documents=documents
+            )
+        except Exception as exc:
+            logger.error(f"Chroma build failed for '{doc_name}': {exc}")
+            results.extend(_create_skipped_results(
+                samples, doc_name, doc_link, pdf_source,
+                experiment.SINGLE_VECTOR, len(results)
+            ))
+            continue
 
         # Process each sample
         for i, sample in enumerate(samples):
@@ -89,7 +84,6 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
                 doc_link=doc_link,
                 pdf_source=pdf_source,
                 retriever=retriever,
-                vectordb=vectordb,
                 sample_id=len(results)
             )
             
@@ -106,38 +100,29 @@ def _process_single_sample(
     doc_link: str,
     pdf_source: str,
     retriever,
-    vectordb,
     sample_id: int
 ) -> Dict[str, Any]:
-    """Process a single sample with retrieval and generation."""
+    """Process a single sample with RetrievalQA and evaluation."""
     question = sample['question']
     reference_answer = sample['answer']
     gold_evidence = sample.get('evidence', '')
-    
+
     gold_parts = experiment._normalize_evidence(gold_evidence)
     gold_evidence_str = "\n\n".join(gold_parts)
 
-    # Retrieve chunks
-    retrieved_chunks = _retrieve_chunks(
+    generated_answer, retrieved_chunks = _run_retrieval_qa(
         experiment=experiment,
         question=question,
-        retriever=retriever,
-        vectordb=vectordb
+        retriever=retriever
     )
 
     context = "\n\n".join([chunk['text'] for chunk in retrieved_chunks])
 
-    # Evaluate retrieval
-    retrieved_texts = [chunk['text'] for chunk in retrieved_chunks]
     retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        retrieved_texts,
+        [chunk['text'] for chunk in retrieved_chunks],
         gold_evidence_str
     )
 
-    # Generate answer
-    generated_answer = experiment._generate_answer(question, context)
-
-    # Evaluate generation
     generation_eval = experiment.evaluator.evaluate_generation(
         generated_answer,
         reference_answer,
@@ -159,63 +144,40 @@ def _process_single_sample(
         'retrieval_evaluation': retrieval_eval,
         'generation_evaluation': generation_eval,
         'experiment_type': experiment.SINGLE_VECTOR,
-        'vector_store_type': 'Chroma' if retriever else 'FAISS',
+        'vector_store_type': 'Chroma',
         'pdf_source': pdf_source
     }
 
 
-def _retrieve_chunks(experiment, question: str, retriever, vectordb) -> List[Dict[str, Any]]:
-    """Retrieve chunks using available retrieval method."""
-    # Try RetrievalQA chain first
-    try:
-        from langchain.chains import RetrievalQA
-        if getattr(experiment, 'langchain_llm', None) and retriever:
-            qa = RetrievalQA.from_chain_type(
-                llm=experiment.langchain_llm,
-                chain_type="stuff",
-                retriever=retriever,
-                return_source_documents=True,
-            )
-            result = qa(question)
-            source_docs = result.get('source_documents', []) or []
-            return [
-                {
-                    'rank': rank + 1,
-                    'text': _get_doc_text(doc),
-                    'score': None,
-                    'length': len(_get_doc_text(doc)),
-                    'metadata': getattr(doc, 'metadata', {})
-                }
-                for rank, doc in enumerate(source_docs)
-            ]
-    except Exception:
-        pass
+def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]]]:
+    """Run RetrievalQA using the experiment's LangChain LLM wrapper."""
+    from langchain.chains import RetrievalQA
 
-    # Try retriever directly
-    try:
-        if retriever:
-            docs = retriever.get_relevant_documents(question)
-            return [
-                {
-                    'rank': rank + 1,
-                    'text': _get_doc_text(doc),
-                    'score': None,
-                    'length': len(_get_doc_text(doc)),
-                    'metadata': getattr(doc, 'metadata', {})
-                }
-                for rank, doc in enumerate(docs)
-            ]
-    except Exception:
-        pass
+    if retriever is None:
+        return "", []
 
-    # Fallback to FAISS similarity search
-    try:
-        if 'retrieve_faiss_chunks' in globals() and vectordb is not None:
-            return retrieve_faiss_chunks(experiment, question, vectordb)
-        return experiment._retrieve_chunks_faiss(question, vectordb)
-    except Exception as e:
-        logger.warning(f"All retrieval methods failed: {e}")
-        return []
+    experiment.ensure_langchain_llm()
+    qa = RetrievalQA.from_chain_type(
+        llm=experiment.langchain_llm,
+        chain_type="stuff",
+        retriever=retriever,
+        return_source_documents=True,
+    )
+
+    result = qa(question)
+    source_docs = result.get('source_documents', []) or []
+    chunks = [
+        {
+            'rank': rank + 1,
+            'text': _get_doc_text(doc),
+            'score': None,
+            'length': len(_get_doc_text(doc)),
+            'metadata': getattr(doc, 'metadata', {})
+        }
+        for rank, doc in enumerate(source_docs)
+    ]
+    answer = result.get('result', '') or ""
+    return answer.strip(), chunks
 
 
 def _get_doc_text(doc) -> str:

@@ -5,7 +5,6 @@ interface as `RAGExperiment` in this repo, i.e. it should provide:
 
   - experiment.vector_store_dir : base directory for persisted stores
   - experiment.embeddings       : LangChain embeddings object
-  - experiment._load_pdf_text   : function(url_or_path: str) -> Optional[str]
   - experiment._chunk_text_langchain(text, metadata) -> List[Document]
   - experiment.top_k            : (optional) int for retrieval
 """
@@ -58,14 +57,11 @@ def build_chroma_store(
         RAGExperiment-like object.
     docs:
         Either ``"all"``, a single document identifier (str), or an iterable
-        of identifiers. These identifiers are passed to
-        ``experiment._load_pdf_text`` when the store needs to be populated.
+        of identifiers. These identifiers determine the persisted DB path.
     embeddings:
         Optional embeddings object. Defaults to ``experiment.embeddings``.
     documents:
         Optional list of *already chunked* LangChain ``Document`` objects.
-        When provided and the Chroma store is empty, these documents will be
-        inserted directly instead of re-loading & re-chunking PDFs.
     """
     if Chroma is None:
         raise RuntimeError(
@@ -122,28 +118,8 @@ def build_chroma_store(
                 exp_logger.error(
                     f"Failed to populate Chroma from precomputed documents: {e}"
                 )
-        elif docs_list is not None:
-            exp_logger.info(
-                f"Populating Chroma DB '{db_name}' with {len(docs_list)} documents"
-            )
-            for doc in docs_list:
-                try:
-                    pdf_text = experiment._load_pdf_text(doc)
-                    if not pdf_text:
-                        exp_logger.debug(
-                            f"No text for doc '{doc}' when populating Chroma"
-                        )
-                        continue
-                    splitted = experiment._chunk_text_langchain(
-                        pdf_text, metadata={"doc_name": doc}
-                    )
-                    if splitted:
-                        vectordb.add_documents(documents=splitted)
-                        vectordb.persist()
-                except Exception as e:  # pragma: no cover
-                    exp_logger.debug(f"Failed to add doc '{doc}' to Chroma: {e}")
         else:
-            exp_logger.info(
+            raise RuntimeError(
                 f"Chroma DB '{db_name}' is empty and no documents were provided "
                 "to populate it."
             )

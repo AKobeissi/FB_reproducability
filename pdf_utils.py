@@ -1,35 +1,29 @@
-"""Utilities for resolving and loading PDFs for FinanceBench experiments.
-
-`load_pdf_with_fallback` is the single public entry point. It takes a
-doc_name + doc_link from the dataset, tries to locate a matching PDF
-in a local directory (usually `<repo>/pdfs`), and falls back to using
-the remote URL via `experiment._load_pdf_text` if necessary.
-"""
+"""Utilities for resolving and loading PDFs for FinanceBench experiments."""
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Callable, Tuple
+from typing import Optional, Tuple, List
 import logging
 import re
+from urllib.parse import urlparse
+
+try:
+    from langchain.document_loaders import PyMuPDFLoader
+except Exception:  # pragma: no cover - surfaced at runtime with clear error
+    PyMuPDFLoader = None
 
 logger = logging.getLogger(__name__)
 
 
 def _normalize_name(name: str) -> str:
     """Return a simplified version of a filename / doc_name for matching."""
-    name = name.lower()
-    # Remove extension
+    name = (name or "").lower()
     if "." in name:
         name = name.rsplit(".", 1)[0]
-    # Strip non-alphanumeric characters
-    name = re.sub(r"[^a-z0-9]+", "", name)
-    return name
+    return re.sub(r"[^a-z0-9]+", "", name)
 
 
-def _find_local_pdf(
-    doc_name: str,
-    local_dir: Optional[str],
-) -> Optional[Path]:
+def _find_local_pdf(doc_name: str, local_dir: Optional[str]) -> Optional[Path]:
     """Try to find a local PDF in `local_dir` that matches `doc_name`."""
     if not local_dir:
         return None
@@ -45,29 +39,24 @@ def _find_local_pdf(
     norm_target = _normalize_name(doc_name)
     candidates = []
 
-    # First, try exact stem match across all files in the directory
     try:
         for p in pdf_dir.iterdir():
-            if not p.is_file():
+            if not p.is_file() or p.suffix.lower() != ".pdf":
                 continue
-            if p.suffix.lower() != ".pdf":
-                continue
-            if _normalize_name(p.stem) == norm_target:
+            stem_norm = _normalize_name(p.stem)
+            if stem_norm == norm_target or norm_target in stem_norm:
                 candidates.append(p)
     except Exception:
-        # If something goes wrong, just ignore and fall back to URL
         return None
 
     if candidates:
-        # Prefer deterministic ordering
         candidates.sort()
         return candidates[0]
 
-    # As a last resort, try treating doc_name as a direct filename
     direct = pdf_dir / doc_name
     if direct.exists() and direct.is_file():
         return direct
-    if not direct.suffix and (direct.with_suffix(".pdf")).exists():
+    if not direct.suffix and direct.with_suffix(".pdf").exists():
         return direct.with_suffix(".pdf")
 
     return None
@@ -77,55 +66,38 @@ def load_pdf_with_fallback(
     doc_name: str,
     doc_link: str,
     local_dir: Optional[str],
-    pdf_loader_func: Callable[[str], Optional[str]],
-) -> Tuple[Optional[str], str]:
-    """Load PDF text either from local cache or remote URL.
+) -> Tuple[List, str]:
+    """Load a PDF strictly from the local directory using PyMuPDFLoader."""
+    if PyMuPDFLoader is None:
+        raise RuntimeError(
+            "PyMuPDFLoader (langchain.document_loaders) is required but not installed."
+        )
 
-    Parameters
-    ----------
-    doc_name:
-        FinanceBench `doc_name` field for the sample.
-    doc_link:
-        Original document URL (may be empty in some cases).
-    local_dir:
-        Local directory containing cached PDFs (e.g. `<repo>/pdfs`).
-    pdf_loader_func:
-        Function (usually `experiment._load_pdf_text`) that accepts either
-        a local filesystem path or a URL, and returns the extracted text.
+    local_path = _find_local_pdf(doc_name, local_dir)
+    if local_path is None and doc_link:
+        parsed = urlparse(doc_link)
+        candidate = Path(parsed.path).stem if parsed.path else Path(doc_link).stem
+        logger.debug(
+            "Doc '%s' not found by name; attempting link-derived filename '%s'",
+            doc_name,
+            candidate,
+        )
+        local_path = _find_local_pdf(candidate, local_dir)
 
-    Returns
-    -------
-    (text, source)
-        `text` is the extracted PDF text (or None on failure).
-        `source` is a string describing where it came from:
-            - "local:<filename>" when loaded from local_dir
-            - "remote:url"     when loaded from the URL
-            - "none"           when nothing could be loaded
-    """
-    # 1) Try local PDF (preferred)
+    if local_path is None:
+        logger.warning("Could not locate local PDF for '%s'", doc_name)
+        return [], "none"
+
     try:
-        local_path = _find_local_pdf(doc_name, local_dir)
-    except Exception:
-        local_path = None
-
-    if local_path is not None:
-        try:
-            logger.info(f"Trying local PDF for '{doc_name}': {local_path}")
-            text = pdf_loader_func(str(local_path))
-            if text:
-                return text, f"local:{local_path.name}"
-        except Exception as e:
-            logger.warning(f"Failed to load local PDF {local_path}: {e}")
-
-    # 2) Fallback to remote URL if available
-    if doc_link:
-        try:
-            logger.info(f"Falling back to remote URL for '{doc_name}': {doc_link}")
-            text = pdf_loader_func(doc_link)
-            if text:
-                return text, "remote:url"
-        except Exception as e:
-            logger.warning(f"Failed to load remote PDF {doc_link}: {e}")
-
-    logger.warning(f"Could not load PDF for '{doc_name}' from local or remote sources")
-    return None, "none"
+        loader = PyMuPDFLoader(str(local_path))
+        documents = loader.load()
+        for doc in documents:
+            meta = doc.metadata or {}
+            meta.setdefault("doc_name", doc_name)
+            meta.setdefault("doc_link", doc_link)
+            meta.setdefault("source", "pdf")
+            doc.metadata = meta
+        return documents, f"local:{local_path.name}"
+    except Exception as exc:
+        logger.warning("Failed to parse PDF %s: %s", local_path, exc)
+        return [], "none"
