@@ -69,12 +69,6 @@ except Exception:
     except Exception:
         HuggingFaceEmbeddings = None
 
-try:
-    from langchain.embeddings import OpenAIEmbeddings
-    _HAS_LANGCHAIN = True
-except Exception:
-    OpenAIEmbeddings = None
-
 # 3) FAISS vectorstore: try langchain_community.vectorstores then langchain.vectorstores
 try:
     from langchain_community.vectorstores import FAISS
@@ -310,7 +304,7 @@ class RAGExperiment:
                  chunk_size: int = 1024,
                  chunk_overlap: int = 30,
                  top_k: int = 5,
-                 embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+                 embedding_model: str = "sentence-transformers/all-mpnet-base-v2",
                  use_bertscore: bool = False,
                  use_llm_judge: bool = False,
                  output_dir: Optional[str] = None,
@@ -354,8 +348,8 @@ class RAGExperiment:
             output_dir = str(base_dir / "outputs")
         if vector_store_dir is None:
             vector_store_dir = str(base_dir / "vector_stores")
-        self.output_dir = output_dir
-        self.vector_store_dir = vector_store_dir
+        self.output_dir = str(Path(output_dir).resolve())
+        self.vector_store_dir = str(Path(vector_store_dir).resolve())
         # Local PDF directory: prefer this for PDF extraction if available
         # Default to the package-local `pdfs` directory so that
         # uploaded PDFs inside the package are preferred.
@@ -464,20 +458,10 @@ class RAGExperiment:
         self.logger.info(f"✓ Text splitter initialized (chunk_size={self.chunk_size}, overlap={self.chunk_overlap})")
 
     def _build_embeddings(self):
-        """Create embeddings object, preferring OpenAI embeddings when available."""
-        if OpenAIEmbeddings is not None:
-            api_key = os.environ.get("OPENAI_API_KEY")
-            if api_key:
-                try:
-                    self.logger.info("Loading OpenAIEmbeddings for FinanceBench pipeline")
-                    return OpenAIEmbeddings(openai_api_key=api_key)
-                except Exception as exc:
-                    self.logger.warning("OpenAIEmbeddings init failed (%s). Falling back to HuggingFace.", exc)
-
+        """Create FinanceBench-style embeddings using HuggingFace sentence transformers."""
         if HuggingFaceEmbeddings is None:
             raise RuntimeError(
-                "No embedding backend available. Install 'langchain-huggingface' or "
-                "set OPENAI_API_KEY for OpenAIEmbeddings."
+                "langchain-huggingface is required for embeddings. Install it before running experiments."
             )
 
         self.logger.info(f"Loading HuggingFace embeddings: {self.embedding_model}")
