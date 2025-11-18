@@ -99,6 +99,33 @@ def _ensure_documents_have_ids(documents: Iterable[Any], namespace: str) -> List
     return safe_docs
 
 
+DEFAULT_CHROMA_BATCH_SIZE = 2000
+
+
+def _detect_chroma_batch_limit(vectordb) -> Optional[int]:
+    """
+    Best-effort detection of the maximum batch size enforced by the underlying
+    Chroma client/settings object.
+    """
+    candidates = [
+        getattr(vectordb, "_client_settings", None),
+        getattr(vectordb, "_client", None),
+    ]
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        settings = getattr(candidate, "_settings", candidate)
+        max_batch = getattr(settings, "max_batch_size", None)
+        if isinstance(max_batch, int) and max_batch > 0:
+            return max_batch
+    return None
+
+
+def _batched_docs(documents: List[Any], batch_size: int) -> Iterable[List[Any]]:
+    for idx in range(0, len(documents), batch_size):
+        yield documents[idx : idx + batch_size]
+
+
 def build_chroma_store(
     experiment,
     docs,
@@ -163,13 +190,31 @@ def build_chroma_store(
     # --- Populate the store if empty --------------------------------------------
     if is_empty:
         if documents:
+            total_docs = len(documents)
             exp_logger.info(
-                f"Populating Chroma DB '{db_name}' from "
-                f"{len(documents)} precomputed chunks"
+                f"Populating Chroma DB '{db_name}' from {total_docs} precomputed chunks"
             )
             try:
                 safe_documents = _ensure_documents_have_ids(documents, db_name)
-                vectordb.add_documents(safe_documents)
+                batch_limit = _detect_chroma_batch_limit(vectordb)
+                override_batch = getattr(experiment, "chroma_batch_size", None)
+                if isinstance(override_batch, int) and override_batch > 0:
+                    batch_limit = override_batch if batch_limit is None else min(
+                        batch_limit, override_batch
+                    )
+                if not batch_limit or batch_limit <= 0:
+                    batch_limit = DEFAULT_CHROMA_BATCH_SIZE
+                if batch_limit < len(safe_documents):
+                    exp_logger.info(
+                        "Chroma batch limit detected at %s – ingesting in %s batches",
+                        batch_limit,
+                        (len(safe_documents) + batch_limit - 1) // batch_limit,
+                    )
+                added = 0
+                for chunk in _batched_docs(safe_documents, batch_limit):
+                    vectordb.add_documents(chunk)
+                    added += len(chunk)
+                exp_logger.info("Persisting Chroma DB '%s' with %s chunks", db_name, added)
                 vectordb.persist()
             except Exception as e:  # pragma: no cover
                 exp_logger.error(
