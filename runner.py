@@ -56,6 +56,10 @@ def parse_args():
         description="Run FinanceBench RAG experiments",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
+
+    script_dir = Path(__file__).resolve().parent
+    default_vector_store_dir = str(script_dir / "vector_stores")
+    default_output_dir = str(script_dir / "outputs")
     
     parser.add_argument(
         "model",
@@ -90,14 +94,14 @@ def parse_args():
     parser.add_argument(
         "--vector-store-dir",
         type=str,
-        default="./vector_stores",
+        default=default_vector_store_dir,
         help="Vector store directory"
     )
     
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="./outputs",
+        default=default_output_dir,
         help="Output directory for results"
     )
     
