@@ -1,8 +1,11 @@
 ## Post-Run Evaluation
 
-The `post_run_evaluator.py` script lets you audit one or more completed RAG experiment
-outputs (`outputs/*.json`) without re-running the models. It enriches each record with
-FinanceBench metadata and reports both retrieval and generation gaps.
+## Post-Run Evaluation
+
+The `post_run_evaluator.py` script turns raw experiment outputs (which now only contain
+questions, reference answers, gold evidence, generated answers, and retrieved chunks) into
+fully scored evaluations. It enriches each record with FinanceBench metadata and reports
+both retrieval and generation gaps.
 
 ### Prerequisites
 
@@ -38,13 +41,13 @@ Key flags:
   runtimes and extra model downloads.
 - `--save-summary` / `--save-details`: override the default output locations.
 
-Running the script produces two files under `outputs/post_eval/` (timestamps omitted
+Running the script produces two files under `outputs/evaluations/` (timestamps omitted
 below for clarity):
 
 | File | Description |
 | --- | --- |
-| `post_eval_summary_*.json` | Aggregated metrics across all inputs, including retrieval hit/recall/mrr, generation scores (EM/F1/BLEU/ROUGE/BERT), LLM-judge accuracy, and failure breakdowns. |
-| `post_eval_details_*.json` | Per-sample diagnostics with inferred gold doc/pages, per-level retrieval metrics, generation metrics, and assigned failure reasons. |
+| `evaluation_summary_*.json` | Aggregated metrics across all inputs, including retrieval hit/recall/mrr, generation scores (EM/F1/BLEU/ROUGE/BERT), LLM-judge accuracy, and failure breakdowns. |
+| `evaluation_details_*.json` | Per-sample diagnostics that retain the generated/reference answers, structured gold evidence (with doc + page info), retrieved chunks (with metadata), plus all computed metrics and failure tags. |
 
 You will also see a pretty-printed summary in the console for quick inspection.
 
@@ -69,10 +72,14 @@ To dive deeper into individual questions, open the details JSON and look at:
 
 - `gold.doc_names` / `gold.pages`: the canonical ground-truth metadata sourced from
   FinanceBench.
+- `gold_evidence`: structured entries (text, doc name, page number, source) that the raw
+  experiment emitted.
+- `retrieved_chunks`: every retrieved chunk with its metadata (doc, page, score, rank).
 - `retrieval.doc/page/chunk.matches`: which retrieved chunks counted as hits and at
   which ranks.
 - `failure.retrieval_reason`: the category used in the aggregated breakdown.
 
-This post-run pass is designed to be idempotent: you can re-run it whenever new
-experiment outputs land, point it at subsets (e.g., only `open_book` runs), or
-tighten/loosen thresholds to study different failure definitions.
+This post-run pass is designed to be idempotent: you can re-run it whenever new experiment
+outputs land, point it at subsets (e.g., only `open_book` runs), or tighten/loosen
+thresholds to study different failure definitions. The raw experiment JSONs remain untouched;
+all scoring artifacts live under `outputs/evaluations/`.

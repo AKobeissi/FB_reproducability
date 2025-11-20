@@ -592,6 +592,7 @@ class PostRunEvaluator:
                     "question": sample.get("question"),
                     "doc_name": sample.get("doc_name")
                     or (reference.get("doc_name") if reference else None),
+                    "doc_link": sample.get("doc_link"),
                     "reference_answer": generation["reference_answer"],
                     "generated_answer": generation["generated_answer"],
                     "experiment_type": sample.get("experiment_type")
@@ -602,6 +603,8 @@ class PostRunEvaluator:
                         "pages": sorted(gold.pages),
                         "num_entries": len(gold.entries),
                     },
+                    "gold_evidence": sample.get("gold_evidence"),
+                    "retrieved_chunks": sample.get("retrieved_chunks", []),
                     "retrieval": retrieval,
                     "generation": generation["metrics"],
                     "llm_judge": generation.get("llm_judge"),
@@ -843,18 +846,18 @@ def main():
     summary, samples = evaluator.evaluate_files(output_paths)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path("outputs") / "post_eval"
+    output_dir = Path("outputs") / "evaluations"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     summary_path = (
         Path(args.save_summary)
         if args.save_summary
-        else output_dir / f"post_eval_summary_{timestamp}.json"
+        else output_dir / f"evaluation_summary_{timestamp}.json"
     )
     details_path = (
         Path(args.save_details)
         if args.save_details
-        else output_dir / f"post_eval_details_{timestamp}.json"
+        else output_dir / f"evaluation_details_{timestamp}.json"
     )
 
     with open(summary_path, "w") as fh:

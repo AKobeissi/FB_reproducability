@@ -27,33 +27,24 @@ def run_open_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, Any]
 
         question = sample['question']
         reference_answer = sample['answer']
-        gold_evidence = sample.get('evidence', '')
-        
-        # Normalize gold evidence to string
-        gold_parts = experiment._normalize_evidence(gold_evidence)
-        context = "\n\n".join(gold_parts)
+        gold_entries = experiment._prepare_gold_evidence_payload(sample, i)
+        context = experiment._gold_context_from_entries(gold_entries)
 
         logger.info(f"Using gold evidence (length: {len(context)} chars)")
 
         # Generate answer with gold evidence
         generated_answer = experiment._generate_answer(question, context)
 
-        # Evaluate generation (no retrieval metrics for oracle test)
-        generation_eval = experiment.evaluator.evaluate_generation(
-            generated_answer,
-            reference_answer,
-            question
-        )
-
         result = {
             'sample_id': i,
             'question': question,
             'reference_answer': reference_answer,
-            'gold_evidence': context,
+            'gold_evidence': gold_entries,
             'context_length': len(context),
             'generated_answer': generated_answer,
             'generation_length': len(generated_answer),
-            'generation_evaluation': generation_eval,
+            'num_retrieved': 0,
+            'retrieved_chunks': [],
             'experiment_type': experiment.OPEN_BOOK
         }
 

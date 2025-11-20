@@ -31,20 +31,20 @@ def run_closed_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, An
         # Generate answer without context
         generated_answer = experiment._generate_answer(question, context=None)
 
-        # Evaluate generation
-        eval_results = experiment.evaluator.evaluate_generation(
-            generated_answer,
-            reference_answer,
-            question
-        )
+        gold_entries = experiment._prepare_gold_evidence_payload(sample, i)
 
         result = {
             'sample_id': i,
             'question': question,
             'reference_answer': reference_answer,
+            'gold_evidence': gold_entries,
             'generated_answer': generated_answer,
             'generation_length': len(generated_answer),
-            'generation_evaluation': eval_results,
+            'retrieved_chunks': [],
+            'num_retrieved': 0,
+            'context_length': 0,
+            'doc_name': sample.get('doc_name'),
+            'doc_link': sample.get('doc_link'),
             'experiment_type': experiment.CLOSED_BOOK
         }
 

@@ -58,7 +58,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     if not all_documents:
         logger.warning("No documents available. All samples will be skipped.")
-        return _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        return _create_all_skipped_results(experiment, data, experiment.SHARED_VECTOR)
 
     logger.info(f"\nTotal chunks across all documents: {len(all_documents)}")
     _log_pdf_sources(pdf_source_map)
@@ -71,7 +71,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         )
     except Exception as e:
         logger.error("Chroma build failed for shared store: %s", e)
-        return _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        return _create_all_skipped_results(experiment, data, experiment.SHARED_VECTOR)
 
     # Process samples
     results = []
@@ -83,7 +83,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         if doc_name not in available_docs:
             logger.info(f"Skipping sample for '{doc_name}' (no PDF text)")
             results.append(_create_skipped_result(
-                sample, i, doc_name, experiment.SHARED_VECTOR
+                experiment, sample, i, doc_name, experiment.SHARED_VECTOR
             ))
             continue
 
@@ -159,10 +159,6 @@ def _process_shared_sample(
     """Process a single sample in shared vector store mode."""
     question = sample.get('question', '')
     reference_answer = sample.get('answer', '')
-    gold_evidence = sample.get('evidence', '')
-    
-    gold_parts = experiment._normalize_evidence(gold_evidence)
-    gold_evidence_str = "\n\n".join(gold_parts)
 
     generated_answer, retrieved_chunks = _run_retrieval_qa(
         experiment=experiment,
@@ -182,33 +178,21 @@ def _process_shared_sample(
     ]
     logger.info(f"Retrieved from documents: {source_docs}")
 
-    # Evaluate retrieval
-    retrieved_texts = [chunk['text'] for chunk in retrieved_chunks]
-    retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        retrieved_texts,
-        gold_evidence_str
-    )
-
-    generation_eval = experiment.evaluator.evaluate_generation(
-        generated_answer,
-        reference_answer,
-        question
-    )
+    gold_entries = experiment._prepare_gold_evidence_payload(sample, sample_id)
 
     return {
         'sample_id': sample_id,
         'doc_name': doc_name,
+        'doc_link': sample.get('doc_link'),
         'question': question,
         'reference_answer': reference_answer,
-        'gold_evidence': gold_evidence_str,
+        'gold_evidence': gold_entries,
         'retrieved_chunks': retrieved_chunks,
         'retrieved_from_docs': source_docs,
         'num_retrieved': len(retrieved_chunks),
         'context_length': len(context),
         'generated_answer': generated_answer,
         'generation_length': len(generated_answer),
-        'retrieval_evaluation': retrieval_eval,
-        'generation_evaluation': generation_eval,
         'experiment_type': experiment.SHARED_VECTOR,
         'vector_store_type': 'Chroma',
         'pdf_source': pdf_source
@@ -399,27 +383,27 @@ def _generate_with_pipeline(experiment, prompt: str) -> str:
 
 
 def _create_skipped_result(
+    experiment,
     sample: Dict[str, Any],
     sample_id: int,
     doc_name: str,
     experiment_type: str
 ) -> Dict[str, Any]:
     """Create a skipped result entry."""
+    gold_entries = experiment._prepare_gold_evidence_payload(sample, sample_id)
     return {
         'sample_id': sample_id,
         'doc_name': doc_name,
         'doc_link': sample.get('doc_link', ''),
         'question': sample.get('question', ''),
         'reference_answer': sample.get('answer', ''),
-        'gold_evidence': '',
+        'gold_evidence': gold_entries,
         'retrieved_chunks': [],
         'retrieved_from_docs': [],
         'num_retrieved': 0,
         'context_length': 0,
         'generated_answer': '',
         'generation_length': 0,
-        'retrieval_evaluation': {},
-        'generation_evaluation': {},
         'experiment_type': experiment_type,
         'vector_store_type': 'Chroma',
         'skipped': True,
@@ -428,12 +412,13 @@ def _create_skipped_result(
 
 
 def _create_all_skipped_results(
+    experiment,
     data: List[Dict[str, Any]],
     experiment_type: str
 ) -> List[Dict[str, Any]]:
     """Create skipped results for all samples."""
     return [
-        _create_skipped_result(sample, i, sample.get('doc_name', 'unknown'), experiment_type)
+        _create_skipped_result(experiment, sample, i, sample.get('doc_name', 'unknown'), experiment_type)
         for i, sample in enumerate(data)
     ]
 

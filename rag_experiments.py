@@ -11,6 +11,7 @@ import logging
 import json
 import os
 from datetime import datetime
+import ast
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 import numpy as np
@@ -215,23 +216,20 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 try:
     # Prefer package-relative imports when running as a package (python -m FB_reproducability.runner)
     from .data_loader import FinanceBenchLoader
-    from .evaluator import Evaluator
 except Exception:
     try:
         # Fall back to top-level imports when running as a script from package directory
         from data_loader import FinanceBenchLoader
-        from evaluator import Evaluator
     except Exception as e:
         logging.getLogger(__name__).exception(
-            "Failed to import local modules data_loader/evaluator.\n"
+            "Failed to import local module data_loader.\n"
             "Make sure you're running this script from the project root or install the package."
         )
-        # As a last resort, try to dynamically load the modules by file path
+        # As a last resort, try to dynamically load the module by file path
         try:
             import importlib.util
             base_dir = Path(__file__).resolve().parent
             dl_path = base_dir / 'data_loader.py'
-            ev_path = base_dir / 'evaluator.py'
 
             def load_module_from_path(path: Path, module_name: str):
                 spec = importlib.util.spec_from_file_location(module_name, str(path))
@@ -240,10 +238,8 @@ except Exception:
                 return mod
 
             dl_mod = load_module_from_path(dl_path, 'data_loader_local')
-            ev_mod = load_module_from_path(ev_path, 'evaluator_local')
 
             FinanceBenchLoader = getattr(dl_mod, 'FinanceBenchLoader')
-            Evaluator = getattr(ev_mod, 'Evaluator')
         except Exception as e2:
             logging.getLogger(__name__).exception(f"Dynamic import fallback failed: {e2}")
             raise
@@ -332,19 +328,15 @@ class RAGExperiment:
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
-    MISTRAL_7B = "mistralai/Mistral-7B-Instruct-v0.3"  # For judge
     
     def __init__(self, 
                  experiment_type: str = CLOSED_BOOK,
                  llm_model: str = LLAMA_3_2_3B,
-                 judge_model: str = MISTRAL_7B,
                  # FinanceBench-style defaults:
                  chunk_size: int = 1024,
                  chunk_overlap: int = 30,
                  top_k: int = 5,
                  embedding_model: str = "sentence-transformers/all-mpnet-base-v2",
-                 use_bertscore: bool = False,
-                 use_llm_judge: bool = False,
                  output_dir: Optional[str] = None,
                  vector_store_dir: Optional[str] = None,
                  pdf_local_dir: Optional[str] = None,
@@ -360,13 +352,10 @@ class RAGExperiment:
         Args:
             experiment_type: Type of experiment (closed_book, single_vector, shared_vector, open_book)
             llm_model: HuggingFace model for generation (Llama 3.2 3B or Qwen 2.5 7B)
-            judge_model: HuggingFace model for LLM-as-judge (Mistral 7B)
             chunk_size: Size of text chunks for retrieval
             chunk_overlap: Overlap between chunks
             top_k: Number of chunks to retrieve
             embedding_model: Model for embeddings
-            use_bertscore: Whether to use BERTScore
-            use_llm_judge: Whether to use LLM as judge
             output_dir: Directory for outputs
             output_dir: Directory for outputs (default: "outputs")
             vector_store_dir: Directory for vector store persistence (default: "vector_stores")
@@ -375,7 +364,6 @@ class RAGExperiment:
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
-        self.judge_model_name = judge_model
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.top_k = top_k
@@ -411,7 +399,6 @@ class RAGExperiment:
         # Initialize components
         self.logger = logging.getLogger(self.__class__.__name__)
         self.data_loader = FinanceBenchLoader()
-        self.evaluator = Evaluator(use_bertscore=use_bertscore, use_llm_judge=use_llm_judge)
         
         # LLM components (lazy loading)
         self.llm_tokenizer = None
@@ -419,9 +406,6 @@ class RAGExperiment:
         self.llm_pipeline = None
         
         # Judge LLM components (lazy loading)
-        self.judge_tokenizer = None
-        self.judge_model = None
-        self.judge_pipeline = None
         
         # Initialize LangChain components
         self.embeddings = None
@@ -441,7 +425,6 @@ class RAGExperiment:
             'llm_model': llm_model,
             'use_api': use_api,
             'api_base_url': api_base_url if use_api else None,
-            'judge_model': judge_model if use_llm_judge else None,
             'chunk_size': chunk_size,
             'chunk_overlap': chunk_overlap,
             'top_k': top_k,
@@ -463,7 +446,6 @@ class RAGExperiment:
         self.logger.info(f"Configuration:")
         self.logger.info(f"  Experiment Type: {experiment_type}")
         self.logger.info(f"  LLM Model: {llm_model}")
-        self.logger.info(f"  Judge Model: {judge_model if use_llm_judge else 'Disabled'}")
         self.logger.info(f"  Device: {self.device}")
         self.logger.info(f"  8-bit Loading: {load_in_8bit}")
         self.logger.info(f"  Chunk Size: {chunk_size}")
@@ -627,54 +609,6 @@ class RAGExperiment:
             self.logger.error(f"_build_vectorstore_chroma delegated to vectorstore failed: {e}")
             raise
     
-    def _initialize_judge_llm(self):
-        """Initialize HuggingFace LLM for judging (if enabled)"""
-        if not self.evaluator.use_llm_judge:
-            return
-        
-        if self.judge_pipeline is not None:
-            return  # Already initialized
-        
-        self.logger.info(f"\nInitializing Judge LLM: {self.judge_model_name}")
-        
-        try:
-            # Load tokenizer
-            self.judge_tokenizer = AutoTokenizer.from_pretrained(self.judge_model_name)
-            
-            # Load model
-            model_kwargs = {
-                "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
-                "device_map": "auto" if self.device == "cuda" else None,
-            }
-            
-            if self.load_in_8bit and self.device == "cuda":
-                model_kwargs["load_in_8bit"] = True
-            
-            self.judge_model = AutoModelForCausalLM.from_pretrained(
-                self.judge_model_name,
-                **model_kwargs
-            )
-            
-            # Create pipeline
-            self.judge_pipeline = pipeline(
-                "text-generation",
-                model=self.judge_model,
-                tokenizer=self.judge_tokenizer,
-                max_new_tokens=200,
-                do_sample=False,
-                temperature=0.1,
-                return_full_text=False
-            )
-            
-            self.logger.info(f"✓ Judge LLM initialized successfully")
-            
-            # Update evaluator with judge pipeline
-            self.evaluator._judge_pipeline = self.judge_pipeline
-            
-        except Exception as e:
-            self.logger.error(f"Failed to initialize Judge LLM: {str(e)}")
-            self.logger.warning("Continuing without LLM judge")
-            self.evaluator.use_llm_judge = False
     
     def _chunk_text_langchain(self, text, metadata: Dict[str, Any] = None) -> List[Document]:
         """
@@ -805,6 +739,146 @@ class RAGExperiment:
             return [str(evidence)]
         except Exception:
             return []
+
+    def _coerce_int(self, value: Any) -> Optional[int]:
+        """Best-effort conversion of various numeric string/number types to int."""
+        if value is None:
+            return None
+        if isinstance(value, bool):
+            return None
+        try:
+            if isinstance(value, (int, np.integer)):  # type: ignore[attr-defined]
+                return int(value)
+        except Exception:
+            pass
+        if isinstance(value, float):
+            if np.isnan(value):  # type: ignore[name-defined]
+                return None
+            return int(value)
+        if isinstance(value, str):
+            stripped = value.strip()
+            if not stripped:
+                return None
+            try:
+                return int(float(stripped))
+            except Exception:
+                return None
+        return None
+
+    def _parse_evidence_blob(
+        self,
+        raw: Any,
+        fallback_doc: Optional[str],
+        source_label: str,
+    ) -> List[Dict[str, Any]]:
+        """Parse evidence payloads into structured entries."""
+        if raw is None:
+            return []
+
+        parsed = raw
+        if isinstance(raw, str):
+            stripped = raw.strip()
+            if not stripped:
+                return []
+            if stripped.startswith("{") or stripped.startswith("["):
+                try:
+                    parsed = ast.literal_eval(stripped)
+                except Exception:
+                    parsed = stripped
+            else:
+                parsed = stripped
+
+        if isinstance(parsed, (list, tuple)):
+            items = list(parsed)
+        else:
+            items = [parsed]
+
+        entries: List[Dict[str, Any]] = []
+        for item in items:
+            entry = {
+                'text': '',
+                'doc_name': fallback_doc,
+                'evidence_page_num': None,
+                'page_text': None,
+                'source': source_label,
+            }
+            if isinstance(item, dict):
+                entry['text'] = str(
+                    item.get('evidence_text')
+                    or item.get('text')
+                    or item.get('snippet')
+                    or ""
+                )
+                entry['doc_name'] = item.get('doc_name') or fallback_doc
+                entry['evidence_page_num'] = (
+                    item.get('evidence_page_num')
+                    or item.get('page')
+                    or item.get('page_num')
+                    or item.get('page_number')
+                )
+                entry['page_text'] = item.get('evidence_text_full_page') or item.get('page_text')
+            else:
+                entry['text'] = str(item)
+            entry['evidence_page_num'] = self._coerce_int(entry['evidence_page_num'])
+            entries.append(entry)
+
+        return entries
+
+    def _extract_gold_evidence_entries(self, sample: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Return structured gold evidence entries for a sample."""
+        fallback_doc = sample.get('doc_name')
+        sources = []
+        for key in ('gold_evidence', 'evidence'):
+            if sample.get(key):
+                sources.append((key, sample.get(key)))
+
+        entries: List[Dict[str, Any]] = []
+        for label, raw in sources:
+            entries.extend(self._parse_evidence_blob(raw, fallback_doc, label))
+
+        # Deduplicate identical text/page combos while preserving order
+        seen = set()
+        unique_entries = []
+        for entry in entries:
+            key = (
+                entry.get('text'),
+                entry.get('doc_name'),
+                entry.get('evidence_page_num'),
+                entry.get('source'),
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            unique_entries.append(entry)
+
+        return unique_entries
+
+    def _prepare_gold_evidence_payload(
+        self,
+        sample: Dict[str, Any],
+        sample_id: int,
+    ) -> List[Dict[str, Any]]:
+        """Attach stable entry ids and return serialized gold evidence for outputs."""
+        entries = self._extract_gold_evidence_entries(sample)
+        payload = []
+        for idx, entry in enumerate(entries):
+            payload.append({
+                'entry_id': f"{sample_id}_{idx}",
+                'text': entry.get('text', ''),
+                'doc_name': entry.get('doc_name') or sample.get('doc_name'),
+                'evidence_page_num': entry.get('evidence_page_num'),
+                'page_text': entry.get('page_text'),
+                'source': entry.get('source'),
+            })
+        return payload
+
+    def _gold_context_from_entries(self, entries: List[Dict[str, Any]]) -> str:
+        """Join evidence entries into a single string for prompting."""
+        return "\n\n".join(
+            entry.get('text', '').strip()
+            for entry in entries
+            if entry.get('text')
+        )
     
     def _create_vector_store_faiss(self, documents: List[Document], index_name: str = "default") -> FAISS:
         """
@@ -1058,47 +1132,14 @@ class RAGExperiment:
             self.logger.info(f"  Mean: {np.mean(context_lengths):.2f} chars")
             self.logger.info(f"  Min: {np.min(context_lengths)} chars")
             self.logger.info(f"  Max: {np.max(context_lengths)} chars")
-            
-            # Retrieval metrics: be defensive — some results may be skipped or have missing fields
-            exact_matches = [
-                r.get('retrieval_evaluation', {}).get('exact_match')
-                for r in self.results
-            ]
-            exact_matches = [v for v in exact_matches if v is not None]
-
-            max_overlaps = [
-                r.get('retrieval_evaluation', {}).get('max_token_overlap')
-                for r in self.results
-            ]
-            max_overlaps = [v for v in max_overlaps if v is not None]
-
-            self.logger.info(f"\nRetrieval Performance:")
-            if exact_matches:
-                self.logger.info(f"  Exact Match Rate: {np.mean(exact_matches):.2%}")
-            else:
-                self.logger.info("  Exact Match Rate: n/a (no retrieval evals present)")
-
-            if max_overlaps:
-                self.logger.info(f"  Mean Max Token Overlap: {np.mean(max_overlaps):.4f}")
-            else:
-                self.logger.info("  Mean Max Token Overlap: n/a (no retrieval evals present)")
-        
-        # Generation metrics
-        bleu_4_scores = []
-        rouge_l_scores = []
-        
-        for r in self.results:
-            if 'generation_evaluation' in r:
-                eval_data = r['generation_evaluation']
-                if 'bleu' in eval_data and 'bleu_4' in eval_data['bleu']:
-                    bleu_4_scores.append(eval_data['bleu']['bleu_4'])
-                if 'rouge' in eval_data and 'rouge_l_f1' in eval_data['rouge']:
-                    rouge_l_scores.append(eval_data['rouge']['rouge_l_f1'])
-        
-        if bleu_4_scores:
-            self.logger.info(f"\nGeneration Performance:")
-            self.logger.info(f"  Mean BLEU-4: {np.mean(bleu_4_scores):.4f}")
-            self.logger.info(f"  Mean ROUGE-L F1: {np.mean(rouge_l_scores):.4f}")
+            retrieved_counts = [r.get('num_retrieved', 0) for r in self.results]
+            self.logger.info(f"\nRetrieved Chunk Counts:")
+            self.logger.info(f"  Mean: {np.mean(retrieved_counts):.2f}")
+            self.logger.info(f"  Min: {np.min(retrieved_counts)}")
+            self.logger.info(f"  Max: {np.max(retrieved_counts)}")
+            skipped = sum(1 for r in self.results if r.get('skipped'))
+            if skipped:
+                self.logger.info(f"  Skipped samples (missing PDFs): {skipped}")
         
         self.logger.info("=" * 80)
     

@@ -68,6 +68,7 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         if not pdf_docs:
             logger.warning(f"No PDF pages for '{doc_name}'. Skipping {len(samples)} samples.")
             results.extend(_create_skipped_results(
+                experiment,
                 samples, doc_name, doc_link, pdf_source, 
                 experiment.SINGLE_VECTOR, len(results)
             ))
@@ -95,6 +96,7 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         except Exception as exc:
             logger.error(f"Chroma build failed for '{doc_name}': {exc}")
             results.extend(_create_skipped_results(
+                experiment,
                 samples, doc_name, doc_link, pdf_source,
                 experiment.SINGLE_VECTOR, len(results)
             ))
@@ -128,14 +130,10 @@ def _process_single_sample(
     pdf_source: str,
     retriever,
     sample_id: int
-) -> Dict[str, Any]:
-    """Process a single sample with RetrievalQA and evaluation."""
+    ) -> Dict[str, Any]:
+    """Process a single sample with RetrievalQA and capture raw artifacts."""
     question = sample['question']
     reference_answer = sample['answer']
-    gold_evidence = sample.get('evidence', '')
-
-    gold_parts = experiment._normalize_evidence(gold_evidence)
-    gold_evidence_str = "\n\n".join(gold_parts)
 
     generated_answer, retrieved_chunks = _run_retrieval_qa(
         experiment=experiment,
@@ -145,16 +143,7 @@ def _process_single_sample(
 
     context = "\n\n".join([chunk['text'] for chunk in retrieved_chunks])
 
-    retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        [chunk['text'] for chunk in retrieved_chunks],
-        gold_evidence_str
-    )
-
-    generation_eval = experiment.evaluator.evaluate_generation(
-        generated_answer,
-        reference_answer,
-        question
-    )
+    gold_entries = experiment._prepare_gold_evidence_payload(sample, sample_id)
 
     return {
         'sample_id': sample_id,
@@ -162,14 +151,12 @@ def _process_single_sample(
         'doc_link': doc_link,
         'question': question,
         'reference_answer': reference_answer,
-        'gold_evidence': gold_evidence_str,
+        'gold_evidence': gold_entries,
         'retrieved_chunks': retrieved_chunks,
         'num_retrieved': len(retrieved_chunks),
         'context_length': len(context),
         'generated_answer': generated_answer,
         'generation_length': len(generated_answer),
-        'retrieval_evaluation': retrieval_eval,
-        'generation_evaluation': generation_eval,
         'experiment_type': experiment.SINGLE_VECTOR,
         'vector_store_type': 'Chroma',
         'pdf_source': pdf_source
@@ -361,6 +348,7 @@ def _generate_with_pipeline(experiment, prompt: str) -> str:
 
 
 def _create_skipped_results(
+    experiment,
     samples: List[Dict[str, Any]],
     doc_name: str,
     doc_link: str,
@@ -371,22 +359,22 @@ def _create_skipped_results(
     """Create skipped result entries for samples without PDF text."""
     results = []
     for i, sample in enumerate(samples):
+        sample_id = start_id + i
+        gold_entries = experiment._prepare_gold_evidence_payload(sample, sample_id)
         results.append({
-            'sample_id': start_id + i,
+            'sample_id': sample_id,
             'doc_name': doc_name,
             'doc_link': doc_link,
             'question': sample.get('question', ''),
             'reference_answer': sample.get('answer', ''),
-            'gold_evidence': '',
+            'gold_evidence': gold_entries,
             'retrieved_chunks': [],
             'num_retrieved': 0,
             'context_length': 0,
             'generated_answer': '',
             'generation_length': 0,
-            'retrieval_evaluation': {},
-            'generation_evaluation': {},
             'experiment_type': experiment_type,
-            'vector_store_type': 'FAISS',
+            'vector_store_type': 'Chroma',
             'skipped': True,
             'skipped_reason': 'no_pdf_text',
             'pdf_source': pdf_source
