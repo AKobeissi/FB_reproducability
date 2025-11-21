@@ -8,14 +8,10 @@ shared vector store, and open-book (evidence)
 from __future__ import annotations
 
 import logging
-import json
 import os
-import ast
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
-import numpy as np
-from collections import defaultdict, Counter
 import torch
 import argparse
 
@@ -32,206 +28,26 @@ try:
 except Exception:
     OpenAI = None
 
-# LangChain imports (try multiple possible packages / entrypoints and provide safe fallbacks)
-_HAS_LANGCHAIN = False
-from dataclasses import dataclass
-Document = None
-RecursiveCharacterTextSplitter = None
-HuggingFaceEmbeddings = None
-FAISS = None
-BaseRetriever = None
-Chroma = None
-RetrievalQA = None
-HuggingFacePipeline = None
-
-_logger = logging.getLogger(__name__)
-
-# 1) Text splitter: try langchain, then langchain_text_splitters
-try:
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
-    _HAS_LANGCHAIN = True
-except Exception:
-    try:
-        # some installs expose splitters via this package
-        from langchain_text_splitters import RecursiveCharacterTextSplitter
-        _HAS_LANGCHAIN = True
-    except Exception:
-        RecursiveCharacterTextSplitter = None
-
-# 2) Embeddings: try langchain_community, then langchain.embeddings
-try:
-    from langchain_huggingface import HuggingFaceEmbeddings
-    # from langchain_community.embeddings import HuggingFaceEmbeddings
-    _HAS_LANGCHAIN = True
-except Exception:
-    try:
-        from langchain.embeddings import HuggingFaceEmbeddings
-        _HAS_LANGCHAIN = True
-    except Exception:
-        HuggingFaceEmbeddings = None
-
-# 3) FAISS vectorstore: try langchain_community.vectorstores then langchain.vectorstores
-try:
-    from langchain_community.vectorstores import FAISS
-    _HAS_LANGCHAIN = True
-except Exception:
-    try:
-        from langchain.vectorstores import FAISS
-        _HAS_LANGCHAIN = True
-    except Exception:
-        FAISS = None
-# Try to import Chroma vector store if available
-try:
-    from langchain.vectorstores import Chroma
-    Chroma = Chroma
-    _HAS_LANGCHAIN = True
-except Exception:
-    try:
-        from langchain_community.vectorstores import Chroma
-        Chroma = Chroma
-        _HAS_LANGCHAIN = True
-    except Exception:
-        Chroma = None
-
-# 4) Document + BaseRetriever
-try:
-    from langchain.docstore.document import Document
-    from langchain.schema import BaseRetriever
-    _HAS_LANGCHAIN = True
-except Exception:
-    # If not available, we'll provide a tiny Document fallback below
-    Document = None
-    BaseRetriever = None
-# RetrievalQA and HuggingFacePipeline (optional)
-try:
-    from langchain.chains import RetrievalQA
-    RetrievalQA = RetrievalQA
-    _HAS_LANGCHAIN = True
-except Exception:
-    RetrievalQA = None
-
-# HuggingFacePipeline moved to langchain_community in LangChain >= 0.2
-HuggingFacePipeline = None
-try:
-    from langchain_community.llms import HuggingFacePipeline as _LC_HFP
-    HuggingFacePipeline = _LC_HFP
-    _HAS_LANGCHAIN = True
-except Exception:
-    try:
-        from langchain.llms import HuggingFacePipeline as _LC_HFP
-        HuggingFacePipeline = _LC_HFP
-        _HAS_LANGCHAIN = True
-    except Exception:
-        HuggingFacePipeline = None
-
-if not _HAS_LANGCHAIN:
-    _logger.warning("langchain or langchain_community not available (or some subpackages missing); using minimal fallbacks. Install 'langchain' and 'langchain-community' for full functionality.")
-
-# Provide dataclass fallback for Document if langchain import failed
-if Document is None:
-    @dataclass
-    class Document:
-        page_content: str
-        metadata: dict = None
-
-# Always declare the minimal text splitter so it is available regardless of vectorstore import state.
-class _MinimalTextSplitter:
-    """Minimal fallback for LangChain's RecursiveCharacterTextSplitter.
-
-    Only implements create_documents(texts, metadatas) used in this repo.
-    """
-
-    def __init__(self, chunk_size=512, chunk_overlap=50, length_function=len, separators=None):
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-        self.length_function = length_function
-
-    def _coerce_text(self, text: Any) -> str:
-        if text is None:
-            return ""
-        if isinstance(text, (bytes, bytearray)):
-            try:
-                return text.decode("utf-8")
-            except Exception:
-                return text.decode("utf-8", errors="replace")
-        return str(text)
-
-    def _chunk_text(self, text: str) -> List[str]:
-        normalized = self._coerce_text(text)
-        if not normalized:
-            return []
-        chunks = []
-        i = 0
-        step = self.chunk_size - self.chunk_overlap if self.chunk_size > self.chunk_overlap else self.chunk_size
-        while i < len(normalized):
-            chunks.append(normalized[i:i + self.chunk_size])
-            i += step
-        return chunks
-
-    def create_documents(self, texts: List[str], metadatas: List[dict]):
-        docs = []
-        for text, meta in zip(texts, metadatas):
-            for chunk in self._chunk_text(text):
-                docs.append(
-                    Document(
-                        page_content=chunk,
-                        metadata=dict(meta or {}),
-                    )
-                )
-        return docs
-
-    def split_documents(self, documents: List[Document]):
-        """Mimic LangChain's split_documents for Document inputs."""
-        split_docs: List[Document] = []
-        for doc in documents or []:
-            content = getattr(doc, "page_content", "") or ""
-            base_metadata = dict(getattr(doc, "metadata", None) or {})
-            for chunk in self._chunk_text(content):
-                split_docs.append(
-                    Document(
-                        page_content=chunk,
-                        metadata=dict(base_metadata),
-                    )
-                )
-        return split_docs
-
-# Vectorstore helpers (modularized) with multi-strategy imports
-build_chroma_store = None
-create_faiss_store = None
-retrieve_faiss_chunks = None
-_vectorstore_import_errors: List[tuple[str, Exception]] = []
-
-try:
-    from .vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
-    _logger.info("Vectorstore helpers loaded via package-relative import.")
-except Exception as e_pkg:
-    _vectorstore_import_errors.append(("package-relative", e_pkg))
-    try:
-        from vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
-        _logger.info("Vectorstore helpers loaded via absolute import.")
-    except Exception as e_abs:
-        _vectorstore_import_errors.append(("absolute", e_abs))
-        _logger.warning(
-            "Vectorstore helpers not available; falling back to disabled vectorstore features."
-        )
-        build_chroma_store = None
-        create_faiss_store = None
-        retrieve_faiss_chunks = None
-        if _vectorstore_import_errors:
-            for label, err in _vectorstore_import_errors:
-                _logger.warning("  [%s] import failed: %s", label, err)
-
-# If RecursiveCharacterTextSplitter was unavailable earlier, fall back to minimal implementation
-if RecursiveCharacterTextSplitter is None:
-    RecursiveCharacterTextSplitter = _MinimalTextSplitter
-
-# Provide a placeholder FAISS class that raises a helpful error if used and FAISS import failed.
-if FAISS is None:
-    class FAISS:  # type: ignore
-        @classmethod
-        def from_documents(cls, *args, **kwargs):
-            raise RuntimeError("FAISS vector store not available. Install 'langchain-community' and a faiss package (faiss-cpu or faiss-gpu) to use vector stores.")
-
+from rag_dependencies import (
+    Document,
+    RecursiveCharacterTextSplitter,
+    HuggingFaceEmbeddings,
+    FAISS,
+    Chroma,
+    BaseRetriever,
+    RetrievalQA,
+    HuggingFacePipeline,
+    build_chroma_store,
+    create_faiss_store,
+    retrieve_faiss_chunks,
+)
+from rag_experiment_mixins import (
+    ComponentTrackingMixin,
+    ChunkAndEvidenceMixin,
+    PromptMixin,
+    VectorstoreMixin,
+    ResultsMixin,
+)
 
 # HuggingFace transformers for LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
@@ -240,23 +56,20 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 try:
     # Prefer package-relative imports when running as a package (python -m FB_reproducability.runner)
     from .data_loader import FinanceBenchLoader
-    from .evaluator import Evaluator
 except Exception:
     try:
         # Fall back to top-level imports when running as a script from package directory
         from data_loader import FinanceBenchLoader
-        from evaluator import Evaluator
-    except Exception as e:
+    except Exception:
         logging.getLogger(__name__).exception(
-            "Failed to import local modules data_loader/evaluator.\n"
+            "Failed to import local module data_loader.\n"
             "Make sure you're running this script from the project root or install the package."
         )
-        # As a last resort, try to dynamically load the modules by file path
+        # As a last resort, try to dynamically load the module by file path
         try:
             import importlib.util
             base_dir = Path(__file__).resolve().parent
             dl_path = base_dir / 'data_loader.py'
-            ev_path = base_dir / 'evaluator.py'
 
             def load_module_from_path(path: Path, module_name: str):
                 spec = importlib.util.spec_from_file_location(module_name, str(path))
@@ -265,10 +78,7 @@ except Exception:
                 return mod
 
             dl_mod = load_module_from_path(dl_path, 'data_loader_local')
-            ev_mod = load_module_from_path(ev_path, 'evaluator_local')
-
             FinanceBenchLoader = getattr(dl_mod, 'FinanceBenchLoader')
-            Evaluator = getattr(ev_mod, 'Evaluator')
         except Exception as e2:
             logging.getLogger(__name__).exception(f"Dynamic import fallback failed: {e2}")
             raise
@@ -345,7 +155,13 @@ def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
     return log_file
 
 
-class RAGExperiment:
+class RAGExperiment(
+    ComponentTrackingMixin,
+    ChunkAndEvidenceMixin,
+    PromptMixin,
+    VectorstoreMixin,
+    ResultsMixin,
+):
     """Main RAG Experiment Runner using LangChain, FAISS, and HuggingFace LLMs"""
     
     # Experiment types
@@ -357,19 +173,15 @@ class RAGExperiment:
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
-    MISTRAL_7B = "mistralai/Mistral-7B-Instruct-v0.3"  # For judge
     
     def __init__(self, 
                  experiment_type: str = CLOSED_BOOK,
                  llm_model: str = LLAMA_3_2_3B,
-                 judge_model: str = MISTRAL_7B,
                  # FinanceBench-style defaults:
                  chunk_size: int = 1024,
                  chunk_overlap: int = 30,
                  top_k: int = 5,
                  embedding_model: str = "sentence-transformers/all-mpnet-base-v2",
-                 use_bertscore: bool = False,
-                 use_llm_judge: bool = False,
                  output_dir: Optional[str] = None,
                  vector_store_dir: Optional[str] = None,
                  pdf_local_dir: Optional[str] = None,
@@ -383,24 +195,20 @@ class RAGExperiment:
         Initialize RAG Experiment
         
         Args:
-            experiment_type: Type of experiment (closed_book, single_vector, shared_vector, open_book)
-            llm_model: HuggingFace model for generation (Llama 3.2 3B or Qwen 2.5 7B)
-            judge_model: HuggingFace model for LLM-as-judge (Mistral 7B)
-            chunk_size: Size of text chunks for retrieval
-            chunk_overlap: Overlap between chunks
-            top_k: Number of chunks to retrieve
-            embedding_model: Model for embeddings
-            use_bertscore: Whether to use BERTScore
-            use_llm_judge: Whether to use LLM as judge
-            output_dir: Directory for outputs
-            output_dir: Directory for outputs (default: "outputs")
-            vector_store_dir: Directory for vector store persistence (default: "vector_stores")
-            load_in_8bit: Whether to load models in 8-bit for memory efficiency
-            max_new_tokens: Maximum tokens to generate
+             experiment_type: Type of experiment (closed_book, single_vector, shared_vector, open_book)
+             llm_model: HuggingFace model for generation (Llama 3.2 3B or Qwen 2.5 7B)
+             chunk_size: Size of text chunks for retrieval
+             chunk_overlap: Overlap between chunks
+             top_k: Number of chunks to retrieve
+             embedding_model: Model for embeddings
+             output_dir: Directory for outputs
+             output_dir: Directory for outputs (default: "outputs")
+             vector_store_dir: Directory for vector store persistence (default: "vector_stores")
+             load_in_8bit: Whether to load models in 8-bit for memory efficiency
+             max_new_tokens: Maximum tokens to generate
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
-        self.judge_model_name = judge_model
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.top_k = top_k
@@ -436,24 +244,10 @@ class RAGExperiment:
         # Initialize components
         self.logger = logging.getLogger(self.__class__.__name__)
         self.data_loader = FinanceBenchLoader()
-        self.evaluator = Evaluator(
-            use_bertscore=use_bertscore,
-            use_llm_judge=use_llm_judge,
-            use_ragas=True,
-            ragas_embedding_model=embedding_model,
-            ragas_device=device,
-        )
-        self.evaluator.configure_ragas(embedding_model=embedding_model, device=self.device)
-        
         # LLM components (lazy loading)
         self.llm_tokenizer = None
         self.llm_model = None
         self.llm_pipeline = None
-        
-        # Judge LLM components (lazy loading)
-        self.judge_tokenizer = None
-        self.judge_model = None
-        self.judge_pipeline = None
         
         # Initialize LangChain components
         self.embeddings = None
@@ -476,7 +270,6 @@ class RAGExperiment:
             'llm_model': llm_model,
             'use_api': use_api,
             'api_base_url': api_base_url if use_api else None,
-            'judge_model': judge_model if use_llm_judge else None,
             'chunk_size': chunk_size,
             'chunk_overlap': chunk_overlap,
             'top_k': top_k,
@@ -498,7 +291,6 @@ class RAGExperiment:
         self.logger.info(f"Configuration:")
         self.logger.info(f"  Experiment Type: {experiment_type}")
         self.logger.info(f"  LLM Model: {llm_model}")
-        self.logger.info(f"  Judge Model: {judge_model if use_llm_judge else 'Disabled'}")
         self.logger.info(f"  Device: {self.device}")
         self.logger.info(f"  8-bit Loading: {load_in_8bit}")
         self.logger.info(f"  Chunk Size: {chunk_size}")
@@ -680,456 +472,6 @@ class RAGExperiment:
         if getattr(self, 'langchain_llm', None) is None:
             self._initialize_llm()
 
-    def _build_vectorstore_chroma(self, docs, embeddings=None):
-        """
-        Build or load a Chroma vector store similar to the evaluation_playground notebook.
-
-        Args:
-            docs: 'all' or a single document name (str) or list of doc names
-            embeddings: LangChain-compatible embedding function (optional)
-
-        Returns:
-            retriever, vectordb
-        """
-        # Delegate to vectorstore helper (Chroma preferred)
-        if build_chroma_store is None:
-            raise RuntimeError("Chroma vectorstore helper not available; ensure vectorstore.py is present and importable.")
-        try:
-            return build_chroma_store(self, docs, embeddings=embeddings)
-        except Exception as e:
-            self.logger.error(f"_build_vectorstore_chroma delegated to vectorstore failed: {e}")
-            raise
-    
-    def _initialize_judge_llm(self):
-        """Initialize HuggingFace LLM for judging (if enabled)"""
-        if not self.evaluator.use_llm_judge:
-            return
-        
-        if self.judge_pipeline is not None:
-            return  # Already initialized
-        
-        self.logger.info(f"\nInitializing Judge LLM: {self.judge_model_name}")
-        
-        try:
-            # Load tokenizer
-            self.judge_tokenizer = AutoTokenizer.from_pretrained(self.judge_model_name)
-            
-            # Load model
-            model_kwargs = {
-                "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
-                "device_map": "auto" if self.device == "cuda" else None,
-            }
-            
-            if self.load_in_8bit and self.device == "cuda":
-                model_kwargs["load_in_8bit"] = True
-            
-            self.judge_model = AutoModelForCausalLM.from_pretrained(
-                self.judge_model_name,
-                **model_kwargs
-            )
-            
-            # Create pipeline
-            self.judge_pipeline = pipeline(
-                "text-generation",
-                model=self.judge_model,
-                tokenizer=self.judge_tokenizer,
-                max_new_tokens=200,
-                do_sample=False,
-                temperature=0.1,
-                return_full_text=False
-            )
-            
-            self.logger.info(f"✓ Judge LLM initialized successfully")
-            
-            # Update evaluator with judge pipeline
-            self.evaluator._judge_pipeline = self.judge_pipeline
-            
-        except Exception as e:
-            self.logger.error(f"Failed to initialize Judge LLM: {str(e)}")
-            self.logger.warning("Continuing without LLM judge")
-            self.evaluator.use_llm_judge = False
-    
-    def _chunk_text_langchain(self, text, metadata: Dict[str, Any] = None) -> List[Document]:
-        """
-        Chunk text using LangChain's RecursiveCharacterTextSplitter
-        
-        Args:
-            text: Text to chunk (str) or list of LangChain Documents
-            metadata: Metadata to attach to each chunk
-            
-        Returns:
-            List of LangChain Document objects
-        """
-        metadata = metadata or {}
-
-        if isinstance(text, list):
-            documents_input = []
-            for doc in text:
-                doc_meta = dict(metadata)
-                doc_meta.update(doc.metadata or {})
-                doc.metadata = doc_meta
-                documents_input.append(doc)
-            documents = self.text_splitter.split_documents(documents_input)
-        else:
-            # Safely coerce bytes to string (some dataset fields may be bytes)
-            if isinstance(text, (bytes, bytearray)):
-                try:
-                    text = text.decode('utf-8')
-                except Exception:
-                    text = text.decode('utf-8', errors='replace')
-
-            if not text or len(text) == 0:
-                return []
-            
-            documents = self.text_splitter.create_documents(
-                texts=[str(text)],
-                metadatas=[metadata]
-            )
-        
-        # Log chunking statistics
-        # Defensive: coerce any bytes page_content to str before computing lengths
-        chunk_lengths = [
-            len(doc.page_content)
-            if not isinstance(doc.page_content, (bytes, bytearray))
-            else len(doc.page_content.decode('utf-8', errors='replace'))
-            for doc in documents
-        ]
-
-        self.logger.info(f"\nChunking Statistics (LangChain):")
-        self.logger.info(f"  Total chunks: {len(documents)}")
-        self.logger.info(f"  Avg chunk size: {np.mean(chunk_lengths):.2f} chars")
-        self.logger.info(f"  Min chunk size: {np.min(chunk_lengths)} chars")
-        self.logger.info(f"  Max chunk size: {np.max(chunk_lengths)} chars")
-        self.logger.info(f"  Median chunk size: {np.median(chunk_lengths):.2f} chars")
-        
-        # Log first few chunks for inspection
-        self.logger.debug(f"\nFirst 3 chunks preview:")
-        for i, doc in enumerate(documents[:3]):
-            content_preview = doc.page_content
-            if isinstance(content_preview, (bytes, bytearray)):
-                content_preview = content_preview.decode('utf-8', errors='replace')
-            self.logger.debug(f"  Chunk {i}: {content_preview[:100]}...")
-            self.logger.debug(f"    Metadata: {doc.metadata}")
-        
-        return documents
-
-    def _normalize_evidence(self, evidence: Any) -> List[str]:
-        """
-        Normalize the dataset's `evidence` field into a list of text strings.
-
-        Supported input types:
-        - None -> []
-        - str -> [str]
-        - bytes/bytearray -> [decoded str]
-        - list/tuple of str/bytes -> list of str
-        - numpy arrays containing strings/bytes -> list of str
-        - fallback: cast to str and return single-item list
-        """
-        parts: List[str] = []
-        if evidence is None:
-            return parts
-
-        # bytes
-        if isinstance(evidence, (bytes, bytearray)):
-            try:
-                parts.append(evidence.decode('utf-8'))
-            except Exception:
-                parts.append(evidence.decode('utf-8', errors='replace'))
-            return parts
-
-        # string
-        if isinstance(evidence, str):
-            return [evidence]
-
-        # numpy arrays
-        try:
-            import numpy as _np
-            if isinstance(evidence, _np.ndarray):
-                for v in evidence.tolist():
-                    if isinstance(v, (bytes, bytearray)):
-                        try:
-                            parts.append(v.decode('utf-8'))
-                        except Exception:
-                            parts.append(v.decode('utf-8', errors='replace'))
-                    elif v is None:
-                        continue
-                    else:
-                        parts.append(str(v))
-                return [p for p in parts if p]
-        except Exception:
-            pass
-
-        # iterable (list/tuple)
-        if isinstance(evidence, (list, tuple)):
-            for v in evidence:
-                if v is None:
-                    continue
-                if isinstance(v, (bytes, bytearray)):
-                    try:
-                        parts.append(v.decode('utf-8'))
-                    except Exception:
-                        parts.append(v.decode('utf-8', errors='replace'))
-                else:
-                    parts.append(str(v))
-            return [p for p in parts if p]
-
-        # fallback: stringify
-        try:
-            return [str(evidence)]
-        except Exception:
-            return []
-
-    def _prepare_gold_evidence(self, evidence: Any) -> Tuple[List[Dict[str, Any]], str]:
-        """Return structured gold evidence segments and a concatenated text corpus."""
-        segments = self._coerce_evidence_segments(evidence)
-        combined_text = "\n\n".join(
-            seg.get("text", "")
-            for seg in segments
-            if seg.get("text")
-        )
-        return segments, combined_text
-
-    def _coerce_evidence_segments(self, evidence: Any) -> List[Dict[str, Any]]:
-        """Convert heterogeneous evidence payloads into structured segments."""
-        if evidence is None:
-            return []
-
-        raw = evidence
-        if isinstance(evidence, (bytes, bytearray)):
-            try:
-                raw = evidence.decode("utf-8")
-            except Exception:
-                raw = evidence.decode("utf-8", errors="replace")
-
-        if isinstance(raw, str):
-            stripped = raw.strip()
-            if stripped.startswith(("{", "[")):
-                try:
-                    raw = json.loads(stripped)
-                except Exception:
-                    try:
-                        raw = ast.literal_eval(stripped)
-                    except Exception:
-                        raw = [stripped]
-            else:
-                return [{"text": stripped, "doc_name": None, "page": None, "page_text": None, "raw": stripped}]
-
-        try:
-            if isinstance(raw, np.ndarray):
-                raw = raw.tolist()
-        except Exception:
-            pass
-
-        if isinstance(raw, dict):
-            entries = [raw]
-        elif isinstance(raw, (list, tuple)):
-            entries = list(raw)
-        else:
-            entries = [raw]
-
-        segments: List[Dict[str, Any]] = []
-        for entry in entries:
-            if entry is None:
-                continue
-            if isinstance(entry, (bytes, bytearray)):
-                try:
-                    entry = entry.decode("utf-8")
-                except Exception:
-                    entry = entry.decode("utf-8", errors="replace")
-            if isinstance(entry, str):
-                segments.append({
-                    "text": entry,
-                    "doc_name": None,
-                    "page": None,
-                    "page_text": None,
-                    "raw": entry,
-                })
-                continue
-
-            if isinstance(entry, dict):
-                text = (
-                    entry.get("evidence_text")
-                    or entry.get("text")
-                    or entry.get("evidence_text_full_page")
-                    or entry.get("excerpt")
-                )
-                if not text:
-                    text = str(entry)
-                segments.append({
-                    "text": text,
-                    "doc_name": entry.get("doc_name") or entry.get("document") or entry.get("doc"),
-                    "page": entry.get("evidence_page_num") or entry.get("page") or entry.get("page_num"),
-                    "page_text": entry.get("evidence_text_full_page"),
-                    "raw": entry,
-                })
-                continue
-
-            segments.append({
-                "text": str(entry),
-                "doc_name": None,
-                "page": None,
-                "page_text": None,
-                "raw": entry,
-            })
-
-        return segments
-    
-    def _create_vector_store_faiss(self, documents: List[Document], index_name: str = "default") -> FAISS:
-        """
-        Create FAISS vector store using LangChain
-        
-        Args:
-            documents: List of LangChain Document objects
-            index_name: Name for the vector store index
-            
-        Returns:
-            FAISS vector store
-        """
-        # Delegate to vectorstore helper
-        if create_faiss_store is None:
-            raise RuntimeError("FAISS helper not available; ensure vectorstore.py is present and importable.")
-        try:
-            return create_faiss_store(self, documents, index_name=index_name)
-        except Exception as e:
-            self.logger.error(f"_create_vector_store_faiss delegated to vectorstore failed: {e}")
-            raise
-
-    def _retrieve_chunks_faiss(self, query: str, vector_store: FAISS, top_k: Optional[int] = None) -> List[Dict[str, Any]]:
-        """
-        Retrieve most relevant chunks using FAISS
-
-        Args:
-            query: Query text
-            vector_store: FAISS vector store
-            top_k: Number of chunks to retrieve
-
-        Returns:
-            List of retrieved chunks with scores and metadata
-        """
-        # Delegate retrieval to vectorstore helper if available
-        if retrieve_faiss_chunks is None:
-            # Last-resort: keep old behaviour if helper missing
-            try:
-                return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
-            except Exception:
-                self.logger.warning("FAISS retrieval helper not available; no retrieval performed")
-                return []
-        try:
-            return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
-        except Exception as e:
-            self.logger.warning(f"FAISS retrieval helper failed: {e}")
-            return []
-
-    
-    def _build_financebench_prompt(
-        self,
-        question: str,
-        context: Optional[str] = None,
-        mode: Optional[str] = None,
-    ) -> str:
-        """
-        Build prompts in the same style as FinanceBench's evaluation_playground:
-
-        - Closed-book: only the question.
-        - Open-book / RAG: question + an explicit context block delimited by markers.
-        """
-        question = (question or "").strip()
-        context = (context or "").strip()
-        prompt_mode = mode or self.experiment_type
-
-        if context:
-            context = context[: self.max_context_chars]
-
-        # No context: closed-book behavior
-        if not context:
-            return f"Answer this question: {question}"
-
-        # With context: oracle / in-context / RAG behavior
-        if prompt_mode in {self.OPEN_BOOK, "oracle"}:
-            header = "Here is the relevant evidence that you need to answer the question:"
-        else:
-            header = "Here is the relevant filing that you need to answer the question:"
-
-        return (
-            f"Answer this question: {question}\n"
-            f"{header}\n"
-            "[START OF FILING]\n"
-            f"{context}\n"
-            "[END OF FILING]"
-        )
-
-    def _generate_answer(
-        self,
-        question: str,
-        context: Optional[str] = None,
-        mode: Optional[str] = None,
-        return_prompt: bool = False,
-        ) -> Any:
-        """
-        Generate an answer using the configured LLM.
-
-        This mirrors FinanceBench's get_answer() logic for prompts:
-        - Closed-book: question only.
-        - Open-book / RAG: question + [START OF FILING] ... [END OF FILING] context block.
-
-        We still keep your local Llama / Qwen models and the existing HF Router API option.
-        """
-        # Build FinanceBench-style prompt
-        prompt = self._build_financebench_prompt(question, context, mode=mode)
-
-        # ---------------- API mode (HF Router / OpenAI) ---------------- #
-        if self.use_api:
-            # Initialize API client if needed
-            self._initialize_llm()  # sets self.api_client
-
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a helpful financial analyst assistant. "
-                        "Answer strictly based on the question and the provided context "
-                        "(if any) and avoid speculation."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ]
-
-            try:
-                response = self.api_client.chat.completions.create(
-                    model=self.llm_model_name,
-                    messages=messages,
-                    max_tokens=self.max_new_tokens,
-                    temperature=0.0,
-                )
-                answer = (response.choices[0].message.content or "").strip()
-            except Exception as e:
-                self.logger.error(f"API generation failed: {e}")
-                answer = ""
-            return (answer, prompt) if return_prompt else answer
-
-        # ---------------- Local HF pipeline mode (Llama / Qwen) ---------------- #
-        # This reuses your existing _initialize_llm() and self.llm_pipeline
-        self._initialize_llm()
-
-        try:
-            # text-generation pipeline (already configured with max_new_tokens, etc.)
-            outputs = self.llm_pipeline(prompt)
-        except TypeError:
-            # Some pipeline versions require explicit kwargs
-            outputs = self.llm_pipeline(
-                prompt,
-                max_new_tokens=self.max_new_tokens,
-                do_sample=False,
-            )
-
-        if not outputs:
-            answer = ""
-        else:
-            text = outputs[0].get("generated_text", "")
-            answer = (text or "").strip()
-
-        return (answer, prompt) if return_prompt else answer
-
     
     def run_closed_book(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         # Delegate to modular closed-book runner
@@ -1206,221 +548,6 @@ class RAGExperiment:
         self.logger.info("=" * 80)
         self._print_component_overview(stage="final")
     
-    def _compute_aggregate_stats(self):
-        """Compute and log aggregate statistics across all samples"""
-        self.logger.info("\n" + "=" * 80)
-        self.logger.info("AGGREGATE STATISTICS")
-        self.logger.info("=" * 80)
-        
-        if not self.results:
-            self.logger.warning("No results to aggregate")
-            return
-        
-        # Generation length stats
-        gen_lengths = [r['generation_length'] for r in self.results]
-        self.logger.info(f"\nGenerated Answer Lengths:")
-        self.logger.info(f"  Mean: {np.mean(gen_lengths):.2f} chars")
-        self.logger.info(f"  Min: {np.min(gen_lengths)} chars")
-        self.logger.info(f"  Max: {np.max(gen_lengths)} chars")
-        self.logger.info(f"  Median: {np.median(gen_lengths):.2f} chars")
-        
-        # Retrieval stats (if applicable)
-        if self.experiment_type in [self.SINGLE_VECTOR, self.SHARED_VECTOR]:
-            context_lengths = [r['context_length'] for r in self.results]
-            self.logger.info(f"\nContext Lengths:")
-            self.logger.info(f"  Mean: {np.mean(context_lengths):.2f} chars")
-            self.logger.info(f"  Min: {np.min(context_lengths)} chars")
-            self.logger.info(f"  Max: {np.max(context_lengths)} chars")
-            
-            # Retrieval metrics: be defensive — some results may be skipped or have missing fields
-            exact_matches = [
-                r.get('retrieval_evaluation', {}).get('exact_match')
-                for r in self.results
-            ]
-            exact_matches = [v for v in exact_matches if v is not None]
-
-            max_overlaps = [
-                r.get('retrieval_evaluation', {}).get('max_token_overlap')
-                for r in self.results
-            ]
-            max_overlaps = [v for v in max_overlaps if v is not None]
-
-            self.logger.info(f"\nRetrieval Performance:")
-            if exact_matches:
-                self.logger.info(f"  Exact Match Rate: {np.mean(exact_matches):.2%}")
-            else:
-                self.logger.info("  Exact Match Rate: n/a (no retrieval evals present)")
-
-            if max_overlaps:
-                self.logger.info(f"  Mean Max Token Overlap: {np.mean(max_overlaps):.4f}")
-            else:
-                self.logger.info("  Mean Max Token Overlap: n/a (no retrieval evals present)")
-            
-            doc_hits = [
-                r.get('retrieval_evaluation', {}).get('doc_hit_at_k')
-                for r in self.results
-            ]
-            doc_hits = [v for v in doc_hits if isinstance(v, bool)]
-
-            page_hits = [
-                r.get('retrieval_evaluation', {}).get('page_hit_at_k')
-                for r in self.results
-            ]
-            page_hits = [v for v in page_hits if isinstance(v, bool)]
-
-            chunk_hits = [
-                r.get('retrieval_evaluation', {}).get('chunk_hit_at_k')
-                for r in self.results
-            ]
-            chunk_hits = [v for v in chunk_hits if isinstance(v, bool)]
-
-            if doc_hits:
-                self.logger.info(f"  Doc Hit@K: {np.mean(doc_hits):.2%}")
-            if page_hits:
-                self.logger.info(f"  Page Hit@K: {np.mean(page_hits):.2%}")
-            if chunk_hits:
-                self.logger.info(f"  Chunk Hit@K: {np.mean(chunk_hits):.2%}")
-
-            failure_modes = [
-                r.get('retrieval_evaluation', {}).get('failure_reason')
-                for r in self.results
-                if r.get('retrieval_evaluation', {}).get('failure_reason')
-            ]
-            if failure_modes:
-                counts = Counter(failure_modes)
-                self.logger.info(f"  Retrieval failure modes: {dict(counts)}")
-        
-        # Generation metrics
-        bleu_4_scores = []
-        rouge_l_scores = []
-        
-        for r in self.results:
-            if 'generation_evaluation' in r:
-                eval_data = r['generation_evaluation']
-                if 'bleu' in eval_data and 'bleu_4' in eval_data['bleu']:
-                    bleu_4_scores.append(eval_data['bleu']['bleu_4'])
-                if 'rouge' in eval_data and 'rouge_l_f1' in eval_data['rouge']:
-                    rouge_l_scores.append(eval_data['rouge']['rouge_l_f1'])
-        
-        if bleu_4_scores:
-            self.logger.info(f"\nGeneration Performance:")
-            self.logger.info(f"  Mean BLEU-4: {np.mean(bleu_4_scores):.4f}")
-            self.logger.info(f"  Mean ROUGE-L F1: {np.mean(rouge_l_scores):.4f}")
-        
-        self.logger.info("=" * 80)
-    
-    def _save_results(self):
-        """Save results to JSON file"""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{self.output_dir}/{self.experiment_type}_{timestamp}.json"
-        
-        output_data = {
-            'metadata': self.experiment_metadata,
-            'num_samples': len(self.results),
-            'framework': 'LangChain + Chroma',
-            'results': self.results
-        }
-
-        # Ensure JSON serializability (convert numpy types, ndarrays, tuples)
-        def _to_json_serializable(obj):
-            try:
-                import numpy as _np
-            except Exception:
-                _np = None
-
-            if obj is None:
-                return None
-            if isinstance(obj, (str, bool, int, float)):
-                return obj
-            if _np is not None and isinstance(obj, _np.ndarray):
-                return obj.tolist()
-            if _np is not None and isinstance(obj, _np.generic):
-                try:
-                    return obj.item()
-                except Exception:
-                    return str(obj)
-            if isinstance(obj, dict):
-                return {str(k): _to_json_serializable(v) for k, v in obj.items()}
-            if isinstance(obj, list):
-                return [_to_json_serializable(v) for v in obj]
-            if isinstance(obj, tuple):
-                return [_to_json_serializable(v) for v in obj]
-            # Fallback: try to cast to builtin types
-            if hasattr(obj, '__dict__'):
-                try:
-                    return _to_json_serializable(obj.__dict__)
-                except Exception:
-                    pass
-            try:
-                return str(obj)
-            except Exception:
-                return None
-
-        serializable = _to_json_serializable(output_data)
-
-        with open(filename, 'w') as f:
-            json.dump(serializable, f, indent=2)
-
-        self.logger.info(f"\nResults saved to: {filename}")
-
-    def register_component_usage(self, component: str, name: str, metadata: Optional[Dict[str, Any]] = None):
-        """Record which concrete implementation is being used for a component."""
-        self.component_usage[component] = {
-            "name": name,
-            "metadata": metadata or {}
-        }
-
-    def _describe_component(self, key: str, fallback: str) -> str:
-        data = self.component_usage.get(key)
-        if not data:
-            return fallback
-        if data.get("metadata"):
-            details = ", ".join(f"{k}={v}" for k, v in data["metadata"].items())
-            return f"{data['name']} ({details})"
-        return data["name"]
-
-    def _print_component_overview(self, stage: str = "current"):
-        """Print human-readable summary of frameworks/components in use."""
-        print("\n" + "=" * 80)
-        print(f"Experiment Component Summary [{stage}]")
-        print("=" * 80)
-        print(f"Experiment Type : {self.experiment_type}")
-        print(f"LLM Generator   : {self._describe_component('generator', f'pending ({self.llm_model_name})')}")
-        print(f"Chunker         : {self._describe_component('chunker', 'pending')}")
-        print(f"Embeddings      : {self._describe_component('embeddings', 'pending')}")
-        vector_hint = "not required (closed/open book)" if self.experiment_type in {self.CLOSED_BOOK, self.OPEN_BOOK} else "pending"
-        retriever_hint = "not required (closed/open book)" if self.experiment_type in {self.CLOSED_BOOK, self.OPEN_BOOK} else "pending"
-        print(f"Vector Store    : {self._describe_component('vector_store', vector_hint)}")
-        print(f"Retriever       : {self._describe_component('retriever', retriever_hint)}")
-        print(f"Top-K           : {self.top_k}")
-        print(f"Chunking Params : size={self.chunk_size}, overlap={self.chunk_overlap}")
-        mode = "OpenAI API" if self.use_api else "Local HF weights"
-        print(f"Generation Mode : {mode}")
-        print("=" * 80 + "\n")
-
-    def _set_progress_total(self, total: int):
-        self.progress_total = total or 0
-        self.progress_completed = 0
-        if self.progress_total:
-            self._print_progress(prefix="initialized")
-
-    def notify_sample_complete(self, count: int = 1, note: Optional[str] = None):
-        """Update and print progress for processed samples."""
-        if count <= 0:
-            return
-        self.progress_completed += count
-        self._print_progress(note=note)
-
-    def _print_progress(self, note: Optional[str] = None, prefix: Optional[str] = None):
-        total = self.progress_total or "?"
-        prefix_text = f"{prefix} | " if prefix else ""
-        msg = f"[Progress] {prefix_text}{self.progress_completed}/{total} samples processed"
-        if note:
-            msg += f" ({note})"
-        print(msg)
-        self.logger.info(msg)
-
-
 def main():
     """
     CLI entry point for FinanceBench-style experiments with local Llama / Qwen.
