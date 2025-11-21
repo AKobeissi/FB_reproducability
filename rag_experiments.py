@@ -126,86 +126,110 @@ except Exception:
 if not _HAS_LANGCHAIN:
     _logger.warning("langchain or langchain_community not available (or some subpackages missing); using minimal fallbacks. Install 'langchain' and 'langchain-community' for full functionality.")
 
-# Vectorstore helpers (modularized)
-try:
-    from vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks
-except Exception:
-    build_chroma_store = None
-    create_faiss_store = None
-    retrieve_faiss_chunks = None
-
+# Provide dataclass fallback for Document if langchain import failed
+if Document is None:
     @dataclass
     class Document:
         page_content: str
         metadata: dict = None
 
-    class _MinimalTextSplitter:
-        """Minimal fallback for LangChain's RecursiveCharacterTextSplitter.
+# Always declare the minimal text splitter so it is available regardless of vectorstore import state.
+class _MinimalTextSplitter:
+    """Minimal fallback for LangChain's RecursiveCharacterTextSplitter.
 
-        Only implements create_documents(texts, metadatas) used in this repo.
-        """
-        def __init__(self, chunk_size=512, chunk_overlap=50, length_function=len, separators=None):
-            self.chunk_size = chunk_size
-            self.chunk_overlap = chunk_overlap
-            self.length_function = length_function
+    Only implements create_documents(texts, metadatas) used in this repo.
+    """
 
-        def _coerce_text(self, text: Any) -> str:
-            if text is None:
-                return ""
-            if isinstance(text, (bytes, bytearray)):
-                try:
-                    return text.decode("utf-8")
-                except Exception:
-                    return text.decode("utf-8", errors="replace")
-            return str(text)
+    def __init__(self, chunk_size=512, chunk_overlap=50, length_function=len, separators=None):
+        self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap
+        self.length_function = length_function
 
-        def _chunk_text(self, text: str) -> List[str]:
-            normalized = self._coerce_text(text)
-            if not normalized:
-                return []
-            chunks = []
-            i = 0
-            step = self.chunk_size - self.chunk_overlap if self.chunk_size > self.chunk_overlap else self.chunk_size
-            while i < len(normalized):
-                chunks.append(normalized[i:i + self.chunk_size])
-                i += step
-            return chunks
+    def _coerce_text(self, text: Any) -> str:
+        if text is None:
+            return ""
+        if isinstance(text, (bytes, bytearray)):
+            try:
+                return text.decode("utf-8")
+            except Exception:
+                return text.decode("utf-8", errors="replace")
+        return str(text)
 
-        def create_documents(self, texts: List[str], metadatas: List[dict]):
-            docs = []
-            for text, meta in zip(texts, metadatas):
-                for chunk in self._chunk_text(text):
-                    docs.append(
-                        Document(
-                            page_content=chunk,
-                            metadata=dict(meta or {}),
-                        )
+    def _chunk_text(self, text: str) -> List[str]:
+        normalized = self._coerce_text(text)
+        if not normalized:
+            return []
+        chunks = []
+        i = 0
+        step = self.chunk_size - self.chunk_overlap if self.chunk_size > self.chunk_overlap else self.chunk_size
+        while i < len(normalized):
+            chunks.append(normalized[i:i + self.chunk_size])
+            i += step
+        return chunks
+
+    def create_documents(self, texts: List[str], metadatas: List[dict]):
+        docs = []
+        for text, meta in zip(texts, metadatas):
+            for chunk in self._chunk_text(text):
+                docs.append(
+                    Document(
+                        page_content=chunk,
+                        metadata=dict(meta or {}),
                     )
-            return docs
+                )
+        return docs
 
-        def split_documents(self, documents: List[Document]):
-            """Mimic LangChain's split_documents for Document inputs."""
-            split_docs: List[Document] = []
-            for doc in documents or []:
-                content = getattr(doc, "page_content", "") or ""
-                base_metadata = dict(getattr(doc, "metadata", None) or {})
-                for chunk in self._chunk_text(content):
-                    split_docs.append(
-                        Document(
-                            page_content=chunk,
-                            metadata=dict(base_metadata),
-                        )
+    def split_documents(self, documents: List[Document]):
+        """Mimic LangChain's split_documents for Document inputs."""
+        split_docs: List[Document] = []
+        for doc in documents or []:
+            content = getattr(doc, "page_content", "") or ""
+            base_metadata = dict(getattr(doc, "metadata", None) or {})
+            for chunk in self._chunk_text(content):
+                split_docs.append(
+                    Document(
+                        page_content=chunk,
+                        metadata=dict(base_metadata),
                     )
-            return split_docs
+                )
+        return split_docs
 
+# Vectorstore helpers (modularized) with multi-strategy imports
+build_chroma_store = None
+create_faiss_store = None
+retrieve_faiss_chunks = None
+_vectorstore_import_errors: List[tuple[str, Exception]] = []
+
+try:
+    from .vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
+    _logger.info("Vectorstore helpers loaded via package-relative import.")
+except Exception as e_pkg:
+    _vectorstore_import_errors.append(("package-relative", e_pkg))
+    try:
+        from vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
+        _logger.info("Vectorstore helpers loaded via absolute import.")
+    except Exception as e_abs:
+        _vectorstore_import_errors.append(("absolute", e_abs))
+        _logger.warning(
+            "Vectorstore helpers not available; falling back to disabled vectorstore features."
+        )
+        build_chroma_store = None
+        create_faiss_store = None
+        retrieve_faiss_chunks = None
+        if _vectorstore_import_errors:
+            for label, err in _vectorstore_import_errors:
+                _logger.warning("  [%s] import failed: %s", label, err)
+
+# If RecursiveCharacterTextSplitter was unavailable earlier, fall back to minimal implementation
+if RecursiveCharacterTextSplitter is None:
     RecursiveCharacterTextSplitter = _MinimalTextSplitter
 
-    # Provide a placeholder FAISS class that raises a helpful error if used
-    if FAISS is None:
-        class FAISS:
-            @classmethod
-            def from_documents(cls, *args, **kwargs):
-                raise RuntimeError("FAISS vector store not available. Install 'langchain-community' and a faiss package (faiss-cpu or faiss-gpu) to use vector stores.")
+# Provide a placeholder FAISS class that raises a helpful error if used and FAISS import failed.
+if FAISS is None:
+    class FAISS:  # type: ignore
+        @classmethod
+        def from_documents(cls, *args, **kwargs):
+            raise RuntimeError("FAISS vector store not available. Install 'langchain-community' and a faiss package (faiss-cpu or faiss-gpu) to use vector stores.")
 
 
 # HuggingFace transformers for LLM
