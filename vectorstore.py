@@ -228,6 +228,23 @@ def build_chroma_store(
 
     top_k = getattr(experiment, "top_k", 5)
     retriever = vectordb.as_retriever(search_kwargs={"k": top_k})
+    if hasattr(experiment, "register_component_usage"):
+        experiment.register_component_usage(
+            "vector_store",
+            f"Chroma ({Chroma.__module__})" if Chroma is not None else "Chroma",
+            {
+                "persist_directory": db_path,
+                "db_name": db_name
+            }
+        )
+        experiment.register_component_usage(
+            "retriever",
+            retriever.__class__.__name__,
+            {
+                "backend": "Chroma",
+                "top_k": top_k
+            }
+        )
     return retriever, vectordb
 
 
@@ -260,6 +277,15 @@ def create_faiss_store(
             exp_logger.info(f"✓ FAISS vector store created with {ntotal} vectors")
     except Exception:
         pass
+    if hasattr(experiment, "register_component_usage"):
+        experiment.register_component_usage(
+            "vector_store",
+            f"FAISS ({FAISS.__module__})" if FAISS is not None else "FAISS",
+            {
+                "index_name": index_name,
+                "num_documents": len(documents)
+            }
+        )
     return vector_store
 
 

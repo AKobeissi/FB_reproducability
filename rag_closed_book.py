@@ -50,5 +50,7 @@ def run_closed_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, An
 
         results.append(result)
         logger.info(f"Completed sample {i+1}")
+        if hasattr(experiment, "notify_sample_complete"):
+            experiment.notify_sample_complete()
 
     return results
