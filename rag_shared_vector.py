@@ -58,7 +58,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     if not all_documents:
         logger.warning("No documents available. All samples will be skipped.")
-        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
         if hasattr(experiment, "notify_sample_complete"):
             experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (no pdf)")
         return skipped
@@ -74,7 +74,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         )
     except Exception as e:
         logger.error("Chroma build failed for shared store: %s", e)
-        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
         if hasattr(experiment, "notify_sample_complete"):
             experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (vector store)")
         return skipped
@@ -89,7 +89,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         if doc_name not in available_docs:
             logger.info(f"Skipping sample for '{doc_name}' (no PDF text)")
             skipped = _create_skipped_result(
-                sample, i, doc_name, experiment.SHARED_VECTOR
+                sample, i, doc_name, experiment.SHARED_VECTOR, experiment=experiment
             )
             results.append(skipped)
             if hasattr(experiment, "notify_sample_complete"):
@@ -170,12 +170,10 @@ def _process_shared_sample(
     """Process a single sample in shared vector store mode."""
     question = sample.get('question', '')
     reference_answer = sample.get('answer', '')
-    gold_evidence = sample.get('evidence', '')
-    
-    gold_parts = experiment._normalize_evidence(gold_evidence)
-    gold_evidence_str = "\n\n".join(gold_parts)
+    gold_segments, gold_evidence_str = experiment._prepare_gold_evidence(sample.get('evidence', ''))
+    gold_context_texts = [seg.get('text') for seg in gold_segments if seg.get('text')]
 
-    generated_answer, retrieved_chunks = _run_retrieval_qa(
+    generated_answer, retrieved_chunks, prompt_snapshot = _run_retrieval_qa(
         experiment=experiment,
         question=question,
         retriever=retriever
@@ -196,14 +194,18 @@ def _process_shared_sample(
     # Evaluate retrieval
     retrieved_texts = [chunk['text'] for chunk in retrieved_chunks]
     retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        retrieved_texts,
-        gold_evidence_str
+        retrieved_chunks,
+        gold_segments,
+        top_k=getattr(experiment, "top_k", None),
     )
 
     generation_eval = experiment.evaluator.evaluate_generation(
         generated_answer,
         reference_answer,
-        question
+        question,
+        contexts=retrieved_texts,
+        gold_contexts=gold_context_texts,
+        langchain_llm=getattr(experiment, "langchain_llm", None),
     )
 
     return {
@@ -213,6 +215,7 @@ def _process_shared_sample(
         'reference_answer': reference_answer,
         'gold_evidence': gold_evidence_str,
         'retrieved_chunks': retrieved_chunks,
+        'gold_evidence_segments': gold_segments,
         'retrieved_from_docs': source_docs,
         'num_retrieved': len(retrieved_chunks),
         'context_length': len(context),
@@ -222,14 +225,15 @@ def _process_shared_sample(
         'generation_evaluation': generation_eval,
         'experiment_type': experiment.SHARED_VECTOR,
         'vector_store_type': 'Chroma',
-        'pdf_source': pdf_source
+        'pdf_source': pdf_source,
+        'final_prompt': prompt_snapshot,
     }
  
  
-def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]]]:
+def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]], str]:
     """Run RetrievalQA using the experiment's LangChain LLM wrapper."""
     if retriever is None:
-        return "", []
+        return "", [], ""
 
     if getattr(experiment, "use_api", False):
         return _fallback_retrieval_qa(experiment, question, retriever)
@@ -254,7 +258,13 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
                     answer = answer.get("answer") or answer.get("result") or ""
                 if not answer and isinstance(result, str):
                     answer = result
-                return str(answer).strip(), chunks
+                context_text = "\n\n".join(chunk['text'] for chunk in chunks)
+                prompt_snapshot = experiment._build_financebench_prompt(
+                    question,
+                    context_text,
+                    mode=experiment.experiment_type,
+                )
+                return str(answer).strip(), chunks, prompt_snapshot
         except Exception as exc:
             logger.warning("Modern retrieval chain failed (%s); falling back to legacy chain.", exc)
 
@@ -270,7 +280,13 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
             source_docs = result.get('source_documents', []) or []
             chunks = _build_chunks_from_docs(source_docs)
             answer = result.get('result', '') or ""
-            return answer.strip(), chunks
+            context_text = "\n\n".join(chunk['text'] for chunk in chunks)
+            prompt_snapshot = experiment._build_financebench_prompt(
+                question,
+                context_text,
+                mode=experiment.experiment_type,
+            )
+            return answer.strip(), chunks, prompt_snapshot
         except Exception as exc:
             logger.warning("RetrievalQA chain failed (%s); falling back to manual retrieval.", exc)
 
@@ -349,13 +365,16 @@ def _fallback_retrieval_qa(experiment, question: str, retriever):
     documents = _invoke_retriever(retriever, question)
     if not documents:
         logger.warning("Retriever returned no documents during fallback path.")
-        return "", []
+        empty_prompt = experiment._build_financebench_prompt(question, "", mode=experiment.experiment_type)
+        return "", [], empty_prompt
 
     chunks = _build_chunks_from_docs(documents)
 
     context = "\n\n".join(chunk['text'] for chunk in chunks)
-    answer = experiment._generate_answer(question, context)
-    return answer, chunks
+    answer, prompt = experiment._generate_answer(question, context, return_prompt=True)
+    if not prompt:
+        prompt = experiment._build_financebench_prompt(question, context, mode=experiment.experiment_type)
+    return answer, chunks, prompt
 
 
 def _invoke_retriever(retriever, question: str):
@@ -397,9 +416,13 @@ def _create_skipped_result(
     sample: Dict[str, Any],
     sample_id: int,
     doc_name: str,
-    experiment_type: str
+    experiment_type: str,
+    experiment=None,
 ) -> Dict[str, Any]:
     """Create a skipped result entry."""
+    prompt = ""
+    if experiment is not None:
+        prompt = experiment._build_financebench_prompt(sample.get('question', ''), "", mode=experiment_type)
     return {
         'sample_id': sample_id,
         'doc_name': doc_name,
@@ -407,6 +430,7 @@ def _create_skipped_result(
         'question': sample.get('question', ''),
         'reference_answer': sample.get('answer', ''),
         'gold_evidence': '',
+        'gold_evidence_segments': [],
         'retrieved_chunks': [],
         'retrieved_from_docs': [],
         'num_retrieved': 0,
@@ -418,17 +442,25 @@ def _create_skipped_result(
         'experiment_type': experiment_type,
         'vector_store_type': 'Chroma',
         'skipped': True,
-        'skipped_reason': 'no_pdf_text'
+        'skipped_reason': 'no_pdf_text',
+        'final_prompt': prompt
     }
 
 
 def _create_all_skipped_results(
     data: List[Dict[str, Any]],
-    experiment_type: str
+    experiment_type: str,
+    experiment=None,
 ) -> List[Dict[str, Any]]:
     """Create skipped results for all samples."""
     return [
-        _create_skipped_result(sample, i, sample.get('doc_name', 'unknown'), experiment_type)
+        _create_skipped_result(
+            sample,
+            i,
+            sample.get('doc_name', 'unknown'),
+            experiment_type,
+            experiment=experiment,
+        )
         for i, sample in enumerate(data)
     ]
 
