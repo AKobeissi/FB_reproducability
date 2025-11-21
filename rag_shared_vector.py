@@ -58,7 +58,10 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     if not all_documents:
         logger.warning("No documents available. All samples will be skipped.")
-        return _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        if hasattr(experiment, "notify_sample_complete"):
+            experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (no pdf)")
+        return skipped
 
     logger.info(f"\nTotal chunks across all documents: {len(all_documents)}")
     _log_pdf_sources(pdf_source_map)
@@ -71,7 +74,10 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         )
     except Exception as e:
         logger.error("Chroma build failed for shared store: %s", e)
-        return _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR)
+        if hasattr(experiment, "notify_sample_complete"):
+            experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (vector store)")
+        return skipped
 
     # Process samples
     results = []
@@ -82,9 +88,12 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         
         if doc_name not in available_docs:
             logger.info(f"Skipping sample for '{doc_name}' (no PDF text)")
-            results.append(_create_skipped_result(
+            skipped = _create_skipped_result(
                 sample, i, doc_name, experiment.SHARED_VECTOR
-            ))
+            )
+            results.append(skipped)
+            if hasattr(experiment, "notify_sample_complete"):
+                experiment.notify_sample_complete(note=f"{doc_name} skipped (no pdf)")
             continue
 
         result = _process_shared_sample(
@@ -98,6 +107,8 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         
         results.append(result)
         logger.info(f"Completed sample {i+1}")
+        if hasattr(experiment, "notify_sample_complete"):
+            experiment.notify_sample_complete(note=f"{doc_name}")
 
     return results
 
@@ -220,6 +231,9 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
     if retriever is None:
         return "", []
 
+    if getattr(experiment, "use_api", False):
+        return _fallback_retrieval_qa(experiment, question, retriever)
+
     experiment.ensure_langchain_llm()
 
     if _supports_modern_retrieval():
@@ -340,8 +354,7 @@ def _fallback_retrieval_qa(experiment, question: str, retriever):
     chunks = _build_chunks_from_docs(documents)
 
     context = "\n\n".join(chunk['text'] for chunk in chunks)
-    prompt = experiment._build_financebench_prompt(question, context)
-    answer = _generate_with_pipeline(experiment, prompt)
+    answer = experiment._generate_answer(question, context)
     return answer, chunks
 
 
@@ -378,24 +391,6 @@ def _normalize_retriever_output(docs):
     if isinstance(docs, list):
         return docs
     return [docs]
-
-
-def _generate_with_pipeline(experiment, prompt: str) -> str:
-    pipeline = getattr(experiment, "llm_pipeline", None)
-    if pipeline is None:
-        logger.warning("LLM pipeline not initialized; returning empty answer.")
-        return ""
-    try:
-        outputs = pipeline(prompt)
-        if isinstance(outputs, list) and outputs:
-            result = outputs[0]
-            if isinstance(result, dict):
-                return (result.get("generated_text") or "").strip()
-            return str(result).strip()
-        return str(outputs).strip()
-    except Exception as exc:
-        logger.error("LLM pipeline generation failed: %s", exc)
-        return ""
 
 
 def _create_skipped_result(

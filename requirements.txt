@@ -15,6 +15,7 @@ chromadb
 faiss-cpu
 requests
 PyPDF2
+openai>=1.0.0
 sacrebleu
 rouge-score
 bert-score

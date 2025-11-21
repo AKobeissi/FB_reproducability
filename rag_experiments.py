@@ -352,7 +352,7 @@ class RAGExperiment:
                  load_in_8bit: bool = True,
                  max_new_tokens: int = 256,
                  use_api: bool = False,
-                 api_base_url: str = "https://router.huggingface.co/v1",
+                 api_base_url: str = "https://api.openai.com/v1",
                  api_key_env: str = "HF_TOKEN"):
         """
         Initialize RAG Experiment
@@ -436,6 +436,9 @@ class RAGExperiment:
 
         # Results storage
         self.results = []
+        self.component_usage: Dict[str, Dict[str, Any]] = {}
+        self.progress_total: int = 0
+        self.progress_completed: int = 0
         self.experiment_metadata = {
             'experiment_type': experiment_type,
             'llm_model': llm_model,
@@ -478,12 +481,24 @@ class RAGExperiment:
         
         # Initialize LangChain components
         self._initialize_components()
+        if self.use_api:
+            # Ensure API client is ready up front so summaries include generator info
+            self._initialize_llm()
+        self._print_component_overview(stage="initial")
     
     def _initialize_components(self):
         """Initialize LangChain embeddings and text splitter"""
         self.logger.info("\nInitializing LangChain components...")
         
         self.embeddings = self._build_embeddings()
+        self.register_component_usage(
+            "embeddings",
+            self.embeddings.__class__.__name__,
+            {
+                "package": self.embeddings.__class__.__module__,
+                "model_name": self.embedding_model
+            }
+        )
         self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         
         # Initialize text splitter using LangChain
@@ -492,6 +507,15 @@ class RAGExperiment:
             chunk_overlap=self.chunk_overlap,
             length_function=len,
             separators=["\n\n", "\n", ". ", " ", ""]
+        )
+        self.register_component_usage(
+            "chunker",
+            self.text_splitter.__class__.__name__,
+            {
+                "package": self.text_splitter.__class__.__module__,
+                "chunk_size": self.chunk_size,
+                "chunk_overlap": self.chunk_overlap
+            }
         )
         self.logger.info(f"✓ Text splitter initialized (chunk_size={self.chunk_size}, overlap={self.chunk_overlap})")
 
@@ -529,6 +553,14 @@ class RAGExperiment:
                 self.logger.info("Initializing OpenAI API client (HF router)...")
                 self.api_client = OpenAI(base_url=self.api_base_url, api_key=api_key)
                 self.logger.info("✓ API client initialized")
+                self.register_component_usage(
+                    "generator",
+                    f"OpenAI Chat Completions ({self.llm_model_name})",
+                    {
+                        "base_url": self.api_base_url,
+                        "key_env": self.api_key_env
+                    }
+                )
                 return
             except Exception as e:
                 self.logger.error(f"Failed to initialize API client: {e}")
@@ -588,6 +620,15 @@ class RAGExperiment:
             if HuggingFacePipeline is not None:
                 try:
                     self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+                    self.register_component_usage(
+                        "generator",
+                        f"HuggingFacePipeline ({self.llm_model_name})",
+                        {
+                            "package": self.llm_pipeline.__class__.__module__,
+                            "load_in_8bit": self.load_in_8bit,
+                            "device": self.device
+                        }
+                    )
                     self.logger.info("✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA")
                 except Exception as exc:
                     self.logger.error(f"Failed to wrap pipeline for LangChain: {exc}")
@@ -1008,6 +1049,7 @@ class RAGExperiment:
             data = self.data_loader.get_batch()
         
         self.logger.info(f"Processing {len(data)} samples")
+        self._set_progress_total(len(data))
         
         # Run appropriate experiment type
         if self.experiment_type == self.CLOSED_BOOK:
@@ -1032,6 +1074,7 @@ class RAGExperiment:
         self.logger.info("\n" + "=" * 80)
         self.logger.info("EXPERIMENT COMPLETE")
         self.logger.info("=" * 80)
+        self._print_component_overview(stage="final")
     
     def _compute_aggregate_stats(self):
         """Compute and log aggregate statistics across all samples"""
@@ -1156,6 +1199,63 @@ class RAGExperiment:
 
         self.logger.info(f"\nResults saved to: {filename}")
 
+    def register_component_usage(self, component: str, name: str, metadata: Optional[Dict[str, Any]] = None):
+        """Record which concrete implementation is being used for a component."""
+        self.component_usage[component] = {
+            "name": name,
+            "metadata": metadata or {}
+        }
+
+    def _describe_component(self, key: str, fallback: str) -> str:
+        data = self.component_usage.get(key)
+        if not data:
+            return fallback
+        if data.get("metadata"):
+            details = ", ".join(f"{k}={v}" for k, v in data["metadata"].items())
+            return f"{data['name']} ({details})"
+        return data["name"]
+
+    def _print_component_overview(self, stage: str = "current"):
+        """Print human-readable summary of frameworks/components in use."""
+        print("\n" + "=" * 80)
+        print(f"Experiment Component Summary [{stage}]")
+        print("=" * 80)
+        print(f"Experiment Type : {self.experiment_type}")
+        print(f"LLM Generator   : {self._describe_component('generator', f'pending ({self.llm_model_name})')}")
+        print(f"Chunker         : {self._describe_component('chunker', 'pending')}")
+        print(f"Embeddings      : {self._describe_component('embeddings', 'pending')}")
+        vector_hint = "not required (closed/open book)" if self.experiment_type in {self.CLOSED_BOOK, self.OPEN_BOOK} else "pending"
+        retriever_hint = "not required (closed/open book)" if self.experiment_type in {self.CLOSED_BOOK, self.OPEN_BOOK} else "pending"
+        print(f"Vector Store    : {self._describe_component('vector_store', vector_hint)}")
+        print(f"Retriever       : {self._describe_component('retriever', retriever_hint)}")
+        print(f"Top-K           : {self.top_k}")
+        print(f"Chunking Params : size={self.chunk_size}, overlap={self.chunk_overlap}")
+        mode = "OpenAI API" if self.use_api else "Local HF weights"
+        print(f"Generation Mode : {mode}")
+        print("=" * 80 + "\n")
+
+    def _set_progress_total(self, total: int):
+        self.progress_total = total or 0
+        self.progress_completed = 0
+        if self.progress_total:
+            self._print_progress(prefix="initialized")
+
+    def notify_sample_complete(self, count: int = 1, note: Optional[str] = None):
+        """Update and print progress for processed samples."""
+        if count <= 0:
+            return
+        self.progress_completed += count
+        self._print_progress(note=note)
+
+    def _print_progress(self, note: Optional[str] = None, prefix: Optional[str] = None):
+        total = self.progress_total or "?"
+        prefix_text = f"{prefix} | " if prefix else ""
+        msg = f"[Progress] {prefix_text}{self.progress_completed}/{total} samples processed"
+        if note:
+            msg += f" ({note})"
+        print(msg)
+        self.logger.info(msg)
+
 
 def main():
     """
@@ -1265,6 +1365,18 @@ def main():
         help="Use HF Router / OpenAI API instead of local weights.",
     )
     parser.add_argument(
+        "--api-base-url",
+        type=str,
+        default="https://api.openai.com/v1",
+        help="Base URL for the OpenAI-compatible API endpoint (default: api.openai.com).",
+    )
+    parser.add_argument(
+        "--api-key-env",
+        type=str,
+        default="OPENAI_API_KEY",
+        help="Environment variable containing the API key for --use-api.",
+    )
+    parser.add_argument(
         "--no-8bit",
         action="store_true",
         help="Disable 8-bit loading (load full-precision model).",
@@ -1312,6 +1424,8 @@ def main():
             pdf_local_dir=args.pdf_dir,
             load_in_8bit=not args.no_8bit,
             use_api=args.use_api,
+            api_base_url=args.api_base_url,
+            api_key_env=args.api_key_env,
         )
 
         experiment.run_experiment(num_samples=args.num_samples)
