@@ -10,11 +10,12 @@ from __future__ import annotations
 import logging
 import json
 import os
+import ast
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 import numpy as np
-from collections import defaultdict
+from collections import defaultdict, Counter
 import torch
 import argparse
 
@@ -435,7 +436,14 @@ class RAGExperiment:
         # Initialize components
         self.logger = logging.getLogger(self.__class__.__name__)
         self.data_loader = FinanceBenchLoader()
-        self.evaluator = Evaluator(use_bertscore=use_bertscore, use_llm_judge=use_llm_judge)
+        self.evaluator = Evaluator(
+            use_bertscore=use_bertscore,
+            use_llm_judge=use_llm_judge,
+            use_ragas=True,
+            ragas_embedding_model=embedding_model,
+            ragas_device=device,
+        )
+        self.evaluator.configure_ragas(embedding_model=embedding_model, device=self.device)
         
         # LLM components (lazy loading)
         self.llm_tokenizer = None
@@ -870,6 +878,101 @@ class RAGExperiment:
             return [str(evidence)]
         except Exception:
             return []
+
+    def _prepare_gold_evidence(self, evidence: Any) -> Tuple[List[Dict[str, Any]], str]:
+        """Return structured gold evidence segments and a concatenated text corpus."""
+        segments = self._coerce_evidence_segments(evidence)
+        combined_text = "\n\n".join(
+            seg.get("text", "")
+            for seg in segments
+            if seg.get("text")
+        )
+        return segments, combined_text
+
+    def _coerce_evidence_segments(self, evidence: Any) -> List[Dict[str, Any]]:
+        """Convert heterogeneous evidence payloads into structured segments."""
+        if evidence is None:
+            return []
+
+        raw = evidence
+        if isinstance(evidence, (bytes, bytearray)):
+            try:
+                raw = evidence.decode("utf-8")
+            except Exception:
+                raw = evidence.decode("utf-8", errors="replace")
+
+        if isinstance(raw, str):
+            stripped = raw.strip()
+            if stripped.startswith(("{", "[")):
+                try:
+                    raw = json.loads(stripped)
+                except Exception:
+                    try:
+                        raw = ast.literal_eval(stripped)
+                    except Exception:
+                        raw = [stripped]
+            else:
+                return [{"text": stripped, "doc_name": None, "page": None, "page_text": None, "raw": stripped}]
+
+        try:
+            if isinstance(raw, np.ndarray):
+                raw = raw.tolist()
+        except Exception:
+            pass
+
+        if isinstance(raw, dict):
+            entries = [raw]
+        elif isinstance(raw, (list, tuple)):
+            entries = list(raw)
+        else:
+            entries = [raw]
+
+        segments: List[Dict[str, Any]] = []
+        for entry in entries:
+            if entry is None:
+                continue
+            if isinstance(entry, (bytes, bytearray)):
+                try:
+                    entry = entry.decode("utf-8")
+                except Exception:
+                    entry = entry.decode("utf-8", errors="replace")
+            if isinstance(entry, str):
+                segments.append({
+                    "text": entry,
+                    "doc_name": None,
+                    "page": None,
+                    "page_text": None,
+                    "raw": entry,
+                })
+                continue
+
+            if isinstance(entry, dict):
+                text = (
+                    entry.get("evidence_text")
+                    or entry.get("text")
+                    or entry.get("evidence_text_full_page")
+                    or entry.get("excerpt")
+                )
+                if not text:
+                    text = str(entry)
+                segments.append({
+                    "text": text,
+                    "doc_name": entry.get("doc_name") or entry.get("document") or entry.get("doc"),
+                    "page": entry.get("evidence_page_num") or entry.get("page") or entry.get("page_num"),
+                    "page_text": entry.get("evidence_text_full_page"),
+                    "raw": entry,
+                })
+                continue
+
+            segments.append({
+                "text": str(entry),
+                "doc_name": None,
+                "page": None,
+                "page_text": None,
+                "raw": entry,
+            })
+
+        return segments
     
     def _create_vector_store_faiss(self, documents: List[Document], index_name: str = "default") -> FAISS:
         """
@@ -960,7 +1063,8 @@ class RAGExperiment:
         question: str,
         context: Optional[str] = None,
         mode: Optional[str] = None,
-        ) -> str:
+        return_prompt: bool = False,
+        ) -> Any:
         """
         Generate an answer using the configured LLM.
 
@@ -997,10 +1101,11 @@ class RAGExperiment:
                     max_tokens=self.max_new_tokens,
                     temperature=0.0,
                 )
-                return (response.choices[0].message.content or "").strip()
+                answer = (response.choices[0].message.content or "").strip()
             except Exception as e:
                 self.logger.error(f"API generation failed: {e}")
-                return ""
+                answer = ""
+            return (answer, prompt) if return_prompt else answer
 
         # ---------------- Local HF pipeline mode (Llama / Qwen) ---------------- #
         # This reuses your existing _initialize_llm() and self.llm_pipeline
@@ -1018,11 +1123,12 @@ class RAGExperiment:
             )
 
         if not outputs:
-            return ""
+            answer = ""
+        else:
+            text = outputs[0].get("generated_text", "")
+            answer = (text or "").strip()
 
-        # HF text-generation pipeline returns a list of dicts with 'generated_text'
-        text = outputs[0].get("generated_text", "")
-        return (text or "").strip()
+        return (answer, prompt) if return_prompt else answer
 
     
     def run_closed_book(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -1149,6 +1255,40 @@ class RAGExperiment:
                 self.logger.info(f"  Mean Max Token Overlap: {np.mean(max_overlaps):.4f}")
             else:
                 self.logger.info("  Mean Max Token Overlap: n/a (no retrieval evals present)")
+            
+            doc_hits = [
+                r.get('retrieval_evaluation', {}).get('doc_hit_at_k')
+                for r in self.results
+            ]
+            doc_hits = [v for v in doc_hits if isinstance(v, bool)]
+
+            page_hits = [
+                r.get('retrieval_evaluation', {}).get('page_hit_at_k')
+                for r in self.results
+            ]
+            page_hits = [v for v in page_hits if isinstance(v, bool)]
+
+            chunk_hits = [
+                r.get('retrieval_evaluation', {}).get('chunk_hit_at_k')
+                for r in self.results
+            ]
+            chunk_hits = [v for v in chunk_hits if isinstance(v, bool)]
+
+            if doc_hits:
+                self.logger.info(f"  Doc Hit@K: {np.mean(doc_hits):.2%}")
+            if page_hits:
+                self.logger.info(f"  Page Hit@K: {np.mean(page_hits):.2%}")
+            if chunk_hits:
+                self.logger.info(f"  Chunk Hit@K: {np.mean(chunk_hits):.2%}")
+
+            failure_modes = [
+                r.get('retrieval_evaluation', {}).get('failure_reason')
+                for r in self.results
+                if r.get('retrieval_evaluation', {}).get('failure_reason')
+            ]
+            if failure_modes:
+                counts = Counter(failure_modes)
+                self.logger.info(f"  Retrieval failure modes: {dict(counts)}")
         
         # Generation metrics
         bleu_4_scores = []

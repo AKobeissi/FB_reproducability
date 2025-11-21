@@ -27,22 +27,22 @@ def run_open_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, Any]
 
         question = sample['question']
         reference_answer = sample['answer']
-        gold_evidence = sample.get('evidence', '')
-        
-        # Normalize gold evidence to string
-        gold_parts = experiment._normalize_evidence(gold_evidence)
-        context = "\n\n".join(gold_parts)
+        gold_segments, context = experiment._prepare_gold_evidence(sample.get('evidence', ''))
+        gold_context_texts = [seg.get('text') for seg in gold_segments if seg.get('text')]
 
         logger.info(f"Using gold evidence (length: {len(context)} chars)")
 
         # Generate answer with gold evidence
-        generated_answer = experiment._generate_answer(question, context)
+        generated_answer, final_prompt = experiment._generate_answer(question, context, return_prompt=True)
 
         # Evaluate generation (no retrieval metrics for oracle test)
         generation_eval = experiment.evaluator.evaluate_generation(
             generated_answer,
             reference_answer,
-            question
+            question,
+            contexts=gold_context_texts,
+            gold_contexts=gold_context_texts,
+            langchain_llm=getattr(experiment, "langchain_llm", None),
         )
 
         result = {
@@ -50,11 +50,13 @@ def run_open_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, Any]
             'question': question,
             'reference_answer': reference_answer,
             'gold_evidence': context,
+            'gold_evidence_segments': gold_segments,
             'context_length': len(context),
             'generated_answer': generated_answer,
             'generation_length': len(generated_answer),
             'generation_evaluation': generation_eval,
-            'experiment_type': experiment.OPEN_BOOK
+            'experiment_type': experiment.OPEN_BOOK,
+            'final_prompt': final_prompt,
         }
 
         results.append(result)

@@ -69,7 +69,7 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
             logger.warning(f"No PDF pages for '{doc_name}'. Skipping {len(samples)} samples.")
             skipped = _create_skipped_results(
                 samples, doc_name, doc_link, pdf_source, 
-                experiment.SINGLE_VECTOR, len(results)
+                experiment.SINGLE_VECTOR, len(results), experiment=experiment
             )
             results.extend(skipped)
             if hasattr(experiment, "notify_sample_complete"):
@@ -99,7 +99,7 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
             logger.error(f"Chroma build failed for '{doc_name}': {exc}")
             skipped = _create_skipped_results(
                 samples, doc_name, doc_link, pdf_source,
-                experiment.SINGLE_VECTOR, len(results)
+                experiment.SINGLE_VECTOR, len(results), experiment=experiment
             )
             results.extend(skipped)
             if hasattr(experiment, "notify_sample_complete"):
@@ -140,28 +140,31 @@ def _process_single_sample(
     """Process a single sample with RetrievalQA and evaluation."""
     question = sample['question']
     reference_answer = sample['answer']
-    gold_evidence = sample.get('evidence', '')
+    gold_segments, gold_evidence_str = experiment._prepare_gold_evidence(sample.get('evidence', ''))
+    gold_context_texts = [seg.get('text') for seg in gold_segments if seg.get('text')]
 
-    gold_parts = experiment._normalize_evidence(gold_evidence)
-    gold_evidence_str = "\n\n".join(gold_parts)
-
-    generated_answer, retrieved_chunks = _run_retrieval_qa(
+    generated_answer, retrieved_chunks, prompt_snapshot = _run_retrieval_qa(
         experiment=experiment,
         question=question,
         retriever=retriever
     )
 
     context = "\n\n".join([chunk['text'] for chunk in retrieved_chunks])
+    retrieved_texts = [chunk['text'] for chunk in retrieved_chunks]
 
     retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        [chunk['text'] for chunk in retrieved_chunks],
-        gold_evidence_str
+        retrieved_chunks,
+        gold_segments,
+        top_k=getattr(experiment, "top_k", None),
     )
 
     generation_eval = experiment.evaluator.evaluate_generation(
         generated_answer,
         reference_answer,
-        question
+        question,
+        contexts=retrieved_texts,
+        gold_contexts=gold_context_texts,
+        langchain_llm=getattr(experiment, "langchain_llm", None),
     )
 
     return {
@@ -171,6 +174,7 @@ def _process_single_sample(
         'question': question,
         'reference_answer': reference_answer,
         'gold_evidence': gold_evidence_str,
+        'gold_evidence_segments': gold_segments,
         'retrieved_chunks': retrieved_chunks,
         'num_retrieved': len(retrieved_chunks),
         'context_length': len(context),
@@ -180,14 +184,15 @@ def _process_single_sample(
         'generation_evaluation': generation_eval,
         'experiment_type': experiment.SINGLE_VECTOR,
         'vector_store_type': 'Chroma',
-        'pdf_source': pdf_source
+        'pdf_source': pdf_source,
+        'final_prompt': prompt_snapshot,
     }
 
 
-def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]]]:
+def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[Dict[str, Any]], str]:
     """Run RetrievalQA using the experiment's LangChain LLM wrapper."""
     if retriever is None:
-        return "", []
+        return "", [], ""
 
     if getattr(experiment, "use_api", False):
         return _fallback_retrieval_qa(experiment, question, retriever)
@@ -212,7 +217,13 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
                     answer = answer.get("answer") or answer.get("result") or ""
                 if not answer and isinstance(result, str):
                     answer = result
-                return str(answer).strip(), chunks
+                context_text = "\n\n".join(chunk['text'] for chunk in chunks)
+                prompt_snapshot = experiment._build_financebench_prompt(
+                    question,
+                    context_text,
+                    mode=experiment.experiment_type,
+                )
+                return str(answer).strip(), chunks, prompt_snapshot
         except Exception as exc:
             logger.warning("Modern retrieval chain failed (%s); falling back to legacy chain.", exc)
 
@@ -229,7 +240,9 @@ def _run_retrieval_qa(experiment, question: str, retriever) -> tuple[str, List[D
             source_docs = result.get('source_documents', []) or []
             chunks = _build_chunks_from_docs(source_docs)
             answer = result.get('result', '') or ""
-            return answer.strip(), chunks
+            context_text = "\n\n".join(chunk['text'] for chunk in chunks)
+            prompt_snapshot = experiment._build_financebench_prompt(question, context_text, mode=experiment.experiment_type)
+            return answer.strip(), chunks, prompt_snapshot
         except Exception as exc:
             logger.warning("RetrievalQA chain failed (%s); falling back to manual retrieval.", exc)
 
@@ -308,13 +321,16 @@ def _fallback_retrieval_qa(experiment, question: str, retriever):
     documents = _invoke_retriever(retriever, question)
     if not documents:
         logger.warning("Retriever returned no documents during fallback path.")
-        return "", []
+        empty_prompt = experiment._build_financebench_prompt(question, "", mode=experiment.experiment_type)
+        return "", [], empty_prompt
 
     chunks = _build_chunks_from_docs(documents)
 
     context = "\n\n".join(chunk['text'] for chunk in chunks)
-    answer = experiment._generate_answer(question, context)
-    return answer, chunks
+    answer, prompt = experiment._generate_answer(question, context, return_prompt=True)
+    if not prompt:
+        prompt = experiment._build_financebench_prompt(question, context, mode=experiment.experiment_type)
+    return answer, chunks, prompt
 
 
 def _invoke_retriever(retriever, question: str):
@@ -358,11 +374,15 @@ def _create_skipped_results(
     doc_link: str,
     pdf_source: str,
     experiment_type: str,
-    start_id: int
+    start_id: int,
+    experiment=None,
 ) -> List[Dict[str, Any]]:
     """Create skipped result entries for samples without PDF text."""
     results = []
     for i, sample in enumerate(samples):
+        prompt = ""
+        if experiment is not None:
+            prompt = experiment._build_financebench_prompt(sample.get('question', ''), "", mode=experiment_type)
         results.append({
             'sample_id': start_id + i,
             'doc_name': doc_name,
@@ -370,6 +390,7 @@ def _create_skipped_results(
             'question': sample.get('question', ''),
             'reference_answer': sample.get('answer', ''),
             'gold_evidence': '',
+            'gold_evidence_segments': [],
             'retrieved_chunks': [],
             'num_retrieved': 0,
             'context_length': 0,
@@ -381,6 +402,7 @@ def _create_skipped_results(
             'vector_store_type': 'FAISS',
             'skipped': True,
             'skipped_reason': 'no_pdf_text',
-            'pdf_source': pdf_source
+            'pdf_source': pdf_source,
+            'final_prompt': prompt
         })
     return results
