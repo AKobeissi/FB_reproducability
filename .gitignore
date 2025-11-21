@@ -6,3 +6,14 @@ venv/
 .idea/
 .vscode/
 vector_stores/
+vectorstores/
+vector_stores1/
+pdfs/
+results/
+.env
+*.sqlite3
+*.bin
+*.pickle
+__pycache__/
+.ipynb_checkpoints/
+GITIGNORE
