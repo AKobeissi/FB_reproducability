@@ -31,23 +31,14 @@ def run_closed_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, An
         # Generate answer without context
         generated_answer, final_prompt = experiment._generate_answer(question, context=None, return_prompt=True)
 
-        # Evaluate generation
-        eval_results = experiment.evaluator.evaluate_generation(
-            generated_answer,
-            reference_answer,
-            question,
-            contexts=[],
-            gold_contexts=[],
-            langchain_llm=getattr(experiment, "langchain_llm", None),
-        )
-
         result = {
             'sample_id': i,
+            'doc_name': sample.get('doc_name'),
+            'doc_link': sample.get('doc_link'),
             'question': question,
             'reference_answer': reference_answer,
             'generated_answer': generated_answer,
             'generation_length': len(generated_answer),
-            'generation_evaluation': eval_results,
             'experiment_type': experiment.CLOSED_BOOK,
             'final_prompt': final_prompt,
             'gold_evidence_segments': [],

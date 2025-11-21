@@ -137,11 +137,10 @@ def _process_single_sample(
     retriever,
     sample_id: int
 ) -> Dict[str, Any]:
-    """Process a single sample with RetrievalQA and evaluation."""
+    """Process a single sample with RetrievalQA."""
     question = sample['question']
     reference_answer = sample['answer']
     gold_segments, gold_evidence_str = experiment._prepare_gold_evidence(sample.get('evidence', ''))
-    gold_context_texts = [seg.get('text') for seg in gold_segments if seg.get('text')]
 
     generated_answer, retrieved_chunks, prompt_snapshot = _run_retrieval_qa(
         experiment=experiment,
@@ -150,22 +149,6 @@ def _process_single_sample(
     )
 
     context = "\n\n".join([chunk['text'] for chunk in retrieved_chunks])
-    retrieved_texts = [chunk['text'] for chunk in retrieved_chunks]
-
-    retrieval_eval = experiment.evaluator.compute_retrieval_metrics(
-        retrieved_chunks,
-        gold_segments,
-        top_k=getattr(experiment, "top_k", None),
-    )
-
-    generation_eval = experiment.evaluator.evaluate_generation(
-        generated_answer,
-        reference_answer,
-        question,
-        contexts=retrieved_texts,
-        gold_contexts=gold_context_texts,
-        langchain_llm=getattr(experiment, "langchain_llm", None),
-    )
 
     return {
         'sample_id': sample_id,
@@ -180,8 +163,6 @@ def _process_single_sample(
         'context_length': len(context),
         'generated_answer': generated_answer,
         'generation_length': len(generated_answer),
-        'retrieval_evaluation': retrieval_eval,
-        'generation_evaluation': generation_eval,
         'experiment_type': experiment.SINGLE_VECTOR,
         'vector_store_type': 'Chroma',
         'pdf_source': pdf_source,
