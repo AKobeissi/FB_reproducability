@@ -29,6 +29,17 @@ The evaluation stack now captures end‑to‑end quality signals for every Finan
 - Retrieval miss attribution is available via `retrieval_evaluation.failure_reason`. Combine with `doc_hit_rank`/`page_hit_rank` to see how deep the relevant content appeared.
 - RAGAS metrics appear under `generation_evaluation.ragas`. Aggregated summaries are logged (mean/std) whenever the metrics are active.
 
+## Post-Hoc CLI
+
+You can aggregate metrics from any saved JSON (no rerun required):
+
+```bash
+python posthoc_evaluator.py --input outputs/single_vector_20251118_174111.json \
+    --save-report reports/single_vector_summary.json
+```
+
+The CLI reads the per-sample `generation_evaluation` / `retrieval_evaluation` blocks already stored in the results file and prints mean/std/range summaries, length stats, and retrieval failure mode histograms. No additional configuration is needed, and the optional `--save-report` flag writes the aggregated view as JSON for dashboards.
+
 ## Extending / Tuning
 
 - To disable RAGAS (e.g., API-only runs), instantiate `Evaluator(use_ragas=False, ...)`.
