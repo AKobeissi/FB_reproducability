@@ -28,26 +28,50 @@ try:
 except Exception:
     OpenAI = None
 
-from rag_dependencies import (
-    Document,
-    RecursiveCharacterTextSplitter,
-    HuggingFaceEmbeddings,
-    FAISS,
-    Chroma,
-    BaseRetriever,
-    RetrievalQA,
-    HuggingFacePipeline,
-    build_chroma_store,
-    create_faiss_store,
-    retrieve_faiss_chunks,
-)
-from rag_experiment_mixins import (
-    ComponentTrackingMixin,
-    ChunkAndEvidenceMixin,
-    PromptMixin,
-    VectorstoreMixin,
-    ResultsMixin,
-)
+try:
+    from .rag_dependencies import (
+        Document,
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        FAISS,
+        Chroma,
+        BaseRetriever,
+        RetrievalQA,
+        HuggingFacePipeline,
+        build_chroma_store,
+        create_faiss_store,
+        retrieve_faiss_chunks,
+    )
+except ImportError:
+    from rag_dependencies import (
+        Document,
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        FAISS,
+        Chroma,
+        BaseRetriever,
+        RetrievalQA,
+        HuggingFacePipeline,
+        build_chroma_store,
+        create_faiss_store,
+        retrieve_faiss_chunks,
+    )
+try:
+    from .rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
+except ImportError:
+    from rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
 
 # HuggingFace transformers for LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
