@@ -27,3 +27,25 @@ The resulting file in `outputs/` is slimmer (generation + metadata only) which k
 - `posthoc_evaluator.py` currently expects the legacy schema with precomputed metrics; it will be updated alongside the new standalone evaluator.
 
 Until the dedicated evaluation CLI lands, you can import `Evaluator` in a notebook or script, iterate over the saved JSON, and score the fields you care about without rerunning the expensive retrieval/generation stages.
+
+## Standalone Evaluation CLI (BERTScore + HF judge)
+
+`evaluate_outputs.py` is a thin wrapper around `Evaluator` that loads any JSON in `outputs/`, computes BLEU/ROUGE/BERTScore as well as HuggingFace-based LLM-judge scores, and writes an updated file (optionally in-place).
+
+Example (scores every JSON file and stores annotated copies under `outputs/scored/`):
+
+```bash
+python evaluate_outputs.py "outputs/*.json" \
+  --judge-model meta-llama/Meta-Llama-3-8B-Instruct \
+  --device-map auto \
+  --retrieval-top-k 5 \
+  --output-dir outputs/scored
+```
+
+Key behavior:
+
+- Uses BERTScore by default (requires `bert-score` weights, downloaded automatically).
+- Spins up a local HuggingFace `text-generation` pipeline for the judge—no OpenAI key is needed. Pass any chat instruct model you have locally (Qwen, Llama, etc.) via `--judge-model`.
+- Adds full per-sample metrics under `generation_evaluation` (and optional `retrieval_evaluation`) plus an aggregated `evaluation_summary` block at the top of the JSON.
+- Supports `--overwrite` if you want to annotate files in place, or `--suffix _scored` (default) to keep originals untouched.
+- Prints a one-line dashboard per file (BLEU-4, ROUGE-L, BERTScore F1, judge accuracy) so you can monitor progress in long batches.

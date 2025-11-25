@@ -115,7 +115,15 @@ All retrieval modes rely on LangChain embeddings (`all-mpnet-base-v2` by default
 
 ## Post-Hoc Evaluation
 
-1. **Notebook/script workflow** – Import `Evaluator` and iterate over saved JSON to compute BLEU/ROUGE/BERTScore, RAGAS, and optional LLM-as-judge metrics:
+1. **Standalone CLI (`evaluate_outputs.py`)** – Score one or many result files with BERTScore and an offline HuggingFace judge:
+   ```bash
+   python evaluate_outputs.py "outputs/*.json" \
+     --judge-model meta-llama/Meta-Llama-3-8B-Instruct \
+     --output-dir outputs/scored \
+     --retrieval-top-k 5
+   ```
+   The script attaches per-sample `generation_evaluation`(BLEU/ROUGE/BERTScore + judge verdict) and optional `retrieval_evaluation` as well as an `evaluation_summary` block. Use `--overwrite` to edit files in place or the default suffix (`_scored`) to preserve the originals.
+2. **Notebook/script workflow** – Import `Evaluator` and iterate over saved JSON to compute BLEU/ROUGE/BERTScore, RAGAS, and optional LLM-as-judge metrics:
    ```python
    from evaluator import Evaluator
    import json
@@ -133,7 +141,7 @@ All retrieval modes rely on LangChain embeddings (`all-mpnet-base-v2` by default
            gold_contexts=[seg["text"] for seg in sample.get("gold_evidence_segments", [])],
        )
    ```
-2. **CLI summary** – Aggregate retrieval/generation diagnostics from any JSON file:
+3. **CLI summary** – Aggregate retrieval/generation diagnostics from any JSON file:
    ```bash
    python posthoc_evaluator.py --input outputs/single_vector_20251118_174111.json \
      --save-report outputs/single_vector_summary.json

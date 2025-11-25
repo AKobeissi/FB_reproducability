@@ -84,6 +84,8 @@ class Evaluator:
             else []
         )
         self._ragas_llm_cache: Dict[str, Any] = {}
+        self._judge_pipeline = None
+        self._judge_max_new_tokens = 200
         if use_ragas and not _HAS_RAGAS:
             logger.warning(
                 "RAGAS not available. Install 'ragas>=0.3.9' to enable holistic metrics."
@@ -609,11 +611,28 @@ class Evaluator:
         prompt_body = f"{system_prompt.strip()}\n\n{user_message.strip()}\n\nReturn the numeric score (1-5) on the first line and provide reasoning on the next line."
         return f"<s>[INST] {prompt_body} [/INST]"
     
+    def set_judge_pipeline(self, pipeline_obj: Any, max_new_tokens: Optional[int] = None):
+        """
+        Attach a HuggingFace text-generation pipeline (or compatible callable) that will
+        score answers when `use_llm_judge` is True.
+
+        Args:
+            pipeline_obj: Typically a `transformers.pipeline("text-generation", ...)`.
+            max_new_tokens: Optional override for the number of tokens to sample per judgment.
+        """
+        self._judge_pipeline = pipeline_obj
+        if max_new_tokens is not None:
+            self._judge_max_new_tokens = max_new_tokens
+        logger.info(
+            "LLM judge pipeline attached (%s tokens max).",
+            self._judge_max_new_tokens,
+        )
+    
     def _call_llm_judge(self, prompt: str, model: str) -> Dict[str, Any]:
         """
         Call LLM API for judgment using HuggingFace pipeline
         """
-        if not hasattr(self, '_judge_pipeline') or self._judge_pipeline is None:
+        if self._judge_pipeline is None:
             logger.warning("LLM judge pipeline not initialized")
             return {
                 'correct': None,
@@ -622,14 +641,18 @@ class Evaluator:
             }
         
         try:
+            max_new_tokens = getattr(self, "_judge_max_new_tokens", 200)
             response = self._judge_pipeline(
                 prompt,
-                max_new_tokens=200,
+                max_new_tokens=max_new_tokens,
                 num_return_sequences=1,
                 pad_token_id=self._judge_pipeline.tokenizer.eos_token_id,
             )
 
-            judgment_text = response[0]['generated_text'].strip()
+            judgment_text = response[0]['generated_text']
+            if prompt and judgment_text.startswith(prompt):
+                judgment_text = judgment_text[len(prompt):]
+            judgment_text = judgment_text.strip()
             lines = [line.strip() for line in judgment_text.splitlines() if line.strip()]
 
             score = None
@@ -871,6 +894,25 @@ class Evaluator:
             if scores:
                 aggregated[f'ragas_{metric_name}_mean'] = float(np.mean(scores))
                 aggregated[f'ragas_{metric_name}_std'] = float(np.std(scores))
+
+        # Aggregate LLM judge scores
+        judge_scores: List[float] = []
+        judge_correct_flags: List[bool] = []
+        for r in results:
+            judge = r.get('llm_judge') if isinstance(r, dict) else None
+            if not judge:
+                continue
+            score = judge.get('score')
+            if isinstance(score, (int, float)):
+                judge_scores.append(float(score))
+            correct = judge.get('correct')
+            if isinstance(correct, bool):
+                judge_correct_flags.append(correct)
+        if judge_scores:
+            aggregated['llm_judge_score_mean'] = float(np.mean(judge_scores))
+            aggregated['llm_judge_score_std'] = float(np.std(judge_scores))
+        if judge_correct_flags:
+            aggregated['llm_judge_accuracy'] = float(np.mean(judge_correct_flags))
         
         return aggregated
 
