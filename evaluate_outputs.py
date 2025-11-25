@@ -11,16 +11,55 @@ Example:
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import logging
+import os
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-import glob
 import torch
+from openai import OpenAI
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
+try:
+    from langchain_openai import ChatOpenAI
+except Exception:  # pragma: no cover - optional dependency
+    ChatOpenAI = None
+
+try:
+    from langchain_community.llms import HuggingFacePipeline as LangchainHFPipeline  # type: ignore
+except Exception:  # pragma: no cover
+    try:
+        from langchain_huggingface import HuggingFacePipeline as LangchainHFPipeline  # type: ignore
+    except Exception:
+        LangchainHFPipeline = None
+
 from evaluator import Evaluator
+
+
+class OpenAIChatPipeline:
+    """Adapter that mimics the transformers pipeline interface for OpenAI chat models."""
+
+    def __init__(self, client: OpenAI, model_id: str):
+        self._client = client
+        self._model_id = model_id
+        self.tokenizer = SimpleNamespace(eos_token_id=None)
+
+    def __call__(self, prompt: str, max_new_tokens: int = 200, **_: Any) -> List[Dict[str, str]]:
+        response = self._client.chat.completions.create(
+            model=self._model_id,
+            messages=[
+                {"role": "system", "content": "You are an impartial grader for FinanceBench answers."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.0,
+            max_tokens=max_new_tokens,
+        )
+        text = response.choices[0].message.content or ""
+        generated_text = f"{prompt}\n{text.strip()}"
+        return [{"generated_text": generated_text}]
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,6 +92,12 @@ def parse_args() -> argparse.Namespace:
         help="HuggingFace model id to use as the LLM judge.",
     )
     parser.add_argument(
+        "--judge-provider",
+        choices=["huggingface", "openai"],
+        default="huggingface",
+        help="Backend for the LLM judge. 'openai' expects a valid API key.",
+    )
+    parser.add_argument(
         "--judge-dtype",
         default="float16",
         help="Torch dtype (e.g., float16, bfloat16, float32) for the judge model.",
@@ -74,6 +119,16 @@ def parse_args() -> argparse.Namespace:
         help="Allow loading models that require custom code (HF trust_remote_code).",
     )
     parser.add_argument(
+        "--openai-api-base",
+        default="https://api.openai.com/v1",
+        help="Base URL for OpenAI-compatible endpoints (judge + embeddings).",
+    )
+    parser.add_argument(
+        "--openai-api-key-env",
+        default="OPENAI_API_KEY",
+        help="Environment variable that stores the OpenAI-compatible API key.",
+    )
+    parser.add_argument(
         "--no-bertscore",
         action="store_true",
         help="Skip BERTScore if resources are tight (not recommended).",
@@ -88,6 +143,32 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=None,
         help="If set, compute retrieval diagnostics up to this k per sample.",
+    )
+    parser.add_argument(
+        "--skip-ragas",
+        action="store_true",
+        help="Disable RAGAS holistic metrics.",
+    )
+    parser.add_argument(
+        "--ragas-embedding-model",
+        default=None,
+        help="Optional override for the embedding model used by RAGAS.",
+    )
+    parser.add_argument(
+        "--ragas-device",
+        default=None,
+        help="Optional device hint (cpu/cuda) for the RAGAS embedding encoder.",
+    )
+    parser.add_argument(
+        "--ragas-llm-provider",
+        choices=["auto", "huggingface", "openai"],
+        default="auto",
+        help="Provider for the LangChain LLM fed to RAGAS (defaults to judge provider).",
+    )
+    parser.add_argument(
+        "--ragas-llm-model",
+        default=None,
+        help="LLM identifier for RAGAS (defaults to --judge-model).",
     )
     parser.add_argument(
         "--quiet",
@@ -110,7 +191,16 @@ def build_judge_pipeline(
     device_map: Optional[str],
     dtype_name: Optional[str],
     trust_remote_code: bool,
+    provider: str = "huggingface",
+    openai_api_key_env: str = "OPENAI_API_KEY",
+    openai_api_base: str = "https://api.openai.com/v1",
 ) -> Any:
+    if provider == "openai":
+        return build_openai_judge_pipeline(
+            model_id=model_id,
+            api_key_env=openai_api_key_env,
+            api_base=openai_api_base,
+        )
     torch_dtype = resolve_dtype(dtype_name)
     model_kwargs: Dict[str, Any] = {"trust_remote_code": trust_remote_code}
     if torch_dtype is not None:
@@ -133,6 +223,78 @@ def build_judge_pipeline(
         tokenizer=tokenizer,
         return_full_text=True,
     )
+
+
+def build_openai_judge_pipeline(model_id: str, api_key_env: str, api_base: str) -> Any:
+    if OpenAI is None:
+        raise RuntimeError("The 'openai' package is required for --judge-provider openai.")
+    api_key = os.environ.get(api_key_env)
+    if not api_key:
+        raise RuntimeError(
+            f"Missing API key for OpenAI judge. Set the '{api_key_env}' environment variable."
+        )
+    logging.info("Using OpenAI judge model %s (base=%s)", model_id, api_base)
+    client = OpenAI(api_key=api_key, base_url=api_base)
+    return OpenAIChatPipeline(client, model_id)
+
+
+def build_ragas_langchain_llm(
+    provider: str,
+    model_id: str,
+    *,
+    openai_api_key_env: str,
+    openai_api_base: str,
+    hf_pipeline: Optional[Any],
+    hf_builder_params: Optional[Dict[str, Any]],
+) -> Optional[Any]:
+    if provider == "openai":
+        if ChatOpenAI is None:
+            logging.warning("langchain-openai is not installed; cannot create RAGAS LLM.")
+            return None
+        api_key = os.environ.get(openai_api_key_env)
+        if not api_key:
+            logging.warning(
+                "OpenAI API key not found in %s; skipping RAGAS LLM.", openai_api_key_env
+            )
+            return None
+        try:
+            return ChatOpenAI(
+                model=model_id,
+                api_key=api_key,
+                base_url=openai_api_base,
+                temperature=0.0,
+                max_tokens=None,
+            )
+        except Exception as exc:
+            logging.warning("Failed to initialize ChatOpenAI for RAGAS: %s", exc)
+            return None
+
+    if provider == "huggingface":
+        if LangchainHFPipeline is None:
+            logging.warning(
+                "LangChain HuggingFacePipeline not available; cannot wrap HF model for RAGAS."
+            )
+            return None
+        pipeline_obj = hf_pipeline
+        if pipeline_obj is None:
+            if hf_builder_params is None:
+                logging.warning("No HF pipeline or builder parameters supplied for RAGAS.")
+                return None
+            pipeline_obj = build_judge_pipeline(
+                provider="huggingface",
+                openai_api_key_env=openai_api_key_env,
+                openai_api_base=openai_api_base,
+                **hf_builder_params,
+            )
+        try:
+            return LangchainHFPipeline(pipeline=pipeline_obj)
+        except Exception as exc:
+            logging.warning("Failed to wrap HuggingFace pipeline for RAGAS: %s", exc)
+            return None
+
+    if provider not in {"auto", None}:
+        logging.warning("Unsupported RAGAS LLM provider '%s'; skipping RAGAS LLM.", provider)
+    return None
 
 
 def load_results(path: Path) -> Tuple[List[Dict[str, Any]], Dict[str, Any], Dict[str, Any]]:
@@ -198,6 +360,7 @@ def evaluate_samples(
     evaluator: Evaluator,
     samples: List[Dict[str, Any]],
     retrieval_top_k: Optional[int],
+    ragas_llm: Any = None,
 ) -> List[Dict[str, Any]]:
     per_sample_results: List[Dict[str, Any]] = []
     for idx, sample in enumerate(samples):
@@ -213,6 +376,7 @@ def evaluate_samples(
             question=question,
             contexts=contexts,
             gold_contexts=gold_contexts,
+            langchain_llm=ragas_llm,
         )
         sample["generation_evaluation"] = metrics
         per_sample_results.append(metrics)
@@ -284,17 +448,51 @@ def main():
     evaluator = Evaluator(
         use_bertscore=not args.no_bertscore,
         use_llm_judge=not args.skip_llm_judge,
-        use_ragas=False,
+        use_ragas=not args.skip_ragas,
+        ragas_embedding_model=args.ragas_embedding_model,
+        ragas_device=args.ragas_device,
     )
 
+    judge_pipeline = None
     if evaluator.use_llm_judge:
         judge_pipeline = build_judge_pipeline(
             model_id=args.judge_model,
             device_map=args.device_map,
             dtype_name=args.judge_dtype,
             trust_remote_code=args.trust_remote_code,
+            provider=args.judge_provider,
+            openai_api_key_env=args.openai_api_key_env,
+            openai_api_base=args.openai_api_base,
         )
         evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=args.judge_max_new_tokens)
+
+    ragas_llm = None
+    if evaluator.use_ragas:
+        ragas_provider = args.ragas_llm_provider
+        if ragas_provider == "auto":
+            ragas_provider = args.judge_provider if judge_pipeline is not None else "openai"
+        ragas_model = args.ragas_llm_model or args.judge_model
+        hf_pipeline_for_ragas: Optional[Any] = None
+        if ragas_provider == "huggingface" and args.judge_provider == "huggingface":
+            hf_pipeline_for_ragas = judge_pipeline
+        hf_builder_params = (
+            {
+                "model_id": ragas_model,
+                "device_map": args.device_map,
+                "dtype_name": args.judge_dtype,
+                "trust_remote_code": args.trust_remote_code,
+            }
+            if ragas_provider == "huggingface"
+            else None
+        )
+        ragas_llm = build_ragas_langchain_llm(
+            provider=ragas_provider,
+            model_id=ragas_model,
+            openai_api_key_env=args.openai_api_key_env,
+            openai_api_base=args.openai_api_base,
+            hf_pipeline=hf_pipeline_for_ragas,
+            hf_builder_params=hf_builder_params,
+        )
 
     scored_any = False
     for input_pattern in args.inputs:
@@ -309,7 +507,7 @@ def main():
 
             samples, _metadata, container = load_results(path)
             logging.info("Scoring %s (%d samples)", path, len(samples))
-            per_sample = evaluate_samples(evaluator, samples, args.retrieval_top_k)
+            per_sample = evaluate_samples(evaluator, samples, args.retrieval_top_k, ragas_llm=ragas_llm)
             summary = summarize_results(evaluator, per_sample)
             container["evaluation_summary"] = summary
 
