@@ -112,6 +112,7 @@ try:
     from .rag_closed_book import run_closed_book as _run_closed_book
     from .rag_single_vector import run_single_vector as _run_single_vector
     from .rag_shared_vector import run_shared_vector as _run_shared_vector
+    from .random_single_store import run_random_single_store as _run_random_single_store
     from .rag_open_book import run_open_book as _run_open_book
 except Exception:
     # If package-style import fails (e.g., running as script), try absolute imports
@@ -119,6 +120,7 @@ except Exception:
         from rag_closed_book import run_closed_book as _run_closed_book
         from rag_single_vector import run_single_vector as _run_single_vector
         from rag_shared_vector import run_shared_vector as _run_shared_vector
+        from random_single_store import run_random_single_store as _run_random_single_store
         from rag_open_book import run_open_book as _run_open_book
     except Exception:
         # As a last resort, try dynamic import by file path so the script can be
@@ -136,12 +138,14 @@ except Exception:
             _run_closed_book = _load_runner(base_dir / 'rag_closed_book.py', 'rag_closed_book').run_closed_book
             _run_single_vector = _load_runner(base_dir / 'rag_single_vector.py', 'rag_single_vector').run_single_vector
             _run_shared_vector = _load_runner(base_dir / 'rag_shared_vector.py', 'rag_shared_vector').run_shared_vector
+            _run_random_single_store = _load_runner(base_dir / 'random_single_store.py', 'random_single_store').run_random_single_store
             _run_open_book = _load_runner(base_dir / 'rag_open_book.py', 'rag_open_book').run_open_book
         except Exception:
             # If even dynamic loading fails, set to None and let callers raise clearer errors
             _run_closed_book = None
             _run_single_vector = None
             _run_shared_vector = None
+            _run_random_single_store = None
             _run_open_book = None
 
 
@@ -193,6 +197,7 @@ class RAGExperiment(
     SINGLE_VECTOR = "single_vector"
     SHARED_VECTOR = "shared_vector"
     OPEN_BOOK = "open_book"
+    RANDOM_SINGLE = "random_single"
     
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
@@ -509,6 +514,11 @@ class RAGExperiment(
             raise RuntimeError("Single-vector runner module not available")
         return _run_single_vector(self, data)
     
+    def run_random_single(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if _run_random_single_store is None:
+            raise RuntimeError("Random single runner module not available")
+        return _run_random_single_store(self, data)
+    
     def run_shared_vector(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         # Delegate to modular shared-vector runner
         if _run_shared_vector is None:
@@ -552,6 +562,8 @@ class RAGExperiment(
             results = self.run_closed_book(data)
         elif self.experiment_type == self.SINGLE_VECTOR:
             results = self.run_single_vector(data)
+        elif self.experiment_type == self.RANDOM_SINGLE:
+            results = self.run_random_single(data)
         elif self.experiment_type == self.SHARED_VECTOR:
             results = self.run_shared_vector(data)
         elif self.experiment_type == self.OPEN_BOOK:
@@ -606,12 +618,13 @@ def main():
     parser.add_argument(
         "-e",
         "--experiment",
-        choices=["closed", "single", "shared", "open"],
+        choices=["closed", "single", "random_single", "shared", "open"],
         default="single",
         help=(
             "Experiment type:\n"
             "  closed  = closed-book (no context)\n"
             "  single  = single-vector store per document (singleStore)\n"
+            "  random_single = single store with random chunk selection baseline\n"
             "  shared  = shared vector store across docs (sharedStore)\n"
             "  open    = oracle / evidence open-book"
         ),
@@ -703,6 +716,7 @@ def main():
     exp_map = {
         "closed": RAGExperiment.CLOSED_BOOK,
         "single": RAGExperiment.SINGLE_VECTOR,
+        "random_single": RAGExperiment.RANDOM_SINGLE,
         "shared": RAGExperiment.SHARED_VECTOR,
         "open": RAGExperiment.OPEN_BOOK,
     }

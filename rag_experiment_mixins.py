@@ -472,7 +472,11 @@ class ResultsMixin:
         self.logger.info(f"  Max: {np.max(gen_lengths)} chars")
         self.logger.info(f"  Median: {np.median(gen_lengths):.2f} chars")
 
-        if self.experiment_type in [self.SINGLE_VECTOR, self.SHARED_VECTOR]:
+        retrieval_modes = [self.SINGLE_VECTOR, self.SHARED_VECTOR]
+        if hasattr(self, "RANDOM_SINGLE"):
+            retrieval_modes.append(self.RANDOM_SINGLE)
+
+        if self.experiment_type in retrieval_modes:
             context_lengths = [r['context_length'] for r in self.results]
             self.logger.info(f"\nContext Lengths:")
             self.logger.info(f"  Mean: {np.mean(context_lengths):.2f} chars")
