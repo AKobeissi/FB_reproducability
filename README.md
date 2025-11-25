@@ -1,6 +1,6 @@
 # FinanceBench RAG Experiments
 
-FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/FinanceBench** benchmark. It bundles dataset loading, PDF chunking, vector-store construction, and multiple retrieval-augmented generation (RAG) baselines that mirror the official evaluation tracks (closed-book, single-vector, shared-vector, and gold-evidence/open-book). The project can run fully offline with local HuggingFace weights (Llama 3.2 3B Instruct or Qwen 2.5 7B Instruct) or call an OpenAI-compatible API endpoint when GPU resources are limited.
+FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/FinanceBench** benchmark. It bundles dataset loading, PDF chunking, vector-store construction, and multiple retrieval-augmented generation (RAG) baselines that mirror the official evaluation tracks (closed-book, single-vector, random single-store sampling, shared-vector, and gold-evidence/open-book). The project can run fully offline with local HuggingFace weights (Llama 3.2 3B Instruct or Qwen 2.5 7B Instruct) or call an OpenAI-compatible API endpoint when GPU resources are limited.
 
 ---
 
@@ -20,7 +20,7 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 | --- | --- |
 | `runner.py` | Friendly CLI wrapper that maps `model`/`experiment` keywords to `RAGExperiment` constants. |
 | `rag_experiments.py` | Core orchestration plus CLI, invoking mode-specific runners in `rag_*.py`. |
-| `rag_closed_book.py`, `rag_single_vector.py`, `rag_shared_vector.py`, `rag_open_book.py` | Implement the individual experiment strategies. |
+| `rag_closed_book.py`, `rag_single_vector.py`, `random_single_store.py`, `rag_shared_vector.py`, `rag_open_book.py` | Implement the individual experiment strategies (including the random chunk baseline). |
 | `rag_experiment_mixins.py` | Chunking, prompting, vector-store, component-tracking, and result helpers mixed into `RAGExperiment`. |
 | `vectorstore.py`, `pdf_utils.py` | Shared utilities for document ingestion and retrieval backends. |
 | `data_loader.py` | FinanceBench dataset ingestion via HuggingFace `datasets`. |
@@ -62,7 +62,7 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 ### Quick CLI (`runner.py`)
 
 ```bash
-python runner.py [llama|qwen|both] [closed|single|shared|open] \
+python runner.py [llama|qwen|both] [closed|single|random_single|shared|open] \
   --num-samples 50 \
   --pdf-dir /path/to/pdfs \
   --vector-store-dir ./vector_stores \
@@ -98,6 +98,7 @@ You can also import `RAGExperiment` from Python to embed the workflow in noteboo
 | --- | --- | --- |
 | `closed` | Pure generation baseline without context. | None |
 | `single` | Builds a dedicated Chroma store per document and retrieves only from that filing. | Chroma (per-doc) |
+| `random_single` | Uses the same per-document chunks but samples them uniformly at random instead of querying a retriever. | None (random sampler) |
 | `shared` | Ingests all PDFs into a single shared Chroma store so cross-document evidence is possible. | Chroma (global) |
 | `open` | Feeds the gold evidence segments directly to the generator (oracle upper bound). | Gold evidence only |
 
