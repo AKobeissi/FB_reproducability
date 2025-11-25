@@ -140,6 +140,12 @@ def parse_args():
         default=None,
         help="Override the built-in model mapping with an explicit model id (e.g., gpt-4o-mini)"
     )
+    parser.add_argument(
+        "--embedding-model",
+        type=str,
+        default="sentence-transformers/all-mpnet-base-v2",
+        help="Embedding model identifier (HF or OpenAI, e.g., text-embedding-ada-002)"
+    )
     
     return parser.parse_args()
 
@@ -204,6 +210,7 @@ def main():
             exp = RAGExperiment(
                 experiment_type=experiment_type,
                 llm_model=model_name,
+                embedding_model=args.embedding_model,
                 pdf_local_dir=pdf_dir,
                 vector_store_dir=args.vector_store_dir,
                 output_dir=args.output_dir,

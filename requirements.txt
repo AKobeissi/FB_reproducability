@@ -10,6 +10,7 @@ bitsandbytes
 langchain
 langchain-text-splitters
 langchain-huggingface
+langchain-openai
 langchain-community
 chromadb
 faiss-cpu

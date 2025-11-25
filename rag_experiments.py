@@ -15,6 +15,7 @@ from pathlib import Path
 import torch
 import argparse
 
+
 # bitsandbytes availability check (used for 8-bit quantization)
 try:
     import bitsandbytes as bnb  # noqa: F401
@@ -56,6 +57,11 @@ except ImportError:
         create_faiss_store,
         retrieve_faiss_chunks,
     )
+
+try:  # OpenAI embeddings via LangChain
+    from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings  # type: ignore
+except Exception:  # pragma: no cover - optional dep
+    LangchainOpenAIEmbeddings = None
 try:
     from .rag_experiment_mixins import (
         ComponentTrackingMixin,
@@ -203,6 +209,13 @@ class RAGExperiment(
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
     
+    OPENAI_EMBEDDING_PREFIXES = (
+        "text-embedding",
+        "text-search",
+        "text-similarity",
+        "text-moderation",
+    )
+
     def __init__(self, 
                  experiment_type: str = CLOSED_BOOK,
                  llm_model: str = LLAMA_3_2_3B,
@@ -373,12 +386,41 @@ class RAGExperiment(
         self.logger.info(f"✓ Text splitter initialized (chunk_size={self.chunk_size}, overlap={self.chunk_overlap})")
 
     def _build_embeddings(self):
-        """Create FinanceBench-style embeddings using HuggingFace sentence transformers."""
+        """Create FinanceBench-style embeddings using HuggingFace or OpenAI models."""
+        if self._is_openai_embedding_model(self.embedding_model):
+            return self._build_openai_embeddings()
+        return self._build_hf_embeddings()
+
+    def _is_openai_embedding_model(self, model_name: str) -> bool:
+        if not model_name:
+            return False
+        normalized = model_name.lower()
+        return normalized.startswith(self.OPENAI_EMBEDDING_PREFIXES)
+
+    def _build_openai_embeddings(self):
+        if LangchainOpenAIEmbeddings is None:
+            raise RuntimeError(
+                "langchain-openai is required to use OpenAI embedding models. "
+                "Install it (pip install langchain-openai) or choose a HuggingFace embedding."
+            )
+        api_key = os.environ.get(self.api_key_env) or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                f"Cannot initialize OpenAI embeddings ({self.embedding_model}). "
+                f"Set the API key in '{self.api_key_env}' or OPENAI_API_KEY."
+            )
+        self.logger.info(f"Loading OpenAI embeddings: {self.embedding_model}")
+        return LangchainOpenAIEmbeddings(
+            model=self.embedding_model,
+            api_key=api_key,
+            base_url=self.api_base_url,
+        )
+
+    def _build_hf_embeddings(self):
         if HuggingFaceEmbeddings is None:
             raise RuntimeError(
                 "langchain-huggingface is required for embeddings. Install it before running experiments."
             )
-
         self.logger.info(f"Loading HuggingFace embeddings: {self.embedding_model}")
         return HuggingFaceEmbeddings(
             model_name=self.embedding_model,
@@ -686,6 +728,12 @@ def main():
         default=5,
         help="Number of retrieved chunks per question.",
     )
+    parser.add_argument(
+        "--embedding-model",
+        type=str,
+        default="sentence-transformers/all-mpnet-base-v2",
+        help="Embedding model identifier (HF sentence transformers or OpenAI text-embedding-*).",
+    )
 
     parser.add_argument(
         "--use-api",
@@ -748,6 +796,7 @@ def main():
             chunk_size=args.chunk_size,
             chunk_overlap=args.chunk_overlap,
             top_k=args.top_k,
+            embedding_model=args.embedding_model,
             output_dir=args.output_dir,
             vector_store_dir=args.vector_store_dir,
             pdf_local_dir=args.pdf_dir,

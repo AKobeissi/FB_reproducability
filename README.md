@@ -68,14 +68,15 @@ python runner.py [llama|qwen|both] [closed|single|random_single|shared|open] \
   --vector-store-dir ./vector_stores \
   --output-dir ./outputs \
   [--no-8bit] [--use-api --api-base-url https://router.huggingface.co --api-key-env HF_TOKEN] \
-  [--llm-model gpt-4o-mini]
+  [--llm-model gpt-4o-mini] [--embedding-model text-embedding-ada-002]
 ```
 
 Key behavior:
 - Omit positional args to run `both` models in `closed` mode.
 - `--num-samples` limits the dataset slice without editing code.
 - `--use-api` routes generation through an OpenAI-compatible endpoint (set your key in `--api-key-env`; default `OPENAI_API_KEY`).
-- `--llm-model` overrides the built-in HF IDs when calling an API backend.
+- `--llm-model` overrides the built-in HF IDs when calling an API backend, so you can target `gpt-4o-mini` (or any router model name) without editing code.
+- `--embedding-model` accepts either HuggingFace sentence-transformer IDs or OpenAI embedding families such as `text-embedding-ada-002`; the experiment automatically loads the right LangChain embedding class based on the string you provide.
 - Logs stream to stdout and `logs/<experiment>_<timestamp>.log`.
 
 ### Direct orchestrator (`rag_experiments.py`)
@@ -116,14 +117,16 @@ All retrieval modes rely on LangChain embeddings (`all-mpnet-base-v2` by default
 
 ## Post-Hoc Evaluation
 
-1. **Standalone CLI (`evaluate_outputs.py`)** – Score one or many result files with BERTScore and an offline HuggingFace judge:
+1. **Standalone CLI (`evaluate_outputs.py`)** – Score one or many result files with BLEU/ROUGE/BERTScore plus a configurable LLM judge (HuggingFace weights or OpenAI API) and optional RAGAS metrics:
    ```bash
    python evaluate_outputs.py "outputs/*.json" \
      --judge-model meta-llama/Meta-Llama-3-8B-Instruct \
+     --judge-provider huggingface \
      --output-dir outputs/scored \
-     --retrieval-top-k 5
+     --retrieval-top-k 5 \
+     --ragas-llm-provider auto
    ```
-   The script attaches per-sample `generation_evaluation`(BLEU/ROUGE/BERTScore + judge verdict) and optional `retrieval_evaluation` as well as an `evaluation_summary` block. Use `--overwrite` to edit files in place or the default suffix (`_scored`) to preserve the originals.
+   The script attaches per-sample `generation_evaluation` (BLEU/ROUGE/BERTScore + judge verdict + RAGAS scores when enabled) and optional `retrieval_evaluation`, plus an `evaluation_summary` block. Use `--overwrite` to edit files in place or keep the default suffix (`_scored`) to preserve the originals. Pass `--judge-provider openai --judge-model gpt-4o-mini --openai-api-key-env OPENAI_API_KEY` to evaluate with GPT-4o-mini via the OpenAI API, and use `--ragas-llm-provider openai` or `--skip-ragas` to control holistic scoring.
 2. **Notebook/script workflow** – Import `Evaluator` and iterate over saved JSON to compute BLEU/ROUGE/BERTScore, RAGAS, and optional LLM-as-judge metrics:
    ```python
    from evaluator import Evaluator
