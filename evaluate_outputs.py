@@ -36,7 +36,7 @@ except Exception:  # pragma: no cover
     except Exception:
         LangchainHFPipeline = None
 
-from evaluator import Evaluator
+from .evaluator import Evaluator
 
 
 class OpenAIChatPipeline:
