@@ -14,22 +14,13 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-try:
-    from .rag_dependencies import (
-        Document,
-        RecursiveCharacterTextSplitter,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
-    )
-except ImportError:
-    from rag_dependencies import (
-        Document,
-        RecursiveCharacterTextSplitter,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
-    )
+from ..retrieval import (
+    Document,
+    RecursiveCharacterTextSplitter,
+    build_chroma_store,
+    create_faiss_store,
+    retrieve_faiss_chunks,
+)
 
 
 logger = logging.getLogger(__name__)

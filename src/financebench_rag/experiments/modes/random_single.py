@@ -5,10 +5,7 @@ import random
 from collections import defaultdict
 from typing import Any, Dict, List, Sequence
 
-try:
-    from .pdf_utils import load_pdf_with_fallback
-except ImportError:
-    from pdf_utils import load_pdf_with_fallback
+from ...data import load_pdf_with_fallback
 
 logger = logging.getLogger(__name__)
 

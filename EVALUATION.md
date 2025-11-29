@@ -16,7 +16,9 @@ There are **no** `generation_evaluation` or `retrieval_evaluation` blocks in the
 Run experiments exactly as before, e.g.:
 
 ```bash
-python rag_experiments.py llama --experiment single --num-samples 150
+PYTHONPATH=src python -m financebench_rag.experiments.orchestrator llama --experiment single --num-samples 150
+# or use the shim:
+# python rag_experiments.py llama --experiment single --num-samples 150
 ```
 
 The resulting file in `outputs/` is slimmer (generation + metadata only) which keeps long runs fast and removes heavyweight LLM-as-judge dependencies from the main loop.
@@ -24,7 +26,7 @@ The resulting file in `outputs/` is slimmer (generation + metadata only) which k
 ## Post-Hoc Evaluation
 
 - `evaluator.py` exposes BLEU/ROUGE/BERTScore/RAGAS utilities that you can embed directly in notebooks or scripts.
-- `evaluate_outputs.py` is the preferred CLI for batch-scoring the lean JSON artifacts written by `rag_experiments.py`.
+- `evaluate_outputs.py` (or `python -m financebench_rag.evaluation.evaluate_outputs`) is the preferred CLI for batch-scoring the lean JSON artifacts written by `rag_experiments.py` / `financebench_rag.experiments.orchestrator`.
 - `posthoc_evaluator.py` supports the older schema with inline metrics; keep using it only if you rely on legacy files.
 
 ## Standalone Evaluation CLI (BERTScore + Judge + RAGAS)

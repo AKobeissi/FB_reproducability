@@ -6,11 +6,11 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 
 ## Key Capabilities
 
-- **Multi-mode experiments** – Closed-book, per-document vector stores, shared stores, and oracle/gold-evidence modes live under a single `RAGExperiment` orchestrator with mixins for chunking, prompting, vector stores, and result persistence (`rag_experiments.py`, `rag_experiment_mixins.py`).
-- **Robust dependency handling** – `rag_dependencies.py` centralizes LangChain/Chroma/FAISS imports and provides safe fallbacks so scripts work even if some extras are missing.
-- **FinanceBench-native data access** – `data_loader.py` downloads the HuggingFace dataset, logs stats, and exposes helper getters for batches, samples, and document filters.
-- **PDF utilities + vector stores** – `pdf_utils.py` locates filings from a local `pdfs/` cache, while `vectorstore.py` builds persistent Chroma stores (preferred) or FAISS indices.
-- **Post-run analytics** – Experiments emit lean JSON under `outputs/`. Use `evaluator.py` in notebooks or `posthoc_evaluator.py` on the CLI to compute BLEU/ROUGE/BERTScore, LLM-as-judge signals, RAGAS, and retrieval diagnostics.
+- **Multi-mode experiments** – Closed-book, per-document vector stores, shared stores, and oracle/gold-evidence modes live under a single `RAGExperiment` orchestrator with mixins for chunking, prompting, vector stores, and result persistence (`src/financebench_rag/experiments/orchestrator.py`, `src/financebench_rag/experiments/mixins.py`).
+- **Robust dependency handling** – `src/financebench_rag/retrieval/dependencies.py` centralizes LangChain/Chroma/FAISS imports and provides safe fallbacks so scripts work even if some extras are missing.
+- **FinanceBench-native data access** – `src/financebench_rag/data/loader.py` downloads the HuggingFace dataset, logs stats, and exposes helper getters for batches, samples, and document filters.
+- **PDF utilities + vector stores** – `src/financebench_rag/data/pdf_utils.py` locates filings from a local `pdfs/` cache, while `src/financebench_rag/retrieval/vectorstore.py` builds persistent Chroma stores (preferred) or FAISS indices.
+- **Post-run analytics** – Experiments emit lean JSON under `outputs/`. Use `src/financebench_rag/evaluation/evaluator.py` in notebooks or the CLIs in `src/financebench_rag/evaluation/` to compute BLEU/ROUGE/BERTScore, LLM-as-judge signals, RAGAS, and retrieval diagnostics.
 
 ---
 
@@ -18,14 +18,14 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 
 | Path | Description |
 | --- | --- |
-| `runner.py` | Friendly CLI wrapper that maps `model`/`experiment` keywords to `RAGExperiment` constants. |
-| `rag_experiments.py` | Core orchestration plus CLI, invoking mode-specific runners in `rag_*.py`. |
-| `rag_closed_book.py`, `rag_single_vector.py`, `random_single_store.py`, `rag_shared_vector.py`, `rag_open_book.py` | Implement the individual experiment strategies (including the random chunk baseline). |
-| `rag_experiment_mixins.py` | Chunking, prompting, vector-store, component-tracking, and result helpers mixed into `RAGExperiment`. |
-| `vectorstore.py`, `pdf_utils.py` | Shared utilities for document ingestion and retrieval backends. |
-| `data_loader.py` | FinanceBench dataset ingestion via HuggingFace `datasets`. |
-| `evaluator.py`, `posthoc_evaluator.py` | Optional scoring utilities for saved experiment outputs. |
-| `outputs/`, `vector_stores/` | Default locations for JSON results and persisted Chroma indices (created at runtime). |
+| `src/financebench_rag/cli/runner.py` | Primary CLI exposed via `python -m financebench_rag.cli.runner` (also available through the root `runner.py` shim). |
+| `src/financebench_rag/experiments/orchestrator.py` | Hosts `RAGExperiment` orchestration plus the legacy CLI (available via the root `rag_experiments.py` shim). |
+| `src/financebench_rag/experiments/modes/` | Mode-specific runners (`closed_book.py`, `single_vector.py`, `random_single.py`, `shared_vector.py`, `open_book.py`). |
+| `src/financebench_rag/experiments/mixins.py` | Chunking, prompting, vector-store, component-tracking, and result helpers mixed into `RAGExperiment`. |
+| `src/financebench_rag/data/loader.py`, `src/financebench_rag/data/pdf_utils.py` | FinanceBench dataset ingestion utilities and PDF loaders. |
+| `src/financebench_rag/retrieval/` | Chroma/FAISS helpers and dependency shims. |
+| `src/financebench_rag/evaluation/` | Evaluator core plus CLI utilities (`evaluate_outputs.py`, `posthoc_evaluator.py`). |
+| `outputs/`, `vector_stores/` | Default locations for JSON results and persisted vector indices (created at runtime). |
 | `requirements.txt` | Consolidated dependency list (un-pinned). |
 
 ---
@@ -58,6 +58,10 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 ---
 
 ## Running Experiments
+
+> **Note:** The code now lives under `src/financebench_rag`. The simplest way to run
+> the CLIs is either `python -m financebench_rag.cli.runner ...` (with
+> `PYTHONPATH=src` or after `pip install -e .`) or the legacy shims (`python runner.py`, `python rag_experiments.py`) which internally add `src/` to `sys.path`.
 
 ### Quick CLI (`runner.py`)
 
