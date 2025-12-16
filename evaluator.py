@@ -702,16 +702,49 @@ class Evaluator:
         return len(intersection) / denom if denom else 0.0
 
     def _extract_numeric_score(self, text: str) -> Optional[float]:
-        """Extract the first floating-point number from text."""
+        """
+        Extract the numeric score (1-5) from the text.
+        Prioritizes numbers at the beginning of the text or explicitly labeled.
+        """
         if not text:
             return None
-        match = re.search(r"(-?\d+(?:\.\d+)?)", text)
-        if not match:
-            return None
-        try:
-            return float(match.group(1))
-        except ValueError:
-            return None
+            
+        # 1. Try to match number at start of line (most common/correct format per instructions)
+        # matches "5", "5.0", "4.5"
+        match = re.search(r"^\s*(\d+(?:\.\d+)?)\b", text)
+        if match:
+            try:
+                val = float(match.group(1))
+                if 0.0 <= val <= 5.0:  # Allow 0-5
+                    return val
+            except ValueError:
+                pass
+
+        # 2. Try to match "Score: X" or "Rating: X" anywhere
+        match = re.search(r"(?:score|rating|grade)\s*[:=]\s*(\d+(?:\.\d+)?)\b", text, re.IGNORECASE)
+        if match:
+            try:
+                val = float(match.group(1))
+                if 0.0 <= val <= 5.0:
+                    return val
+            except ValueError:
+                pass
+                
+        # 3. Try "score of X" or "give it a X"
+        match = re.search(r"\b(?:give|assigned|received)\s+(?:it\s+)?(?:a\s+)?score\s+(?:of\s+)?(\d+(?:\.\d+)?)\b", text, re.IGNORECASE)
+        if match:
+            try:
+                val = float(match.group(1))
+                if 0.0 <= val <= 5.0:
+                    return val
+            except ValueError:
+                pass
+        
+        # NOTE: We intentionally do NOT fall back to finding *any* number in the string,
+        # as that often picks up years (2020), percentages, or monetary values mentioned 
+        # in the explanation if the model fails to output a score at the start.
+        
+        return None
 
     def _confidence_from_score(self, score: Optional[float]) -> Optional[str]:
         """Map numeric score to coarse confidence bucket."""

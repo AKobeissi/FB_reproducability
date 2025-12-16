@@ -1,8 +1,10 @@
 from typing import List, Dict, Any, Set
 import logging
+import os
+import json
 from collections import Counter
 from .pdf_utils import load_pdf_with_fallback
-from .vectorstore import build_chroma_store
+from .vectorstore import build_chroma_store, populate_chroma_store, save_store_config
 
 try:
     from langchain.chains import RetrievalQA
@@ -51,26 +53,12 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     logger.info(f"Collected {len(unique_docs)} unique documents")
 
-    # Load and chunk all documents
-    all_documents, available_docs, pdf_source_map = _load_all_documents(
-        experiment, unique_docs
-    )
-
-    if not all_documents:
-        logger.warning("No documents available. All samples will be skipped.")
-        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
-        if hasattr(experiment, "notify_sample_complete"):
-            experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (no pdf)")
-        return skipped
-
-    logger.info(f"\nTotal chunks across all documents: {len(all_documents)}")
-    _log_pdf_sources(pdf_source_map)
-
+    # Initialize Chroma store (lazy load)
     try:
-        retriever, _ = build_chroma_store(
+        retriever, vectordb, is_new = build_chroma_store(
             experiment,
             "all",
-            documents=all_documents,
+            lazy_load=True,
         )
     except Exception as e:
         logger.error("Chroma build failed for shared store: %s", e)
@@ -78,6 +66,81 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         if hasattr(experiment, "notify_sample_complete"):
             experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (vector store)")
         return skipped
+
+    # Define paths for metadata
+    db_name = "shared"
+    db_path = os.path.join(experiment.vector_store_dir, "chroma", db_name)
+    meta_path = os.path.join(db_path, "shared_meta.json")
+
+    available_docs = set()
+    pdf_source_map = {}
+
+    if is_new:
+        logger.info("Ingesting documents incrementally...")
+        
+        for i, (doc_name, doc_link) in enumerate(unique_docs.items()):
+            logger.info(f"\nProcessing document {i+1}/{len(unique_docs)}: {doc_name}")
+            
+            pdf_docs, pdf_source = load_pdf_with_fallback(
+                doc_name=doc_name,
+                doc_link=doc_link,
+                local_dir=getattr(experiment, 'pdf_local_dir', None),
+            )
+            
+            pdf_source_map[doc_name] = pdf_source
+
+            if not pdf_docs:
+                logger.warning(f"No PDF pages for '{doc_name}'. Excluding from shared store.")
+                continue
+
+            logger.info(f"Chunking (from {pdf_source}): {doc_name}")
+            chunks = experiment._chunk_text_langchain(
+                pdf_docs,
+                metadata={
+                    'doc_name': doc_name,
+                    'source': 'pdf',
+                    'doc_link': doc_link,
+                    'pdf_source': pdf_source
+                }
+            )
+            
+            if chunks:
+                added = populate_chroma_store(experiment, vectordb, chunks, db_name)
+                logger.info(f"Added {added} chunks for '{doc_name}'")
+                available_docs.add(doc_name)
+            
+            # Clear memory
+            del pdf_docs
+            del chunks
+        
+        # Persist metadata and config
+        save_store_config(experiment, db_path)
+        try:
+            with open(meta_path, 'w') as f:
+                json.dump({
+                    "available_docs": list(available_docs),
+                    "pdf_source_map": pdf_source_map
+                }, f)
+        except Exception as e:
+            logger.warning(f"Failed to save metadata to {meta_path}: {e}")
+            
+    else:
+        logger.info("Using existing shared vector store.")
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path, 'r') as f:
+                    meta = json.load(f)
+                    available_docs = set(meta.get("available_docs", []))
+                    pdf_source_map = meta.get("pdf_source_map", {})
+            except Exception as e:
+                logger.warning(f"Failed to load metadata: {e}")
+        
+        # Fallback if metadata missing or empty
+        if not available_docs:
+             logger.info("Metadata missing or empty, assuming all unique docs are available (optimistic).")
+             available_docs = set(unique_docs.keys())
+
+    _log_pdf_sources(pdf_source_map)
 
     # Process samples
     results = []
@@ -111,52 +174,6 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
             experiment.notify_sample_complete(note=f"{doc_name}")
 
     return results
-
-
-def _load_all_documents(
-    experiment,
-    unique_docs: Dict[str, str]
-) -> tuple[List, Set[str], Dict[str, str]]:
-    """
-    Load and chunk all documents.
-    
-    Returns:
-        (all_documents, available_docs, pdf_source_map)
-    """
-    all_documents = []
-    available_docs = set()
-    pdf_source_map = {}
-
-    for doc_name, doc_link in unique_docs.items():
-        logger.info(f"\nProcessing document: {doc_name}")
-        
-        pdf_docs, pdf_source = load_pdf_with_fallback(
-            doc_name=doc_name,
-            doc_link=doc_link,
-            local_dir=getattr(experiment, 'pdf_local_dir', None),
-        )
-        
-        pdf_source_map[doc_name] = pdf_source
-
-        if not pdf_docs:
-            logger.warning(f"No PDF pages for '{doc_name}'. Excluding from shared store.")
-            continue
-
-        logger.info(f"Chunking (from {pdf_source}): {doc_name}")
-        docs = experiment._chunk_text_langchain(
-            pdf_docs,
-            metadata={
-                'doc_name': doc_name,
-                'source': 'pdf',
-                'doc_link': doc_link,
-                'pdf_source': pdf_source
-            }
-        )
-        
-        all_documents.extend(docs)
-        available_docs.add(doc_name)
-
-    return all_documents, available_docs, pdf_source_map
 
 
 def _process_shared_sample(
