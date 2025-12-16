@@ -9,6 +9,7 @@ vector_stores/
 vectorstores/
 vector_stores1/
 pdfs/
+pdfs/
 results/
 .env
 *.sqlite3
