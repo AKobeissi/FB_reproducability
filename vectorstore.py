@@ -15,6 +15,7 @@ import os
 import logging
 import json
 import shutil
+import re
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)
@@ -128,6 +129,17 @@ def _batched_docs(documents: List[Any], batch_size: int) -> Iterable[List[Any]]:
         yield documents[idx : idx + batch_size]
 
 
+def _sanitize_path_segment(name: str) -> str:
+    """Sanitize a string to be safe for use as a filename/directory name."""
+    if not name:
+        return "unknown"
+    # Replace non-alphanumeric characters (except - and _) with underscores
+    cleaned = re.sub(r'[^a-zA-Z0-9\-_]', '_', name)
+    # Collapse multiple underscores
+    cleaned = re.sub(r'_+', '_', cleaned)
+    return cleaned.strip('_') or "unknown"
+
+
 def build_chroma_store(
     experiment,
     docs,
@@ -163,10 +175,17 @@ def build_chroma_store(
         db_name = "shared"
     elif isinstance(docs, str):
         docs_list = [docs]
-        db_name = docs
+        db_name = _sanitize_path_segment(docs)
     elif isinstance(docs, (list, tuple, set)):
         docs_list = list(docs)
-        db_name = "_".join(docs_list) if len(docs_list) <= 3 else docs_list[0]
+        if len(docs_list) <= 3:
+            # Join them, but sanitize the result to avoid weird chars from individual names
+            # or from the join itself if we used weird separators (though we use _)
+            # Using _ as separator is safe if we sanitize segments first.
+            sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
+            db_name = "_".join(sanitized_list)
+        else:
+            db_name = _sanitize_path_segment(docs_list[0])
     else:
         docs_list = None
         db_name = "shared"
@@ -206,10 +225,7 @@ def build_chroma_store(
             # If the directory exists but config.json is missing, it might be an old store.
             # To be safe against stale data (different chunk sizes), we rebuild it.
             # Only do this if we actually have documents to populate it with, 
-            # otherwise we might just be loading a valid legacy store (though the requirement implies strictness).
-            # If documents provided -> we are in build mode -> strict check.
-            # If documents NOT provided -> we are in load mode. If config missing, we can warn but maybe proceed?
-            # Review says "Critical Logic Issue", so let's err on side of caution if documents are provided.
+            # otherwise we might just be loading a valid legacy store.
             if documents:
                 exp_logger.warning(f"Vector store '{db_name}' missing config.json. Rebuilding...")
                 should_clean = True
@@ -233,8 +249,6 @@ def build_chroma_store(
     # --- Detect whether store is effectively empty --------------------------------
     try:
         collection_files = os.listdir(db_path)
-        # Chroma creates a few files. If it's just initialized, it might have some structure but no data.
-        # However, checking <= 1 is a heuristic.
         # If we just cleaned it, it is definitely empty (or just has what Chroma init created).
         is_empty = len(collection_files) <= 1 or should_clean
     except Exception:  # pragma: no cover
@@ -278,7 +292,6 @@ def build_chroma_store(
                     f"Failed to populate Chroma from precomputed documents: {e}"
                 )
         else:
-            # If we cleaned it because of mismatch, but provided no docs, we have a problem.
             if should_clean:
                  raise RuntimeError(
                     f"Vector store '{db_name}' was stale and cleared, but no documents were provided to rebuild it."
