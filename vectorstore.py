@@ -52,7 +52,7 @@ except Exception:
         FAISS = None
 
 
-def _ensure_documents_have_ids(documents: Iterable[Any], namespace: str) -> List[Any]:
+def ensure_documents_have_ids(documents: Iterable[Any], namespace: str) -> List[Any]:
     """
     Ensure every document exposes an `id` attribute required by recent Chroma versions.
     """
@@ -140,13 +140,60 @@ def _sanitize_path_segment(name: str) -> str:
     return cleaned.strip('_') or "unknown"
 
 
+def populate_chroma_store(experiment, vectordb, documents: List[Any], db_name: str = "shared") -> int:
+    """
+    Populate a ChromaDB instance with documents.
+    Returns the number of chunks added.
+    """
+    exp_logger = getattr(experiment, "logger", logger)
+    if not documents:
+        return 0
+
+    safe_documents = ensure_documents_have_ids(documents, db_name)
+    batch_limit = _detect_chroma_batch_limit(vectordb)
+    override_batch = getattr(experiment, "chroma_batch_size", None)
+    if isinstance(override_batch, int) and override_batch > 0:
+        batch_limit = override_batch if batch_limit is None else min(
+            batch_limit, override_batch
+        )
+    if not batch_limit or batch_limit <= 0:
+        batch_limit = DEFAULT_CHROMA_BATCH_SIZE
+    
+    if batch_limit < len(safe_documents):
+        exp_logger.info(
+            "Chroma batch limit detected at %s – ingesting in %s batches",
+            batch_limit,
+            (len(safe_documents) + batch_limit - 1) // batch_limit,
+        )
+    
+    added = 0
+    for chunk in _batched_docs(safe_documents, batch_limit):
+        vectordb.add_documents(chunk)
+        added += len(chunk)
+    
+    return added
+
+
+def save_store_config(experiment, db_path: str):
+    """Save the current experiment configuration to the vector store directory."""
+    current_config = {
+        "chunk_size": getattr(experiment, "chunk_size", None),
+        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
+        "embedding_model": getattr(experiment, "embedding_model", None),
+    }
+    config_path = os.path.join(db_path, "config.json")
+    with open(config_path, 'w') as f:
+        json.dump(current_config, f)
+
+
 def build_chroma_store(
     experiment,
     docs,
     embeddings=None,
     documents: Optional[List[Any]] = None,
+    lazy_load: bool = False,
 ):
-    """Build / load a Chroma store and return ``(retriever, vectordb)``.
+    """Build / load a Chroma store and return ``(retriever, vectordb)`` or ``(retriever, vectordb, is_new)``.
 
     Parameters
     ----------
@@ -159,6 +206,9 @@ def build_chroma_store(
         Optional embeddings object. Defaults to ``experiment.embeddings``.
     documents:
         Optional list of *already chunked* LangChain ``Document`` objects.
+    lazy_load:
+        If True, returns (retriever, vectordb, is_new) tuple. 
+        If is_new is True, the caller is responsible for populating the store.
     """
     if Chroma is None:
         raise RuntimeError(
@@ -224,9 +274,9 @@ def build_chroma_store(
         else:
             # If the directory exists but config.json is missing, it might be an old store.
             # To be safe against stale data (different chunk sizes), we rebuild it.
-            # Only do this if we actually have documents to populate it with, 
+            # Only do this if we actually have documents to populate it with or if lazy_load is requested
             # otherwise we might just be loading a valid legacy store.
-            if documents:
+            if documents or lazy_load:
                 exp_logger.warning(f"Vector store '{db_name}' missing config.json. Rebuilding...")
                 should_clean = True
     
@@ -254,6 +304,12 @@ def build_chroma_store(
     except Exception:  # pragma: no cover
         is_empty = False
 
+    top_k = getattr(experiment, "top_k", 5)
+    retriever = vectordb.as_retriever(search_kwargs={"k": top_k})
+
+    if lazy_load:
+        return retriever, vectordb, is_empty
+
     # --- Populate the store if empty --------------------------------------------
     if is_empty:
         if documents:
@@ -262,30 +318,11 @@ def build_chroma_store(
                 f"Populating Chroma DB '{db_name}' from {total_docs} precomputed chunks"
             )
             try:
-                safe_documents = _ensure_documents_have_ids(documents, db_name)
-                batch_limit = _detect_chroma_batch_limit(vectordb)
-                override_batch = getattr(experiment, "chroma_batch_size", None)
-                if isinstance(override_batch, int) and override_batch > 0:
-                    batch_limit = override_batch if batch_limit is None else min(
-                        batch_limit, override_batch
-                    )
-                if not batch_limit or batch_limit <= 0:
-                    batch_limit = DEFAULT_CHROMA_BATCH_SIZE
-                if batch_limit < len(safe_documents):
-                    exp_logger.info(
-                        "Chroma batch limit detected at %s – ingesting in %s batches",
-                        batch_limit,
-                        (len(safe_documents) + batch_limit - 1) // batch_limit,
-                    )
-                added = 0
-                for chunk in _batched_docs(safe_documents, batch_limit):
-                    vectordb.add_documents(chunk)
-                    added += len(chunk)
+                added = populate_chroma_store(experiment, vectordb, documents, db_name)
                 exp_logger.info("Persisting Chroma DB '%s' with %s chunks", db_name, added)
                 
                 # Write config.json after successful population
-                with open(config_path, 'w') as f:
-                    json.dump(current_config, f)
+                save_store_config(experiment, db_path)
                     
             except Exception as e:  # pragma: no cover
                 exp_logger.error(
@@ -301,8 +338,6 @@ def build_chroma_store(
                 "to populate it."
             )
 
-    top_k = getattr(experiment, "top_k", 5)
-    retriever = vectordb.as_retriever(search_kwargs={"k": top_k})
     if hasattr(experiment, "register_component_usage"):
         experiment.register_component_usage(
             "vector_store",
