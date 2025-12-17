@@ -46,10 +46,33 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     # Collect unique documents
     unique_docs = {}
+    
+    # Option to include all PDFs from the local directory
+    if getattr(experiment, "use_all_pdfs", False) and getattr(experiment, "pdf_local_dir", None):
+        pdf_dir = str(experiment.pdf_local_dir)
+        logger.info(f"Scanning {pdf_dir} for all PDF documents...")
+        if os.path.exists(pdf_dir):
+            import glob
+            # Match both .pdf and .PDF
+            pdf_files = glob.glob(os.path.join(pdf_dir, "**", "*.pdf"), recursive=True)
+            pdf_files += glob.glob(os.path.join(pdf_dir, "**", "*.PDF"), recursive=True)
+            
+            logger.info(f"Found {len(pdf_files)} PDF files in local directory.")
+            
+            for pdf_path in pdf_files:
+                # Use filename stem as doc_name (simplification, but aligns with _find_local_pdf logic)
+                filename = os.path.basename(pdf_path)
+                doc_name = os.path.splitext(filename)[0]
+                # Store with empty link as we have local file
+                unique_docs[doc_name] = ""
+        else:
+            logger.warning(f"PDF directory {pdf_dir} does not exist.")
+
     for sample in data:
         doc_name = sample.get('doc_name', 'unknown')
         if doc_name not in unique_docs:
             unique_docs[doc_name] = sample.get('doc_link', '')
+
 
     logger.info(f"Collected {len(unique_docs)} unique documents")
 
@@ -77,6 +100,10 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     if is_new:
         logger.info("Ingesting documents incrementally...")
+        
+        # Determine paths for progress tracking
+        # We need to know which docs are available in the store vs what we need to add.
+        # But 'unique_docs' is our target set.
         
         for i, (doc_name, doc_link) in enumerate(unique_docs.items()):
             logger.info(f"\nProcessing document {i+1}/{len(unique_docs)}: {doc_name}")

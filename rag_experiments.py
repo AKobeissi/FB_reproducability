@@ -232,7 +232,8 @@ class RAGExperiment(
                  max_new_tokens: int = 256,
                  use_api: bool = False,
                  api_base_url: str = "https://api.openai.com/v1",
-                 api_key_env: str = "HF_TOKEN"):
+                 api_key_env: str = "HF_TOKEN",
+                 use_all_pdfs: bool = False):
         """
         Initialize RAG Experiment
         
@@ -248,6 +249,7 @@ class RAGExperiment(
              vector_store_dir: Directory for vector store persistence (default: "vector_stores")
              load_in_8bit: Whether to load models in 8-bit for memory efficiency
              max_new_tokens: Maximum tokens to generate
+             use_all_pdfs: Whether to index all PDFs in the local directory (shared vector store only)
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
@@ -255,6 +257,7 @@ class RAGExperiment(
         self.chunk_overlap = chunk_overlap
         self.top_k = top_k
         self.embedding_model = embedding_model
+        self.use_all_pdfs = use_all_pdfs
         self.output_dir = output_dir
         base_dir = Path(__file__).resolve().parent
         if output_dir is None:
@@ -320,6 +323,7 @@ class RAGExperiment(
             'load_in_8bit': load_in_8bit,
             'max_new_tokens': max_new_tokens,
             'pdf_local_dir': str(self.pdf_local_dir) if self.pdf_local_dir is not None else None,
+            'use_all_pdfs': use_all_pdfs,
             'timestamp': datetime.now().isoformat()
         }
 
@@ -340,6 +344,7 @@ class RAGExperiment(
         self.logger.info(f"  Top-K Retrieval: {top_k}")
         self.logger.info(f"  Embedding Model: {embedding_model}")
         self.logger.info(f"  Max New Tokens: {max_new_tokens}")
+        self.logger.info(f"  Use All PDFs: {use_all_pdfs}")
         self.logger.info(f"  Using LangChain + FAISS + HuggingFace LLMs")
         if self.use_api:
             self.logger.info("  Using API-based LLM via OpenAI client (HF router)")
@@ -757,6 +762,11 @@ def main():
         action="store_true",
         help="Disable 8-bit loading (load full-precision model).",
     )
+    parser.add_argument(
+        "--use-all-pdfs",
+        action="store_true",
+        help="Index all PDFs in the pdf-dir, not just those referenced in the dataset (for shared vector store).",
+    )
 
     args = parser.parse_args()
 
@@ -804,6 +814,7 @@ def main():
             use_api=args.use_api,
             api_base_url=args.api_base_url,
             api_key_env=args.api_key_env,
+            use_all_pdfs=args.use_all_pdfs,
         )
 
         experiment.run_experiment(num_samples=args.num_samples)
