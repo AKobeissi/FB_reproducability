@@ -19,6 +19,19 @@ import re
 import hashlib
 from uuid import uuid4
 
+def get_experiment_config_hash(experiment) -> str:
+    """Generate a hash of the relevant experiment configuration for vector store compatibility."""
+    config = {
+        "chunk_size": getattr(experiment, "chunk_size", None),
+        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
+        "embedding_model": getattr(experiment, "embedding_model", None),
+        "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
+    }
+    # Create a stable string representation
+    config_str = json.dumps(config, sort_keys=True)
+    return hashlib.md5(config_str.encode("utf-8")).hexdigest()[:8]
+
+
 logger = logging.getLogger(__name__)
 
 # --- Try to import Chroma & FAISS from langchain / langchain_community --------
@@ -181,6 +194,7 @@ def save_store_config(experiment, db_path: str):
         "chunk_size": getattr(experiment, "chunk_size", None),
         "chunk_overlap": getattr(experiment, "chunk_overlap", None),
         "embedding_model": getattr(experiment, "embedding_model", None),
+        "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
     }
     config_path = os.path.join(db_path, "config.json")
     with open(config_path, 'w') as f:
@@ -221,12 +235,14 @@ def build_chroma_store(
         embeddings = getattr(experiment, "embeddings", None)
 
     # --- Normalise docs argument & derive DB name --------------------------------
+    config_hash = get_experiment_config_hash(experiment)
+    
     if docs == "all":
         docs_list = None
-        db_name = "shared"
+        db_name = f"shared_{config_hash}"
     elif isinstance(docs, str):
         docs_list = [docs]
-        db_name = _sanitize_path_segment(docs)
+        db_name = _sanitize_path_segment(docs) + f"_{config_hash}"
     elif isinstance(docs, (list, tuple, set)):
         docs_list = list(docs)
         if len(docs_list) <= 3:
@@ -234,15 +250,15 @@ def build_chroma_store(
             # or from the join itself if we used weird separators (though we use _)
             # Using _ as separator is safe if we sanitize segments first.
             sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
-            db_name = "_".join(sanitized_list)
+            db_name = "_".join(sanitized_list) + f"_{config_hash}"
         else:
             # Use a hash of the sorted document names to ensure uniqueness for large sets
             sorted_docs = sorted([str(d) for d in docs_list])
             doc_hash = hashlib.md5("_".join(sorted_docs).encode("utf-8")).hexdigest()
-            db_name = f"custom_set_{doc_hash[:8]}"
+            db_name = f"custom_set_{doc_hash[:8]}_{config_hash}"
     else:
         docs_list = None
-        db_name = "shared"
+        db_name = f"shared_{config_hash}"
 
     db_path = os.path.join(experiment.vector_store_dir, "chroma", db_name)
     exp_logger = getattr(experiment, "logger", logger)
@@ -252,6 +268,7 @@ def build_chroma_store(
         "chunk_size": getattr(experiment, "chunk_size", None),
         "chunk_overlap": getattr(experiment, "chunk_overlap", None),
         "embedding_model": getattr(experiment, "embedding_model", None),
+        "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
     }
     
     config_path = os.path.join(db_path, "config.json")
@@ -264,6 +281,8 @@ def build_chroma_store(
                     stored_config = json.load(f)
                 
                 # Check for mismatch in critical parameters
+                # With the hash in the name, this shouldn't happen often unless hash collisions or 
+                # manual modification, but good to keep as safety.
                 if stored_config != current_config:
                     exp_logger.warning(
                         f"Vector store '{db_name}' configuration mismatch.\n"
