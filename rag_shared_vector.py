@@ -97,15 +97,28 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
     available_docs = set()
     pdf_source_map = {}
 
-    if is_new:
-        logger.info("Ingesting documents incrementally...")
+    if not is_new:
+        logger.info("Using existing shared vector store.")
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path, 'r') as f:
+                    meta = json.load(f)
+                    available_docs = set(meta.get("available_docs", []))
+                    pdf_source_map = meta.get("pdf_source_map", {})
+            except Exception as e:
+                logger.warning(f"Failed to load metadata: {e}")
+
+    # Identify documents that need to be ingested
+    docs_to_process = {k: v for k, v in unique_docs.items() if k not in available_docs}
+
+    if docs_to_process:
+        if is_new:
+            logger.info(f"Ingesting {len(docs_to_process)} documents (new store)...")
+        else:
+            logger.info(f"Ingesting {len(docs_to_process)} missing documents (incremental update)...")
         
-        # Determine paths for progress tracking
-        # We need to know which docs are available in the store vs what we need to add.
-        # But 'unique_docs' is our target set.
-        
-        for i, (doc_name, doc_link) in enumerate(unique_docs.items()):
-            logger.info(f"\nProcessing document {i+1}/{len(unique_docs)}: {doc_name}")
+        for i, (doc_name, doc_link) in enumerate(docs_to_process.items()):
+            logger.info(f"\nProcessing document {i+1}/{len(docs_to_process)}: {doc_name}")
             
             pdf_docs, pdf_source = load_pdf_with_fallback(
                 doc_name=doc_name,
@@ -149,22 +162,6 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
                 }, f)
         except Exception as e:
             logger.warning(f"Failed to save metadata to {meta_path}: {e}")
-            
-    else:
-        logger.info("Using existing shared vector store.")
-        if os.path.exists(meta_path):
-            try:
-                with open(meta_path, 'r') as f:
-                    meta = json.load(f)
-                    available_docs = set(meta.get("available_docs", []))
-                    pdf_source_map = meta.get("pdf_source_map", {})
-            except Exception as e:
-                logger.warning(f"Failed to load metadata: {e}")
-        
-        # Fallback if metadata missing or empty
-        if not available_docs:
-             logger.info("Metadata missing or empty, assuming all unique docs are available (optimistic).")
-             available_docs = set(unique_docs.keys())
 
     _log_pdf_sources(pdf_source_map)
 
