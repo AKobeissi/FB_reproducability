@@ -133,15 +133,16 @@ if FAISS is None:
 build_chroma_store = None
 create_faiss_store = None
 retrieve_faiss_chunks = None
+get_chroma_db_path = None
 _vectorstore_import_errors: List[Tuple[str, Exception]] = []
 
 try:
-    from .vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
+    from .vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks, get_chroma_db_path  # type: ignore
     logger.info("Vectorstore helpers loaded via package-relative import.")
 except Exception as e_pkg:
     _vectorstore_import_errors.append(("package-relative", e_pkg))
     try:
-        from vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks  # type: ignore
+        from vectorstore import build_chroma_store, create_faiss_store, retrieve_faiss_chunks, get_chroma_db_path  # type: ignore
         logger.info("Vectorstore helpers loaded via absolute import.")
     except Exception as e_abs:
         _vectorstore_import_errors.append(("absolute", e_abs))
@@ -151,6 +152,7 @@ except Exception as e_pkg:
         build_chroma_store = None
         create_faiss_store = None
         retrieve_faiss_chunks = None
+        get_chroma_db_path = None
         if _vectorstore_import_errors:
             for label, err in _vectorstore_import_errors:
                 logger.warning("  [%s] import failed: %s", label, err)
@@ -168,4 +170,5 @@ __all__ = [
     "build_chroma_store",
     "create_faiss_store",
     "retrieve_faiss_chunks",
+    "get_chroma_db_path",
 ]
