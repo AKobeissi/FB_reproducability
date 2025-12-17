@@ -17,6 +17,7 @@ import json
 import shutil
 import re
 import hashlib
+import gc
 import time
 from uuid import uuid4
 
@@ -331,6 +332,7 @@ def build_chroma_store(
                         if i == max_retries - 1:
                             raise
                         exp_logger.warning(f"Cleanup attempt {i+1} failed ({e}), retrying...")
+                        gc.collect()
                         time.sleep(1)
         except Exception as e:
             exp_logger.error(f"Failed to clear stale vector store at {db_path}: {e}")
