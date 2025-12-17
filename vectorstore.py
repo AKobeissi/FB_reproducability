@@ -16,6 +16,7 @@ import logging
 import json
 import shutil
 import re
+import hashlib
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)
@@ -235,7 +236,10 @@ def build_chroma_store(
             sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
             db_name = "_".join(sanitized_list)
         else:
-            db_name = _sanitize_path_segment(docs_list[0])
+            # Use a hash of the sorted document names to ensure uniqueness for large sets
+            sorted_docs = sorted([str(d) for d in docs_list])
+            doc_hash = hashlib.md5("_".join(sorted_docs).encode("utf-8")).hexdigest()
+            db_name = f"custom_set_{doc_hash[:8]}"
     else:
         docs_list = None
         db_name = "shared"
