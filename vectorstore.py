@@ -197,6 +197,8 @@ def save_store_config(experiment, db_path: str):
         "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
     }
     config_path = os.path.join(db_path, "config.json")
+    config_dir = os.path.dirname(config_path)
+    os.makedirs(config_dir, exist_ok=True)
     with open(config_path, 'w') as f:
         json.dump(current_config, f)
 
