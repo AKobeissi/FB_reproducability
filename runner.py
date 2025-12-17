@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+import gc
 from pathlib import Path
 
 # Handle import depending on whether run as module or script. Be explicit about errors
@@ -206,6 +207,7 @@ def main():
             print(f"Samples: {args.num_samples}")
         print("=" * 80)
 
+        exp = None
         try:
             exp = RAGExperiment(
                 experiment_type=experiment_type,
@@ -224,7 +226,10 @@ def main():
             
         except Exception as e:
             logger.error(f"Experiment failed for {label}: {e}", exc_info=True)
-            continue
+        finally:
+            if exp:
+                del exp
+            gc.collect()
 
 
 if __name__ == "__main__":

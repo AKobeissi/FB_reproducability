@@ -10,13 +10,15 @@ interface as `RAGExperiment` in this repo, i.e. it should provide:
 """
 from __future__ import annotations
 
-from typing import List, Any, Optional, Iterable
+from typing import List, Any, Optional, Iterable, Tuple
 import os
 import logging
 import json
 import shutil
 import re
 import hashlib
+import gc
+import time
 from uuid import uuid4
 
 def get_experiment_config_hash(experiment) -> str:
@@ -203,6 +205,47 @@ def save_store_config(experiment, db_path: str):
         json.dump(current_config, f)
 
 
+def get_chroma_db_path(experiment, docs: Any) -> Tuple[str, str]:
+    """
+    Get the database name and absolute path for a Chroma vector store.
+
+    Parameters
+    ----------
+    experiment:
+        RAGExperiment-like object.
+    docs:
+        Either "all", a single document identifier (str), or an iterable
+        of identifiers.
+
+    Returns
+    -------
+    (db_name, db_path) tuple
+    """
+    config_hash = get_experiment_config_hash(experiment)
+    
+    if docs == "all":
+        docs_list = None
+        db_name = f"shared_{config_hash}"
+    elif isinstance(docs, str):
+        docs_list = [docs]
+        db_name = _sanitize_path_segment(docs) + f"_{config_hash}"
+    elif isinstance(docs, (list, tuple, set)):
+        docs_list = list(docs)
+        if len(docs_list) <= 3:
+            sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
+            db_name = "_".join(sanitized_list) + f"_{config_hash}"
+        else:
+            sorted_docs = sorted([str(d) for d in docs_list])
+            doc_hash = hashlib.md5("_".join(sorted_docs).encode("utf-8")).hexdigest()
+            db_name = f"custom_set_{doc_hash[:8]}_{config_hash}"
+    else:
+        docs_list = None
+        db_name = f"shared_{config_hash}"
+
+    db_path = os.path.join(experiment.vector_store_dir, "chroma", db_name)
+    return db_name, db_path
+
+
 def build_chroma_store(
     experiment,
     docs,
@@ -237,32 +280,7 @@ def build_chroma_store(
         embeddings = getattr(experiment, "embeddings", None)
 
     # --- Normalise docs argument & derive DB name --------------------------------
-    config_hash = get_experiment_config_hash(experiment)
-    
-    if docs == "all":
-        docs_list = None
-        db_name = f"shared_{config_hash}"
-    elif isinstance(docs, str):
-        docs_list = [docs]
-        db_name = _sanitize_path_segment(docs) + f"_{config_hash}"
-    elif isinstance(docs, (list, tuple, set)):
-        docs_list = list(docs)
-        if len(docs_list) <= 3:
-            # Join them, but sanitize the result to avoid weird chars from individual names
-            # or from the join itself if we used weird separators (though we use _)
-            # Using _ as separator is safe if we sanitize segments first.
-            sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
-            db_name = "_".join(sanitized_list) + f"_{config_hash}"
-        else:
-            # Use a hash of the sorted document names to ensure uniqueness for large sets
-            sorted_docs = sorted([str(d) for d in docs_list])
-            doc_hash = hashlib.md5("_".join(sorted_docs).encode("utf-8")).hexdigest()
-            db_name = f"custom_set_{doc_hash[:8]}_{config_hash}"
-    else:
-        docs_list = None
-        db_name = f"shared_{config_hash}"
-
-    db_path = os.path.join(experiment.vector_store_dir, "chroma", db_name)
+    db_name, db_path = get_chroma_db_path(experiment, docs)
     exp_logger = getattr(experiment, "logger", logger)
     
     # --- Check for stale vector store configuration ------------------------------
@@ -283,8 +301,6 @@ def build_chroma_store(
                     stored_config = json.load(f)
                 
                 # Check for mismatch in critical parameters
-                # With the hash in the name, this shouldn't happen often unless hash collisions or 
-                # manual modification, but good to keep as safety.
                 if stored_config != current_config:
                     exp_logger.warning(
                         f"Vector store '{db_name}' configuration mismatch.\n"
@@ -299,8 +315,6 @@ def build_chroma_store(
         else:
             # If the directory exists but config.json is missing, it might be an old store.
             # To be safe against stale data (different chunk sizes), we rebuild it.
-            # Only do this if we actually have documents to populate it with or if lazy_load is requested
-            # otherwise we might just be loading a valid legacy store.
             if documents or lazy_load:
                 exp_logger.warning(f"Vector store '{db_name}' missing config.json. Rebuilding...")
                 should_clean = True
@@ -308,7 +322,18 @@ def build_chroma_store(
     if should_clean:
         try:
             if os.path.exists(db_path):
-                shutil.rmtree(db_path)
+                # Try multiple times to remove the directory to handle potential file locks
+                max_retries = 3
+                for i in range(max_retries):
+                    try:
+                        shutil.rmtree(db_path)
+                        break
+                    except OSError as e:
+                        if i == max_retries - 1:
+                            raise
+                        exp_logger.warning(f"Cleanup attempt {i+1} failed ({e}), retrying...")
+                        gc.collect()
+                        time.sleep(1)
         except Exception as e:
             exp_logger.error(f"Failed to clear stale vector store at {db_path}: {e}")
             raise
