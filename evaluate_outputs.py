@@ -16,6 +16,10 @@ import json
 import logging
 import os
 from pathlib import Path
+
+# Set memory management env var to avoid fragmentation OOM
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -114,6 +118,16 @@ def parse_args() -> argparse.Namespace:
         help="Device map hint passed to transformers (auto, cuda, cpu, cuda:0, etc.).",
     )
     parser.add_argument(
+        "--load-in-8bit",
+        action="store_true",
+        help="Load model in 8-bit quantization (requires bitsandbytes).",
+    )
+    parser.add_argument(
+        "--load-in-4bit",
+        action="store_true",
+        help="Load model in 4-bit quantization (requires bitsandbytes).",
+    )
+    parser.add_argument(
         "--trust-remote-code",
         action="store_true",
         help="Allow loading models that require custom code (HF trust_remote_code).",
@@ -194,6 +208,8 @@ def build_judge_pipeline(
     provider: str = "huggingface",
     openai_api_key_env: str = "OPENAI_API_KEY",
     openai_api_base: str = "https://api.openai.com/v1",
+    load_in_8bit: bool = False,
+    load_in_4bit: bool = False,
 ) -> Any:
     if provider == "openai":
         return build_openai_judge_pipeline(
@@ -207,6 +223,10 @@ def build_judge_pipeline(
         model_kwargs["torch_dtype"] = torch_dtype
     if device_map:
         model_kwargs["device_map"] = device_map
+    if load_in_8bit:
+        model_kwargs["load_in_8bit"] = True
+    if load_in_4bit:
+        model_kwargs["load_in_4bit"] = True
 
     logging.info("Loading judge model %s (dtype=%s, device_map=%s)", model_id, dtype_name, device_map)
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=trust_remote_code)
@@ -463,6 +483,8 @@ def main():
             provider=args.judge_provider,
             openai_api_key_env=args.openai_api_key_env,
             openai_api_base=args.openai_api_base,
+            load_in_8bit=args.load_in_8bit,
+            load_in_4bit=args.load_in_4bit,
         )
         evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=args.judge_max_new_tokens)
 
