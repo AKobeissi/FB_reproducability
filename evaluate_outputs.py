@@ -19,6 +19,7 @@ from pathlib import Path
 
 # Set memory management env var to avoid fragmentation OOM
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
 
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -118,14 +119,9 @@ def parse_args() -> argparse.Namespace:
         help="Device map hint passed to transformers (auto, cuda, cpu, cuda:0, etc.).",
     )
     parser.add_argument(
-        "--load-in-8bit",
-        action="store_true",
-        help="Load model in 8-bit quantization (requires bitsandbytes).",
-    )
-    parser.add_argument(
-        "--load-in-4bit",
-        action="store_true",
-        help="Load model in 4-bit quantization (requires bitsandbytes).",
+        "--max-gpu-memory",
+        default=None,
+        help="Max memory to use per GPU (e.g. '10GiB'). Helps with OOM by forcing offload.",
     )
     parser.add_argument(
         "--trust-remote-code",
@@ -208,8 +204,7 @@ def build_judge_pipeline(
     provider: str = "huggingface",
     openai_api_key_env: str = "OPENAI_API_KEY",
     openai_api_base: str = "https://api.openai.com/v1",
-    load_in_8bit: bool = False,
-    load_in_4bit: bool = False,
+    max_gpu_memory: Optional[str] = None,
 ) -> Any:
     if provider == "openai":
         return build_openai_judge_pipeline(
@@ -223,10 +218,8 @@ def build_judge_pipeline(
         model_kwargs["torch_dtype"] = torch_dtype
     if device_map:
         model_kwargs["device_map"] = device_map
-    if load_in_8bit:
-        model_kwargs["load_in_8bit"] = True
-    if load_in_4bit:
-        model_kwargs["load_in_4bit"] = True
+    if max_gpu_memory:
+        model_kwargs["max_memory"] = {0: max_gpu_memory, "cpu": "200GiB"}
 
     logging.info("Loading judge model %s (dtype=%s, device_map=%s)", model_id, dtype_name, device_map)
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=trust_remote_code)
@@ -465,6 +458,14 @@ def main():
         format="%(levelname)s - %(message)s",
     )
 
+    try:
+        import triton
+        logging.info(f"Triton version {triton.__version__} is available.")
+    except ImportError:
+        logging.warning("Triton is NOT installed or cannot be imported. MXFP4 models will fail or fallback to slow/heavy dequantization.")
+    except Exception as e:
+        logging.warning(f"Error checking Triton: {e}")
+
     evaluator = Evaluator(
         use_bertscore=not args.no_bertscore,
         use_llm_judge=not args.skip_llm_judge,
@@ -483,8 +484,7 @@ def main():
             provider=args.judge_provider,
             openai_api_key_env=args.openai_api_key_env,
             openai_api_base=args.openai_api_base,
-            load_in_8bit=args.load_in_8bit,
-            load_in_4bit=args.load_in_4bit,
+            max_gpu_memory=args.max_gpu_memory,
         )
         evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=args.judge_max_new_tokens)
 
