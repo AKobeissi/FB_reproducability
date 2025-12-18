@@ -118,6 +118,11 @@ def parse_args() -> argparse.Namespace:
         help="Device map hint passed to transformers (auto, cuda, cpu, cuda:0, etc.).",
     )
     parser.add_argument(
+        "--max-gpu-memory",
+        default=None,
+        help="Max memory to use per GPU (e.g. '18GiB'). Helps avoid OOM by offloading.",
+    )
+    parser.add_argument(
         "--load-in-8bit",
         action="store_true",
         help="Load model in 8-bit quantization (requires bitsandbytes).",
@@ -210,6 +215,7 @@ def build_judge_pipeline(
     openai_api_base: str = "https://api.openai.com/v1",
     load_in_8bit: bool = False,
     load_in_4bit: bool = False,
+    max_gpu_memory: Optional[str] = None,
 ) -> Any:
     if provider == "openai":
         return build_openai_judge_pipeline(
@@ -223,6 +229,13 @@ def build_judge_pipeline(
         model_kwargs["torch_dtype"] = torch_dtype
     if device_map:
         model_kwargs["device_map"] = device_map
+
+    if max_gpu_memory:
+        if torch.cuda.is_available():
+            n_gpus = torch.cuda.device_count()
+            max_memory = {i: max_gpu_memory for i in range(n_gpus)}
+            model_kwargs["max_memory"] = max_memory
+
     if load_in_8bit:
         model_kwargs["load_in_8bit"] = True
     if load_in_4bit:
@@ -485,6 +498,7 @@ def main():
             openai_api_base=args.openai_api_base,
             load_in_8bit=args.load_in_8bit,
             load_in_4bit=args.load_in_4bit,
+            max_gpu_memory=args.max_gpu_memory,
         )
         evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=args.judge_max_new_tokens)
 
