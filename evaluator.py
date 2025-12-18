@@ -609,7 +609,7 @@ class Evaluator:
             generated_answer=prediction or "(no answer provided)",
         )
         prompt_body = f"{system_prompt.strip()}\n\n{user_message.strip()}\n\nReturn the numeric score (1-5) on the first line and provide reasoning on the next line."
-        return f"<s>[INST] {prompt_body} [/INST]"
+        return prompt_body
     
     def set_judge_pipeline(self, pipeline_obj: Any, max_new_tokens: Optional[int] = None):
         """
@@ -641,17 +641,38 @@ class Evaluator:
             }
         
         try:
+            # Apply chat template if available
+            prompt_formatted = prompt
+            if hasattr(self._judge_pipeline, "tokenizer") and hasattr(self._judge_pipeline.tokenizer, "apply_chat_template"):
+                try:
+                    messages = [{"role": "user", "content": prompt}]
+                    prompt_formatted = self._judge_pipeline.tokenizer.apply_chat_template(
+                        messages,
+                        tokenize=False,
+                        add_generation_prompt=True
+                    )
+                except Exception:
+                    # Fallback to Llama-style if template application fails
+                    prompt_formatted = f"<s>[INST] {prompt} [/INST]"
+            else:
+                 # Fallback to Llama-style
+                prompt_formatted = f"<s>[INST] {prompt} [/INST]"
+
             max_new_tokens = getattr(self, "_judge_max_new_tokens", 200)
             response = self._judge_pipeline(
-                prompt,
+                prompt_formatted,
                 max_new_tokens=max_new_tokens,
                 num_return_sequences=1,
                 pad_token_id=self._judge_pipeline.tokenizer.eos_token_id,
             )
 
             judgment_text = response[0]['generated_text']
-            if prompt and judgment_text.startswith(prompt):
-                judgment_text = judgment_text[len(prompt):]
+            # Remove prompt from generated text
+            if prompt_formatted and judgment_text.startswith(prompt_formatted):
+                judgment_text = judgment_text[len(prompt_formatted):]
+            elif prompt and judgment_text.startswith(prompt):
+                 judgment_text = judgment_text[len(prompt):]
+            
             judgment_text = judgment_text.strip()
             lines = [line.strip() for line in judgment_text.splitlines() if line.strip()]
 
