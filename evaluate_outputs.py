@@ -88,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--judge-model",
-        default="meta-llama/Meta-Llama-3-8B-Instruct",
+        default="openai/gpt-oss-20b",
         help="HuggingFace model id to use as the LLM judge.",
     )
     parser.add_argument(
