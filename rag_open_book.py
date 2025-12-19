@@ -42,6 +42,8 @@ def run_open_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, Any]
             'doc_link': doc_link,
             'question': question,
             'reference_answer': reference_answer,
+            'question_type': sample.get('question_type'),
+            'question_reasoning': sample.get('question_reasoning'),
             'gold_evidence': context,
             'gold_evidence_segments': gold_segments,
             'context_length': len(context),
