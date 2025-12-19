@@ -375,7 +375,6 @@ def evaluate_samples(
     retrieval_top_k: Optional[int],
     ragas_llm: Any = None,
 ) -> List[Dict[str, Any]]:
-    per_sample_results: List[Dict[str, Any]] = []
     for idx, sample in enumerate(samples):
         prediction = (sample.get("generated_answer") or "").strip()
         reference = (sample.get("reference_answer") or "").strip()
@@ -392,7 +391,6 @@ def evaluate_samples(
             langchain_llm=ragas_llm,
         )
         sample["generation_evaluation"] = metrics
-        per_sample_results.append(metrics)
 
         retrieval_metrics = compute_retrieval_metrics_if_available(
             evaluator,
@@ -404,16 +402,16 @@ def evaluate_samples(
 
         logging.debug("Scored sample %s", idx)
 
-    return per_sample_results
+    return samples
 
 
 def summarize_results(
     evaluator: Evaluator,
-    per_sample_results: List[Dict[str, Any]],
+    samples: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
-    if not per_sample_results:
+    if not samples:
         return {}
-    return evaluator._aggregate_results(per_sample_results)  # pragma: no cover
+    return evaluator.summarize_experiment(samples)
 
 
 def determine_output_path(
@@ -440,13 +438,14 @@ def render_summary_line(
     num_samples: int,
     summary: Dict[str, Any],
 ) -> str:
+    overall = summary.get("overall", {})
     parts = [
         f"{path.name}:",
         f"samples={num_samples}",
-        f"BLEU4={format_float(summary.get('bleu_4_mean'))}",
-        f"ROUGEL={format_float(summary.get('rouge_l_f1_mean'))}",
-        f"BERTScore={format_float(summary.get('bertscore_f1_mean'))}",
-        f"JudgeAcc={format_float(summary.get('llm_judge_accuracy'))}",
+        f"BLEU4={format_float(overall.get('bleu_4_mean'))}",
+        f"ROUGEL={format_float(overall.get('rouge_l_f1_mean'))}",
+        f"BERTScore={format_float(overall.get('bertscore_f1_mean'))}",
+        f"JudgeAcc={format_float(overall.get('llm_judge_accuracy'))}",
     ]
     return " | ".join(parts)
 
@@ -529,8 +528,8 @@ def main():
 
             samples, _metadata, container = load_results(path)
             logging.info("Scoring %s (%d samples)", path, len(samples))
-            per_sample = evaluate_samples(evaluator, samples, args.retrieval_top_k, ragas_llm=ragas_llm)
-            summary = summarize_results(evaluator, per_sample)
+            evaluated_samples = evaluate_samples(evaluator, samples, args.retrieval_top_k, ragas_llm=ragas_llm)
+            summary = summarize_results(evaluator, evaluated_samples)
             container["evaluation_summary"] = summary
 
             target_path = determine_output_path(path, args.output_dir, args.suffix, args.overwrite)

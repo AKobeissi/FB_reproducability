@@ -912,7 +912,7 @@ class Evaluator:
         # Aggregate BLEU scores
         for n in range(1, 5):
             key = f'bleu_{n}'
-            scores = [r['bleu'][key] for r in results if 'bleu' in r and key in r['bleu']]
+            scores = [r['bleu'][key] for r in results if 'bleu' in r and r['bleu'] and key in r['bleu']]
             if scores:
                 aggregated[f'{key}_mean'] = np.mean(scores)
                 aggregated[f'{key}_std'] = np.std(scores)
@@ -920,7 +920,7 @@ class Evaluator:
         # Aggregate ROUGE scores
         rouge_metrics = ['rouge_1_f1', 'rouge_2_f1', 'rouge_l_f1']
         for metric in rouge_metrics:
-            scores = [r['rouge'][metric] for r in results if 'rouge' in r and metric in r['rouge']]
+            scores = [r['rouge'][metric] for r in results if 'rouge' in r and r['rouge'] and metric in r['rouge']]
             if scores:
                 aggregated[f'{metric}_mean'] = np.mean(scores)
                 aggregated[f'{metric}_std'] = np.std(scores)
@@ -929,7 +929,7 @@ class Evaluator:
         if any('bertscore' in r for r in results):
             for metric in ['precision', 'recall', 'f1']:
                 scores = [r['bertscore'][metric] for r in results 
-                         if 'bertscore' in r and r['bertscore'][metric] is not None]
+                         if 'bertscore' in r and r['bertscore'] and r['bertscore'].get(metric) is not None]
                 if scores:
                     aggregated[f'bertscore_{metric}_mean'] = np.mean(scores)
                     aggregated[f'bertscore_{metric}_std'] = np.std(scores)
@@ -937,13 +937,13 @@ class Evaluator:
         # Aggregate RAGAS scores
         ragas_metric_names: set = set()
         for r in results:
-            if 'ragas' in r:
+            if 'ragas' in r and r['ragas']:
                 ragas_metric_names.update(r['ragas'].keys())
         for metric_name in ragas_metric_names:
             scores = [
                 r['ragas'][metric_name]
                 for r in results
-                if 'ragas' in r and metric_name in r['ragas']
+                if 'ragas' in r and r['ragas'] and metric_name in r['ragas']
             ]
             if scores:
                 aggregated[f'ragas_{metric_name}_mean'] = float(np.mean(scores))
@@ -969,6 +969,78 @@ class Evaluator:
             aggregated['llm_judge_accuracy'] = float(np.mean(judge_correct_flags))
         
         return aggregated
+
+    def _aggregate_retrieval_results(self, results: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Aggregate retrieval metrics"""
+        aggregated = {}
+        if not results:
+            return aggregated
+            
+        keys = [
+            "num_retrieved", "exact_match", "max_token_overlap", "mean_token_overlap",
+            "doc_hit_at_k", "page_hit_at_k", "chunk_hit_at_k",
+            "doc_recall_at_k", "page_recall_at_k", "chunk_recall_at_k",
+            "doc_hit_rank", "page_hit_rank", "chunk_hit_rank"
+        ]
+        
+        for key in keys:
+            # Filter None values (e.g. rank can be None)
+            vals = [r[key] for r in results if r.get(key) is not None]
+            if vals:
+                aggregated[f"retrieval_{key}_mean"] = float(np.mean(vals))
+                # Skip std for binary hit flags if desired, but including for completeness is fine
+                aggregated[f"retrieval_{key}_std"] = float(np.std(vals))
+        
+        # Add failure reason counts
+        reasons = [r.get("failure_reason") for r in results if r.get("failure_reason")]
+        if reasons:
+            total = len(reasons)
+            counts = Counter(reasons)
+            for reason, count in counts.items():
+                aggregated[f"retrieval_fail_{reason}_pct"] = count / total
+                
+        return aggregated
+
+    def _aggregate_samples(self, samples: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Helper to aggregate both generation and retrieval metrics for a list of samples"""
+        # Extract generation metrics list (ensure not None)
+        gen_metrics = [s.get("generation_evaluation", {}) for s in samples if s.get("generation_evaluation")]
+        # Extract retrieval metrics list
+        ret_metrics = [s.get("retrieval_evaluation", {}) for s in samples if s.get("retrieval_evaluation")]
+        
+        agg_gen = self._aggregate_results(gen_metrics)
+        agg_ret = self._aggregate_retrieval_results(ret_metrics)
+        
+        return {**agg_gen, **agg_ret}
+
+    def summarize_experiment(self, samples: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Aggregate metrics across all samples, and by question_type/reasoning.
+        """
+        # 1. Full aggregation
+        full_agg = self._aggregate_samples(samples)
+        
+        # 2. By question_type
+        by_type = {}
+        # Get all unique types, filtering out None
+        types = set(str(s.get("question_type")) for s in samples if s.get("question_type"))
+        for t in types:
+            subset = [s for s in samples if str(s.get("question_type")) == t]
+            by_type[t] = self._aggregate_samples(subset)
+            
+        # 3. By question_reasoning
+        by_reasoning = {}
+        reasons = set(str(s.get("question_reasoning")) for s in samples if s.get("question_reasoning"))
+        for r in reasons:
+            subset = [s for s in samples if str(s.get("question_reasoning")) == r]
+            by_reasoning[r] = self._aggregate_samples(subset)
+            
+        return {
+            "overall": full_agg,
+            "by_question_type": by_type,
+            "by_question_reasoning": by_reasoning
+        }
+
 
 
 if __name__ == "__main__":
