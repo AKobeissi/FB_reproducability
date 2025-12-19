@@ -37,6 +37,8 @@ def run_closed_book(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, An
             'doc_link': sample.get('doc_link'),
             'question': question,
             'reference_answer': reference_answer,
+            'question_type': sample.get('question_type'),
+            'question_reasoning': sample.get('question_reasoning'),
             'generated_answer': generated_answer,
             'generation_length': len(generated_answer),
             'experiment_type': experiment.CLOSED_BOOK,

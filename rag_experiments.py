@@ -262,6 +262,10 @@ class RAGExperiment(
         base_dir = Path(__file__).resolve().parent
         if output_dir is None:
             output_dir = str(base_dir / "outputs")
+        
+        # Adjust output directory structure: outputs/experiment_type/results
+        output_dir = Path(output_dir) / experiment_type / "results"
+        
         if vector_store_dir is None:
             vector_store_dir = str(base_dir / "vector_stores")
         self.output_dir = str(Path(output_dir).resolve())

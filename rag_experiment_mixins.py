@@ -442,6 +442,8 @@ class ResultsMixin:
                 'doc_link': doc_link,
                 'question': sample.get('question', ''),
                 'reference_answer': sample.get('answer', ''),
+                'question_type': sample.get('question_type'),
+                'question_reasoning': sample.get('question_reasoning'),
                 'gold_evidence': '',
                 'gold_evidence_segments': [],
                 'retrieved_chunks': [],

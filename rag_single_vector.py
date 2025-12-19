@@ -156,6 +156,8 @@ def _process_single_sample(
         'doc_link': doc_link,
         'question': question,
         'reference_answer': reference_answer,
+        'question_type': sample.get('question_type'),
+        'question_reasoning': sample.get('question_reasoning'),
         'gold_evidence': gold_evidence_str,
         'gold_evidence_segments': gold_segments,
         'retrieved_chunks': retrieved_chunks,
