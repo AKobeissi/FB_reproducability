@@ -449,8 +449,9 @@ class Evaluator:
         self,
         retrieved_chunks: List[Dict[str, Any]],
         gold_segments: List[Dict[str, Any]],
+        reference_answer: Optional[str] = None,
         top_k: Optional[int] = None,
-        match_threshold: float = 0.55,
+        match_threshold: float = 0.70,
     ) -> Dict[str, Any]:
         """
         Compute retrieval diagnostics (Recall@k / Hit@k) at document, page, and chunk level.
@@ -458,6 +459,7 @@ class Evaluator:
         Args:
             retrieved_chunks: List of chunk dictionaries with `text` and `metadata`.
             gold_segments: Structured gold evidence entries (each dict contains text/doc/page).
+            reference_answer: The textual reference answer (optional).
             top_k: Optional limit on evaluated retrievals.
             match_threshold: Token-overlap threshold required for chunk matches.
         """
@@ -465,6 +467,14 @@ class Evaluator:
         gold_segments = gold_segments or []
 
         gold_texts = [seg.get("text", "") for seg in gold_segments if seg.get("text")]
+        # Use single space instead of double newline to avoid issues with exact string matching
+        # if the original text didn't have double newlines. Or better, just concatenate if needed.
+        # But for exact match against chunks, we need to be careful.
+        # Actually, if we want "exact match of gold evidence in retrieved chunk", we should check
+        # if ANY gold segment is in the chunk, or if the ALL gold evidence is in the chunk?
+        # The user asked "checking if there is an exact match of the gold evidence in the retreived chunk".
+        # This implies checking per-segment.
+        
         gold_concat = "\n\n".join(gold_texts)
         gold_docs = {seg.get("doc_name") for seg in gold_segments if seg.get("doc_name")}
         gold_pages = {
@@ -474,26 +484,54 @@ class Evaluator:
         }
 
         overlaps: List[float] = []
-        exact_match = False
+        exact_match_gold = False
+        exact_match_ref = False
 
         doc_hits: Dict[str, int] = {}
         page_hits: Dict[Tuple[Any, Any], int] = {}
         matched_chunk_indices: set = set()
         chunk_hit_rank = None
 
+        # LCS calculation helper
+        def check_exact_lcs_match(chunk_text: str, target_text: str) -> bool:
+            if not target_text or not chunk_text:
+                return False
+            # Normalize whitespace
+            ct = " ".join(chunk_text.split())
+            tt = " ".join(target_text.split())
+            if tt in ct:
+                return True
+            # Optional: stricter LCS logic can be added here if "exact substring" isn't enough
+            return False
+
+        # Reference-based metrics
+        ref_chunk_matches = 0
+        ref_exact_matches = 0
+
         for idx, chunk in enumerate(evaluated_chunks):
             text = chunk.get("text", "") or ""
             metadata = chunk.get("metadata", {}) or {}
             doc_name = metadata.get("doc_name")
             page = metadata.get("page")
+            
+            # 1. Overlap with aggregated gold
             chunk_tokens_overlap = (
                 self._token_overlap_ratio(text, gold_concat) if gold_concat else 0.0
             )
             overlaps.append(chunk_tokens_overlap)
 
-            if gold_concat and gold_concat.strip() and gold_concat.strip() in text:
-                exact_match = True
+            # 2. Exact match check (substring) for gold
+            # Check if ANY individual gold segment is contained in this chunk
+            for g_text in gold_texts:
+                if check_exact_lcs_match(text, g_text):
+                    exact_match_gold = True
 
+            # 3. Exact match check (substring) for reference
+            if reference_answer and check_exact_lcs_match(text, reference_answer):
+                exact_match_ref = True
+                ref_exact_matches += 1
+
+            # 4. Doc/Page hits
             if doc_name in gold_docs and doc_name not in doc_hits:
                 doc_hits[doc_name] = idx + 1
 
@@ -501,6 +539,7 @@ class Evaluator:
             if page_key in gold_pages and page_key not in page_hits:
                 page_hits[page_key] = idx + 1
 
+            # 5. Chunk Hit (Token Overlap vs Gold)
             for seg_idx, seg in enumerate(gold_segments):
                 gold_text = seg.get("text") or ""
                 if not gold_text:
@@ -511,6 +550,12 @@ class Evaluator:
                     if chunk_hit_rank is None:
                         chunk_hit_rank = idx + 1
                     break
+            
+            # 6. Chunk Match (Token Overlap vs Reference)
+            if reference_answer:
+                ref_overlap = self._token_overlap_ratio(text, reference_answer)
+                if ref_overlap >= match_threshold:
+                    ref_chunk_matches += 1
 
         doc_hit_rank = min(doc_hits.values()) if doc_hits else None
         page_hit_rank = min(page_hits.values()) if page_hits else None
@@ -521,9 +566,19 @@ class Evaluator:
 
         doc_recall = len(doc_hits) / len(gold_docs) if gold_docs else 0.0
         page_recall = len(page_hits) / len(gold_pages) if gold_pages else 0.0
-        chunk_recall = (
+        
+        # Recall against gold evidence segments
+        chunk_recall_evidence = (
             len(matched_chunk_indices) / len(gold_segments) if gold_segments else 0.0
         )
+        
+        # Recall against reference answer (binary: found match or not, since ref is usually single-unit)
+        # However, user asked for "chunk recall against reference", we can treat it as 
+        # "did we retrieve a chunk that matches the reference?"
+        chunk_recall_reference = 1.0 if ref_chunk_matches > 0 else 0.0
+        
+        # Also track exact match recall (binary)
+        chunk_recall_reference_exact = 1.0 if ref_exact_matches > 0 else 0.0
 
         if not evaluated_chunks:
             miss_reason = "no_retrievals"
@@ -538,15 +593,18 @@ class Evaluator:
 
         metrics = {
             "num_retrieved": len(evaluated_chunks),
-            "exact_match": 1.0 if exact_match else 0.0,
-            "max_token_overlap": max(overlaps) if overlaps else 0.0,
-            "mean_token_overlap": float(np.mean(overlaps)) if overlaps else 0.0,
+            "exact_match_gold": 1.0 if exact_match_gold else 0.0,
+            "exact_match_ref": 1.0 if exact_match_ref else 0.0,
+            "max_token_overlap_gold": max(overlaps) if overlaps else 0.0,
+            "mean_token_overlap_gold": float(np.mean(overlaps)) if overlaps else 0.0,
             "doc_hit_at_k": doc_hit,
             "page_hit_at_k": page_hit,
             "chunk_hit_at_k": chunk_hit,
             "doc_recall_at_k": doc_recall,
             "page_recall_at_k": page_recall,
-            "chunk_recall_at_k": chunk_recall,
+            "chunk_recall_evidence": chunk_recall_evidence,
+            "chunk_recall_reference": chunk_recall_reference,
+            "chunk_recall_reference_exact": chunk_recall_reference_exact,
             "doc_hit_rank": doc_hit_rank,
             "page_hit_rank": page_hit_rank,
             "chunk_hit_rank": chunk_hit_rank,
@@ -977,9 +1035,11 @@ class Evaluator:
             return aggregated
             
         keys = [
-            "num_retrieved", "exact_match", "max_token_overlap", "mean_token_overlap",
+            "num_retrieved", "exact_match_gold", "exact_match_ref", 
+            "max_token_overlap_gold", "mean_token_overlap_gold",
             "doc_hit_at_k", "page_hit_at_k", "chunk_hit_at_k",
-            "doc_recall_at_k", "page_recall_at_k", "chunk_recall_at_k",
+            "doc_recall_at_k", "page_recall_at_k", 
+            "chunk_recall_evidence", "chunk_recall_reference", "chunk_recall_reference_exact",
             "doc_hit_rank", "page_hit_rank", "chunk_hit_rank"
         ]
         
