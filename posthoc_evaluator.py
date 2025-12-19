@@ -2,6 +2,7 @@
 """
 Post-hoc evaluation utility for FinanceBench RAG experiments.
 Calculates generation metrics (BLEU, ROUGE, BERTScore) and retrieval metrics.
+Also computes a programmatic exact match accuracy for numeric answers.
 """
 
 from __future__ import annotations
@@ -9,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -136,13 +138,8 @@ class MetricsCalculator:
         
         # BLEU
         if self.bleu_metric:
-            # sacrebleu expects list of references list (for multiple refs per sample)
-            # here we have 1 ref per sample
             refs_formatted = [[r] for r in refs] 
             try:
-                # sacrebleu corpus_score expects list of hypotheses and list of references (where each ref is a list if multiple)
-                # actually corpus_score takes (sys, refs) where refs is list of list of strings (refs[0] is all ref1s, refs[1] is all ref2s)
-                # Since we have 1 ref per doc, we pass [refs]
                 score = self.bleu_metric.corpus_score(preds, [refs])
                 metrics['bleu'] = score.score
             except Exception as e:
@@ -178,30 +175,17 @@ class MetricsCalculator:
         page_hits = []
         chunk_hits = []
         
-        k_values = [1, 3, 5] # We can calc hit@k if we know rank. 
-        # But here we just have 'retrieved_chunks'. If top_k was 5 during exp, we are calculating hit@5.
-        
         for sample in samples:
             retrieved = sample.get('retrieved_chunks', [])
             gold_segments = sample.get('gold_evidence_segments', [])
             
             if not gold_segments:
-                # No gold evidence, skip or treat as 0? 
-                # If question type suggests retrieval, treat as failure?
-                # For now, skip calculation for this sample
                 continue
 
             # Document Level
-            # Gold doc names
             gold_docs = set(s.get('doc_name') for s in gold_segments if s.get('doc_name'))
-            
-            # Retrieved doc names
             retrieved_docs = set(c.get('metadata', {}).get('doc_name') for c in retrieved if c.get('metadata', {}).get('doc_name'))
-            
-            # Check overlap
             if not gold_docs:
-                 # If gold doesn't have doc info (e.g. just text), strictly can't evaluate doc hit.
-                 # But in FinanceBench, doc_name is usually top-level field too.
                  if sample.get('doc_name'):
                      gold_docs.add(sample['doc_name'])
             
@@ -209,7 +193,6 @@ class MetricsCalculator:
             doc_hits.append(doc_hit)
             
             # Page Level
-            # Gold pages: (doc_name, page_num)
             gold_pages = set()
             for s in gold_segments:
                 dn = s.get('doc_name') or sample.get('doc_name')
@@ -230,29 +213,14 @@ class MetricsCalculator:
                 page_hits.append(page_hit)
             
             # Chunk/Text Level
-            # Check if any gold evidence text is roughly contained in retrieved text
-            # This is a proxy for chunk hit since we don't have shared chunk IDs
             chunk_hit = 0.0
             retrieved_texts = [c.get('text', '').lower() for c in retrieved]
-            
             for s in gold_segments:
                 gold_text = s.get('text', '').lower()
-                # Simple containment or overlap
-                # If a significant portion of gold text is in retrieved text
                 if not gold_text: continue
-                
-                # Check if gold text is in any retrieved chunk
-                # Relaxed check: if 50% of gold text is found? 
-                # Strict check: "exact" substring
-                
-                # Using strict substring for now as FinanceBench often retrieves exact paragraphs
                 if any(gold_text in rt for rt in retrieved_texts):
                     chunk_hit = 1.0
                     break
-                
-                # Fallback: if gold text is very long, maybe it spans chunks?
-                # Let's try simple overlap
-            
             chunk_hits.append(chunk_hit)
 
         metrics = {}
@@ -264,6 +232,103 @@ class MetricsCalculator:
             metrics['chunk_hit_rate'] = float(np.mean(chunk_hits))
             
         return metrics
+
+    def compute_numeric_accuracy(self, samples: List[Dict[str, Any]]) -> Dict[str, float]:
+        """
+        Compute correctness of numeric answers by extracting numbers from
+        the reference answer and checking if they appear in the generated answer.
+        Primarily useful for 'metrics-generated' questions.
+        """
+        if not samples:
+            return {}
+            
+        matches = []
+        valid_samples = 0
+        
+        for sample in samples:
+            # We specifically target metrics-generated questions or just generally attempt
+            # parsing if the question type is relevant.
+            # However, the user request says "metrics-generated", so we can be strict or loose.
+            # Being loose allows us to evaluate "domain-relevant" too if they happen to be numeric.
+            
+            ref = sample.get('reference_answer', '')
+            gen = sample.get('generated_answer', '')
+            
+            if not ref or not gen:
+                continue
+
+            ref_nums = self._extract_numbers(ref)
+            if not ref_nums:
+                # If reference has no numbers, we skip this metric for this sample
+                # or treat as N/A.
+                continue
+                
+            valid_samples += 1
+            gen_nums = self._extract_numbers(gen)
+            
+            # Check if all numbers in reference are present in generation (with tolerance)
+            # Typically FinanceBench questions ask for a specific value.
+            # If the reference is "$1,577", numbers are [1577.0].
+            # If generated is "$1,577 million", numbers are [1577.0].
+            # If generated is "1577", numbers are [1577.0].
+            
+            # We use a relaxed containment check: is the KEY reference number in the generated numbers?
+            # If reference has multiple numbers (rare for single metric Q), we require all of them?
+            # Or at least one?
+            # Let's require ALL reference numbers to be present in the generated answer (precision).
+            
+            is_match = True
+            for r_val in ref_nums:
+                # Check if r_val matches any g_val within tolerance
+                found = False
+                for g_val in gen_nums:
+                    if self._is_close(r_val, g_val):
+                        found = True
+                        break
+                if not found:
+                    is_match = False
+                    break
+            
+            matches.append(1.0 if is_match else 0.0)
+            
+        if not matches:
+            return {}
+            
+        return {
+            "numeric_correctness": float(np.mean(matches)),
+            "numeric_eval_count": len(matches)
+        }
+
+    def _extract_numbers(self, text: str) -> List[float]:
+        """
+        Extract numbers from text, handling commas, currency, percentages.
+        Returns a list of floats.
+        Example: "$1,234.56" -> [1234.56]
+                 "5.1%" -> [5.1]
+        """
+        # Remove commas
+        clean_text = text.replace(',', '')
+        # Regex for float-like numbers
+        # Matches: 123, -123, 123.45, .45
+        pattern = r"[-+]?\d*\.\d+|[-+]?\d+"
+        matches = re.findall(pattern, clean_text)
+        
+        nums = []
+        for m in matches:
+            try:
+                # remove typical non-numeric chars if any slipped through (like trailing .)
+                val = float(m)
+                nums.append(val)
+            except ValueError:
+                pass
+        return nums
+
+    def _is_close(self, a: float, b: float, tol: float = 0.01) -> bool:
+        """Check if two floats are close within a percentage tolerance."""
+        if a == 0:
+            return abs(b) < 1e-6
+        # Allow 1% error margin
+        return abs(a - b) / abs(a) <= tol
 
 
 def summarize_values(values: List[float]) -> Dict[str, float]:
@@ -286,6 +351,7 @@ def analyze_results(samples: List[Dict[str, Any]], calculator: MetricsCalculator
     
     gen_metrics = calculator.compute_generation_metrics(references, predictions)
     ret_metrics = calculator.compute_retrieval_metrics(samples)
+    num_metrics = calculator.compute_numeric_accuracy(samples)
     
     # Length metrics
     gen_lengths = [s.get('generation_length', 0) for s in samples]
@@ -295,6 +361,7 @@ def analyze_results(samples: List[Dict[str, Any]], calculator: MetricsCalculator
         "count": len(samples),
         **gen_metrics,
         **ret_metrics,
+        **num_metrics,
         "generation_length": float(np.mean(gen_lengths)) if gen_lengths else 0.0,
         "context_length": float(np.mean(ctx_lengths)) if ctx_lengths else 0.0
     }
@@ -337,8 +404,6 @@ def main():
     by_reasoning = defaultdict(list)
     for s in samples:
         q_reason = s.get('question_reasoning') or 'unknown'
-        # Sometimes reasoning is a list or complex string, normalize?
-        # Assuming simple string for now based on data loader
         by_reasoning[q_reason].append(s)
         
     reasoning_metrics = {}
@@ -383,15 +448,6 @@ def main():
         with out_path.open("w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
         print(f"\nReport saved to {out_path}")
-    else:
-        # If no explicit save path, maybe save alongside input?
-        # But user didn't explicitly ask for this, only "results file should have both retreival and generation results". 
-        # The input file IS the results file from the run. The PROMPT says: "the results file should have both retreival and generation results".
-        # This implies the *output of the experiment* should have them. 
-        # But I implemented the metrics calculation in `posthoc_evaluator.py`.
-        # To strictly satisfy "the results file should have...", I should probably append these metrics back to the input file or save a new one.
-        # But usually posthoc generates a REPORT.
-        pass
 
 if __name__ == "__main__":
     main()
