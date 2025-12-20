@@ -449,8 +449,9 @@ class Evaluator:
         self,
         retrieved_chunks: List[Dict[str, Any]],
         gold_segments: List[Dict[str, Any]],
+        reference_answer: Optional[str] = None,
         top_k: Optional[int] = None,
-        match_threshold: float = 0.55,
+        match_threshold: float = 0.70,
     ) -> Dict[str, Any]:
         """
         Compute retrieval diagnostics (Recall@k / Hit@k) at document, page, and chunk level.
@@ -458,6 +459,7 @@ class Evaluator:
         Args:
             retrieved_chunks: List of chunk dictionaries with `text` and `metadata`.
             gold_segments: Structured gold evidence entries (each dict contains text/doc/page).
+            reference_answer: The textual reference answer (optional).
             top_k: Optional limit on evaluated retrievals.
             match_threshold: Token-overlap threshold required for chunk matches.
         """
@@ -465,6 +467,14 @@ class Evaluator:
         gold_segments = gold_segments or []
 
         gold_texts = [seg.get("text", "") for seg in gold_segments if seg.get("text")]
+        # Use single space instead of double newline to avoid issues with exact string matching
+        # if the original text didn't have double newlines. Or better, just concatenate if needed.
+        # But for exact match against chunks, we need to be careful.
+        # Actually, if we want "exact match of gold evidence in retrieved chunk", we should check
+        # if ANY gold segment is in the chunk, or if the ALL gold evidence is in the chunk?
+        # The user asked "checking if there is an exact match of the gold evidence in the retreived chunk".
+        # This implies checking per-segment.
+        
         gold_concat = "\n\n".join(gold_texts)
         gold_docs = {seg.get("doc_name") for seg in gold_segments if seg.get("doc_name")}
         gold_pages = {
@@ -474,26 +484,54 @@ class Evaluator:
         }
 
         overlaps: List[float] = []
-        exact_match = False
+        exact_match_gold = False
+        exact_match_ref = False
 
         doc_hits: Dict[str, int] = {}
         page_hits: Dict[Tuple[Any, Any], int] = {}
         matched_chunk_indices: set = set()
         chunk_hit_rank = None
 
+        # LCS calculation helper
+        def check_exact_lcs_match(chunk_text: str, target_text: str) -> bool:
+            if not target_text or not chunk_text:
+                return False
+            # Normalize whitespace
+            ct = " ".join(chunk_text.split())
+            tt = " ".join(target_text.split())
+            if tt in ct:
+                return True
+            # Optional: stricter LCS logic can be added here if "exact substring" isn't enough
+            return False
+
+        # Reference-based metrics
+        ref_chunk_matches = 0
+        ref_exact_matches = 0
+
         for idx, chunk in enumerate(evaluated_chunks):
             text = chunk.get("text", "") or ""
             metadata = chunk.get("metadata", {}) or {}
             doc_name = metadata.get("doc_name")
             page = metadata.get("page")
+            
+            # 1. Overlap with aggregated gold
             chunk_tokens_overlap = (
                 self._token_overlap_ratio(text, gold_concat) if gold_concat else 0.0
             )
             overlaps.append(chunk_tokens_overlap)
 
-            if gold_concat and gold_concat.strip() and gold_concat.strip() in text:
-                exact_match = True
+            # 2. Exact match check (substring) for gold
+            # Check if ANY individual gold segment is contained in this chunk
+            for g_text in gold_texts:
+                if check_exact_lcs_match(text, g_text):
+                    exact_match_gold = True
 
+            # 3. Exact match check (substring) for reference
+            if reference_answer and check_exact_lcs_match(text, reference_answer):
+                exact_match_ref = True
+                ref_exact_matches += 1
+
+            # 4. Doc/Page hits
             if doc_name in gold_docs and doc_name not in doc_hits:
                 doc_hits[doc_name] = idx + 1
 
@@ -501,6 +539,7 @@ class Evaluator:
             if page_key in gold_pages and page_key not in page_hits:
                 page_hits[page_key] = idx + 1
 
+            # 5. Chunk Hit (Token Overlap vs Gold)
             for seg_idx, seg in enumerate(gold_segments):
                 gold_text = seg.get("text") or ""
                 if not gold_text:
@@ -511,6 +550,12 @@ class Evaluator:
                     if chunk_hit_rank is None:
                         chunk_hit_rank = idx + 1
                     break
+            
+            # 6. Chunk Match (Token Overlap vs Reference)
+            if reference_answer:
+                ref_overlap = self._token_overlap_ratio(text, reference_answer)
+                if ref_overlap >= match_threshold:
+                    ref_chunk_matches += 1
 
         doc_hit_rank = min(doc_hits.values()) if doc_hits else None
         page_hit_rank = min(page_hits.values()) if page_hits else None
@@ -521,9 +566,19 @@ class Evaluator:
 
         doc_recall = len(doc_hits) / len(gold_docs) if gold_docs else 0.0
         page_recall = len(page_hits) / len(gold_pages) if gold_pages else 0.0
-        chunk_recall = (
+        
+        # Recall against gold evidence segments
+        chunk_recall_evidence = (
             len(matched_chunk_indices) / len(gold_segments) if gold_segments else 0.0
         )
+        
+        # Recall against reference answer (binary: found match or not, since ref is usually single-unit)
+        # However, user asked for "chunk recall against reference", we can treat it as 
+        # "did we retrieve a chunk that matches the reference?"
+        chunk_recall_reference = 1.0 if ref_chunk_matches > 0 else 0.0
+        
+        # Also track exact match recall (binary)
+        chunk_recall_reference_exact = 1.0 if ref_exact_matches > 0 else 0.0
 
         if not evaluated_chunks:
             miss_reason = "no_retrievals"
@@ -538,15 +593,18 @@ class Evaluator:
 
         metrics = {
             "num_retrieved": len(evaluated_chunks),
-            "exact_match": 1.0 if exact_match else 0.0,
-            "max_token_overlap": max(overlaps) if overlaps else 0.0,
-            "mean_token_overlap": float(np.mean(overlaps)) if overlaps else 0.0,
+            "exact_match_gold": 1.0 if exact_match_gold else 0.0,
+            "exact_match_ref": 1.0 if exact_match_ref else 0.0,
+            "max_token_overlap_gold": max(overlaps) if overlaps else 0.0,
+            "mean_token_overlap_gold": float(np.mean(overlaps)) if overlaps else 0.0,
             "doc_hit_at_k": doc_hit,
             "page_hit_at_k": page_hit,
             "chunk_hit_at_k": chunk_hit,
             "doc_recall_at_k": doc_recall,
             "page_recall_at_k": page_recall,
-            "chunk_recall_at_k": chunk_recall,
+            "chunk_recall_evidence": chunk_recall_evidence,
+            "chunk_recall_reference": chunk_recall_reference,
+            "chunk_recall_reference_exact": chunk_recall_reference_exact,
             "doc_hit_rank": doc_hit_rank,
             "page_hit_rank": page_hit_rank,
             "chunk_hit_rank": chunk_hit_rank,
@@ -912,7 +970,7 @@ class Evaluator:
         # Aggregate BLEU scores
         for n in range(1, 5):
             key = f'bleu_{n}'
-            scores = [r['bleu'][key] for r in results if 'bleu' in r and key in r['bleu']]
+            scores = [r['bleu'][key] for r in results if 'bleu' in r and r['bleu'] and key in r['bleu']]
             if scores:
                 aggregated[f'{key}_mean'] = np.mean(scores)
                 aggregated[f'{key}_std'] = np.std(scores)
@@ -920,7 +978,7 @@ class Evaluator:
         # Aggregate ROUGE scores
         rouge_metrics = ['rouge_1_f1', 'rouge_2_f1', 'rouge_l_f1']
         for metric in rouge_metrics:
-            scores = [r['rouge'][metric] for r in results if 'rouge' in r and metric in r['rouge']]
+            scores = [r['rouge'][metric] for r in results if 'rouge' in r and r['rouge'] and metric in r['rouge']]
             if scores:
                 aggregated[f'{metric}_mean'] = np.mean(scores)
                 aggregated[f'{metric}_std'] = np.std(scores)
@@ -929,7 +987,7 @@ class Evaluator:
         if any('bertscore' in r for r in results):
             for metric in ['precision', 'recall', 'f1']:
                 scores = [r['bertscore'][metric] for r in results 
-                         if 'bertscore' in r and r['bertscore'][metric] is not None]
+                         if 'bertscore' in r and r['bertscore'] and r['bertscore'].get(metric) is not None]
                 if scores:
                     aggregated[f'bertscore_{metric}_mean'] = np.mean(scores)
                     aggregated[f'bertscore_{metric}_std'] = np.std(scores)
@@ -937,13 +995,13 @@ class Evaluator:
         # Aggregate RAGAS scores
         ragas_metric_names: set = set()
         for r in results:
-            if 'ragas' in r:
+            if 'ragas' in r and r['ragas']:
                 ragas_metric_names.update(r['ragas'].keys())
         for metric_name in ragas_metric_names:
             scores = [
                 r['ragas'][metric_name]
                 for r in results
-                if 'ragas' in r and metric_name in r['ragas']
+                if 'ragas' in r and r['ragas'] and metric_name in r['ragas']
             ]
             if scores:
                 aggregated[f'ragas_{metric_name}_mean'] = float(np.mean(scores))
@@ -969,6 +1027,80 @@ class Evaluator:
             aggregated['llm_judge_accuracy'] = float(np.mean(judge_correct_flags))
         
         return aggregated
+
+    def _aggregate_retrieval_results(self, results: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Aggregate retrieval metrics"""
+        aggregated = {}
+        if not results:
+            return aggregated
+            
+        keys = [
+            "num_retrieved", "exact_match_gold", "exact_match_ref", 
+            "max_token_overlap_gold", "mean_token_overlap_gold",
+            "doc_hit_at_k", "page_hit_at_k", "chunk_hit_at_k",
+            "doc_recall_at_k", "page_recall_at_k", 
+            "chunk_recall_evidence", "chunk_recall_reference", "chunk_recall_reference_exact",
+            "doc_hit_rank", "page_hit_rank", "chunk_hit_rank"
+        ]
+        
+        for key in keys:
+            # Filter None values (e.g. rank can be None)
+            vals = [r[key] for r in results if r.get(key) is not None]
+            if vals:
+                aggregated[f"retrieval_{key}_mean"] = float(np.mean(vals))
+                # Skip std for binary hit flags if desired, but including for completeness is fine
+                aggregated[f"retrieval_{key}_std"] = float(np.std(vals))
+        
+        # Add failure reason counts
+        reasons = [r.get("failure_reason") for r in results if r.get("failure_reason")]
+        if reasons:
+            total = len(reasons)
+            counts = Counter(reasons)
+            for reason, count in counts.items():
+                aggregated[f"retrieval_fail_{reason}_pct"] = count / total
+                
+        return aggregated
+
+    def _aggregate_samples(self, samples: List[Dict[str, Any]]) -> Dict[str, float]:
+        """Helper to aggregate both generation and retrieval metrics for a list of samples"""
+        # Extract generation metrics list (ensure not None)
+        gen_metrics = [s.get("generation_evaluation", {}) for s in samples if s.get("generation_evaluation")]
+        # Extract retrieval metrics list
+        ret_metrics = [s.get("retrieval_evaluation", {}) for s in samples if s.get("retrieval_evaluation")]
+        
+        agg_gen = self._aggregate_results(gen_metrics)
+        agg_ret = self._aggregate_retrieval_results(ret_metrics)
+        
+        return {**agg_gen, **agg_ret}
+
+    def summarize_experiment(self, samples: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Aggregate metrics across all samples, and by question_type/reasoning.
+        """
+        # 1. Full aggregation
+        full_agg = self._aggregate_samples(samples)
+        
+        # 2. By question_type
+        by_type = {}
+        # Get all unique types, filtering out None
+        types = set(str(s.get("question_type")) for s in samples if s.get("question_type"))
+        for t in types:
+            subset = [s for s in samples if str(s.get("question_type")) == t]
+            by_type[t] = self._aggregate_samples(subset)
+            
+        # 3. By question_reasoning
+        by_reasoning = {}
+        reasons = set(str(s.get("question_reasoning")) for s in samples if s.get("question_reasoning"))
+        for r in reasons:
+            subset = [s for s in samples if str(s.get("question_reasoning")) == r]
+            by_reasoning[r] = self._aggregate_samples(subset)
+            
+        return {
+            "overall": full_agg,
+            "by_question_type": by_type,
+            "by_question_reasoning": by_reasoning
+        }
+
 
 
 if __name__ == "__main__":
