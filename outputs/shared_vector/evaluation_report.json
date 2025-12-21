@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "experiment_type": "shared_vector",
+    "llm_model": "Qwen/Qwen2.5-7B-Instruct",
+    "use_api": false,
+    "api_base_url": null,
+    "chunk_size": 1024,
+    "chunk_overlap": 30,
+    "top_k": 5,
+    "embedding_model": "sentence-transformers/all-mpnet-base-v2",
+    "device": "cuda",
+    "load_in_8bit": true,
+    "max_new_tokens": 256,
+    "pdf_local_dir": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/pdfs",
+    "use_all_pdfs": false,
+    "timestamp": "2025-12-17T17:36:51.192871"
+  },
+  "overall": {
+    "count": 150,
+    "rouge1": 0.08894298072341854,
+    "rouge2": 0.03499557169755743,
+    "rougeL": 0.0711605298313602,
+    "bleu": 1.165916147312916,
+    "bertscore_f1": 0.8201022148132324,
+    "bertscore_precision": 0.782410204410553,
+    "bertscore_recall": 0.8622868657112122,
+    "doc_hit_rate": 0.6866666666666666,
+    "page_hit_rate": 0.3125,
+    "chunk_hit_rate": 0.02666666666666667,
+    "numeric_correctness": 0.20634920634920634,
+    "numeric_eval_count": 126,
+    "generation_length": 913.6066666666667,
+    "context_length": 4567.06
+  },
+  "by_question_type": {
+    "unknown": {
+      "count": 150,
+      "rouge1": 0.08894298072341854,
+      "rouge2": 0.03499557169755743,
+      "rougeL": 0.0711605298313602,
+      "bleu": 1.165916147312916,
+      "bertscore_f1": 0.8201022148132324,
+      "bertscore_precision": 0.782410204410553,
+      "bertscore_recall": 0.8622868657112122,
+      "doc_hit_rate": 0.6866666666666666,
+      "page_hit_rate": 0.3125,
+      "chunk_hit_rate": 0.02666666666666667,
+      "numeric_correctness": 0.20634920634920634,
+      "numeric_eval_count": 126,
+      "generation_length": 913.6066666666667,
+      "context_length": 4567.06
+    }
+  },
+  "by_question_reasoning": {
+    "unknown": {
+      "count": 150,
+      "rouge1": 0.08894298072341854,
+      "rouge2": 0.03499557169755743,
+      "rougeL": 0.0711605298313602,
+      "bleu": 1.165916147312916,
+      "bertscore_f1": 0.8201022148132324,
+      "bertscore_precision": 0.782410204410553,
+      "bertscore_recall": 0.8622868657112122,
+      "doc_hit_rate": 0.6866666666666666,
+      "page_hit_rate": 0.3125,
+      "chunk_hit_rate": 0.02666666666666667,
+      "numeric_correctness": 0.20634920634920634,
+      "numeric_eval_count": 126,
+      "generation_length": 913.6066666666667,
+      "context_length": 4567.06
+    }
+  }
+}
