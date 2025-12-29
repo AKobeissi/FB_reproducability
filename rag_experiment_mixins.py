@@ -547,3 +547,4 @@ class ResultsMixin:
             json.dump(serializable, f, indent=2)
 
         self.logger.info(f"\nResults saved to: {filename}")
+        return filename

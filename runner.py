@@ -147,6 +147,30 @@ def parse_args():
         default="sentence-transformers/all-mpnet-base-v2",
         help="Embedding model identifier (HF or OpenAI, e.g., text-embedding-ada-002)"
     )
+
+    # Evaluation configuration
+    parser.add_argument(
+        "--eval-type",
+        type=str,
+        default="both",
+        choices=["retrieval", "generative", "both"],
+        help="Type of evaluation to run"
+    )
+    
+    parser.add_argument(
+        "--eval-mode",
+        type=str,
+        default="static",
+        choices=["static", "semantic"],
+        help="Evaluation mode: 'static' (BLEU/ROUGE/BERTScore) or 'semantic' (RAGAS + LLM Judge)"
+    )
+
+    parser.add_argument(
+        "--judge-model",
+        type=str,
+        default="openai/gpt-4o",
+        help="Model to use for LLM judge (if eval-mode is semantic)"
+    )
     
     return parser.parse_args()
 
@@ -220,6 +244,9 @@ def main():
                 use_api=args.use_api,
                 api_base_url=args.api_base_url,
                 api_key_env=args.api_key_env,
+                eval_type=args.eval_type,
+                eval_mode=args.eval_mode,
+                judge_model=args.judge_model,
             )
             
             exp.run_experiment(num_samples=args.num_samples)

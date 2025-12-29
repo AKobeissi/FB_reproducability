@@ -450,11 +450,38 @@ def render_summary_line(
     return " | ".join(parts)
 
 
-def main():
-    args = parse_args()
+def run_scoring(
+    inputs: List[str],
+    output_dir: Optional[str] = None,
+    suffix: str = "_scored",
+    overwrite: bool = False,
+    judge_model: str = "openai/gpt-oss-20b",
+    judge_provider: str = "huggingface",
+    judge_dtype: str = "float16",
+    judge_max_new_tokens: int = 200,
+    device_map: str = "auto",
+    max_gpu_memory: Optional[str] = None,
+    trust_remote_code: bool = False,
+    openai_api_base: str = "https://api.openai.com/v1",
+    openai_api_key_env: str = "OPENAI_API_KEY",
+    no_bertscore: bool = False,
+    skip_llm_judge: bool = False,
+    retrieval_top_k: Optional[int] = None,
+    skip_ragas: bool = False,
+    ragas_embedding_model: Optional[str] = None,
+    ragas_device: Optional[str] = None,
+    ragas_llm_provider: str = "auto",
+    ragas_llm_model: Optional[str] = None,
+    quiet: bool = False,
+) -> List[str]:
+    """
+    Programmatic entry point for scoring results.
+    Returns a list of paths to the scored files.
+    """
     logging.basicConfig(
-        level=logging.WARNING if args.quiet else logging.INFO,
+        level=logging.WARNING if quiet else logging.INFO,
         format="%(levelname)s - %(message)s",
+        force=True
     )
 
     try:
@@ -466,42 +493,42 @@ def main():
         logging.warning(f"Error checking Triton: {e}")
 
     evaluator = Evaluator(
-        use_bertscore=not args.no_bertscore,
-        use_llm_judge=not args.skip_llm_judge,
-        use_ragas=not args.skip_ragas,
-        ragas_embedding_model=args.ragas_embedding_model,
-        ragas_device=args.ragas_device,
+        use_bertscore=not no_bertscore,
+        use_llm_judge=not skip_llm_judge,
+        use_ragas=not skip_ragas,
+        ragas_embedding_model=ragas_embedding_model,
+        ragas_device=ragas_device,
     )
 
     judge_pipeline = None
     if evaluator.use_llm_judge:
         judge_pipeline = build_judge_pipeline(
-            model_id=args.judge_model,
-            device_map=args.device_map,
-            dtype_name=args.judge_dtype,
-            trust_remote_code=args.trust_remote_code,
-            provider=args.judge_provider,
-            openai_api_key_env=args.openai_api_key_env,
-            openai_api_base=args.openai_api_base,
-            max_gpu_memory=args.max_gpu_memory,
+            model_id=judge_model,
+            device_map=device_map,
+            dtype_name=judge_dtype,
+            trust_remote_code=trust_remote_code,
+            provider=judge_provider,
+            openai_api_key_env=openai_api_key_env,
+            openai_api_base=openai_api_base,
+            max_gpu_memory=max_gpu_memory,
         )
-        evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=args.judge_max_new_tokens)
+        evaluator.set_judge_pipeline(judge_pipeline, max_new_tokens=judge_max_new_tokens)
 
     ragas_llm = None
     if evaluator.use_ragas:
-        ragas_provider = args.ragas_llm_provider
+        ragas_provider = ragas_llm_provider
         if ragas_provider == "auto":
-            ragas_provider = args.judge_provider if judge_pipeline is not None else "openai"
-        ragas_model = args.ragas_llm_model or args.judge_model
+            ragas_provider = judge_provider if judge_pipeline is not None else "openai"
+        ragas_model = ragas_llm_model or judge_model
         hf_pipeline_for_ragas: Optional[Any] = None
-        if ragas_provider == "huggingface" and args.judge_provider == "huggingface":
+        if ragas_provider == "huggingface" and judge_provider == "huggingface":
             hf_pipeline_for_ragas = judge_pipeline
         hf_builder_params = (
             {
                 "model_id": ragas_model,
-                "device_map": args.device_map,
-                "dtype_name": args.judge_dtype,
-                "trust_remote_code": args.trust_remote_code,
+                "device_map": device_map,
+                "dtype_name": judge_dtype,
+                "trust_remote_code": trust_remote_code,
             }
             if ragas_provider == "huggingface"
             else None
@@ -509,40 +536,50 @@ def main():
         ragas_llm = build_ragas_langchain_llm(
             provider=ragas_provider,
             model_id=ragas_model,
-            openai_api_key_env=args.openai_api_key_env,
-            openai_api_base=args.openai_api_base,
+            openai_api_key_env=openai_api_key_env,
+            openai_api_base=openai_api_base,
             hf_pipeline=hf_pipeline_for_ragas,
             hf_builder_params=hf_builder_params,
         )
 
+    scored_files = []
     scored_any = False
-    for input_pattern in args.inputs:
+    
+    # Expand globs if needed, though inputs is usually a list of strings
+    all_paths = []
+    for input_pattern in inputs:
         if any(ch in input_pattern for ch in "*?[]"):
-            paths = sorted(Path(p) for p in glob.glob(input_pattern))
+            all_paths.extend(sorted(Path(p) for p in glob.glob(input_pattern)))
         else:
-            paths = [Path(input_pattern)]
-        for path in paths:
-            if not path.is_file():
-                logging.warning("Skipping %s (not a file)", path)
-                continue
+            all_paths.append(Path(input_pattern))
+            
+    for path in all_paths:
+        if not path.is_file():
+            logging.warning("Skipping %s (not a file)", path)
+            continue
 
-            samples, _metadata, container = load_results(path)
-            logging.info("Scoring %s (%d samples)", path, len(samples))
-            evaluated_samples = evaluate_samples(evaluator, samples, args.retrieval_top_k, ragas_llm=ragas_llm)
-            summary = summarize_results(evaluator, evaluated_samples)
-            container["evaluation_summary"] = summary
+        samples, _metadata, container = load_results(path)
+        logging.info("Scoring %s (%d samples)", path, len(samples))
+        evaluated_samples = evaluate_samples(evaluator, samples, retrieval_top_k, ragas_llm=ragas_llm)
+        summary = summarize_results(evaluator, evaluated_samples)
+        container["evaluation_summary"] = summary
 
-            target_path = determine_output_path(path, args.output_dir, args.suffix, args.overwrite)
-            action = "Overwriting" if target_path == path else "Writing"
-            logging.info("%s %s", action, target_path)
-            target_path.write_text(json.dumps(container, indent=2), encoding="utf-8")
-            scored_any = True
+        target_path = determine_output_path(path, output_dir, suffix, overwrite)
+        action = "Overwriting" if target_path == path else "Writing"
+        logging.info("%s %s", action, target_path)
+        target_path.write_text(json.dumps(container, indent=2), encoding="utf-8")
+        scored_any = True
+        scored_files.append(str(target_path))
 
-            print(render_summary_line(target_path, len(samples), summary))
+        print(render_summary_line(target_path, len(samples), summary))
 
     if not scored_any:
-        raise SystemExit("No files were scored. Check your --inputs pattern.")
+        logging.warning("No files were scored.")
+    
+    return scored_files
 
 
-if __name__ == "__main__":
-    main()
+def main():
+    args = parse_args()
+    # Call run_scoring with args as kwargs
+    run_scoring(**vars(args))
