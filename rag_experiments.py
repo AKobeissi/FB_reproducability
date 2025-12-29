@@ -79,6 +79,15 @@ except ImportError:
         ResultsMixin,
     )
 
+try:
+    from .evaluate_outputs import run_scoring
+except ImportError:
+    try:
+        from evaluate_outputs import run_scoring
+    except ImportError:
+        run_scoring = None
+
+
 # HuggingFace transformers for LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
@@ -233,7 +242,10 @@ class RAGExperiment(
                  use_api: bool = False,
                  api_base_url: str = "https://api.openai.com/v1",
                  api_key_env: str = "HF_TOKEN",
-                 use_all_pdfs: bool = False):
+                 use_all_pdfs: bool = False,
+                 eval_type: str = "both",
+                 eval_mode: str = "static",
+                 judge_model: str = "openai/gpt-4o"):
         """
         Initialize RAG Experiment
         
@@ -244,12 +256,14 @@ class RAGExperiment(
              chunk_overlap: Overlap between chunks
              top_k: Number of chunks to retrieve
              embedding_model: Model for embeddings
-             output_dir: Directory for outputs
              output_dir: Directory for outputs (default: "outputs")
              vector_store_dir: Directory for vector store persistence (default: "vector_stores")
              load_in_8bit: Whether to load models in 8-bit for memory efficiency
              max_new_tokens: Maximum tokens to generate
              use_all_pdfs: Whether to index all PDFs in the local directory (shared vector store only)
+             eval_type: Type of evaluation to run ('retrieval', 'generative', 'both')
+             eval_mode: Evaluation mode ('static', 'semantic')
+             judge_model: Model to use for LLM judge
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
@@ -258,18 +272,36 @@ class RAGExperiment(
         self.top_k = top_k
         self.embedding_model = embedding_model
         self.use_all_pdfs = use_all_pdfs
-        self.output_dir = output_dir
+        
+        # Evaluation config
+        self.eval_type = eval_type
+        self.eval_mode = eval_mode
+        self.judge_model = judge_model
+        
         base_dir = Path(__file__).resolve().parent
         if output_dir is None:
-            output_dir = str(base_dir / "outputs")
-        
-        # Adjust output directory structure: outputs/experiment_type/results
-        output_dir = Path(output_dir) / experiment_type / "results"
-        
+            output_root = base_dir / "outputs"
+        else:
+            output_root = Path(output_dir)
+            
         if vector_store_dir is None:
             vector_store_dir = str(base_dir / "vector_stores")
-        self.output_dir = str(Path(output_dir).resolve())
+            
+        # Organize output directories: outputs/experiment_type/YYYYMMDD
+        today_str = datetime.now().strftime("%Y%m%d")
+        self.output_dir = str((output_root / experiment_type / today_str).resolve())
+        
+        # Organize results directories: results/experiment_type/YYYYMMDD
+        # If output_root is named "outputs", result_root will be sibling "results"
+        if output_root.name == "outputs":
+            result_root = output_root.parent / "results"
+        else:
+            # Fallback: create results sibling to whatever output root was given
+            result_root = output_root.parent / "results"
+            
+        self.results_dir = str((result_root / experiment_type / today_str).resolve())
         self.vector_store_dir = str(Path(vector_store_dir).resolve())
+        
         # Local PDF directory: prefer this for PDF extraction if available
         # Default to the package-local `pdfs` directory so that
         # uploaded PDFs inside the package are preferred.
@@ -328,11 +360,15 @@ class RAGExperiment(
             'max_new_tokens': max_new_tokens,
             'pdf_local_dir': str(self.pdf_local_dir) if self.pdf_local_dir is not None else None,
             'use_all_pdfs': use_all_pdfs,
-            'timestamp': datetime.now().isoformat()
+            'timestamp': datetime.now().isoformat(),
+            'eval_type': eval_type,
+            'eval_mode': eval_mode,
+            'judge_model': judge_model
         }
 
         # Ensure output and vector store directories exist
         os.makedirs(self.output_dir, exist_ok=True)
+        os.makedirs(self.results_dir, exist_ok=True)
         os.makedirs(self.vector_store_dir, exist_ok=True)
         
         self.logger.info("=" * 80)
@@ -349,6 +385,12 @@ class RAGExperiment(
         self.logger.info(f"  Embedding Model: {embedding_model}")
         self.logger.info(f"  Max New Tokens: {max_new_tokens}")
         self.logger.info(f"  Use All PDFs: {use_all_pdfs}")
+        self.logger.info(f"  Evaluation Type: {eval_type}")
+        self.logger.info(f"  Evaluation Mode: {eval_mode}")
+        if eval_mode == "semantic":
+            self.logger.info(f"  Judge Model: {judge_model}")
+        self.logger.info(f"  Output Dir: {self.output_dir}")
+        self.logger.info(f"  Results Dir: {self.results_dir}")
         self.logger.info(f"  Using LangChain + FAISS + HuggingFace LLMs")
         if self.use_api:
             self.logger.info("  Using API-based LLM via OpenAI client (HF router)")
@@ -360,6 +402,7 @@ class RAGExperiment(
             # Ensure API client is ready up front so summaries include generator info
             self._initialize_llm()
         self._print_component_overview(stage="initial")
+
     
     def _initialize_components(self):
         """Initialize LangChain embeddings and text splitter"""
@@ -628,12 +671,87 @@ class RAGExperiment(
         self._compute_aggregate_stats()
         
         # Save results
-        self._save_results()
+        output_file = self._save_results()
         
         self.logger.info("\n" + "=" * 80)
         self.logger.info("EXPERIMENT COMPLETE")
         self.logger.info("=" * 80)
         self._print_component_overview(stage="final")
+        
+        # Run automated evaluation
+        if self.eval_type:
+            self.run_evaluation(output_file)
+
+    def _unload_model(self):
+        """Unload generator model to free memory."""
+        if self.llm_model is not None:
+            self.logger.info("Unloading generator model to free memory for evaluation...")
+            del self.llm_model
+            del self.llm_pipeline
+            if self.langchain_llm is not None:
+                del self.langchain_llm
+            
+            self.llm_model = None
+            self.llm_pipeline = None
+            self.langchain_llm = None
+            
+            import gc
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            self.logger.info("✓ Model unloaded")
+
+    def run_evaluation(self, output_file: str):
+        """Run automated evaluation on the experiment output."""
+        if run_scoring is None:
+            self.logger.warning("Evaluation module not available. Skipping scoring.")
+            return
+
+        self.logger.info("\n" + "=" * 80)
+        self.logger.info("STARTING AUTOMATED EVALUATION")
+        self.logger.info("=" * 80)
+        self.logger.info(f"Input file: {output_file}")
+        self.logger.info(f"Results dir: {self.results_dir}")
+        self.logger.info(f"Eval Type: {self.eval_type}")
+        self.logger.info(f"Eval Mode: {self.eval_mode}")
+        
+        # Free up memory if we are going to load a judge model
+        # or if we just want to be clean.
+        self._unload_model()
+        
+        # Configure evaluation based on self.eval_mode
+        use_llm_judge = (self.eval_mode == "semantic")
+        use_ragas = (self.eval_mode == "semantic")
+        
+        # Determine retrieval top k
+        retrieval_top_k = None
+        if self.eval_type in ["retrieval", "both"]:
+            retrieval_top_k = self.top_k
+            
+        # Determine judge provider
+        judge_provider = "huggingface"
+        if "gpt" in self.judge_model.lower() or "openai" in self.judge_model.lower():
+            judge_provider = "openai"
+            
+        # Run scoring
+        try:
+            run_scoring(
+                inputs=[output_file],
+                output_dir=self.results_dir,
+                judge_model=self.judge_model,
+                judge_provider=judge_provider,
+                # Use current device map or auto. 
+                # If we use OpenAI judge, device_map doesn't matter much.
+                device_map="auto" if self.device == "cuda" else "cpu",
+                skip_llm_judge=not use_llm_judge,
+                skip_ragas=not use_ragas,
+                retrieval_top_k=retrieval_top_k,
+                no_bertscore=False, # Always run BERTScore as requested ("static scores only plus bert")
+                quiet=False
+            )
+            self.logger.info("Evaluation complete.")
+        except Exception as e:
+            self.logger.error(f"Evaluation failed: {e}", exc_info=True)
     
 def main():
     """
