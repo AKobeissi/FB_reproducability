@@ -11,11 +11,10 @@ import argparse
 import json
 import logging
 import re
-import sys
 import numpy as np
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple
 
 # --- Optional Metric Libraries ---
 try:
@@ -104,7 +103,8 @@ def extract_numbers(text: str) -> List[float]:
     nums = []
     for m in matches:
         try:
-            if m == '.' or m == '-': continue
+            if m in {'.', '-'}:
+                continue
             nums.append(float(m))
         except ValueError:
             pass
@@ -168,7 +168,8 @@ class MetricsCalculator:
             try:
                 res = self.bleu_metric.sentence_score(prediction, [reference])
                 metrics["bleu"] = res.score
-            except: pass
+            except Exception:
+                pass
 
         # Numeric Match
         if "metrics" in q_type.lower() or "generated" in q_type.lower():
@@ -224,13 +225,15 @@ class MetricsCalculator:
         evidence_hit = False
         for s in gold_segments:
             gold_text = s.get('text') or s.get('evidence_text') or ""
-            if not gold_text: continue
+            if not gold_text:
+                continue
             for c in retrieved:
                 chunk_text = c.get('text') or c.get('page_content') or ""
                 if token_overlap(chunk_text, gold_text) >= 0.70:
                     evidence_hit = True
                     break
-            if evidence_hit: break
+            if evidence_hit:
+                break
         metrics["recall_evidence_70"] = 1.0 if evidence_hit else 0.0
 
         # Chunk Recall > 70% on Answer
@@ -251,7 +254,8 @@ class MetricsCalculator:
             return results
         
         valid_idxs = [i for i, (r, p) in enumerate(zip(refs, preds)) if r.strip() and p.strip()]
-        if not valid_idxs: return results
+        if not valid_idxs:
+            return results
         
         try:
             v_refs = [refs[i] for i in valid_idxs]
@@ -265,7 +269,8 @@ class MetricsCalculator:
 
 def aggregate_metrics(metrics_list: List[Dict]) -> Dict[str, float]:
     """Computes Mean and Std Dev for each metric key."""
-    if not metrics_list: return {}
+    if not metrics_list:
+        return {}
     agg = {}
     keys = metrics_list[0].keys()
     
@@ -283,7 +288,8 @@ def aggregate_metrics(metrics_list: List[Dict]) -> Dict[str, float]:
 
 def main():
     args = parse_args()
-    if args.verbose: logger.setLevel(logging.DEBUG)
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
 
     # 1. Load Data
     logger.info(f"Loading results: {args.input}")
@@ -329,7 +335,8 @@ def main():
         
         retrieved = s.get('retrieved_chunks', [])
         gold = s.get('gold_evidence_segments', [])
-        if gold and isinstance(gold[0], str): gold = [{"text": g} for g in gold]
+        if gold and isinstance(gold[0], str):
+            gold = [{"text": g} for g in gold]
         
         r_metrics = calc.compute_retrieval_metrics(retrieved, gold, ref)
         
@@ -347,11 +354,13 @@ def main():
     overall = aggregate_metrics(all_mets)
     
     by_type = defaultdict(list)
-    for d in detailed_results: by_type[d['question_type']].append(d['metrics'])
+    for d in detailed_results:
+        by_type[d['question_type']].append(d['metrics'])
     agg_type = {k: aggregate_metrics(v) for k, v in by_type.items()}
     
     by_reas = defaultdict(list)
-    for d in detailed_results: by_reas[d['question_reasoning']].append(d['metrics'])
+    for d in detailed_results:
+        by_reas[d['question_reasoning']].append(d['metrics'])
     agg_reas = {k: aggregate_metrics(v) for k, v in by_reas.items()}
 
     # 5. Output
@@ -372,14 +381,16 @@ def main():
     def print_m(name, m):
         print(f"\n--- {name} (n={m.get('count', 0)}) ---")
         for k in sorted(m.keys()):
-            if k == "count": continue
+            if k == "count":
+                continue
             val = m[k]
             print(f"{k:<30}: {val:.4f}")
 
     print_m("Overall", overall)
     
     print("\n[By Question Type]")
-    for k, v in sorted(agg_type.items()): print_m(k, v)
+    for k, v in sorted(agg_type.items()):
+        print_m(k, v)
 
     if args.save_report:
         with open(args.save_report, 'w') as f:

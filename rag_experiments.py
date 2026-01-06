@@ -31,31 +31,15 @@ except Exception:
 
 try:
     from .rag_dependencies import (
-        Document,
         RecursiveCharacterTextSplitter,
         HuggingFaceEmbeddings,
-        FAISS,
-        Chroma,
-        BaseRetriever,
-        RetrievalQA,
         HuggingFacePipeline,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
     )
 except ImportError:
     from rag_dependencies import (
-        Document,
         RecursiveCharacterTextSplitter,
         HuggingFaceEmbeddings,
-        FAISS,
-        Chroma,
-        BaseRetriever,
-        RetrievalQA,
         HuggingFacePipeline,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
     )
 
 try:  # OpenAI embeddings via LangChain
@@ -374,7 +358,7 @@ class RAGExperiment(
         self.logger.info("=" * 80)
         self.logger.info(f"INITIALIZING RAG EXPERIMENT: {experiment_type.upper()}")
         self.logger.info("=" * 80)
-        self.logger.info(f"Configuration:")
+        self.logger.info("Configuration:")
         self.logger.info(f"  Experiment Type: {experiment_type}")
         self.logger.info(f"  LLM Model: {llm_model}")
         self.logger.info(f"  Device: {self.device}")
@@ -391,7 +375,7 @@ class RAGExperiment(
             self.logger.info(f"  Judge Model: {judge_model}")
         self.logger.info(f"  Output Dir: {self.output_dir}")
         self.logger.info(f"  Results Dir: {self.results_dir}")
-        self.logger.info(f"  Using LangChain + FAISS + HuggingFace LLMs")
+        self.logger.info("  Using LangChain + FAISS + HuggingFace LLMs")
         if self.use_api:
             self.logger.info("  Using API-based LLM via OpenAI client (HF router)")
         self.logger.info("=" * 80)
@@ -561,7 +545,7 @@ class RAGExperiment(
                 return_full_text=False
             )
             
-            self.logger.info(f"✓ LLM initialized successfully")
+            self.logger.info("✓ LLM initialized successfully")
             # If LangChain's HuggingFacePipeline wrapper is available, create a
             # LangChain LLM wrapper so RetrievalQA can be used directly.
             if HuggingFacePipeline is not None:
@@ -638,7 +622,7 @@ class RAGExperiment(
         self.logger.info("=" * 80)
         
         # Load data
-        df = self.data_loader.load_data()
+        self.data_loader.load_data()
         
         # Select samples
         if sample_indices is not None:
