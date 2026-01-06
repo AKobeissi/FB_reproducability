@@ -583,3 +583,7 @@ def main():
     args = parse_args()
     # Call run_scoring with args as kwargs
     run_scoring(**vars(args))
+
+
+if __name__ == "__main__":
+    main()
