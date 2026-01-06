@@ -67,6 +67,65 @@ class OpenAIChatPipeline:
         return [{"generated_text": generated_text}]
 
 
+class AutocastSafePipeline:
+    """
+    Wrap a transformers text-generation pipeline and run calls under autocast to
+    avoid fp16/bf16 mismatches (common with quantization fallbacks).
+    """
+
+    def __init__(self, inner: Any, preferred_dtype: Optional[torch.dtype] = None):
+        self._inner = inner
+        self._preferred_dtype = preferred_dtype
+
+    @property
+    def tokenizer(self) -> Any:
+        return getattr(self._inner, "tokenizer", None)
+
+    @property
+    def model(self) -> Any:
+        return getattr(self._inner, "model", None)
+
+    def __getattr__(self, name: str) -> Any:  # pragma: no cover - simple delegation
+        return getattr(self._inner, name)
+
+    def _should_autocast(self) -> bool:
+        model = getattr(self._inner, "model", None)
+        if model is None:
+            return False
+        try:
+            device_type = getattr(getattr(model, "device", None), "type", None)
+        except Exception:
+            device_type = None
+        return bool(torch.cuda.is_available() and device_type == "cuda")
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        # Try preferred dtype first, then fall back to the other common mixed-precision dtype.
+        dtypes_to_try: List[Optional[torch.dtype]] = [self._preferred_dtype]
+        for candidate in (torch.float16, torch.bfloat16):
+            if candidate not in dtypes_to_try:
+                dtypes_to_try.append(candidate)
+        dtypes_to_try.append(None)  # last resort: no autocast
+
+        last_exc: Optional[BaseException] = None
+        for dtype in dtypes_to_try:
+            try:
+                if not self._should_autocast() or dtype is None:
+                    return self._inner(*args, **kwargs)
+                with torch.autocast(device_type="cuda", dtype=dtype):
+                    return self._inner(*args, **kwargs)
+            except RuntimeError as exc:
+                msg = str(exc)
+                # Only retry on the common mixed-dtype error; otherwise raise immediately.
+                if "expected scalar type" not in msg:
+                    raise
+                last_exc = exc
+                continue
+
+        if last_exc is not None:
+            raise last_exc
+        return self._inner(*args, **kwargs)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Attach BERTScore + HF-judge metrics to saved experiment outputs.",
@@ -230,12 +289,15 @@ def build_judge_pipeline(
         model_id,
         **model_kwargs,
     )
-    return pipeline(
+    pipe = pipeline(
         task="text-generation",
         model=model,
         tokenizer=tokenizer,
         return_full_text=True,
     )
+    # Guard against common fp16/bf16 mismatches (esp. quantization fallbacks).
+    preferred = torch_dtype
+    return AutocastSafePipeline(pipe, preferred_dtype=preferred)
 
 
 def build_openai_judge_pipeline(model_id: str, api_key_env: str, api_base: str) -> Any:

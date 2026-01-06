@@ -437,7 +437,11 @@ class Evaluator:
                     continue
                 metric_values = evaluation[name]
                 if metric_values:
-                    ragas_scores[name] = float(metric_values[0])
+                    val = float(metric_values[0])
+                    # Avoid propagating NaNs/Infs into downstream summaries.
+                    if not np.isfinite(val):
+                        continue
+                    ragas_scores[name] = val
             return ragas_scores
         except Exception as exc:
             logger.warning("RAGAS evaluation error: %s", exc)
