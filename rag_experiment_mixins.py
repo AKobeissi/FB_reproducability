@@ -17,7 +17,6 @@ import numpy as np
 try:
     from .rag_dependencies import (
         Document,
-        RecursiveCharacterTextSplitter,
         build_chroma_store,
         create_faiss_store,
         retrieve_faiss_chunks,
@@ -25,7 +24,6 @@ try:
 except ImportError:
     from rag_dependencies import (
         Document,
-        RecursiveCharacterTextSplitter,
         build_chroma_store,
         create_faiss_store,
         retrieve_faiss_chunks,
@@ -131,14 +129,14 @@ class ChunkAndEvidenceMixin:
             for doc in documents
         ]
 
-        self.logger.info(f"\nChunking Statistics (LangChain):")
+        self.logger.info("\nChunking Statistics (LangChain):")
         self.logger.info(f"  Total chunks: {len(documents)}")
         self.logger.info(f"  Avg chunk size: {np.mean(chunk_lengths):.2f} chars")
         self.logger.info(f"  Min chunk size: {np.min(chunk_lengths)} chars")
         self.logger.info(f"  Max chunk size: {np.max(chunk_lengths)} chars")
         self.logger.info(f"  Median chunk size: {np.median(chunk_lengths):.2f} chars")
 
-        self.logger.debug(f"\nFirst 3 chunks preview:")
+        self.logger.debug("\nFirst 3 chunks preview:")
         for i, doc in enumerate(documents[:3]):
             content_preview = doc.page_content
             if isinstance(content_preview, (bytes, bytearray)):
@@ -406,11 +404,8 @@ class VectorstoreMixin:
 
     def _retrieve_chunks_faiss(self, query: str, vector_store: Any, top_k: Optional[int] = None) -> List[Dict[str, Any]]:
         if retrieve_faiss_chunks is None:
-            try:
-                return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
-            except Exception:
-                self.logger.warning("FAISS retrieval helper not available; no retrieval performed")
-                return []
+            self.logger.warning("FAISS retrieval helper not available; no retrieval performed")
+            return []
         try:
             return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
         except Exception as e:
@@ -468,7 +463,7 @@ class ResultsMixin:
             return
 
         gen_lengths = [r['generation_length'] for r in self.results]
-        self.logger.info(f"\nGenerated Answer Lengths:")
+        self.logger.info("\nGenerated Answer Lengths:")
         self.logger.info(f"  Mean: {np.mean(gen_lengths):.2f} chars")
         self.logger.info(f"  Min: {np.min(gen_lengths)} chars")
         self.logger.info(f"  Max: {np.max(gen_lengths)} chars")
@@ -480,7 +475,7 @@ class ResultsMixin:
 
         if self.experiment_type in retrieval_modes:
             context_lengths = [r['context_length'] for r in self.results]
-            self.logger.info(f"\nContext Lengths:")
+            self.logger.info("\nContext Lengths:")
             self.logger.info(f"  Mean: {np.mean(context_lengths):.2f} chars")
             self.logger.info(f"  Min: {np.min(context_lengths)} chars")
             self.logger.info(f"  Max: {np.max(context_lengths)} chars")
