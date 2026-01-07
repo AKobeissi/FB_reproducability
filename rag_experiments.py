@@ -14,154 +14,38 @@ from typing import Dict, List, Any, Optional
 from pathlib import Path
 import torch
 import argparse
+import importlib.util
 
-
-# bitsandbytes availability check (used for 8-bit quantization)
-try:
-    import bitsandbytes as bnb  # noqa: F401
-    _BNB_AVAILABLE = True
-except Exception:
-    _BNB_AVAILABLE = False
-
-# Optional OpenAI client (for HF router / nference style API)
-try:
-    from openai import OpenAI
-except Exception:
-    OpenAI = None
-
-try:
-    from .rag_dependencies import (
-        RecursiveCharacterTextSplitter,
-        HuggingFaceEmbeddings,
-        HuggingFacePipeline,
-    )
-except ImportError:
-    from rag_dependencies import (
-        RecursiveCharacterTextSplitter,
-        HuggingFaceEmbeddings,
-        HuggingFacePipeline,
-    )
-
-try:  # OpenAI embeddings via LangChain
-    from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings  # type: ignore
-except Exception:  # pragma: no cover - optional dep
-    LangchainOpenAIEmbeddings = None
-try:
-    from .rag_experiment_mixins import (
-        ComponentTrackingMixin,
-        ChunkAndEvidenceMixin,
-        PromptMixin,
-        VectorstoreMixin,
-        ResultsMixin,
-    )
-except ImportError:
-    from rag_experiment_mixins import (
-        ComponentTrackingMixin,
-        ChunkAndEvidenceMixin,
-        PromptMixin,
-        VectorstoreMixin,
-        ResultsMixin,
-    )
-
-try:
-    from .evaluate_outputs import run_scoring
-except ImportError:
-    try:
-        from evaluate_outputs import run_scoring
-    except ImportError:
-        run_scoring = None
-
-try:
-    from .retrieval_evaluator import RetrievalEvaluator
-except ImportError:
-    try:
-        from retrieval_evaluator import RetrievalEvaluator
-    except ImportError:
-        RetrievalEvaluator = None
-
-try:
-    from .generative_evaluator import GenerativeEvaluator
-except ImportError:
-    try:
-        from generative_evaluator import GenerativeEvaluator
-    except ImportError:
-        GenerativeEvaluator = None
-
-
-# HuggingFace transformers for LLM
+# Mandatory Imports - Fail fast if missing
+import bitsandbytes as bnb
+from openai import OpenAI
+from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
-# Import local modules (support running as package or script)
-try:
-    # Prefer package-relative imports when running as a package (python -m FB_reproducability.runner)
-    from .data_loader import FinanceBenchLoader
-except Exception:
-    try:
-        # Fall back to top-level imports when running as a script from package directory
-        from data_loader import FinanceBenchLoader
-    except Exception:
-        logging.getLogger(__name__).exception(
-            "Failed to import local module data_loader.\n"
-            "Make sure you're running this script from the project root or install the package."
-        )
-        # As a last resort, try to dynamically load the module by file path
-        try:
-            import importlib.util
-            base_dir = Path(__file__).resolve().parent
-            dl_path = base_dir / 'data_loader.py'
+# Local imports
+from rag_dependencies import (
+    RecursiveCharacterTextSplitter,
+    HuggingFaceEmbeddings,
+    HuggingFacePipeline,
+)
+from rag_experiment_mixins import (
+    ComponentTrackingMixin,
+    ChunkAndEvidenceMixin,
+    PromptMixin,
+    VectorstoreMixin,
+    ResultsMixin,
+)
+from evaluate_outputs import run_scoring
+from retrieval_evaluator import RetrievalEvaluator
+from generative_evaluator import GenerativeEvaluator
+from data_loader import FinanceBenchLoader
 
-            def load_module_from_path(path: Path, module_name: str):
-                spec = importlib.util.spec_from_file_location(module_name, str(path))
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)  # type: ignore
-                return mod
-
-            dl_mod = load_module_from_path(dl_path, 'data_loader_local')
-            FinanceBenchLoader = getattr(dl_mod, 'FinanceBenchLoader')
-        except Exception as e2:
-            logging.getLogger(__name__).exception(f"Dynamic import fallback failed: {e2}")
-            raise
-
-# Import modular experiment runners (keeps main file small and easier to maintain)
-try:
-    from .rag_closed_book import run_closed_book as _run_closed_book
-    from .rag_single_vector import run_single_vector as _run_single_vector
-    from .rag_shared_vector import run_shared_vector as _run_shared_vector
-    from .random_single_store import run_random_single_store as _run_random_single_store
-    from .rag_open_book import run_open_book as _run_open_book
-except Exception:
-    # If package-style import fails (e.g., running as script), try absolute imports
-    try:
-        from rag_closed_book import run_closed_book as _run_closed_book
-        from rag_single_vector import run_single_vector as _run_single_vector
-        from rag_shared_vector import run_shared_vector as _run_shared_vector
-        from random_single_store import run_random_single_store as _run_random_single_store
-        from rag_open_book import run_open_book as _run_open_book
-    except Exception:
-        # As a last resort, try dynamic import by file path so the script can be
-        # executed both as a package and as a standalone script from the project root.
-        try:
-            import importlib.util
-            base_dir = Path(__file__).resolve().parent
-
-            def _load_runner(path: Path, name: str):
-                spec = importlib.util.spec_from_file_location(name, str(path))
-                mod = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(mod)  # type: ignore
-                return mod
-
-            _run_closed_book = _load_runner(base_dir / 'rag_closed_book.py', 'rag_closed_book').run_closed_book
-            _run_single_vector = _load_runner(base_dir / 'rag_single_vector.py', 'rag_single_vector').run_single_vector
-            _run_shared_vector = _load_runner(base_dir / 'rag_shared_vector.py', 'rag_shared_vector').run_shared_vector
-            _run_random_single_store = _load_runner(base_dir / 'random_single_store.py', 'random_single_store').run_random_single_store
-            _run_open_book = _load_runner(base_dir / 'rag_open_book.py', 'rag_open_book').run_open_book
-        except Exception:
-            # If even dynamic loading fails, set to None and let callers raise clearer errors
-            _run_closed_book = None
-            _run_single_vector = None
-            _run_shared_vector = None
-            _run_random_single_store = None
-            _run_open_book = None
+# Modular Runners
+from rag_closed_book import run_closed_book as _run_closed_book
+from rag_single_vector import run_single_vector as _run_single_vector
+from rag_shared_vector import run_shared_vector as _run_shared_vector
+from random_single_store import run_random_single_store as _run_random_single_store
+from rag_open_book import run_open_book as _run_open_book
 
 
 # Set up logging
@@ -248,22 +132,6 @@ class RAGExperiment(
                  judge_model: str = "openai/gpt-4o"):
         """
         Initialize RAG Experiment
-        
-        Args:
-             experiment_type: Type of experiment (closed_book, single_vector, shared_vector, open_book)
-             llm_model: HuggingFace model for generation (Llama 3.2 3B or Qwen 2.5 7B)
-             chunk_size: Size of text chunks for retrieval
-             chunk_overlap: Overlap between chunks
-             top_k: Number of chunks to retrieve
-             embedding_model: Model for embeddings
-             output_dir: Directory for outputs (default: "outputs")
-             vector_store_dir: Directory for vector store persistence (default: "vector_stores")
-             load_in_8bit: Whether to load models in 8-bit for memory efficiency
-             max_new_tokens: Maximum tokens to generate
-             use_all_pdfs: Whether to index all PDFs in the local directory (shared vector store only)
-             eval_type: Type of evaluation to run ('retrieval', 'generative', 'both')
-             eval_mode: Evaluation mode ('static', 'semantic')
-             judge_model: Model to use for LLM judge
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
@@ -450,11 +318,6 @@ class RAGExperiment(
         return normalized.startswith(self.OPENAI_EMBEDDING_PREFIXES)
 
     def _build_openai_embeddings(self):
-        if LangchainOpenAIEmbeddings is None:
-            raise RuntimeError(
-                "langchain-openai is required to use OpenAI embedding models. "
-                "Install it (pip install langchain-openai) or choose a HuggingFace embedding."
-            )
         api_key = os.environ.get(self.api_key_env) or os.environ.get("OPENAI_API_KEY")
         if not api_key:
             raise RuntimeError(
@@ -469,10 +332,6 @@ class RAGExperiment(
         )
 
     def _build_hf_embeddings(self):
-        if HuggingFaceEmbeddings is None:
-            raise RuntimeError(
-                "langchain-huggingface is required for embeddings. Install it before running experiments."
-            )
         self.logger.info(f"Loading HuggingFace embeddings: {self.embedding_model}")
         return HuggingFaceEmbeddings(
             model_name=self.embedding_model,
@@ -486,10 +345,6 @@ class RAGExperiment(
         if self.use_api:
             if self.api_client is not None:
                 return
-
-            if OpenAI is None:
-                self.logger.error("OpenAI client library not installed. Install 'openai' package to use API mode.")
-                raise RuntimeError("OpenAI client not available")
 
             api_key = os.environ.get(self.api_key_env)
             if not api_key:
@@ -533,16 +388,9 @@ class RAGExperiment(
             }
 
             if self.load_in_8bit and self.device == "cuda":
-                if not _BNB_AVAILABLE:
-                    # bitsandbytes not available — fall back to full precision to avoid exception
-                    self.logger.warning("bitsandbytes not available or outdated; falling back to full precision (disabling 8-bit).")
-                    # Don't set load_in_8bit; continue with default dtype/device_map
-                    self.load_in_8bit = False
-                else:
-                    # If available, request 8-bit (older transformers use load_in_8bit; if your
-                    # transformers requires BitsAndBytesConfig, you can upgrade or set quantization_config)
-                    model_kwargs["load_in_8bit"] = True
-                    self.logger.info("  Using 8-bit quantization for memory efficiency")
+                # bitsandbytes must be available since we imported it
+                model_kwargs["load_in_8bit"] = True
+                self.logger.info("  Using 8-bit quantization for memory efficiency")
             
             self.llm_model = AutoModelForCausalLM.from_pretrained(
                 self.llm_model_name,
@@ -564,26 +412,17 @@ class RAGExperiment(
             self.logger.info("✓ LLM initialized successfully")
             # If LangChain's HuggingFacePipeline wrapper is available, create a
             # LangChain LLM wrapper so RetrievalQA can be used directly.
-            if HuggingFacePipeline is not None:
-                try:
-                    self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
-                    self.register_component_usage(
-                        "generator",
-                        f"HuggingFacePipeline ({self.llm_model_name})",
-                        {
-                            "package": self.llm_pipeline.__class__.__module__,
-                            "load_in_8bit": self.load_in_8bit,
-                            "device": self.device
-                        }
-                    )
-                    self.logger.info("✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA")
-                except Exception as exc:
-                    self.logger.error(f"Failed to wrap pipeline for LangChain: {exc}")
-                    raise
-            else:
-                raise RuntimeError(
-                    "HuggingFacePipeline is not available. Install 'langchain' to enable RetrievalQA."
-                )
+            self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+            self.register_component_usage(
+                "generator",
+                f"HuggingFacePipeline ({self.llm_model_name})",
+                {
+                    "package": self.llm_pipeline.__class__.__module__,
+                    "load_in_8bit": self.load_in_8bit,
+                    "device": self.device
+                }
+            )
+            self.logger.info("✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA")
             
         except Exception as e:
             self.logger.error(f"Failed to initialize LLM: {str(e)}")
@@ -597,32 +436,18 @@ class RAGExperiment(
 
     
     def run_closed_book(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        # Delegate to modular closed-book runner
-        if _run_closed_book is None:
-            raise RuntimeError("Closed-book runner module not available")
         return _run_closed_book(self, data)
     
     def run_single_vector(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        # Delegate to modular single-vector runner
-        if _run_single_vector is None:
-            raise RuntimeError("Single-vector runner module not available")
         return _run_single_vector(self, data)
     
     def run_random_single(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        if _run_random_single_store is None:
-            raise RuntimeError("Random single runner module not available")
         return _run_random_single_store(self, data)
     
     def run_shared_vector(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        # Delegate to modular shared-vector runner
-        if _run_shared_vector is None:
-            raise RuntimeError("Shared-vector runner module not available")
         return _run_shared_vector(self, data)
     
     def run_open_book(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        # Delegate to modular open-book runner
-        if _run_open_book is None:
-            raise RuntimeError("Open-book runner module not available")
         return _run_open_book(self, data)
     
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
@@ -729,7 +554,7 @@ class RAGExperiment(
         self._unload_model()
         
         # 1. Retrieval Evaluation
-        if self.eval_type in ["retrieval", "both"] and RetrievalEvaluator:
+        if self.eval_type in ["retrieval", "both"]:
             self.logger.info("Running Retrieval Evaluation...")
             try:
                 ret_evaluator = RetrievalEvaluator()
@@ -740,20 +565,13 @@ class RAGExperiment(
                     data["evaluation_summary"] = {}
                 data["evaluation_summary"]["retrieval"] = ret_metrics
                 
-                # We can also inject per-sample retrieval stats if desired, 
-                # but RetrievalEvaluator currently returns aggregated stats.
-                # If we want per-sample flags, we'd need to modify RetrievalEvaluator 
-                # or rely on what was computed. For now, we save the summary.
-                
                 self.logger.info("Retrieval Evaluation Complete.")
                 self.logger.info(f"MRR: {ret_metrics.get('mrr', 0):.4f}")
             except Exception as e:
                 self.logger.error(f"Retrieval evaluation failed: {e}", exc_info=True)
-        elif self.eval_type in ["retrieval", "both"] and not RetrievalEvaluator:
-             self.logger.warning("RetrievalEvaluator not available.")
 
         # 2. Generative Evaluation
-        if self.eval_type in ["generative", "both"] and GenerativeEvaluator:
+        if self.eval_type in ["generative", "both"]:
             self.logger.info("Running Generative Evaluation...")
             try:
                 use_llm_judge = (self.eval_mode == "semantic")

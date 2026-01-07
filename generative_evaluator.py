@@ -14,48 +14,56 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# --- Optional Dependencies ---
-try:
-    import sacrebleu
-    HAS_SACREBLEU = True
-except ImportError:
-    HAS_SACREBLEU = False
+# Mandatory Dependencies - Fail if missing
+import sacrebleu
+from rouge_score import rouge_scorer
+from bert_score import BERTScorer
+from ragas import evaluate as ragas_evaluate
+from ragas.dataset_schema import EvaluationDataset
+from ragas.embeddings import HuggingFaceEmbeddings as RagasHuggingFaceEmbeddings
+from ragas.llms.base import LangchainLLMWrapper
+from ragas.metrics import (
+    answer_relevancy,
+    context_precision,
+    context_recall,
+    faithfulness,
+)
 
-try:
-    from rouge_score import rouge_scorer
-    HAS_ROUGE = True
-except ImportError:
-    HAS_ROUGE = False
+# Use provided LlamaIndex templates directly as fallback/default
+CORRECTNESS_SYS_TMPL = """
+You are an expert evaluation system for a question answering chatbot.
 
-try:
-    from bert_score import BERTScorer
-    HAS_BERTSCORE = True
-except ImportError:
-    HAS_BERTSCORE = False
+You are given the following information:
+- a user query,
+- a reference answer, and
+- a generated answer.
 
-try:
-    from ragas import evaluate as ragas_evaluate
-    from ragas.dataset_schema import EvaluationDataset
-    from ragas.embeddings import HuggingFaceEmbeddings as RagasHuggingFaceEmbeddings
-    from ragas.llms.base import LangchainLLMWrapper
-    from ragas.metrics import (
-        answer_relevancy,
-        context_precision,
-        context_recall,
-        faithfulness,
-    )
-    HAS_RAGAS = True
-except Exception:
-    HAS_RAGAS = False
+Your job is to judge the relevance and correctness of the generated answer.
+Output a single score that represents a holistic evaluation.
+You must return your response in a line with only the score.
+Do not return answers in any other format.
+On a separate line provide your reasoning for the score as well.
 
-try:
-    from llama_index.core.evaluation.correctness import (
-        DEFAULT_SYSTEM_TEMPLATE as LLAMAINDEX_SYSTEM_PROMPT,
-        DEFAULT_USER_TEMPLATE as LLAMAINDEX_USER_PROMPT,
-    )
-    HAS_LLAMA_INDEX = True
-except Exception:
-    HAS_LLAMA_INDEX = False
+Follow these guidelines for scoring:
+- Your score has to be between 1 and 5, where 1 is the worst and 5 is the best.
+- If the generated answer is not relevant to the user query, \
+you should give a score of 1.
+- If the generated answer is relevant but contains mistakes, \
+you should give a score between 2 and 3.
+- If the generated answer is relevant and fully correct, \
+you should give a score between 4 and 5.
+"""
+
+CORRECTNESS_USER_TMPL = """
+## User Query
+{query}
+
+## Reference Answer
+{reference_answer}
+
+## Generated Answer
+{generated_answer}
+"""
 
 class GenerativeEvaluator:
     """
@@ -74,29 +82,23 @@ class GenerativeEvaluator:
     ):
         self.use_bertscore = use_bertscore
         self.use_llm_judge = use_llm_judge
-        self.use_ragas = use_ragas and HAS_RAGAS
+        self.use_ragas = use_ragas
         
         # BERTScore
         self.bertscore_scorer = None
         if self.use_bertscore:
-            if HAS_BERTSCORE:
-                try:
-                    self.bertscore_scorer = BERTScorer(lang="en", rescale_with_baseline=True)
-                    logger.info("BERTScore initialized.")
-                except Exception as e:
-                    logger.warning(f"Failed to initialize BERTScore: {e}")
-                    self.use_bertscore = False
-            else:
-                logger.warning("bert-score not installed.")
+            try:
+                self.bertscore_scorer = BERTScorer(lang="en", rescale_with_baseline=True)
+                logger.info("BERTScore initialized.")
+            except Exception as e:
+                logger.warning(f"Failed to initialize BERTScore: {e}")
                 self.use_bertscore = False
 
         # ROUGE
-        self.rouge_scorer = None
-        if HAS_ROUGE:
-            self.rouge_scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+        self.rouge_scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
         
         # BLEU
-        self.sacrebleu = sacrebleu if HAS_SACREBLEU else None
+        self.sacrebleu = sacrebleu
 
         # LLM Judge
         self.judge_pipeline = judge_pipeline
@@ -228,8 +230,8 @@ class GenerativeEvaluator:
             return {}
 
     def _create_judge_prompt(self, question: str, prediction: str, reference: str) -> str:
-        system = LLAMAINDEX_SYSTEM_PROMPT if HAS_LLAMA_INDEX and LLAMAINDEX_SYSTEM_PROMPT else "You are an expert evaluation system."
-        user_tpl = LLAMAINDEX_USER_PROMPT if HAS_LLAMA_INDEX and LLAMAINDEX_USER_PROMPT else "Query: {query}\nReference: {reference_answer}\nGenerated: {generated_answer}"
+        system = CORRECTNESS_SYS_TMPL
+        user_tpl = CORRECTNESS_USER_TMPL
         user_msg = user_tpl.format(query=question, reference_answer=reference, generated_answer=prediction)
         return f"{system}\n\n{user_msg}\n\nReturn the numeric score (1-5) on the first line and reasoning on the next."
 

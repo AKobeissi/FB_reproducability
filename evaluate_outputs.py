@@ -16,11 +16,6 @@ import json
 import logging
 import os
 from pathlib import Path
-
-# Set memory management env var to avoid fragmentation OOM
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
-
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -28,20 +23,15 @@ import torch
 from openai import OpenAI
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
-try:
-    from langchain_openai import ChatOpenAI
-except Exception:  # pragma: no cover - optional dependency
-    ChatOpenAI = None
+# Mandatory imports - fail fast
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFacePipeline as LangchainHFPipeline
 
-try:
-    from langchain_community.llms import HuggingFacePipeline as LangchainHFPipeline  # type: ignore
-except Exception:  # pragma: no cover
-    try:
-        from langchain_huggingface import HuggingFacePipeline as LangchainHFPipeline  # type: ignore
-    except Exception:
-        LangchainHFPipeline = None
+from evaluator import Evaluator
 
-from .evaluator import Evaluator
+# Set memory management env var to avoid fragmentation OOM
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
 
 
 class OpenAIChatPipeline:
@@ -261,9 +251,6 @@ def build_ragas_langchain_llm(
     hf_builder_params: Optional[Dict[str, Any]],
 ) -> Optional[Any]:
     if provider == "openai":
-        if ChatOpenAI is None:
-            logging.warning("langchain-openai is not installed; cannot create RAGAS LLM.")
-            return None
         api_key = os.environ.get(openai_api_key_env)
         if not api_key:
             logging.warning(
@@ -283,11 +270,6 @@ def build_ragas_langchain_llm(
             return None
 
     if provider == "huggingface":
-        if LangchainHFPipeline is None:
-            logging.warning(
-                "LangChain HuggingFacePipeline not available; cannot wrap HF model for RAGAS."
-            )
-            return None
         pipeline_obj = hf_pipeline
         if pipeline_obj is None:
             if hf_builder_params is None:

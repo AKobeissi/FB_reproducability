@@ -14,20 +14,13 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-try:
-    from .rag_dependencies import (
-        Document,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
-    )
-except ImportError:
-    from rag_dependencies import (
-        Document,
-        build_chroma_store,
-        create_faiss_store,
-        retrieve_faiss_chunks,
-    )
+# Mandatory imports
+from rag_dependencies import (
+    Document,
+    build_chroma_store,
+    create_faiss_store,
+    retrieve_faiss_chunks,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -385,32 +378,13 @@ class VectorstoreMixin:
     """Helpers for delegating vector store creation/retrieval."""
 
     def _build_vectorstore_chroma(self, docs, embeddings=None):
-        if build_chroma_store is None:
-            raise RuntimeError("Chroma vectorstore helper not available; ensure vectorstore.py is present and importable.")
-        try:
-            return build_chroma_store(self, docs, embeddings=embeddings)
-        except Exception as e:
-            self.logger.error(f"_build_vectorstore_chroma delegated to vectorstore failed: {e}")
-            raise
+        return build_chroma_store(self, docs, embeddings=embeddings)
 
     def _create_vector_store_faiss(self, documents: List[Document], index_name: str = "default") -> Any:
-        if create_faiss_store is None:
-            raise RuntimeError("FAISS helper not available; ensure vectorstore.py is present and importable.")
-        try:
-            return create_faiss_store(self, documents, index_name=index_name)
-        except Exception as e:
-            self.logger.error(f"_create_vector_store_faiss delegated to vectorstore failed: {e}")
-            raise
+        return create_faiss_store(self, documents, index_name=index_name)
 
     def _retrieve_chunks_faiss(self, query: str, vector_store: Any, top_k: Optional[int] = None) -> List[Dict[str, Any]]:
-        if retrieve_faiss_chunks is None:
-            self.logger.warning("FAISS retrieval helper not available; no retrieval performed")
-            return []
-        try:
-            return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
-        except Exception as e:
-            self.logger.warning(f"FAISS retrieval helper failed: {e}")
-            return []
+        return retrieve_faiss_chunks(self, query, vector_store, top_k=top_k)
 
 
 class ResultsMixin:
