@@ -3,8 +3,8 @@ import logging
 import os
 import json
 from collections import Counter
-from .pdf_utils import load_pdf_with_fallback
-from .vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
+from pdf_utils import load_pdf_with_fallback
+from vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
 
 try:
     from langchain.chains import RetrievalQA
