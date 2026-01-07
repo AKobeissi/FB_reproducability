@@ -29,6 +29,33 @@ from ragas.metrics import (
     faithfulness,
 )
 
+# Optional Imports for LLM Initialization
+try:
+    import torch
+    from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+    HAS_TRANSFORMERS = True
+except ImportError:
+    HAS_TRANSFORMERS = False
+
+try:
+    from openai import OpenAI
+    HAS_OPENAI = True
+except ImportError:
+    HAS_OPENAI = False
+
+try:
+    from langchain_openai import ChatOpenAI
+    HAS_LANGCHAIN_OPENAI = True
+except ImportError:
+    HAS_LANGCHAIN_OPENAI = False
+
+try:
+    from langchain_huggingface import HuggingFacePipeline as LangchainHFPipeline
+    HAS_LANGCHAIN_HF = True
+except ImportError:
+    HAS_LANGCHAIN_HF = False
+
+
 # Use provided LlamaIndex templates directly as fallback/default
 CORRECTNESS_SYS_TMPL = """
 You are an expert evaluation system for a question answering chatbot.
@@ -64,6 +91,29 @@ CORRECTNESS_USER_TMPL = """
 ## Generated Answer
 {generated_answer}
 """
+
+class OpenAIChatPipeline:
+    """Adapter that mimics the transformers pipeline interface for OpenAI chat models."""
+
+    def __init__(self, client: Any, model_id: str):
+        self._client = client
+        self._model_id = model_id
+        self.tokenizer = SimpleNamespace(eos_token_id=None)
+
+    def __call__(self, prompt: str, max_new_tokens: int = 200, **_: Any) -> List[Dict[str, str]]:
+        response = self._client.chat.completions.create(
+            model=self._model_id,
+            messages=[
+                {"role": "system", "content": "You are an impartial grader for FinanceBench answers."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.0,
+            max_tokens=max_new_tokens,
+        )
+        text = response.choices[0].message.content or ""
+        generated_text = f"{prompt}\n{text.strip()}"
+        return [{"generated_text": generated_text}]
+
 
 class GenerativeEvaluator:
     """
@@ -333,6 +383,15 @@ def main():
     parser.add_argument("--no-bertscore", action="store_true", help="Disable BERTScore")
     parser.add_argument("--no-llm-judge", action="store_true", help="Disable LLM Judge")
     parser.add_argument("--no-ragas", action="store_true", help="Disable RAGAS")
+    
+    # LLM Judge Configuration
+    parser.add_argument("--judge-model", default="openai/gpt-4o", help="Model to use for LLM judge")
+    parser.add_argument("--judge-provider", choices=["huggingface", "openai"], default="auto", 
+                        help="Provider for LLM judge (auto: detect from model name)")
+    parser.add_argument("--openai-api-key-env", default="OPENAI_API_KEY", help="Env var for OpenAI API key")
+    parser.add_argument("--openai-api-base", default="https://api.openai.com/v1", help="Base URL for OpenAI")
+    parser.add_argument("--device", default="auto", help="Device for local models (cpu, cuda, auto)")
+    
     args = parser.parse_args()
 
     input_path = Path(args.input_file)
@@ -351,15 +410,91 @@ def main():
         logger.error("Invalid JSON format.")
         return
 
+    # Initialize Judge Pipeline if requested
+    judge_pipeline = None
+    langchain_llm = None
+    
+    use_llm_judge = not args.no_llm_judge
+    use_ragas = not args.no_ragas
+    
+    if use_llm_judge or use_ragas:
+        provider = args.judge_provider
+        if provider == "auto":
+            if "gpt" in args.judge_model.lower() or "openai" in args.judge_model.lower():
+                provider = "openai"
+            else:
+                provider = "huggingface"
+        
+        logger.info(f"Initializing LLM Judge/RAGAS using {provider} provider and model {args.judge_model}")
+        
+        if provider == "openai":
+            if not HAS_OPENAI:
+                logger.error("openai package required for OpenAI judge. Install with: pip install openai")
+                use_llm_judge = False
+                use_ragas = False
+            else:
+                api_key = os.environ.get(args.openai_api_key_env)
+                if not api_key:
+                    logger.error(f"API key not found in {args.openai_api_key_env}")
+                    use_llm_judge = False
+                    use_ragas = False
+                else:
+                    try:
+                        client = OpenAI(api_key=api_key, base_url=args.openai_api_base)
+                        judge_pipeline = OpenAIChatPipeline(client, args.judge_model)
+                        
+                        if use_ragas and HAS_LANGCHAIN_OPENAI:
+                            langchain_llm = ChatOpenAI(
+                                model=args.judge_model,
+                                api_key=api_key,
+                                base_url=args.openai_api_base,
+                                temperature=0.0
+                            )
+                    except Exception as e:
+                        logger.error(f"Failed to initialize OpenAI client: {e}")
+                        use_llm_judge = False
+                        use_ragas = False
+
+        elif provider == "huggingface":
+            if not HAS_TRANSFORMERS:
+                logger.error("transformers package required for HuggingFace judge.")
+                use_llm_judge = False
+                use_ragas = False
+            else:
+                try:
+                    logger.info(f"Loading local model: {args.judge_model}")
+                    tokenizer = AutoTokenizer.from_pretrained(args.judge_model)
+                    model_kwargs = {"device_map": args.device} if args.device != "cpu" else {}
+                    if args.device == "cuda":
+                        model_kwargs["torch_dtype"] = torch.float16
+                        
+                    model = AutoModelForCausalLM.from_pretrained(args.judge_model, **model_kwargs)
+                    judge_pipeline = pipeline(
+                        "text-generation",
+                        model=model,
+                        tokenizer=tokenizer,
+                        max_new_tokens=200,
+                    )
+                    
+                    if use_ragas and HAS_LANGCHAIN_HF:
+                        langchain_llm = LangchainHFPipeline(pipeline=judge_pipeline)
+                except Exception as e:
+                    logger.error(f"Failed to initialize local model: {e}")
+                    use_llm_judge = False
+                    use_ragas = False
+
     evaluator = GenerativeEvaluator(
         use_bertscore=not args.no_bertscore,
-        use_llm_judge=not args.no_llm_judge,
-        use_ragas=not args.no_ragas
+        use_llm_judge=use_llm_judge,
+        use_ragas=use_ragas,
+        judge_pipeline=judge_pipeline
     )
 
     results = []
-    for sample in samples:
-        metrics = evaluator.evaluate_sample(sample)
+    for i, sample in enumerate(samples):
+        if i % 10 == 0:
+            logger.info(f"Processing sample {i}/{len(samples)}")
+        metrics = evaluator.evaluate_sample(sample, langchain_llm=langchain_llm)
         sample["generative_metrics"] = metrics
         results.append(sample)
 
