@@ -71,6 +71,22 @@ except ImportError:
     except ImportError:
         run_scoring = None
 
+try:
+    from .retrieval_evaluator import RetrievalEvaluator
+except ImportError:
+    try:
+        from retrieval_evaluator import RetrievalEvaluator
+    except ImportError:
+        RetrievalEvaluator = None
+
+try:
+    from .generative_evaluator import GenerativeEvaluator
+except ImportError:
+    try:
+        from generative_evaluator import GenerativeEvaluator
+    except ImportError:
+        GenerativeEvaluator = None
+
 
 # HuggingFace transformers for LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
@@ -686,56 +702,152 @@ class RAGExperiment(
             self.logger.info("✓ Model unloaded")
 
     def run_evaluation(self, output_file: str):
-        """Run automated evaluation on the experiment output."""
-        if run_scoring is None:
-            self.logger.warning("Evaluation module not available. Skipping scoring.")
-            return
-
+        """Run automated evaluation on the experiment output using RetrievalEvaluator and GenerativeEvaluator."""
         self.logger.info("\n" + "=" * 80)
         self.logger.info("STARTING AUTOMATED EVALUATION")
         self.logger.info("=" * 80)
         self.logger.info(f"Input file: {output_file}")
         self.logger.info(f"Results dir: {self.results_dir}")
         self.logger.info(f"Eval Type: {self.eval_type}")
-        self.logger.info(f"Eval Mode: {self.eval_mode}")
         
-        # Free up memory if we are going to load a judge model
-        # or if we just want to be clean.
+        # Load results
+        try:
+            with open(output_file, 'r') as f:
+                data = json.load(f)
+        except Exception as e:
+            self.logger.error(f"Failed to load output file: {e}")
+            return
+
+        if isinstance(data, dict) and "results" in data:
+            samples = data["results"]
+            metadata = data.get("metadata", {})
+        else:
+            samples = data
+            metadata = {}
+
+        # Free up memory
         self._unload_model()
         
-        # Configure evaluation based on self.eval_mode
-        use_llm_judge = (self.eval_mode == "semantic")
-        use_ragas = (self.eval_mode == "semantic")
+        # 1. Retrieval Evaluation
+        if self.eval_type in ["retrieval", "both"] and RetrievalEvaluator:
+            self.logger.info("Running Retrieval Evaluation...")
+            try:
+                ret_evaluator = RetrievalEvaluator()
+                ret_metrics = ret_evaluator.compute_metrics(samples, k_values=[1, 3, 5, self.top_k])
+                
+                # Add summary to metadata/container
+                if "evaluation_summary" not in data:
+                    data["evaluation_summary"] = {}
+                data["evaluation_summary"]["retrieval"] = ret_metrics
+                
+                # We can also inject per-sample retrieval stats if desired, 
+                # but RetrievalEvaluator currently returns aggregated stats.
+                # If we want per-sample flags, we'd need to modify RetrievalEvaluator 
+                # or rely on what was computed. For now, we save the summary.
+                
+                self.logger.info("Retrieval Evaluation Complete.")
+                self.logger.info(f"MRR: {ret_metrics.get('mrr', 0):.4f}")
+            except Exception as e:
+                self.logger.error(f"Retrieval evaluation failed: {e}", exc_info=True)
+        elif self.eval_type in ["retrieval", "both"] and not RetrievalEvaluator:
+             self.logger.warning("RetrievalEvaluator not available.")
+
+        # 2. Generative Evaluation
+        if self.eval_type in ["generative", "both"] and GenerativeEvaluator:
+            self.logger.info("Running Generative Evaluation...")
+            try:
+                use_llm_judge = (self.eval_mode == "semantic")
+                use_ragas = (self.eval_mode == "semantic")
+                
+                # Configure Judge Pipeline if needed
+                judge_pipeline = None
+                if use_llm_judge:
+                    # We need to re-initialize a pipeline for the judge if it's a local model
+                    # Check if judge_model is HF or OpenAI
+                    judge_provider = "huggingface"
+                    if "gpt" in self.judge_model.lower() or "openai" in self.judge_model.lower():
+                        judge_provider = "openai"
+                    
+                    if judge_provider == "huggingface":
+                         # Re-load model for judge if it's different or if we unloaded
+                         self.logger.info(f"Loading Judge Model: {self.judge_model}")
+                         try:
+                            tokenizer = AutoTokenizer.from_pretrained(self.judge_model)
+                            model = AutoModelForCausalLM.from_pretrained(
+                                self.judge_model,
+                                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+                                device_map="auto" if self.device == "cuda" else None
+                            )
+                            judge_pipeline = pipeline(
+                                "text-generation",
+                                model=model,
+                                tokenizer=tokenizer,
+                                max_new_tokens=200,
+                            )
+                         except Exception as e:
+                             self.logger.warning(f"Failed to load local judge model: {e}")
+                    elif judge_provider == "openai" and self.use_api and self.api_client:
+                         # We can use the existing API client or create a new one for the judge
+                         # For now, GenerativeEvaluator expects a callable pipeline or similar.
+                         # We can pass a wrapper.
+                         pass # TODO: Implement OpenAI wrapper for GenerativeEvaluator if needed
+                
+                gen_evaluator = GenerativeEvaluator(
+                    use_bertscore=(self.eval_mode == "static" or self.eval_mode == "semantic"),
+                    use_llm_judge=use_llm_judge,
+                    use_ragas=use_ragas,
+                    judge_pipeline=judge_pipeline
+                )
+                
+                evaluated_samples = []
+                for sample in samples:
+                    # RAGAS needs LangChain LLM. If we are in semantic mode, we might need it.
+                    # self.langchain_llm might be None if we unloaded.
+                    # For now, pass None.
+                    metrics = gen_evaluator.evaluate_sample(sample, langchain_llm=None)
+                    sample["generative_metrics"] = metrics
+                    evaluated_samples.append(sample)
+                
+                samples = evaluated_samples
+                
+                # Compute averages for summary
+                agg_gen = {}
+                metric_keys = set()
+                for s in samples:
+                    metric_keys.update(s.get("generative_metrics", {}).keys())
+                
+                for k in metric_keys:
+                    vals = [s["generative_metrics"][k] for s in samples if s["generative_metrics"].get(k) is not None]
+                    if vals:
+                         if all(isinstance(v, (int, float, bool)) for v in vals):
+                            agg_gen[f"avg_{k}"] = sum(vals) / len(vals)
+                
+                if "evaluation_summary" not in data:
+                    data["evaluation_summary"] = {}
+                data["evaluation_summary"]["generative"] = agg_gen
+                
+                self.logger.info("Generative Evaluation Complete.")
+            except Exception as e:
+                self.logger.error(f"Generative evaluation failed: {e}", exc_info=True)
+
+        # Save results to results_dir
+        if "results" in data:
+            data["results"] = samples
+        else:
+            data = samples # If it was a list
+
+        # Create output path
+        source_path = Path(output_file)
+        out_filename = f"{source_path.stem}_scored{source_path.suffix}"
+        out_path = Path(self.results_dir) / out_filename
         
-        # Determine retrieval top k
-        retrieval_top_k = None
-        if self.eval_type in ["retrieval", "both"]:
-            retrieval_top_k = self.top_k
-            
-        # Determine judge provider
-        judge_provider = "huggingface"
-        if "gpt" in self.judge_model.lower() or "openai" in self.judge_model.lower():
-            judge_provider = "openai"
-            
-        # Run scoring
         try:
-            run_scoring(
-                inputs=[output_file],
-                output_dir=self.results_dir,
-                judge_model=self.judge_model,
-                judge_provider=judge_provider,
-                # Use current device map or auto. 
-                # If we use OpenAI judge, device_map doesn't matter much.
-                device_map="auto" if self.device == "cuda" else "cpu",
-                skip_llm_judge=not use_llm_judge,
-                skip_ragas=not use_ragas,
-                retrieval_top_k=retrieval_top_k,
-                no_bertscore=False, # Always run BERTScore as requested ("static scores only plus bert")
-                quiet=False
-            )
-            self.logger.info("Evaluation complete.")
+            with open(out_path, 'w') as f:
+                json.dump(data, f, indent=2)
+            self.logger.info(f"Evaluation results saved to: {out_path}")
         except Exception as e:
-            self.logger.error(f"Evaluation failed: {e}", exc_info=True)
+            self.logger.error(f"Failed to save evaluation results: {e}")
+
     
 def main():
     """
