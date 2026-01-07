@@ -15,12 +15,20 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 # Mandatory imports
-from rag_dependencies import (
-    Document,
-    build_chroma_store,
-    create_faiss_store,
-    retrieve_faiss_chunks,
-)
+try:
+    from .rag_dependencies import (
+        Document,
+        build_chroma_store,
+        create_faiss_store,
+        retrieve_faiss_chunks,
+    )
+except ImportError:
+    from rag_dependencies import (
+        Document,
+        build_chroma_store,
+        create_faiss_store,
+        retrieve_faiss_chunks,
+    )
 
 
 logger = logging.getLogger(__name__)

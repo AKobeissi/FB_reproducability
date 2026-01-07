@@ -24,29 +24,54 @@ from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 # Local imports
-from rag_dependencies import (
-    RecursiveCharacterTextSplitter,
-    HuggingFaceEmbeddings,
-    HuggingFacePipeline,
-)
-from rag_experiment_mixins import (
-    ComponentTrackingMixin,
-    ChunkAndEvidenceMixin,
-    PromptMixin,
-    VectorstoreMixin,
-    ResultsMixin,
-)
-from evaluate_outputs import run_scoring
-from retrieval_evaluator import RetrievalEvaluator
-from generative_evaluator import GenerativeEvaluator
-from data_loader import FinanceBenchLoader
+try:
+    from .rag_dependencies import (
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        HuggingFacePipeline,
+    )
+    from .rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
+    from .evaluate_outputs import run_scoring
+    from .retrieval_evaluator import RetrievalEvaluator
+    from .generative_evaluator import GenerativeEvaluator
+    from .data_loader import FinanceBenchLoader
 
-# Modular Runners
-from rag_closed_book import run_closed_book as _run_closed_book
-from rag_single_vector import run_single_vector as _run_single_vector
-from rag_shared_vector import run_shared_vector as _run_shared_vector
-from random_single_store import run_random_single_store as _run_random_single_store
-from rag_open_book import run_open_book as _run_open_book
+    # Modular Runners
+    from .rag_closed_book import run_closed_book as _run_closed_book
+    from .rag_single_vector import run_single_vector as _run_single_vector
+    from .rag_shared_vector import run_shared_vector as _run_shared_vector
+    from .random_single_store import run_random_single_store as _run_random_single_store
+    from .rag_open_book import run_open_book as _run_open_book
+except ImportError:
+    from rag_dependencies import (
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        HuggingFacePipeline,
+    )
+    from rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
+    from evaluate_outputs import run_scoring
+    from retrieval_evaluator import RetrievalEvaluator
+    from generative_evaluator import GenerativeEvaluator
+    from data_loader import FinanceBenchLoader
+
+    # Modular Runners
+    from rag_closed_book import run_closed_book as _run_closed_book
+    from rag_single_vector import run_single_vector as _run_single_vector
+    from rag_shared_vector import run_shared_vector as _run_shared_vector
+    from random_single_store import run_random_single_store as _run_random_single_store
+    from rag_open_book import run_open_book as _run_open_book
 
 
 # Set up logging
