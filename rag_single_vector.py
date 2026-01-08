@@ -1,8 +1,12 @@
 from typing import List, Dict, Any
 import logging
 from collections import defaultdict
-from .pdf_utils import load_pdf_with_fallback
-from .vectorstore import build_chroma_store
+try:
+    from .pdf_utils import load_pdf_with_fallback
+    from .vectorstore import build_chroma_store
+except ImportError:
+    from pdf_utils import load_pdf_with_fallback
+    from vectorstore import build_chroma_store
 
 try:
     from langchain.chains import RetrievalQA

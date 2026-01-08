@@ -27,7 +27,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFacePipeline as LangchainHFPipeline
 
-from evaluator import Evaluator
+from .evaluator import Evaluator
 
 # Set memory management env var to avoid fragmentation OOM
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"

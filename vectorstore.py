@@ -10,7 +10,7 @@ interface as `RAGExperiment` in this repo, i.e. it should provide:
 """
 from __future__ import annotations
 
-from typing import List, Any, Optional, Iterable, Tuple
+from typing import List, Any, Optional, Iterable, Tuple, Dict
 import os
 import logging
 import json
@@ -21,14 +21,45 @@ import gc
 import time
 from uuid import uuid4
 
-def get_experiment_config_hash(experiment) -> str:
-    """Generate a hash of the relevant experiment configuration for vector store compatibility."""
+def build_index_config(experiment) -> Dict[str, Any]:
+    """
+    Build a dictionary capturing everything that changes the indexed chunks.
+    This config is used for hashing and validation.
+    """
+    strategy = getattr(experiment, "chunking_strategy", "recursive")
+    
     config = {
-        "chunk_size": getattr(experiment, "chunk_size", None),
-        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
         "embedding_model": getattr(experiment, "embedding_model", None),
         "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
+        "chunking_strategy": strategy,
+        "chunking_unit": getattr(experiment, "chunking_unit", "chars"),
+        "chunk_size": getattr(experiment, "chunk_size", None),
+        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
     }
+
+    if strategy == "hierarchical":
+        config.update({
+            "parent_chunk_size": getattr(experiment, "parent_chunk_size", None),
+            "parent_chunk_overlap": getattr(experiment, "parent_chunk_overlap", None),
+            "child_chunk_size": getattr(experiment, "child_chunk_size", None),
+            "child_chunk_overlap": getattr(experiment, "child_chunk_overlap", None),
+            # Optional: Add hier_level if relevant for store separation
+            # "hier_level": getattr(experiment, "hier_level", None) 
+        })
+    elif strategy == "chipper":
+        config.update({
+            "partition_model": getattr(experiment, "partition_model", "chipper"),
+            "render_dpi": getattr(experiment, "render_dpi", None),
+            "vision_encoder": getattr(experiment, "vision_encoder", None),
+            "patch_size": getattr(experiment, "patch_size", None),
+            "pipeline_version": getattr(experiment, "pipeline_version", None),
+        })
+        
+    return config
+
+def get_experiment_config_hash(experiment) -> str:
+    """Generate a hash of the relevant experiment configuration for vector store compatibility."""
+    config = build_index_config(experiment)
     # Create a stable string representation
     config_str = json.dumps(config, sort_keys=True)
     return hashlib.md5(config_str.encode("utf-8")).hexdigest()[:8]
@@ -192,17 +223,12 @@ def populate_chroma_store(experiment, vectordb, documents: List[Any], db_name: s
 
 def save_store_config(experiment, db_path: str):
     """Save the current experiment configuration to the vector store directory."""
-    current_config = {
-        "chunk_size": getattr(experiment, "chunk_size", None),
-        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
-        "embedding_model": getattr(experiment, "embedding_model", None),
-        "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
-    }
+    current_config = build_index_config(experiment)
     config_path = os.path.join(db_path, "config.json")
     config_dir = os.path.dirname(config_path)
     os.makedirs(config_dir, exist_ok=True)
     with open(config_path, 'w') as f:
-        json.dump(current_config, f)
+        json.dump(current_config, f, indent=2)
 
 
 def get_chroma_db_path(experiment, docs: Any) -> Tuple[str, str]:
@@ -222,25 +248,29 @@ def get_chroma_db_path(experiment, docs: Any) -> Tuple[str, str]:
     (db_name, db_path) tuple
     """
     config_hash = get_experiment_config_hash(experiment)
+    strategy = getattr(experiment, "chunking_strategy", "recursive")
+    
+    # Prefix db_name with strategy
     
     if docs == "all":
         docs_list = None
-        db_name = f"shared_{config_hash}"
+        db_name = f"shared_{strategy}_{config_hash}"
     elif isinstance(docs, str):
         docs_list = [docs]
-        db_name = _sanitize_path_segment(docs) + f"_{config_hash}"
+        sanitized_doc = _sanitize_path_segment(docs)
+        db_name = f"{sanitized_doc}_{strategy}_{config_hash}"
     elif isinstance(docs, (list, tuple, set)):
         docs_list = list(docs)
         if len(docs_list) <= 3:
             sanitized_list = [_sanitize_path_segment(d) for d in docs_list]
-            db_name = "_".join(sanitized_list) + f"_{config_hash}"
+            db_name = "_".join(sanitized_list) + f"_{strategy}_{config_hash}"
         else:
             sorted_docs = sorted([str(d) for d in docs_list])
             doc_hash = hashlib.md5("_".join(sorted_docs).encode("utf-8")).hexdigest()
-            db_name = f"custom_set_{doc_hash[:8]}_{config_hash}"
+            db_name = f"custom_set_{doc_hash[:8]}_{strategy}_{config_hash}"
     else:
         docs_list = None
-        db_name = f"shared_{config_hash}"
+        db_name = f"shared_{strategy}_{config_hash}"
 
     db_path = os.path.join(experiment.vector_store_dir, "chroma", db_name)
     return db_name, db_path
@@ -284,12 +314,7 @@ def build_chroma_store(
     exp_logger = getattr(experiment, "logger", logger)
     
     # --- Check for stale vector store configuration ------------------------------
-    current_config = {
-        "chunk_size": getattr(experiment, "chunk_size", None),
-        "chunk_overlap": getattr(experiment, "chunk_overlap", None),
-        "embedding_model": getattr(experiment, "embedding_model", None),
-        "use_all_pdfs": getattr(experiment, "use_all_pdfs", False),
-    }
+    current_config = build_index_config(experiment)
     
     config_path = os.path.join(db_path, "config.json")
     should_clean = False
@@ -301,11 +326,12 @@ def build_chroma_store(
                     stored_config = json.load(f)
                 
                 # Check for mismatch in critical parameters
+                # We can now compare the full dictionaries directly
                 if stored_config != current_config:
                     exp_logger.warning(
                         f"Vector store '{db_name}' configuration mismatch.\n"
-                        f"Stored: {stored_config}\n"
-                        f"Current: {current_config}\n"
+                        f"Stored: {json.dumps(stored_config, indent=2)}\n"
+                        f"Current: {json.dumps(current_config, indent=2)}\n"
                         "Rebuilding vector store..."
                     )
                     should_clean = True

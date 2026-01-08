@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 import os
+import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
@@ -23,29 +24,54 @@ from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 # Local imports
-from rag_dependencies import (
-    RecursiveCharacterTextSplitter,
-    HuggingFaceEmbeddings,
-    HuggingFacePipeline,
-)
-from rag_experiment_mixins import (
-    ComponentTrackingMixin,
-    ChunkAndEvidenceMixin,
-    PromptMixin,
-    VectorstoreMixin,
-    ResultsMixin,
-)
-from evaluate_outputs import run_scoring
-from retrieval_evaluator import RetrievalEvaluator
-from generative_evaluator import GenerativeEvaluator
-from data_loader import FinanceBenchLoader
+try:
+    from .rag_dependencies import (
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        HuggingFacePipeline,
+    )
+    from .rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
+    from .evaluate_outputs import run_scoring
+    from .retrieval_evaluator import RetrievalEvaluator
+    from .generative_evaluator import GenerativeEvaluator
+    from .data_loader import FinanceBenchLoader
 
-# Modular Runners
-from rag_closed_book import run_closed_book as _run_closed_book
-from rag_single_vector import run_single_vector as _run_single_vector
-from rag_shared_vector import run_shared_vector as _run_shared_vector
-from random_single_store import run_random_single_store as _run_random_single_store
-from rag_open_book import run_open_book as _run_open_book
+    # Modular Runners
+    from .rag_closed_book import run_closed_book as _run_closed_book
+    from .rag_single_vector import run_single_vector as _run_single_vector
+    from .rag_shared_vector import run_shared_vector as _run_shared_vector
+    from .random_single_store import run_random_single_store as _run_random_single_store
+    from .rag_open_book import run_open_book as _run_open_book
+except ImportError:
+    from rag_dependencies import (
+        RecursiveCharacterTextSplitter,
+        HuggingFaceEmbeddings,
+        HuggingFacePipeline,
+    )
+    from rag_experiment_mixins import (
+        ComponentTrackingMixin,
+        ChunkAndEvidenceMixin,
+        PromptMixin,
+        VectorstoreMixin,
+        ResultsMixin,
+    )
+    from evaluate_outputs import run_scoring
+    from retrieval_evaluator import RetrievalEvaluator
+    from generative_evaluator import GenerativeEvaluator
+    from data_loader import FinanceBenchLoader
+
+    # Modular Runners
+    from rag_closed_book import run_closed_book as _run_closed_book
+    from rag_single_vector import run_single_vector as _run_single_vector
+    from rag_shared_vector import run_shared_vector as _run_shared_vector
+    from random_single_store import run_random_single_store as _run_random_single_store
+    from rag_open_book import run_open_book as _run_open_book
 
 
 # Set up logging
@@ -129,17 +155,47 @@ class RAGExperiment(
                  use_all_pdfs: bool = False,
                  eval_type: str = "both",
                  eval_mode: str = "static",
-                 judge_model: str = "openai/gpt-4o"):
+                 judge_model: str = "openai/gpt-4o",
+                 
+                 # New Chunking Strategy Params
+                 chunking_strategy: str = "recursive",
+                 chunking_unit: str = "chars",
+                 parent_chunk_size: Optional[int] = None,
+                 parent_chunk_overlap: Optional[int] = None,
+                 child_chunk_size: Optional[int] = None,
+                 child_chunk_overlap: Optional[int] = None,
+                 partition_model: str = "chipper",
+                 render_dpi: Optional[int] = None,
+                 vision_encoder: Optional[str] = None,
+                 patch_size: Optional[int] = None,
+                 pipeline_version: Optional[str] = None):
         """
         Initialize RAG Experiment
         """
         self.experiment_type = experiment_type
         self.llm_model_name = llm_model
+        
+        # Base chunking params
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.top_k = top_k
         self.embedding_model = embedding_model
         self.use_all_pdfs = use_all_pdfs
+        
+        # Advanced chunking params
+        self.chunking_strategy = chunking_strategy
+        self.chunking_unit = chunking_unit
+        self.parent_chunk_size = parent_chunk_size
+        self.parent_chunk_overlap = parent_chunk_overlap
+        self.child_chunk_size = child_chunk_size
+        self.child_chunk_overlap = child_chunk_overlap
+        
+        # Chipper / Vision params
+        self.partition_model = partition_model
+        self.render_dpi = render_dpi
+        self.vision_encoder = vision_encoder
+        self.patch_size = patch_size
+        self.pipeline_version = pipeline_version
         
         # Evaluation config
         self.eval_type = eval_type
@@ -160,21 +216,15 @@ class RAGExperiment(
         self.output_dir = str((output_root / experiment_type / today_str).resolve())
         
         # Organize results directories: results/experiment_type/YYYYMMDD
-        # If output_root is named "outputs", result_root will be sibling "results"
         if output_root.name == "outputs":
             result_root = output_root.parent / "results"
         else:
-            # Fallback: create results sibling to whatever output root was given
             result_root = output_root.parent / "results"
             
         self.results_dir = str((result_root / experiment_type / today_str).resolve())
         self.vector_store_dir = str(Path(vector_store_dir).resolve())
         
-        # Local PDF directory: prefer this for PDF extraction if available
-        # Default to the package-local `pdfs` directory so that
-        # uploaded PDFs inside the package are preferred.
         if pdf_local_dir is None:
-            # default to pdfs (inside the package)
             self.pdf_local_dir = Path(base_dir) / "pdfs"
         else:
             self.pdf_local_dir = Path(pdf_local_dir)
@@ -184,36 +234,30 @@ class RAGExperiment(
         self.api_key_env = api_key_env
         self.api_client = None
         
-        # Auto-detect device
         if device is None:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
         else:
             self.device = device
         
-        # Initialize components
         self.logger = logging.getLogger(self.__class__.__name__)
         self.data_loader = FinanceBenchLoader()
-        # LLM components (lazy loading)
         self.llm_tokenizer = None
         self.llm_model = None
         self.llm_pipeline = None
         
-        # Initialize LangChain components
         self.embeddings = None
         self.text_splitter = None
         self.vector_stores = {}
         self.langchain_llm = None
         self.max_context_chars = 12000
-        # Persist generation config on the instance
         self.max_new_tokens = max_new_tokens
-        # Batch size for generation calls to the pipeline (helps GPU efficiency)
         self.generation_batch_size = 8
 
-        # Results storage
         self.results = []
         self.component_usage: Dict[str, Dict[str, Any]] = {}
         self.progress_total: int = 0
         self.progress_completed: int = 0
+        
         self.experiment_metadata = {
             'experiment_type': experiment_type,
             'llm_model': llm_model,
@@ -231,10 +275,29 @@ class RAGExperiment(
             'timestamp': datetime.now().isoformat(),
             'eval_type': eval_type,
             'eval_mode': eval_mode,
-            'judge_model': judge_model
+            'judge_model': judge_model,
+            
+            # New metadata
+            'chunking_strategy': chunking_strategy,
+            'chunking_unit': chunking_unit,
         }
+        
+        if chunking_strategy == 'hierarchical':
+            self.experiment_metadata.update({
+                'parent_chunk_size': parent_chunk_size,
+                'parent_chunk_overlap': parent_chunk_overlap,
+                'child_chunk_size': child_chunk_size,
+                'child_chunk_overlap': child_chunk_overlap
+            })
+        elif chunking_strategy == 'chipper':
+            self.experiment_metadata.update({
+                'partition_model': partition_model,
+                'render_dpi': render_dpi,
+                'vision_encoder': vision_encoder,
+                'patch_size': patch_size,
+                'pipeline_version': pipeline_version
+            })
 
-        # Ensure output and vector store directories exist
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.results_dir, exist_ok=True)
         os.makedirs(self.vector_store_dir, exist_ok=True)
@@ -247,27 +310,24 @@ class RAGExperiment(
         self.logger.info(f"  LLM Model: {llm_model}")
         self.logger.info(f"  Device: {self.device}")
         self.logger.info(f"  8-bit Loading: {load_in_8bit}")
+        self.logger.info(f"  Chunking Strategy: {chunking_strategy}")
+        self.logger.info(f"  Chunking Unit: {chunking_unit}")
         self.logger.info(f"  Chunk Size: {chunk_size}")
         self.logger.info(f"  Chunk Overlap: {chunk_overlap}")
+        
+        if chunking_strategy == "hierarchical":
+             self.logger.info(f"  Parent Size/Overlap: {parent_chunk_size}/{parent_chunk_overlap}")
+             self.logger.info(f"  Child Size/Overlap: {child_chunk_size}/{child_chunk_overlap}")
+        
         self.logger.info(f"  Top-K Retrieval: {top_k}")
         self.logger.info(f"  Embedding Model: {embedding_model}")
-        self.logger.info(f"  Max New Tokens: {max_new_tokens}")
         self.logger.info(f"  Use All PDFs: {use_all_pdfs}")
-        self.logger.info(f"  Evaluation Type: {eval_type}")
-        self.logger.info(f"  Evaluation Mode: {eval_mode}")
-        if eval_mode == "semantic":
-            self.logger.info(f"  Judge Model: {judge_model}")
         self.logger.info(f"  Output Dir: {self.output_dir}")
         self.logger.info(f"  Results Dir: {self.results_dir}")
-        self.logger.info("  Using LangChain + FAISS + HuggingFace LLMs")
-        if self.use_api:
-            self.logger.info("  Using API-based LLM via OpenAI client (HF router)")
         self.logger.info("=" * 80)
         
-        # Initialize LangChain components
         self._initialize_components()
         if self.use_api:
-            # Ensure API client is ready up front so summaries include generator info
             self._initialize_llm()
         self._print_component_overview(stage="initial")
 
@@ -288,22 +348,58 @@ class RAGExperiment(
         self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         
         # Initialize text splitter using LangChain
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size,
-            chunk_overlap=self.chunk_overlap,
-            length_function=len,
-            separators=["\n\n", "\n", ". ", " ", ""]
-        )
+        # NOTE: For now, we only implement recursive splitter.
+        # Hierarchical/Chipper logic would need custom splitters or pre-processors here.
+        # But we still initialize a basic splitter for 'recursive' or fallback.
+        
+        if self.chunking_unit == "tokens":
+            self.logger.info(f"Using token-based chunking with model: {self.llm_model_name}")
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name)
+                self.text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
+                    tokenizer,
+                    chunk_size=self.chunk_size,
+                    chunk_overlap=self.chunk_overlap,
+                    separators=["\n\n", "\n", ". ", " ", ""]
+                )
+            except Exception as e:
+                self.logger.warning(f"Failed to load tokenizer for token chunking: {e}. Falling back to chars.")
+                self.chunking_unit = "chars" # Fallback
+                self.text_splitter = RecursiveCharacterTextSplitter(
+                    chunk_size=self.chunk_size,
+                    chunk_overlap=self.chunk_overlap,
+                    length_function=len,
+                    separators=["\n\n", "\n", ". ", " ", ""]
+                )
+        elif self.chunking_strategy == "recursive":
+            self.text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=self.chunk_size,
+                chunk_overlap=self.chunk_overlap,
+                length_function=len,
+                separators=["\n\n", "\n", ". ", " ", ""]
+            )
+        else:
+            # Placeholder for other strategies or fallback
+            self.logger.info(f"Using RecursiveCharacterTextSplitter as fallback for '{self.chunking_strategy}' strategy")
+            self.text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=self.chunk_size,
+                chunk_overlap=self.chunk_overlap,
+                length_function=len,
+                separators=["\n\n", "\n", ". ", " ", ""]
+            )
+
         self.register_component_usage(
             "chunker",
             self.text_splitter.__class__.__name__,
             {
                 "package": self.text_splitter.__class__.__module__,
+                "strategy": self.chunking_strategy,
+                "unit": self.chunking_unit,
                 "chunk_size": self.chunk_size,
                 "chunk_overlap": self.chunk_overlap
             }
         )
-        self.logger.info(f"✓ Text splitter initialized (chunk_size={self.chunk_size}, overlap={self.chunk_overlap})")
+        self.logger.info(f"✓ Text splitter initialized (strategy={self.chunking_strategy}, unit={self.chunking_unit}, size={self.chunk_size})")
 
     def _build_embeddings(self):
         """Create FinanceBench-style embeddings using HuggingFace or OpenAI models."""
@@ -341,7 +437,6 @@ class RAGExperiment(
     
     def _initialize_llm(self):
         """Initialize HuggingFace LLM for generation"""
-        # If configured to use API, initialize the API client and skip local model
         if self.use_api:
             if self.api_client is not None:
                 return
@@ -376,11 +471,9 @@ class RAGExperiment(
         self.logger.info(f"  8-bit: {self.load_in_8bit}")
         
         try:
-            # Load tokenizer
             self.logger.info("Loading tokenizer...")
             self.llm_tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name)
             
-            # Load model
             self.logger.info("Loading model (this may take a moment)...")
             model_kwargs = {
                 "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
@@ -388,7 +481,6 @@ class RAGExperiment(
             }
 
             if self.load_in_8bit and self.device == "cuda":
-                # bitsandbytes must be available since we imported it
                 model_kwargs["load_in_8bit"] = True
                 self.logger.info("  Using 8-bit quantization for memory efficiency")
             
@@ -397,7 +489,6 @@ class RAGExperiment(
                 **model_kwargs
             )
             
-            # Create pipeline
             self.llm_pipeline = pipeline(
                 "text-generation",
                 model=self.llm_model,
@@ -410,8 +501,6 @@ class RAGExperiment(
             )
             
             self.logger.info("✓ LLM initialized successfully")
-            # If LangChain's HuggingFacePipeline wrapper is available, create a
-            # LangChain LLM wrapper so RetrievalQA can be used directly.
             self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
             self.register_component_usage(
                 "generator",
@@ -462,10 +551,8 @@ class RAGExperiment(
         self.logger.info("STARTING EXPERIMENT")
         self.logger.info("=" * 80)
         
-        # Load data
         self.data_loader.load_data()
         
-        # Select samples
         if sample_indices is not None:
             data = self.data_loader.get_batch(indices=sample_indices)
         elif num_samples is not None:
@@ -476,7 +563,6 @@ class RAGExperiment(
         self.logger.info(f"Processing {len(data)} samples")
         self._set_progress_total(len(data))
         
-        # Run appropriate experiment type
         if self.experiment_type == self.CLOSED_BOOK:
             results = self.run_closed_book(data)
         elif self.experiment_type == self.SINGLE_VECTOR:
@@ -491,11 +577,7 @@ class RAGExperiment(
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
         self.results = results
-        
-        # Compute aggregate statistics
         self._compute_aggregate_stats()
-        
-        # Save results
         output_file = self._save_results()
         
         self.logger.info("\n" + "=" * 80)
@@ -503,7 +585,6 @@ class RAGExperiment(
         self.logger.info("=" * 80)
         self._print_component_overview(stage="final")
         
-        # Run automated evaluation
         if self.eval_type:
             self.run_evaluation(output_file)
 
@@ -535,7 +616,6 @@ class RAGExperiment(
         self.logger.info(f"Results dir: {self.results_dir}")
         self.logger.info(f"Eval Type: {self.eval_type}")
         
-        # Load results
         try:
             with open(output_file, 'r') as f:
                 data = json.load(f)
@@ -550,7 +630,6 @@ class RAGExperiment(
             samples = data
             metadata = {}
 
-        # Free up memory
         self._unload_model()
         
         # 1. Retrieval Evaluation
@@ -560,7 +639,6 @@ class RAGExperiment(
                 ret_evaluator = RetrievalEvaluator()
                 ret_metrics = ret_evaluator.compute_metrics(samples, k_values=[1, 3, 5, self.top_k])
                 
-                # Add summary to metadata/container
                 if "evaluation_summary" not in data:
                     data["evaluation_summary"] = {}
                 data["evaluation_summary"]["retrieval"] = ret_metrics
@@ -577,17 +655,13 @@ class RAGExperiment(
                 use_llm_judge = (self.eval_mode == "semantic")
                 use_ragas = (self.eval_mode == "semantic")
                 
-                # Configure Judge Pipeline if needed
                 judge_pipeline = None
                 if use_llm_judge:
-                    # We need to re-initialize a pipeline for the judge if it's a local model
-                    # Check if judge_model is HF or OpenAI
                     judge_provider = "huggingface"
                     if "gpt" in self.judge_model.lower() or "openai" in self.judge_model.lower():
                         judge_provider = "openai"
                     
                     if judge_provider == "huggingface":
-                         # Re-load model for judge if it's different or if we unloaded
                          self.logger.info(f"Loading Judge Model: {self.judge_model}")
                          try:
                             tokenizer = AutoTokenizer.from_pretrained(self.judge_model)
@@ -605,10 +679,7 @@ class RAGExperiment(
                          except Exception as e:
                              self.logger.warning(f"Failed to load local judge model: {e}")
                     elif judge_provider == "openai" and self.use_api and self.api_client:
-                         # We can use the existing API client or create a new one for the judge
-                         # For now, GenerativeEvaluator expects a callable pipeline or similar.
-                         # We can pass a wrapper.
-                         pass # TODO: Implement OpenAI wrapper for GenerativeEvaluator if needed
+                         pass
                 
                 gen_evaluator = GenerativeEvaluator(
                     use_bertscore=(self.eval_mode == "static" or self.eval_mode == "semantic"),
@@ -619,16 +690,12 @@ class RAGExperiment(
                 
                 evaluated_samples = []
                 for sample in samples:
-                    # RAGAS needs LangChain LLM. If we are in semantic mode, we might need it.
-                    # self.langchain_llm might be None if we unloaded.
-                    # For now, pass None.
                     metrics = gen_evaluator.evaluate_sample(sample, langchain_llm=None)
                     sample["generative_metrics"] = metrics
                     evaluated_samples.append(sample)
                 
                 samples = evaluated_samples
                 
-                # Compute averages for summary
                 agg_gen = {}
                 metric_keys = set()
                 for s in samples:
@@ -648,13 +715,11 @@ class RAGExperiment(
             except Exception as e:
                 self.logger.error(f"Generative evaluation failed: {e}", exc_info=True)
 
-        # Save results to results_dir
         if "results" in data:
             data["results"] = samples
         else:
-            data = samples # If it was a list
+            data = samples
 
-        # Create output path
         source_path = Path(output_file)
         out_filename = f"{source_path.stem}_scored{source_path.suffix}"
         out_path = Path(self.results_dir) / out_filename
@@ -670,22 +735,11 @@ class RAGExperiment(
 def main():
     """
     CLI entry point for FinanceBench-style experiments with local Llama / Qwen.
-
-    Examples:
-        # Single-vector (singleStore) with local Llama 3.2 3B
-        python rag_experiments.py llama3binstruct -e single
-
-        # Shared-vector (sharedStore) with local Qwen 2.5 7B
-        python rag_experiments.py qwen -e shared
-
-        # Closed-book with both models (runs Llama then Qwen)
-        python rag_experiments.py both -e closed -n 50
     """
     parser = argparse.ArgumentParser(
         description="FinanceBench-style RAG experiments with local Llama / Qwen models."
     )
 
-    # Positional: which generator
     parser.add_argument(
         "llm",
         nargs="?",
@@ -697,20 +751,12 @@ def main():
         ),
     )
 
-    # Experiment type (maps to FinanceBench eval modes)
     parser.add_argument(
         "-e",
         "--experiment",
         choices=["closed", "single", "random_single", "shared", "open"],
         default="single",
-        help=(
-            "Experiment type:\n"
-            "  closed  = closed-book (no context)\n"
-            "  single  = single-vector store per document (singleStore)\n"
-            "  random_single = single store with random chunk selection baseline\n"
-            "  shared  = shared vector store across docs (sharedStore)\n"
-            "  open    = oracle / evidence open-book"
-        ),
+        help="Experiment type.",
     )
 
     parser.add_argument(
@@ -721,9 +767,6 @@ def main():
         help="Number of samples to evaluate (None = all).",
     )
 
-    # Default paths should live under package directory so
-    # running from different working directories still reads/writes inside
-    # the package instead of the repository root.
     base_dir = Path(__file__).resolve().parent
     default_pdf_dir = str(base_dir / "pdfs")
     default_vector_store_dir = str(base_dir / "vector_stores")
@@ -750,18 +793,17 @@ def main():
         help="Directory where JSON result files will be saved (defaults to outputs).",
     )
 
-    # FinanceBench-style retrieval defaults, exposed as flags
     parser.add_argument(
         "--chunk-size",
         type=int,
         default=1024,
-        help="Chunk size for retrieval (FinanceBench default 1024).",
+        help="Chunk size for retrieval (default 1024).",
     )
     parser.add_argument(
         "--chunk-overlap",
         type=int,
         default=30,
-        help="Chunk overlap for retrieval (FinanceBench default 30).",
+        help="Chunk overlap for retrieval (default 30).",
     )
     parser.add_argument(
         "--top-k",
@@ -773,7 +815,7 @@ def main():
         "--embedding-model",
         type=str,
         default="sentence-transformers/all-mpnet-base-v2",
-        help="Embedding model identifier (HF sentence transformers or OpenAI text-embedding-*).",
+        help="Embedding model identifier.",
     )
 
     parser.add_argument(
@@ -785,7 +827,7 @@ def main():
         "--api-base-url",
         type=str,
         default="https://api.openai.com/v1",
-        help="Base URL for the OpenAI-compatible API endpoint (default: api.openai.com).",
+        help="Base URL for the OpenAI-compatible API endpoint.",
     )
     parser.add_argument(
         "--api-key-env",
@@ -796,17 +838,86 @@ def main():
     parser.add_argument(
         "--no-8bit",
         action="store_true",
-        help="Disable 8-bit loading (load full-precision model).",
+        help="Disable 8-bit loading.",
     )
     parser.add_argument(
         "--use-all-pdfs",
         action="store_true",
-        help="Index all PDFs in the pdf-dir, not just those referenced in the dataset (for shared vector store).",
+        help="Index all PDFs in the pdf-dir.",
+    )
+
+    # --- New Chunking Arguments ---
+    parser.add_argument(
+        "--chunking-strategy",
+        type=str,
+        default="recursive",
+        choices=["recursive", "hierarchical", "chipper"],
+        help="Chunking strategy: recursive (default), hierarchical, or chipper."
+    )
+    parser.add_argument(
+        "--chunking-unit",
+        type=str,
+        default="chars",
+        choices=["chars", "tokens"],
+        help="Unit for chunking: chars (default) or tokens."
+    )
+    parser.add_argument(
+        "--parent-chunk-size",
+        type=int,
+        default=None,
+        help="Parent chunk size for hierarchical chunking."
+    )
+    parser.add_argument(
+        "--parent-chunk-overlap",
+        type=int,
+        default=None,
+        help="Parent chunk overlap for hierarchical chunking."
+    )
+    parser.add_argument(
+        "--child-chunk-size",
+        type=int,
+        default=None,
+        help="Child chunk size for hierarchical chunking."
+    )
+    parser.add_argument(
+        "--child-chunk-overlap",
+        type=int,
+        default=None,
+        help="Child chunk overlap for hierarchical chunking."
+    )
+    parser.add_argument(
+        "--partition-model",
+        type=str,
+        default="chipper",
+        help="Partition model for vision/chipper strategy."
+    )
+    parser.add_argument(
+        "--render-dpi",
+        type=int,
+        default=None,
+        help="Render DPI for vision strategy."
+    )
+    parser.add_argument(
+        "--vision-encoder",
+        type=str,
+        default=None,
+        help="Vision encoder for vision strategy."
+    )
+    parser.add_argument(
+        "--patch-size",
+        type=int,
+        default=None,
+        help="Patch size for vision strategy."
+    )
+    parser.add_argument(
+        "--pipeline-version",
+        type=str,
+        default=None,
+        help="Pipeline version string for cache busting."
     )
 
     args = parser.parse_args()
 
-    # Map experiment name to RAGExperiment constants
     exp_map = {
         "closed": RAGExperiment.CLOSED_BOOK,
         "single": RAGExperiment.SINGLE_VECTOR,
@@ -816,7 +927,6 @@ def main():
     }
     experiment_type = exp_map[args.experiment]
 
-    # Map LLM shorthand to HF model ids
     llm_arg = args.llm.lower()
     if llm_arg in {"llama", "llama3", "llama3b", "llama3binstruct"}:
         models_to_run = [("llama3binstruct", RAGExperiment.LLAMA_3_2_3B)]
@@ -828,7 +938,6 @@ def main():
             ("qwen2.5-7b", RAGExperiment.QWEN_2_5_7B),
         ]
     else:
-        # Treat as a full HF model id
         models_to_run = [(args.llm, args.llm)]
 
     for label, model_name in models_to_run:
@@ -851,6 +960,19 @@ def main():
             api_base_url=args.api_base_url,
             api_key_env=args.api_key_env,
             use_all_pdfs=args.use_all_pdfs,
+            
+            # New Params
+            chunking_strategy=args.chunking_strategy,
+            chunking_unit=args.chunking_unit,
+            parent_chunk_size=args.parent_chunk_size,
+            parent_chunk_overlap=args.parent_chunk_overlap,
+            child_chunk_size=args.child_chunk_size,
+            child_chunk_overlap=args.child_chunk_overlap,
+            partition_model=args.partition_model,
+            render_dpi=args.render_dpi,
+            vision_encoder=args.vision_encoder,
+            patch_size=args.patch_size,
+            pipeline_version=args.pipeline_version
         )
 
         experiment.run_experiment(num_samples=args.num_samples)
