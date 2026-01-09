@@ -100,28 +100,13 @@ class ChunkAndEvidenceMixin:
     def _chunk_text_langchain(self, text, metadata: Dict[str, Any] = None) -> List[Document]:
         metadata = metadata or {}
 
-        if isinstance(text, list):
-            documents_input = []
-            for doc in text:
-                doc_meta = dict(metadata)
-                doc_meta.update(doc.metadata or {})
-                doc.metadata = doc_meta
-                documents_input.append(doc)
-            documents = self.text_splitter.split_documents(documents_input)
-        else:
-            if isinstance(text, (bytes, bytearray)):
-                try:
-                    text = text.decode('utf-8')
-                except Exception:
-                    text = text.decode('utf-8', errors='replace')
+        # Delegate to chunking module so strategies don't live here.
+        try:
+            from .chunking import chunk_text
+        except Exception:  # pragma: no cover
+            from chunking import chunk_text
 
-            if not text or len(text) == 0:
-                return []
-
-            documents = self.text_splitter.create_documents(
-                texts=[str(text)],
-                metadatas=[metadata]
-            )
+        documents = chunk_text(self, text, metadata=metadata)
 
         chunk_lengths = [
             len(doc.page_content)
@@ -130,12 +115,14 @@ class ChunkAndEvidenceMixin:
             for doc in documents
         ]
 
-        self.logger.info("\nChunking Statistics (LangChain):")
+        strategy = getattr(self, "chunking_strategy", "recursive")
+        self.logger.info(f"\nChunking Statistics ({strategy}):")
         self.logger.info(f"  Total chunks: {len(documents)}")
-        self.logger.info(f"  Avg chunk size: {np.mean(chunk_lengths):.2f} chars")
-        self.logger.info(f"  Min chunk size: {np.min(chunk_lengths)} chars")
-        self.logger.info(f"  Max chunk size: {np.max(chunk_lengths)} chars")
-        self.logger.info(f"  Median chunk size: {np.median(chunk_lengths):.2f} chars")
+        if chunk_lengths:
+            self.logger.info(f"  Avg chunk size: {np.mean(chunk_lengths):.2f} chars")
+            self.logger.info(f"  Min chunk size: {np.min(chunk_lengths)} chars")
+            self.logger.info(f"  Max chunk size: {np.max(chunk_lengths)} chars")
+            self.logger.info(f"  Median chunk size: {np.median(chunk_lengths):.2f} chars")
 
         self.logger.debug("\nFirst 3 chunks preview:")
         for i, doc in enumerate(documents[:3]):

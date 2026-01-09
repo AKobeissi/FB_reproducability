@@ -42,6 +42,8 @@ try:
     from .generative_evaluator import GenerativeEvaluator
     from .data_loader import FinanceBenchLoader
 
+    from .chunking import initialize_chunker
+
     # Modular Runners
     from .rag_closed_book import run_closed_book as _run_closed_book
     from .rag_single_vector import run_single_vector as _run_single_vector
@@ -65,6 +67,8 @@ except ImportError:
     from retrieval_evaluator import RetrievalEvaluator
     from generative_evaluator import GenerativeEvaluator
     from data_loader import FinanceBenchLoader
+
+    from chunking import initialize_chunker
 
     # Modular Runners
     from rag_closed_book import run_closed_book as _run_closed_book
@@ -347,56 +351,22 @@ class RAGExperiment(
         )
         self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         
-        # Initialize text splitter using LangChain
-        # NOTE: For now, we only implement recursive splitter.
-        # Hierarchical/Chipper logic would need custom splitters or pre-processors here.
-        # But we still initialize a basic splitter for 'recursive' or fallback.
-        
-        if self.chunking_unit == "tokens":
-            self.logger.info(f"Using token-based chunking with model: {self.llm_model_name}")
-            try:
-                tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name)
-                self.text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
-                    tokenizer,
-                    chunk_size=self.chunk_size,
-                    chunk_overlap=self.chunk_overlap,
-                    separators=["\n\n", "\n", ". ", " ", ""]
-                )
-            except Exception as e:
-                self.logger.warning(f"Failed to load tokenizer for token chunking: {e}. Falling back to chars.")
-                self.chunking_unit = "chars" # Fallback
-                self.text_splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=self.chunk_size,
-                    chunk_overlap=self.chunk_overlap,
-                    length_function=len,
-                    separators=["\n\n", "\n", ". ", " ", ""]
-                )
-        elif self.chunking_strategy == "recursive":
-            self.text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap,
-                length_function=len,
-                separators=["\n\n", "\n", ". ", " ", ""]
-            )
-        else:
-            # Placeholder for other strategies or fallback
-            self.logger.info(f"Using RecursiveCharacterTextSplitter as fallback for '{self.chunking_strategy}' strategy")
-            self.text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap,
-                length_function=len,
-                separators=["\n\n", "\n", ". ", " ", ""]
-            )
+        # Initialize chunker (delegated to chunking.py)
+        self.text_splitter = initialize_chunker(self)
 
         self.register_component_usage(
             "chunker",
-            self.text_splitter.__class__.__name__,
+            "HierarchicalChunker" if self.chunking_strategy == "hierarchical" else self.text_splitter.__class__.__name__,
             {
                 "package": self.text_splitter.__class__.__module__,
                 "strategy": self.chunking_strategy,
                 "unit": self.chunking_unit,
                 "chunk_size": self.chunk_size,
-                "chunk_overlap": self.chunk_overlap
+                "chunk_overlap": self.chunk_overlap,
+                "parent_chunk_size": self.parent_chunk_size,
+                "parent_chunk_overlap": self.parent_chunk_overlap,
+                "child_chunk_size": self.child_chunk_size,
+                "child_chunk_overlap": self.child_chunk_overlap,
             }
         )
         self.logger.info(f"✓ Text splitter initialized (strategy={self.chunking_strategy}, unit={self.chunking_unit}, size={self.chunk_size})")
