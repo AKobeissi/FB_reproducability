@@ -11,6 +11,7 @@ vector_stores1/
 pdfs/
 pdfs/
 results/
+outputs/
 .env
 *.sqlite3
 *.bin
