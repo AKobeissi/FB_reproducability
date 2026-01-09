@@ -11,6 +11,7 @@ import logging
 from dataclasses import dataclass
 from typing import List, Tuple
 
+
 logger = logging.getLogger(__name__)
 
 # LangChain imports (try multiple possible packages / entrypoints and provide safe fallbacks)
@@ -23,7 +24,9 @@ BaseRetriever = None
 Chroma = None
 RetrievalQA = None
 HuggingFacePipeline = None
-
+ParentDocumentRetriever = None
+InMemoryStore = None
+LocalFileStore = None
 
 # 1) Text splitter: try langchain, then langchain_text_splitters
 try:
@@ -79,6 +82,9 @@ try:
 except Exception:
     Document = None
     BaseRetriever = None
+
+from langchain.retrievers import ParentDocumentRetriever
+from langchain.storage import InMemoryStore, LocalFileStore
 
 # RetrievalQA and HuggingFacePipeline (optional)
 try:
@@ -170,4 +176,7 @@ __all__ = [
     "create_faiss_store",
     "retrieve_faiss_chunks",
     "get_chroma_db_path",
+    "ParentDocumentRetriever",
+    "InMemoryStore",
+    "LocalFileStore",
 ]
