@@ -7,6 +7,8 @@ from typing import List, Dict, Any, Tuple, Optional, Set
 from collections import Counter
 import re
 from pathlib import Path
+import sacrebleu
+from rouge_score import rouge_scorer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -19,7 +21,7 @@ class RetrievalEvaluator:
     """
 
     def __init__(self):
-        pass
+        self.rouge_scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
 
     def _normalize_text(self, text: str) -> str:
         """Normalize text for matching (lowercase, strip whitespace)."""
@@ -54,6 +56,18 @@ class RetrievalEvaluator:
         
         return overlap >= threshold
 
+    def _compute_bleu(self, prediction: str, reference: str) -> float:
+        """Compute BLEU-4 score using sacrebleu."""
+        score = sacrebleu.sentence_bleu(prediction, [reference]).score / 100.0
+        return score
+      
+
+    def _compute_rouge_l(self, prediction: str, reference: str) -> float:
+        """Compute ROUGE-L F1 score."""
+        scores = self.rouge_scorer.score(reference, prediction)
+        return scores['rougeL'].fmeasure
+
+        
     def compute_metrics(self, samples: List[Dict[str, Any]], k_values: List[int] = [1, 3, 5, 10]) -> Dict[str, Any]:
         """
         Compute retrieval metrics for a list of samples.
@@ -76,7 +90,9 @@ class RetrievalEvaluator:
             "chunk_hit": {k: [] for k in k_values}, # Matches gold evidence
             "chunk_recall": {k: [] for k in k_values},
             "ref_answer_hit": {k: [] for k in k_values}, # Matches reference answer
-            "mrr": []
+            "mrr": [],
+            "context_bleu": {k: [] for k in k_values},
+            "context_rougeL": {k: [] for k in k_values}
         }
 
         for sample in samples:
@@ -117,7 +133,6 @@ class RetrievalEvaluator:
             # Matches is a list of dicts: {'doc_match': bool, 'page_match': bool, 'chunk_match': bool, 'ref_match': bool}
             
             retrieval_metadata = []
-            
             first_relevant_rank = 0
 
             for idx, chunk in enumerate(retrieved):
@@ -169,6 +184,39 @@ class RetrievalEvaluator:
             # Calculate Hit@k and Recall@k
             for k in k_values:
                 k_retrieved = retrieval_metadata[:k]
+                
+                top_k_chunks = retrieved[:k]
+                
+                # Create a single reference string from all gold segments
+                gold_evidence_text = "\n".join(gold_texts)
+                
+                k_bleu_scores = []
+                k_rouge_scores = []
+                
+                if gold_evidence_text:
+                    for chunk in top_k_chunks:
+                        chunk_text = chunk.get("text", "")
+                        if not chunk_text:
+                            k_bleu_scores.append(0.0)
+                            k_rouge_scores.append(0.0)
+                            continue
+                        
+                        # Score this specific chunk against the gold evidence
+                        b_score = self._compute_bleu(chunk_text, gold_evidence_text)
+                        r_score = self._compute_rouge_l(chunk_text, gold_evidence_text)
+                        
+                        k_bleu_scores.append(b_score)
+                        k_rouge_scores.append(r_score)
+                
+                # Take the MAX score (best single chunk retrieved)
+                max_bleu = max(k_bleu_scores) if k_bleu_scores else 0.0
+                max_rouge_l = max(k_rouge_scores) if k_rouge_scores else 0.0
+                
+                metrics["context_bleu"][k].append(max_bleu)
+                metrics["context_rougeL"][k].append(max_rouge_l)
+                
+                sample_metrics[f"context_bleu@{k}"] = max_bleu
+                sample_metrics[f"context_rougeL@{k}"] = max_rouge_l
                 
                 # Document Level
                 retrieved_docs = set()
