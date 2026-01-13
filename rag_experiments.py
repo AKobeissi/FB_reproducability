@@ -38,6 +38,9 @@ from .rag_experiment_mixins import (
     VectorstoreMixin,
     ResultsMixin,
 )
+
+from .big2small import run_big2small as _run_big2small
+from .bm25 import run_bm25 as _run_bm25  
 from .evaluate_outputs import run_scoring
 from .retrieval_evaluator import RetrievalEvaluator
 from .generative_evaluator import GenerativeEvaluator
@@ -100,6 +103,8 @@ class RAGExperiment(
     SHARED_VECTOR = "shared_vector"
     OPEN_BOOK = "open_book"
     RANDOM_SINGLE = "random_single"
+    BIG_2_SMALL = "big2small",
+    BM25 = "bm25"   
     
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
@@ -484,6 +489,12 @@ class RAGExperiment(
     def run_open_book(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_open_book(self, data)
     
+    def run_big2small(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_big2small(self, data)
+   
+    def run_bm25(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_bm25(self, data)
+    
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
         Run the configured experiment
@@ -518,6 +529,10 @@ class RAGExperiment(
             results = self.run_shared_vector(data)
         elif self.experiment_type == self.OPEN_BOOK:
             results = self.run_open_book(data)
+        elif self.experiment_type == self.BIG_2_SMALL:   
+            results = self.run_big2small(data)
+        elif self.experiment_type == self.BM25:    
+            results = self.run_bm25(data)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -699,7 +714,7 @@ def main():
     parser.add_argument(
         "-e",
         "--experiment",
-        choices=["closed", "single", "random_single", "shared", "open"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25"],
         default="single",
         help="Experiment type.",
     )
@@ -869,6 +884,8 @@ def main():
         "random_single": RAGExperiment.RANDOM_SINGLE,
         "shared": RAGExperiment.SHARED_VECTOR,
         "open": RAGExperiment.OPEN_BOOK,
+        "big2small": RAGExperiment.BIG_2_SMALL,
+        "bm25": RAGExperiment.BM25,
     }
     experiment_type = exp_map[args.experiment]
 

@@ -83,8 +83,16 @@ except Exception:
     Document = None
     BaseRetriever = None
 
-from langchain.retrievers import ParentDocumentRetriever
-from langchain.storage import InMemoryStore, LocalFileStore
+try:
+    from langchain_community.retrievers import BM25Retriever
+    _HAS_LANGCHAIN = True
+except ImportError:
+    try:
+        from langchain.retrievers import BM25Retriever
+        _HAS_LANGCHAIN = True
+    except ImportError:
+        BM25Retriever = None
+# from langchain.storage import InMemoryStore, LocalFileStore
 
 # RetrievalQA and HuggingFacePipeline (optional)
 try:

@@ -1,4 +1,3 @@
-
 import logging
 import json
 import argparse
@@ -28,6 +27,20 @@ class RetrievalEvaluator:
         if not text:
             return ""
         return " ".join(text.lower().split())
+    
+    def _normalize_doc_name(self, name: str) -> str:
+        """
+        Normalize document name for robust comparison.
+        1. Lowercase.
+        2. Remove .pdf extension if present.
+        3. Strip whitespace.
+        """
+        if not name:
+            return ""
+        name = str(name).lower().strip()
+        if name.endswith(".pdf"):
+            name = name[:-4]
+        return name
 
     def _check_match(self, retrieved_text: str, gold_text: str, threshold: float = 0.7) -> bool:
         """
@@ -58,7 +71,10 @@ class RetrievalEvaluator:
 
     def _compute_bleu(self, prediction: str, reference: str) -> float:
         """Compute BLEU-4 score using sacrebleu."""
-        score = sacrebleu.sentence_bleu(prediction, [reference]).score / 100.0
+        try:
+            score = sacrebleu.sentence_bleu(prediction, [reference]).score / 100.0
+        except Exception:
+            score = 0.0
         return score
       
 
@@ -71,16 +87,6 @@ class RetrievalEvaluator:
     def compute_metrics(self, samples: List[Dict[str, Any]], k_values: List[int] = [1, 3, 5, 10]) -> Dict[str, Any]:
         """
         Compute retrieval metrics for a list of samples.
-        
-        Args:
-            samples: List of sample dictionaries. Each sample must have:
-                     - 'retrieved_chunks': List of dicts with 'text', 'metadata' -> {'doc_name', 'page'}
-                     - 'gold_evidence_segments': List of dicts with 'text', 'doc_name', 'page'
-                     - 'reference_answer': str (optional, for checking if answer is in chunk)
-            k_values: List of k thresholds for Hit@k and Recall@k
-        
-        Returns:
-            Dictionary of aggregated metrics.
         """
         metrics = {
             "doc_hit": {k: [] for k in k_values},
@@ -103,7 +109,6 @@ class RetrievalEvaluator:
             if isinstance(gold_segments, dict):
                 gold_segments = [gold_segments]
             elif not isinstance(gold_segments, list):
-                # Try legacy format or skip
                 if sample.get("gold_evidence"):
                      gold_segments = [{"text": sample["gold_evidence"]}]
                 else:
@@ -115,22 +120,27 @@ class RetrievalEvaluator:
             if not gold_segments and not reference_answer:
                 continue
 
-            # Extract Gold Sets
+            # Extract Gold Sets (Normalized)
             gold_docs = set()
             gold_pages = set()
             gold_texts = []
 
             for seg in gold_segments:
-                if seg.get("doc_name"):
-                    gold_docs.add(seg["doc_name"])
-                if seg.get("doc_name") and seg.get("page") is not None:
-                    gold_pages.add((seg["doc_name"], seg["page"]))
+                doc_name = seg.get("doc_name") or seg.get("document")
+                if doc_name:
+                    # NORMALIZE DOC NAME
+                    gold_docs.add(self._normalize_doc_name(doc_name))
+                
+                if doc_name and seg.get("page") is not None:
+                    # NORMALIZE DOC NAME IN PAGE TUPLE
+                    # Note: Convert page to string to handle "41" vs 41 mismatches
+                    page_str = str(seg["page"]).strip()
+                    gold_pages.add((self._normalize_doc_name(doc_name), page_str))
+                
                 if seg.get("text") or seg.get("evidence_text"):
                     gold_texts.append(seg.get("text") or seg.get("evidence_text"))
 
             # --- Evaluate at different K ---
-            # Pre-compute matches for all retrieved chunks to avoid re-looping
-            # Matches is a list of dicts: {'doc_match': bool, 'page_match': bool, 'chunk_match': bool, 'ref_match': bool}
             
             retrieval_metadata = []
             first_relevant_rank = 0
@@ -139,8 +149,14 @@ class RetrievalEvaluator:
                 meta = chunk.get("metadata", {})
                 text = chunk.get("text", "")
                 
-                doc = meta.get("doc_name")
+                raw_doc_name = meta.get("doc_name") or meta.get("source")
+                # NORMALIZE RETRIEVED DOC NAME
+                doc = self._normalize_doc_name(raw_doc_name)
+                
+                # Handle Page type mismatch (int vs str)
                 page = meta.get("page")
+                if page is not None:
+                    page = str(page).strip()
                 
                 # Doc Match
                 is_doc_match = doc in gold_docs
@@ -158,8 +174,6 @@ class RetrievalEvaluator:
                 # Reference Answer Match
                 is_ref_match = False
                 if reference_answer:
-                    # Check if reference answer is contained in the chunk (programmatic approach)
-                    # We typically check if the reference answer is a substring of the chunk
                     if self._normalize_text(reference_answer) in self._normalize_text(text):
                         is_ref_match = True
 
@@ -170,7 +184,7 @@ class RetrievalEvaluator:
                     "ref_match": is_ref_match
                 })
                 
-                # MRR Calculation (based on Chunk Match - finding the evidence)
+                # MRR Calculation (based on Chunk Match)
                 if first_relevant_rank == 0 and is_chunk_match:
                     first_relevant_rank = idx + 1
 
@@ -184,10 +198,8 @@ class RetrievalEvaluator:
             # Calculate Hit@k and Recall@k
             for k in k_values:
                 k_retrieved = retrieval_metadata[:k]
-                
                 top_k_chunks = retrieved[:k]
                 
-                # Create a single reference string from all gold segments
                 gold_evidence_text = "\n".join(gold_texts)
                 
                 k_bleu_scores = []
@@ -201,14 +213,12 @@ class RetrievalEvaluator:
                             k_rouge_scores.append(0.0)
                             continue
                         
-                        # Score this specific chunk against the gold evidence
                         b_score = self._compute_bleu(chunk_text, gold_evidence_text)
                         r_score = self._compute_rouge_l(chunk_text, gold_evidence_text)
                         
                         k_bleu_scores.append(b_score)
                         k_rouge_scores.append(r_score)
                 
-                # Take the MAX score (best single chunk retrieved)
                 max_bleu = max(k_bleu_scores) if k_bleu_scores else 0.0
                 max_rouge_l = max(k_rouge_scores) if k_rouge_scores else 0.0
                 
@@ -218,17 +228,23 @@ class RetrievalEvaluator:
                 sample_metrics[f"context_bleu@{k}"] = max_bleu
                 sample_metrics[f"context_rougeL@{k}"] = max_rouge_l
                 
-                # Document Level
-                retrieved_docs = set()
-                for i, item in enumerate(k_retrieved):
-                     if retrieved[i].get("metadata", {}).get("doc_name"):
-                         retrieved_docs.add(retrieved[i]["metadata"]["doc_name"])
+                # Document Level Stats for this K
+                # Re-extract relevant docs from top-K for recall calculation
+                # We need to normalize them again to count unique correct docs
+                retrieved_docs_k = set()
+                for i in range(min(k, len(retrieved))):
+                     m = retrieved[i].get("metadata", {})
+                     d_name = m.get("doc_name") or m.get("source")
+                     if d_name:
+                         retrieved_docs_k.add(self._normalize_doc_name(d_name))
                 
                 # DOC
                 doc_hits = sum(1 for x in k_retrieved if x['doc_match'])
                 doc_hit_val = 1 if doc_hits > 0 else 0
                 metrics["doc_hit"][k].append(doc_hit_val)
-                doc_recall_val = len(retrieved_docs.intersection(gold_docs)) / len(gold_docs) if gold_docs else 0
+                
+                # Doc Recall: Intersection of (Normalized Retrieved @ K) and (Normalized Gold)
+                doc_recall_val = len(retrieved_docs_k.intersection(gold_docs)) / len(gold_docs) if gold_docs else 0
                 metrics["doc_recall"][k].append(doc_recall_val)
 
                 # PAGE
@@ -236,13 +252,15 @@ class RetrievalEvaluator:
                 page_hit_val = 1 if page_hits > 0 else 0
                 metrics["page_hit"][k].append(page_hit_val)
                 
-                retrieved_pages = set()
-                for i, item in enumerate(k_retrieved):
+                retrieved_pages_k = set()
+                for i in range(min(k, len(retrieved))):
                     m = retrieved[i].get("metadata", {})
-                    if m.get("doc_name") and m.get("page") is not None:
-                        retrieved_pages.add((m["doc_name"], m["page"]))
+                    d_name = m.get("doc_name") or m.get("source")
+                    p_num = m.get("page")
+                    if d_name and p_num is not None:
+                        retrieved_pages_k.add((self._normalize_doc_name(d_name), str(p_num).strip()))
                 
-                page_recall_val = len(retrieved_pages.intersection(gold_pages)) / len(gold_pages) if gold_pages else 0
+                page_recall_val = len(retrieved_pages_k.intersection(gold_pages)) / len(gold_pages) if gold_pages else 0
                 metrics["page_recall"][k].append(page_recall_val)
 
                 # CHUNK (Gold Evidence)
@@ -268,19 +286,11 @@ class RetrievalEvaluator:
                 ref_hit_val = 1 if ref_hits > 0 else 0
                 metrics["ref_answer_hit"][k].append(ref_hit_val)
                 
-                # Add to sample metrics
                 sample_metrics[f"doc_hit@{k}"] = doc_hit_val
                 sample_metrics[f"doc_recall@{k}"] = doc_recall_val
-                sample_metrics[f"page_hit@{k}"] = page_hit_val
-                sample_metrics[f"page_recall@{k}"] = page_recall_val
-                sample_metrics[f"chunk_hit@{k}"] = chunk_hit_val
-                sample_metrics[f"chunk_recall@{k}"] = chunk_recall_val
-                sample_metrics[f"ref_answer_hit@{k}"] = ref_hit_val
 
-            # Update sample in place
             sample["retrieval_metrics"] = sample_metrics
 
-        # Aggregate Results
         aggregated = {}
         for metric_name, k_dict in metrics.items():
             if metric_name == "mrr":
@@ -305,7 +315,6 @@ def main():
     with open(input_path, 'r') as f:
         data = json.load(f)
 
-    # Support different JSON structures
     if isinstance(data, list):
         samples = data
     elif isinstance(data, dict) and "results" in data:

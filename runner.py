@@ -73,7 +73,7 @@ def parse_args():
         "experiment",
         nargs="?",
         default="closed",
-        choices=["closed", "single", "random_single", "shared", "open"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small"],
         help="Experiment type"
     )
     
@@ -197,6 +197,7 @@ def get_experiment_type(exp_arg: str) -> str:
         "random_single": RAGExperiment.RANDOM_SINGLE,
         "shared": RAGExperiment.SHARED_VECTOR,
         "open": RAGExperiment.OPEN_BOOK,
+        "big2small": RAGExperiment.BIG_2_SMALL,
     }
     return exp_map[exp_arg]
 
