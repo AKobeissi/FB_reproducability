@@ -2,7 +2,9 @@
 RAG Experiments Main Module
 Uses LangChain, Chroma, and HuggingFace models (Llama 3.2 3B, Qwen 2.5 7B)
 Supports multiple experiment types: closed-book, single vector store, 
-shared vector store, and open-book (evidence)
+shared vector store, and open-book (evidence).
+
+MODIFIED: Added support for BGE-M3 and FinanceMTEB (Fin-E5) embedding models.
 """
 
 from __future__ import annotations
@@ -103,7 +105,7 @@ class RAGExperiment(
     SHARED_VECTOR = "shared_vector"
     OPEN_BOOK = "open_book"
     RANDOM_SINGLE = "random_single"
-    BIG_2_SMALL = "big2small",
+    BIG_2_SMALL = "big2small"
     BM25 = "bm25"   
     
     # Available LLMs
@@ -116,6 +118,17 @@ class RAGExperiment(
         "text-similarity",
         "text-moderation",
     )
+
+    # --- New: Embedding Model Presets ---
+    EMBEDDING_ALIASES = {
+        "mpnet": "sentence-transformers/all-mpnet-base-v2",
+        "bge-m3": "BAAI/bge-m3",
+        "bge-base": "BAAI/bge-base-en-v1.5",
+        "bge-large": "BAAI/bge-large-en-v1.5",
+        "financemteb": "FinanceMTEB/FinE5",  # Maps to the top performing Fin-E5
+        "fin-e5": "FinanceMTEB/FinE5",
+        "finance-bench": "FinanceMTEB/FinanceBench" # Dataset, but sometimes requested as model context
+    }
 
     def __init__(self, 
                  experiment_type: str = CLOSED_BOOK,
@@ -322,15 +335,13 @@ class RAGExperiment(
             self.embeddings.__class__.__name__,
             {
                 "package": self.embeddings.__class__.__module__,
-                "model_name": self.embedding_model
+                "model_name": self.embedding_model,
+                "resolved_model": getattr(self.embeddings, "model_name", "unknown")
             }
         )
         self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         
         # Initialize text splitter using LangChain
-        # NOTE: For now, we only implement recursive splitter.
-        # Hierarchical/Chipper logic would need custom splitters or pre-processors here.
-        # But we still initialize a basic splitter for 'recursive' or fallback.
         self.text_splitter, self.child_splitter = get_splitters(self)
         
         # Logging
@@ -378,10 +389,28 @@ class RAGExperiment(
         )
 
     def _build_hf_embeddings(self):
-        self.logger.info(f"Loading HuggingFace embeddings: {self.embedding_model}")
+        """
+        Build HuggingFace embeddings.
+        Updated to support aliases for BGE-M3 and FinanceMTEB/FinE5.
+        """
+        # Resolve alias if present (e.g., 'bge-m3' -> 'BAAI/bge-m3')
+        resolved_name = self.EMBEDDING_ALIASES.get(self.embedding_model.lower(), self.embedding_model)
+        
+        self.logger.info(f"Loading HuggingFace embeddings: {resolved_name} (Requested: {self.embedding_model})")
+        
+        # Default kwargs
+        model_kwargs = {
+            'device': self.device, 
+            'trust_remote_code': True # Required for some newer models like FinE5/Mistral
+        }
+        
+        # Specific optimizations or warnings
+        if "fine5" in resolved_name.lower() or "mistral" in resolved_name.lower():
+            self.logger.info("Note: FinE5/Mistral embeddings are large (7B). Ensure you have sufficient VRAM.")
+        
         return HuggingFaceEmbeddings(
-            model_name=self.embedding_model,
-            model_kwargs={'device': self.device},
+            model_name=resolved_name,
+            model_kwargs=model_kwargs,
             encode_kwargs={'normalize_embeddings': True}
         )
     
@@ -775,7 +804,14 @@ def main():
         "--embedding-model",
         type=str,
         default="sentence-transformers/all-mpnet-base-v2",
-        help="Embedding model identifier.",
+        help=(
+            "Embedding model identifier. You can pass a full Hugging Face ID "
+            "or use one of these aliases:\n"
+            "  - 'bge-m3'      : BAAI/bge-m3\n"
+            "  - 'financemteb' : FinanceMTEB/FinE5\n"
+            "  - 'fin-e5'      : FinanceMTEB/FinE5\n"
+            "  - 'mpnet'       : sentence-transformers/all-mpnet-base-v2 (default)"
+        ),
     )
 
     parser.add_argument(
