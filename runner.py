@@ -22,7 +22,7 @@ try:
     # Try package-relative import first (works when running via `python -m FB_reproducability.runner`)
     if __package__:
         try:
-            from .rag_experiments import RAGExperiment  # type: ignore
+            from src.core.rag_experiments import RAGExperiment  # type: ignore
         except Exception as e:
             _import_errors.append(("package-relative", e))
             raise
@@ -31,7 +31,7 @@ try:
 except Exception:
     # Fall back to absolute/top-level import (works when running `python runner.py` from package dir)
     try:
-        from rag_experiments import RAGExperiment
+        from src.core.rag_experiments import RAGExperiment
     except Exception as e:
         _import_errors.append(("absolute", e))
 
