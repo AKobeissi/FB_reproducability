@@ -4,7 +4,7 @@ Uses LangChain, Chroma, and HuggingFace models (Llama 3.2 3B, Qwen 2.5 7B)
 Supports multiple experiment types: closed-book, single vector store, 
 shared vector store, and open-book (evidence).
 
-MODIFIED: Added support for BGE-M3 and FinanceMTEB (Fin-E5) embedding models.
+MODIFIED: Added support for BGE-M3, FinanceMTEB, and Expanded Shared experiments.
 """
 
 from __future__ import annotations
@@ -54,7 +54,8 @@ from .rag_single_vector import run_single_vector as _run_single_vector
 from .rag_shared_vector import run_shared_vector as _run_shared_vector
 from .random_single_store import run_random_single_store as _run_random_single_store
 from .rag_open_book import run_open_book as _run_open_book
-
+from .rag_expanded_shared import run_expanded_shared as _run_expanded_shared
+from .rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -106,8 +107,11 @@ class RAGExperiment(
     OPEN_BOOK = "open_book"
     RANDOM_SINGLE = "random_single"
     BIG_2_SMALL = "big2small"
-    BM25 = "bm25"   
-    
+    BM25 = "bm25"
+    EXPANDED_SHARED = "expanded_shared"
+    HYDE_SHARED = "hyde_shared"
+    MULTI_HYDE_SHARED = "multi_hyde_shared"
+        
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -119,7 +123,7 @@ class RAGExperiment(
         "text-moderation",
     )
 
-    # --- New: Embedding Model Presets ---
+    # Embedding Model Presets
     EMBEDDING_ALIASES = {
         "mpnet": "sentence-transformers/all-mpnet-base-v2",
         "bge-m3": "BAAI/bge-m3",
@@ -562,6 +566,13 @@ class RAGExperiment(
             results = self.run_big2small(data)
         elif self.experiment_type == self.BM25:    
             results = self.run_bm25(data)
+        elif self.experiment_type == self.EXPANDED_SHARED:
+            results = _run_expanded_shared(self, data)
+        elif self.experiment_type == self.HYDE_SHARED:
+            results = _run_hyde_shared(self, data)
+        elif self.experiment_type == self.MULTI_HYDE_SHARED:
+            results = _run_multi_hyde_shared(self, data)
+
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -743,7 +754,8 @@ def main():
     parser.add_argument(
         "-e",
         "--experiment",
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25"],
+        # --- MODIFIED CHOICES ---
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared"],
         default="single",
         help="Experiment type.",
     )
@@ -922,7 +934,18 @@ def main():
         "open": RAGExperiment.OPEN_BOOK,
         "big2small": RAGExperiment.BIG_2_SMALL,
         "bm25": RAGExperiment.BM25,
+        # --- NEW KEY ADDED HERE ---
+        "expanded_shared": RAGExperiment.EXPANDED_SHARED,
+        "hyde_shared": RAGExperiment.HYDE_SHARED,
+        "multi_hyde_shared": RAGExperiment.MULTI_HYDE_SHARED,
     }
+    
+    # Simple error handling for bad keys
+    if args.experiment not in exp_map:
+        print(f"Error: Experiment '{args.experiment}' not found.")
+        print(f"Available experiments: {list(exp_map.keys())}")
+        return
+
     experiment_type = exp_map[args.experiment]
 
     llm_arg = args.llm.lower()
