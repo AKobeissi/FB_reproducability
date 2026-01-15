@@ -25,39 +25,27 @@ from openai import OpenAI
 from langchain_openai import OpenAIEmbeddings as LangchainOpenAIEmbeddings
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
-# Local imports
-from .chunking import get_splitters
 
-from .rag_dependencies import (
-    RecursiveCharacterTextSplitter,
-    HuggingFaceEmbeddings,
-    HuggingFacePipeline,
-)
-from .rag_experiment_mixins import (
-    ComponentTrackingMixin,
-    ChunkAndEvidenceMixin,
-    PromptMixin,
-    VectorstoreMixin,
-    ResultsMixin,
-)
+from src.ingestion.chunking import get_splitters
+from src.core.rag_dependencies import RecursiveCharacterTextSplitter,HuggingFaceEmbeddings,HuggingFacePipeline
+from src.core.rag_experiment_mixins import ComponentTrackingMixin, ChunkAndEvidenceMixin, PromptMixin, VectorstoreMixin, ResultsMixin
 
-from .big2small import run_big2small as _run_big2small
-from .bm25 import run_bm25 as _run_bm25  
-from .evaluate_outputs import run_scoring
-from .retrieval_evaluator import RetrievalEvaluator
-from .generative_evaluator import GenerativeEvaluator
-from .data_loader import FinanceBenchLoader
+from src.retrieval.big2small import run_big2small as _run_big2small
+from src.retrieval.bm25 import run_bm25 as _run_bm25
+from src.evaluation.evaluate_outputs import run_scoring
+from src.evaluation.retrieval_evaluator import RetrievalEvaluator
+from src.evaluation.generative_evaluator import GenerativeEvaluator
+from src.ingestion.data_loader import FinanceBenchLoader
 
-# Modular Runners
-from .rag_closed_book import run_closed_book as _run_closed_book
-from .rag_single_vector import run_single_vector as _run_single_vector
-from .rag_shared_vector import run_shared_vector as _run_shared_vector
-from .random_single_store import run_random_single_store as _run_random_single_store
-from .rag_open_book import run_open_book as _run_open_book
-from .rag_expanded_shared import run_expanded_shared as _run_expanded_shared
-from .rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
-from .hybrid_retrieval import run_hybrid_search as _run_hybrid_search
-from .splade import run_splade as _run_splade
+from src.experiments.rag_closed_book import run_closed_book as _run_closed_book
+from src.experiments.rag_single_vector import run_single_vector as _run_single_vector
+from src.experiments.rag_shared_vector import run_shared_vector as _run_shared_vector
+from src.experiments.random_single_store import run_random_single_store as _run_random_single_store
+from src.experiments.rag_open_book import run_open_book as _run_open_book
+from src.experiments.rag_expanded_shared import run_expanded_shared as _run_expanded_shared
+from src.experiments.rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
+from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search
+from src.experiments.splade import run_splade as _run_splade
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -349,7 +337,7 @@ class RAGExperiment(
             self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
         else:
             self.logger.info(f"✓ Embeddings skipped for {self.experiment_type}")
-            
+
         # Initialize text splitter using LangChain
         self.text_splitter, self.child_splitter = get_splitters(self)
         

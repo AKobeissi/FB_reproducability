@@ -22,7 +22,7 @@ except ImportError:
     except ImportError:
         PyMuPDFLoader = None
 
-from .vectorstore import get_chroma_db_path, Chroma, populate_chroma_store, save_store_config
+from .. import get_chroma_db_path, Chroma, populate_chroma_store, save_store_config
 
 logger = logging.getLogger(__name__)
 

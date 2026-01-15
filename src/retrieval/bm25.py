@@ -19,7 +19,7 @@ from tqdm import tqdm
 from pathlib import Path
 
 # Imports
-from .rag_dependencies import BM25Retriever
+from ..core.rag_dependencies import BM25Retriever
 try:
     from langchain_community.document_loaders import PyMuPDFLoader
 except ImportError:
