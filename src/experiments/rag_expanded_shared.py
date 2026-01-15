@@ -7,34 +7,20 @@ import logging
 import os
 import json
 
-try:
-    from .pdf_utils import load_pdf_with_fallback
-    from .vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-    from .query_expansion import process_query_for_experiment
-    from .rag_shared_vector import (
-        _get_or_create_retrieval_prompt, 
-        _get_or_create_documents_chain, 
-        _build_chunks_from_docs, 
-        _fallback_retrieval_qa,
-        _supports_modern_retrieval,
-        _log_pdf_sources,
-        _create_skipped_result,
-        _create_all_skipped_results
-    )
-except ImportError:
-    from pdf_utils import load_pdf_with_fallback
-    from vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-    from query_expansion import process_query_for_experiment
-    from rag_shared_vector import (
-        _get_or_create_retrieval_prompt, 
-        _get_or_create_documents_chain, 
-        _build_chunks_from_docs, 
-        _fallback_retrieval_qa,
-        _supports_modern_retrieval,
-        _log_pdf_sources,
-        _create_skipped_result,
-        _create_all_skipped_results
-    )
+
+from src.ingestion.pdf_utils import load_pdf_with_fallback
+from src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
+from src.experiments.query_expansion import process_query_for_experiment
+from src.experiments.rag_shared_vector import (
+    _get_or_create_retrieval_prompt, 
+    _get_or_create_documents_chain, 
+    _build_chunks_from_docs, 
+    _fallback_retrieval_qa,
+    _supports_modern_retrieval,
+    _log_pdf_sources,
+    _create_skipped_result,
+    _create_all_skipped_results
+)
 
 logger = logging.getLogger(__name__)
 

@@ -15,11 +15,8 @@ import torch.nn.functional as F
 from tqdm import tqdm
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
-# Ensure this import works based on your project structure
-try:
-    from .bm25 import _compute_corpus_fingerprint
-except ImportError:
-    from bm25 import _compute_corpus_fingerprint
+
+from src.retrieval.bm25 import _compute_corpus_fingerprint
 
 try:
     from langchain_community.document_loaders import PyMuPDFLoader

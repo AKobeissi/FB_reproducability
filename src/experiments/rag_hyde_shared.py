@@ -8,30 +8,17 @@ import os
 import json
 import numpy as np
 
-try:
-    from .pdf_utils import load_pdf_with_fallback
-    from .vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-    from .rag_shared_vector import (
-        _get_or_create_retrieval_prompt, 
-        _get_or_create_documents_chain, 
-        _build_chunks_from_docs, 
-        _fallback_retrieval_qa,
-        _log_pdf_sources,
-        _create_skipped_result,
-        _create_all_skipped_results
-    )
-except ImportError:
-    from pdf_utils import load_pdf_with_fallback
-    from vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-    from rag_shared_vector import (
-        _get_or_create_retrieval_prompt, 
-        _get_or_create_documents_chain, 
-        _build_chunks_from_docs, 
-        _fallback_retrieval_qa,
-        _log_pdf_sources,
-        _create_skipped_result,
-        _create_all_skipped_results
-    )
+from src.ingestion.pdf_utils import load_pdf_with_fallback
+from src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
+from src.experiments.rag_shared_vector import (
+    _get_or_create_retrieval_prompt, 
+    _get_or_create_documents_chain, 
+    _build_chunks_from_docs, 
+    _fallback_retrieval_qa,
+    _log_pdf_sources,
+    _create_skipped_result,
+    _create_all_skipped_results
+)
 
 logger = logging.getLogger(__name__)
 

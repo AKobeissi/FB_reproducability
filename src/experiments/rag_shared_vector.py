@@ -3,12 +3,9 @@ import logging
 import os
 import json
 from collections import Counter
-try:
-    from .. import load_pdf_with_fallback
-    from .. import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-except ImportError:
-    from FB_reproducability.src.ingestion.pdf_utils import load_pdf_with_fallback
-    from FB_reproducability.src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
+
+from src.ingestion.pdf_utils import load_pdf_with_fallback
+from src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
 
 try:
     from langchain.chains import RetrievalQA

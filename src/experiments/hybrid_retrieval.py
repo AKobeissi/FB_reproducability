@@ -9,9 +9,10 @@ import pickle
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from tqdm import tqdm
-from .vectorstore import build_chroma_store
-from .bm25 import _compute_corpus_fingerprint, _get_chunk_cache_path, finance_preprocess_func
-from .rag_dependencies import BM25Retriever
+
+from src.retrieval.vectorstore import build_chroma_store
+from src.retrieval.bm25 import _compute_corpus_fingerprint, _get_chunk_cache_path, finance_preprocess_func
+from src.core.rag_dependencies import BM25Retriever
 
 logger = logging.getLogger(__name__)
 
