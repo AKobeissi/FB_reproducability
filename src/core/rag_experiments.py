@@ -56,6 +56,8 @@ from .random_single_store import run_random_single_store as _run_random_single_s
 from .rag_open_book import run_open_book as _run_open_book
 from .rag_expanded_shared import run_expanded_shared as _run_expanded_shared
 from .rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
+from .hybrid_retrieval import run_hybrid_search as _run_hybrid_search
+from .splade import run_splade as _run_splade
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -111,7 +113,9 @@ class RAGExperiment(
     EXPANDED_SHARED = "expanded_shared"
     HYDE_SHARED = "hyde_shared"
     MULTI_HYDE_SHARED = "multi_hyde_shared"
-        
+    HYBRID = "hybrid"
+    SPLADE = "splade"
+
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -273,8 +277,6 @@ class RAGExperiment(
             'eval_type': eval_type,
             'eval_mode': eval_mode,
             'judge_model': judge_model,
-            
-            # New metadata
             'chunking_strategy': chunking_strategy,
             'chunking_unit': chunking_unit,
         }
@@ -333,18 +335,21 @@ class RAGExperiment(
         """Initialize LangChain embeddings and text splitter"""
         self.logger.info("\nInitializing LangChain components...")
         
-        self.embeddings = self._build_embeddings()
-        self.register_component_usage(
-            "embeddings",
-            self.embeddings.__class__.__name__,
-            {
-                "package": self.embeddings.__class__.__module__,
-                "model_name": self.embedding_model,
-                "resolved_model": getattr(self.embeddings, "model_name", "unknown")
-            }
-        )
-        self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
-        
+        if self.experiment_type not in [self.BM25, self.SPLADE]: 
+            self.embeddings = self._build_embeddings()
+            self.register_component_usage(
+                "embeddings",
+                self.embeddings.__class__.__name__,
+                {
+                    "package": self.embeddings.__class__.__module__,
+                    "model_name": self.embedding_model,
+                    "resolved_model": getattr(self.embeddings, "model_name", "unknown")
+                }
+            )
+            self.logger.info(f"✓ Embeddings loaded ({self.embeddings.__class__.__name__})")
+        else:
+            self.logger.info(f"✓ Embeddings skipped for {self.experiment_type}")
+            
         # Initialize text splitter using LangChain
         self.text_splitter, self.child_splitter = get_splitters(self)
         
@@ -527,7 +532,13 @@ class RAGExperiment(
    
     def run_bm25(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_bm25(self, data)
-    
+   
+    def run_hybrid_search(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_hybrid_search(self, data)
+
+    def run_splade(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_splade(self, data)
+  
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
         Run the configured experiment
@@ -572,6 +583,10 @@ class RAGExperiment(
             results = _run_hyde_shared(self, data)
         elif self.experiment_type == self.MULTI_HYDE_SHARED:
             results = _run_multi_hyde_shared(self, data)
+        elif self.experiment_type == self.HYBRID:
+            results = self.run_hybrid_search(data)
+        elif self.experiment_type == self.SPLADE:
+            results = self.run_splade(data)
 
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
@@ -755,7 +770,7 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "splade"],
         default="single",
         help="Experiment type.",
     )
@@ -934,10 +949,11 @@ def main():
         "open": RAGExperiment.OPEN_BOOK,
         "big2small": RAGExperiment.BIG_2_SMALL,
         "bm25": RAGExperiment.BM25,
-        # --- NEW KEY ADDED HERE ---
         "expanded_shared": RAGExperiment.EXPANDED_SHARED,
         "hyde_shared": RAGExperiment.HYDE_SHARED,
         "multi_hyde_shared": RAGExperiment.MULTI_HYDE_SHARED,
+        "hybrid": RAGExperiment.HYBRID,
+        "splade": RAGExperiment.SPLADE,
     }
     
     # Simple error handling for bad keys
