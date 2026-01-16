@@ -46,6 +46,7 @@ from src.experiments.rag_expanded_shared import run_expanded_shared as _run_expa
 from src.experiments.rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
 from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search
 from src.experiments.splade import run_splade as _run_splade
+from src.experiments.reranking import run_reranking as _run_reranking  
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -103,7 +104,8 @@ class RAGExperiment(
     MULTI_HYDE_SHARED = "multi_hyde_shared"
     HYBRID = "hybrid"
     SPLADE = "splade"
-
+    RERANKING = "reranking"  
+    
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -526,6 +528,7 @@ class RAGExperiment(
 
     def run_splade(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_splade(self, data)
+    
   
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
@@ -575,7 +578,8 @@ class RAGExperiment(
             results = self.run_hybrid_search(data)
         elif self.experiment_type == self.SPLADE:
             results = self.run_splade(data)
-
+        elif self.experiment_type == self.RERANKING:  # <--- ADD THIS BLOCK
+            results = _run_reranking(self, data)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -758,7 +762,7 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "splade"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "splade", "reranking"],
         default="single",
         help="Experiment type.",
     )
@@ -942,6 +946,7 @@ def main():
         "multi_hyde_shared": RAGExperiment.MULTI_HYDE_SHARED,
         "hybrid": RAGExperiment.HYBRID,
         "splade": RAGExperiment.SPLADE,
+        "reranking": RAGExperiment.RERANKING,  
     }
     
     # Simple error handling for bad keys
