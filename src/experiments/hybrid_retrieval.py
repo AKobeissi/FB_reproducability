@@ -16,7 +16,7 @@ from src.core.rag_dependencies import BM25Retriever
 
 logger = logging.getLogger(__name__)
 
-# Helpers omitted for brevity (same as before), just ensuring imports match
+# Helpers for PDF loading
 try:
     from langchain_community.document_loaders import PyMuPDFLoader
 except Exception:
@@ -26,8 +26,18 @@ except Exception:
         PyMuPDFLoader = None
 
 def _get_docs(retriever, query: str):
-    if hasattr(retriever, "invoke"): return retriever.invoke(query)
-    return retriever.get_relevant_documents(query)
+    """
+    Safely invoke a retriever, handling both new (invoke) and old (get_relevant_documents) LangChain APIs.
+    """
+    if hasattr(retriever, "invoke"):
+        return retriever.invoke(query)
+    elif hasattr(retriever, "get_relevant_documents"):
+        return retriever.get_relevant_documents(query)
+    else:
+        # If it's a VectorStore trying to act as a retriever, fallback to similarity_search
+        if hasattr(retriever, "similarity_search"):
+            return retriever.similarity_search(query)
+        raise AttributeError(f"Provided object {type(retriever)} is not a valid retriever.")
 
 def _stable_sha1(s: str) -> str:
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
@@ -55,8 +65,12 @@ def _load_or_build_chunks(experiment, fingerprint):
     if PyMuPDFLoader is None: raise ImportError("PyMuPDFLoader required")
     pdf_files = sorted(Path(experiment.pdf_local_dir).glob("*.pdf"))
     raw_docs = []
-    for p in tqdm(pdf_files, desc="Loading PDFs"):
-        raw_docs.extend(PyMuPDFLoader(str(p)).load())
+    for p in tqdm(pdf_files, desc="Loading PDFs for Sparse"):
+        try:
+            raw_docs.extend(PyMuPDFLoader(str(p)).load())
+        except Exception as e:
+            logger.warning(f"Failed to load {p}: {e}")
+            
     chunks = experiment.text_splitter.split_documents(raw_docs)
     for c in chunks: _ensure_chunk_key_in_metadata(c)
     
@@ -69,6 +83,7 @@ def _perform_rrf(dense_docs, sparse_docs, rrf_k, top_k, dense_weight=1.0, sparse
     doc_map = {}
     
     def _process(docs, weight):
+        if not docs: return
         for rank, doc in enumerate(docs):
             key = _ensure_chunk_key_in_metadata(doc)
             scores.setdefault(key, 0.0)
@@ -86,15 +101,52 @@ def run_hybrid_search(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
     logger.info(f"RUNNING HYBRID EXPERIMENT")
     logger.info("=" * 80)
 
-    # 1. Initialize Dense
-    dense_retriever, _ = build_chroma_store(experiment, docs="all", lazy_load=False)
     candidate_k = int(getattr(experiment, "hybrid_candidate_k", 50))
-    try: dense_retriever.search_kwargs["k"] = candidate_k
-    except: dense_retriever.k = candidate_k
+
+    # 1. Initialize Dense
+    # FIX: Handle return type of build_chroma_store safely
+    logger.info("Initializing Dense Retriever...")
+    store_result = build_chroma_store(experiment, docs="all", lazy_load=False)
+    
+    dense_retriever = None
+    if isinstance(store_result, tuple):
+        # Likely (vectorstore, retriever) or (retriever, vectorstore)
+        # We assume standard LangChain convention often used in these repos: (store, retriever)
+        # But we verify capabilities.
+        obj1, obj2 = store_result
+        if hasattr(obj2, "invoke") or hasattr(obj2, "get_relevant_documents"):
+            dense_retriever = obj2
+        elif hasattr(obj1, "invoke") or hasattr(obj1, "get_relevant_documents"):
+            dense_retriever = obj1
+        else:
+            # Neither is a retriever? Try converting the one that looks like a store.
+            if hasattr(obj1, "as_retriever"):
+                dense_retriever = obj1.as_retriever()
+            elif hasattr(obj2, "as_retriever"):
+                dense_retriever = obj2.as_retriever()
+    else:
+        # Single return value
+        if hasattr(store_result, "as_retriever"):
+            dense_retriever = store_result.as_retriever()
+        else:
+            dense_retriever = store_result
+
+    if dense_retriever is None:
+        raise ValueError("Could not initialize a valid Dense Retriever from build_chroma_store.")
+
+    # Set K for dense retriever
+    if hasattr(dense_retriever, "search_kwargs"):
+        dense_retriever.search_kwargs["k"] = candidate_k
+    else:
+        dense_retriever.k = candidate_k
 
     # 2. Initialize Sparse
+    logger.info("Initializing Sparse (BM25) Retriever...")
     fingerprint = _compute_corpus_fingerprint(Path(experiment.pdf_local_dir))
     chunks = _load_or_build_chunks(experiment, fingerprint)
+    if not chunks:
+        logger.warning("No chunks found for BM25! Hybrid search will rely solely on Dense.")
+    
     bm25_retriever = BM25Retriever.from_documents(chunks, preprocess_func=finance_preprocess_func)
     bm25_retriever.k = candidate_k
 
@@ -117,7 +169,12 @@ def run_hybrid_search(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         sparse_docs = _get_docs(bm25_retriever, question)
         
         fused = _perform_rrf(dense_docs or [], sparse_docs or [], rrf_k=60, top_k=experiment.top_k)
-        context = "\n\n".join([c["text"] for c in fused])
+        
+        if not fused:
+            logger.warning(f"No documents retrieved for Q: {question[:30]}...")
+            context = ""
+        else:
+            context = "\n\n".join([c["text"] for c in fused])
         
         answer, prompt = experiment._generate_answer(question, context, return_prompt=True)
         gold_segments, gold_text = experiment._prepare_gold_evidence(sample.get("evidence"))

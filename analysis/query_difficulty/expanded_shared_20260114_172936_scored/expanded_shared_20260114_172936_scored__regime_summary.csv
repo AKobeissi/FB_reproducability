@@ -1,0 +1,5 @@
+regime,Count,HitRate
+"Easy (High Lex, High Sem)",47,0.0
+"Hard (Low Lex, Low Sem)",47,0.0
+"Lexical Gap (Low Lex, High Sem)",28,0.0
+"Semantic Gap (High Lex, Low Sem)",28,0.0

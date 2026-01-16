@@ -1,0 +1,13 @@
+method,regime,Count,HitRate
+shared_vector_20260107_164341_scored,"Easy (High Lex, High Sem)",47,42.55
+shared_vector_20260107_164341_scored,"Hard (Low Lex, Low Sem)",47,21.28
+shared_vector_20260107_164341_scored,"Lexical Gap (Low Lex, High Sem)",28,42.86
+shared_vector_20260107_164341_scored,"Semantic Gap (High Lex, Low Sem)",28,32.14
+expanded_shared_20260114_172936_scored,"Easy (High Lex, High Sem)",47,0.0
+expanded_shared_20260114_172936_scored,"Hard (Low Lex, Low Sem)",47,0.0
+expanded_shared_20260114_172936_scored,"Lexical Gap (Low Lex, High Sem)",28,0.0
+expanded_shared_20260114_172936_scored,"Semantic Gap (High Lex, Low Sem)",28,0.0
+hyde_shared_20260114_202108_scored,"Easy (High Lex, High Sem)",47,0.0
+hyde_shared_20260114_202108_scored,"Hard (Low Lex, Low Sem)",47,0.0
+hyde_shared_20260114_202108_scored,"Lexical Gap (Low Lex, High Sem)",28,0.0
+hyde_shared_20260114_202108_scored,"Semantic Gap (High Lex, Low Sem)",28,0.0

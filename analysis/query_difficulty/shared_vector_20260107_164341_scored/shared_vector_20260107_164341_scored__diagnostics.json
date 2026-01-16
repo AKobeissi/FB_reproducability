@@ -1,0 +1,10 @@
+{
+  "method": "shared_vector_20260107_164341_scored",
+  "n": 150,
+  "lex_thr": 0.2594670355319977,
+  "sem_thr": 0.47230979800224304,
+  "overall_hit_rate": 34.0,
+  "auc_lexical_recall": 0.5857595563477916,
+  "auc_bm25_to_gold": 0.6213111507229154,
+  "auc_semantic_cosine": 0.6629035452564865
+}

@@ -1,0 +1,1673 @@
+Working in scratch: /Tmp/kobeissa/4825
+Copying repository content from /u/kobeissa/Documents/thesis/experiments/FB_reproducability to scratch...
+sending incremental file list
+./
+.env
+.gitignore
+EVALUATION.md
+LICENSE
+README.md
+core
+requirements.txt
+runner.py
+data/
+data/financebench_document_information.jsonl
+data/financebench_open_source.jsonl
+notebooks/
+notebooks/playground.ipynb
+notebooks/tensor_logic.ipynb
+pdfs/
+pdfs/3M_2015_10K.pdf
+pdfs/3M_2016_10K.pdf
+pdfs/3M_2017_10K.pdf
+pdfs/3M_2018_10K.pdf
+pdfs/3M_2019_10K.pdf
+pdfs/3M_2020_10K.pdf
+pdfs/3M_2021_10K.pdf
+pdfs/3M_2022_10K.pdf
+pdfs/3M_2023Q2_10Q.pdf
+pdfs/ACTIVISIONBLIZZARD_2015_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2016_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2017_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2018_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2019_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2020_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2021_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2022_10K.pdf
+pdfs/ACTIVSIONBLIZZARD_2023Q2_10Q.pdf
+pdfs/ADOBE_2015_10K.pdf
+pdfs/ADOBE_2016_10K.pdf
+pdfs/ADOBE_2017_10K.pdf
+pdfs/ADOBE_2018_10K.pdf
+pdfs/ADOBE_2019_10K.pdf
+pdfs/ADOBE_2020_10K.pdf
+pdfs/ADOBE_2021_10K.pdf
+pdfs/ADOBE_2022Q2_10Q.pdf
+pdfs/ADOBE_2022_10K.pdf
+pdfs/AES_2015_10K.pdf
+pdfs/AES_2016_10K.pdf
+pdfs/AES_2017_10K.pdf
+pdfs/AES_2018_10K.pdf
+pdfs/AES_2019_10K.pdf
+pdfs/AES_2020_10K.pdf
+pdfs/AES_2021_10K.pdf
+pdfs/AES_2022_10K.pdf
+pdfs/AMAZON_2015_10K.pdf
+pdfs/AMAZON_2016_10K.pdf
+pdfs/AMAZON_2017_10K.pdf
+pdfs/AMAZON_2018_10K.pdf
+pdfs/AMAZON_2019_10K.pdf
+pdfs/AMAZON_2020_10K.pdf
+pdfs/AMAZON_2021_10K.pdf
+pdfs/AMAZON_2022_10K.pdf
+pdfs/AMCOR_2019_10K.pdf
+pdfs/AMCOR_2020_10K.pdf
+pdfs/AMCOR_2021_10K.pdf
+pdfs/AMCOR_2022_10K.pdf
+pdfs/AMCOR_2022_8K_2022-04-26.pdf
+pdfs/AMCOR_2022_8K_2022-07-01.pdf
+pdfs/AMCOR_2022_8K_dated-2022-04-26.pdf
+pdfs/AMCOR_2022_8K_dated-2022-07-01.pdf
+pdfs/AMCOR_2023Q2_10Q.pdf
+pdfs/AMCOR_2023Q4_EARNINGS.pdf
+pdfs/AMCOR_2023_10K.pdf
+pdfs/AMD_2015_10K.pdf
+pdfs/AMD_2016_10K.pdf
+pdfs/AMD_2017_10K.pdf
+pdfs/AMD_2018_10K.pdf
+pdfs/AMD_2019_10K.pdf
+pdfs/AMD_2020_10K.pdf
+pdfs/AMD_2021_10K.pdf
+pdfs/AMD_2022_10K.pdf
+pdfs/AMD_2022_annualreport.pdf
+pdfs/AMERICANEXPRESS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2015_10K.pdf
+pdfs/AMERICANWATERWORKS_2016_10K.pdf
+pdfs/AMERICANWATERWORKS_2017_10K.pdf
+pdfs/AMERICANWATERWORKS_2018_10K.pdf
+pdfs/AMERICANWATERWORKS_2019_10K.pdf
+pdfs/AMERICANWATERWORKS_2020_10K.pdf
+pdfs/AMERICANWATERWORKS_2021_10K.pdf
+pdfs/AMERICANWATERWORKS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2023Q2_10Q.pdf
+pdfs/APPLE_2015_10K.pdf
+pdfs/APPLE_2016_10K.pdf
+pdfs/APPLE_2017_10K.pdf
+pdfs/APPLE_2018_10K.pdf
+pdfs/APPLE_2019_10K.pdf
+pdfs/APPLE_2020_10K.pdf
+pdfs/APPLE_2021_10K.pdf
+pdfs/APPLE_2022_10K.pdf
+pdfs/APPLE_2023Q3_10Q.pdf
+pdfs/BESTBUY_2015_10K.pdf
+pdfs/BESTBUY_2016_10K.pdf
+pdfs/BESTBUY_2017_10K.pdf
+pdfs/BESTBUY_2018_10K.pdf
+pdfs/BESTBUY_2019_10K.pdf
+pdfs/BESTBUY_2020_10K.pdf
+pdfs/BESTBUY_2021_10K.pdf
+pdfs/BESTBUY_2022_10K.pdf
+pdfs/BESTBUY_2023Q4_EARNINGS.pdf
+pdfs/BESTBUY_2023_10K.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-12.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-24.pdf
+pdfs/BESTBUY_2024Q2_10Q.pdf
+pdfs/BESTBUY_2024Q2_EARNINGS.pdf
+pdfs/BLOCK_2015_10K.pdf
+pdfs/BLOCK_2016_10K.pdf
+pdfs/BLOCK_2017_10K.pdf
+pdfs/BLOCK_2018_10K.pdf
+pdfs/BLOCK_2019_10K.pdf
+pdfs/BLOCK_2020_10K.pdf
+pdfs/BLOCK_2021_10K.pdf
+pdfs/BLOCK_2022_10K.pdf
+pdfs/BLOCK_2022_8K_dated-2022-01-28.pdf
+pdfs/BOEING_2015_10K.pdf
+pdfs/BOEING_2016_10K.pdf
+pdfs/BOEING_2017_10K.pdf
+pdfs/BOEING_2018_10K.pdf
+pdfs/BOEING_2019_10K.pdf
+pdfs/BOEING_2020_10K.pdf
+pdfs/BOEING_2021_10K.pdf
+pdfs/BOEING_2022_10K.pdf
+pdfs/BOSTONPROPERTIES_2015_10K.pdf
+pdfs/COCACOLA_2015_10K.pdf
+pdfs/COCACOLA_2016_10K.pdf
+pdfs/COCACOLA_2017_10K.pdf
+pdfs/COCACOLA_2018_10K.pdf
+pdfs/COCACOLA_2019_10K.pdf
+pdfs/COCACOLA_2020_10K.pdf
+pdfs/COCACOLA_2021_10K.pdf
+pdfs/COCACOLA_2022_10K.pdf
+pdfs/CORNING_2015_10K.pdf
+pdfs/CORNING_2016_10K.pdf
+pdfs/CORNING_2017_10K.pdf
+pdfs/CORNING_2018_10K.pdf
+pdfs/CORNING_2019_10K.pdf
+pdfs/CORNING_2020_10K.pdf
+pdfs/CORNING_2021_10K.pdf
+pdfs/CORNING_2022_10K.pdf
+pdfs/CORNING_2023Q2_10Q.pdf
+pdfs/COSTCO_2015_10K.pdf
+pdfs/COSTCO_2016_10K.pdf
+pdfs/COSTCO_2017_10K.pdf
+pdfs/COSTCO_2018_10K.pdf
+pdfs/COSTCO_2019_10K.pdf
+pdfs/COSTCO_2020_10K.pdf
+pdfs/COSTCO_2021_10K.pdf
+pdfs/COSTCO_2022_10K.pdf
+pdfs/COSTCO_2023Q1_EARNINGS.pdf
+pdfs/COSTCO_2023Q3_EARNINGS.pdf
+pdfs/COSTCO_2023_8K_dated-2023-01-19.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-09.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-16.pdf
+pdfs/CVSHEALTH_2015_10K.pdf
+pdfs/CVSHEALTH_2016_10K.pdf
+pdfs/CVSHEALTH_2017_10K.pdf
+pdfs/CVSHEALTH_2018_10K.pdf
+pdfs/CVSHEALTH_2019_10K.pdf
+pdfs/CVSHEALTH_2020_10K.pdf
+pdfs/CVSHEALTH_2021_10K.pdf
+pdfs/CVSHEALTH_2022_10K.pdf
+pdfs/EBAY_2015_10K.pdf
+pdfs/EBAY_2016_10K.pdf
+pdfs/EBAY_2017_10K.pdf
+pdfs/EBAY_2018_10K.pdf
+pdfs/EBAY_2019_10K.pdf
+pdfs/EBAY_2020_10K.pdf
+pdfs/EBAY_2021_10K.pdf
+pdfs/EBAY_2022_10K.pdf
+pdfs/EBAY_2023Q1_8K.pdf
+pdfs/EBAY_2023Q1_EARNINGS.pdf
+pdfs/EBAY_2023Q2_10Q.pdf
+pdfs/EBAY_2023Q2_8K.pdf
+pdfs/EBAY_2023Q2_EARNINGS.pdf
+pdfs/FEDEX_2023_10K.pdf
+pdfs/FEDEX_2023_annualreport.pdf
+pdfs/FOOTLOCKER_2022_10K.pdf
+pdfs/FOOTLOCKER_2022_10Q.pdf
+pdfs/FOOTLOCKER_2022_8K_dated-2022-05-20.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2022-08-19.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2023-02-21.pdf
+pdfs/FOOTLOCKER_2023Q3_10Q.pdf
+pdfs/FOOTLOCKER_2023_10K.pdf
+pdfs/FOOTLOCKER_2023_annualreport.pdf
+pdfs/GENERALMILLS_2015_10K.pdf
+pdfs/GENERALMILLS_2016_10K.pdf
+pdfs/GENERALMILLS_2017_10K.pdf
+pdfs/GENERALMILLS_2018_10K.pdf
+pdfs/GENERALMILLS_2019_10K.pdf
+pdfs/GENERALMILLS_2020_10K.pdf
+pdfs/GENERALMILLS_2021_10K.pdf
+pdfs/GENERALMILLS_2022_10K.pdf
+pdfs/GENERALMILLS_2023_10K.pdf
+pdfs/GENERALMILLS_2023_annualreport.pdf
+pdfs/INTEL_2015_10K.pdf
+pdfs/INTEL_2016_10K.pdf
+pdfs/INTEL_2017_10K.pdf
+pdfs/INTEL_2018_10K.pdf
+pdfs/INTEL_2019_10K.pdf
+pdfs/INTEL_2020_10K.pdf
+pdfs/INTEL_2021_10K.pdf
+pdfs/INTEL_2022Q4_EARNINGS.pdf
+pdfs/INTEL_2022_10K.pdf
+pdfs/INTEL_2023Q1_EARNINGS.pdf
+pdfs/INTEL_2023_8K_dated-2022-11-22.pdf
+pdfs/INTEL_2023_8K_dated-2023-02-10.pdf
+pdfs/INTEL_2023_8K_dated-2023-08-16.pdf
+pdfs/JOHNSON_JOHNSON_2015_10K.pdf
+pdfs/JOHNSON_JOHNSON_2016_10K.pdf
+pdfs/JOHNSON_JOHNSON_2017_10K.pdf
+pdfs/JOHNSON_JOHNSON_2018_10K.pdf
+pdfs/JOHNSON_JOHNSON_2019_10K.pdf
+pdfs/JOHNSON_JOHNSON_2020_10K.pdf
+pdfs/JOHNSON_JOHNSON_2021_10K.pdf
+pdfs/JOHNSON_JOHNSON_2022Q4_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2022_10K.pdf
+pdfs/JOHNSON_JOHNSON_2023Q1_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023Q2_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-23.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-30.pdf
+pdfs/JPMORGAN_2021Q1_10Q.pdf
+pdfs/JPMORGAN_2021Q2_10Q.pdf
+pdfs/JPMORGAN_2021Q3_10Q.pdf
+pdfs/JPMORGAN_2021_10K.pdf
+pdfs/JPMORGAN_2022Q1_10Q.pdf
+pdfs/JPMORGAN_2022Q2_10Q.pdf
+pdfs/JPMORGAN_2022Q3_10Q.pdf
+pdfs/JPMORGAN_2022_10K.pdf
+pdfs/JPMORGAN_2023Q1_10Q.pdf
+pdfs/JPMORGAN_2023Q2_10Q.pdf
+pdfs/KRAFTHEINZ_2015_10K.pdf
+pdfs/KRAFTHEINZ_2016_10K.pdf
+pdfs/KRAFTHEINZ_2017_10K.pdf
+pdfs/KRAFTHEINZ_2018_10K.pdf
+pdfs/KRAFTHEINZ_2019_10K.pdf
+pdfs/KRAFTHEINZ_2020_10K.pdf
+pdfs/KRAFTHEINZ_2021_10K.pdf
+pdfs/KRAFTHEINZ_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2015_10K.pdf
+pdfs/LOCKHEEDMARTIN_2016_10K.pdf
+pdfs/LOCKHEEDMARTIN_2017_10K.pdf
+pdfs/LOCKHEEDMARTIN_2018_10K.pdf
+pdfs/LOCKHEEDMARTIN_2019_10K.pdf
+pdfs/LOCKHEEDMARTIN_2020_10K.pdf
+pdfs/LOCKHEEDMARTIN_2021_10K.pdf
+pdfs/LOCKHEEDMARTIN_2022Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2023Q1_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-05-25.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-08-24.pdf
+pdfs/MCDONALDS_2022Q4_EARNINGS.pdf
+pdfs/MCDONALDS_2022_10K.pdf
+pdfs/MCDONALDS_2023Q1_EARNINGS.pdf
+pdfs/MCDONALDS_2023Q2_EARNINGS.pdf
+pdfs/MCDONALDS_8K_dated-2023-01-06.pdf
+pdfs/MCDONALDS_8K_dated-2023-02-13.pdf
+pdfs/MCDONALDS_8K_dated-2023-08-14.pdf
+pdfs/MGMRESORTS_2015_10K.pdf
+pdfs/MGMRESORTS_2016_10K.pdf
+pdfs/MGMRESORTS_2017_10K.pdf
+pdfs/MGMRESORTS_2018_10K.pdf
+pdfs/MGMRESORTS_2019_10K.pdf
+pdfs/MGMRESORTS_2020_10K.pdf
+pdfs/MGMRESORTS_2021_10K.pdf
+pdfs/MGMRESORTS_2022Q4_EARNINGS.pdf
+pdfs/MGMRESORTS_2022_10K.pdf
+pdfs/MGMRESORTS_2023Q2_10Q.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-03-01.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-09-12.pdf
+pdfs/MICROSOFT_2015_10K.pdf
+pdfs/MICROSOFT_2016_10K.pdf
+pdfs/MICROSOFT_2017_10K.pdf
+pdfs/MICROSOFT_2018_10K.pdf
+pdfs/MICROSOFT_2019_10K.pdf
+pdfs/MICROSOFT_2020_10K.pdf
+pdfs/MICROSOFT_2021_10K.pdf
+pdfs/MICROSOFT_2022_10K.pdf
+pdfs/MICROSOFT_2023_10K.pdf
+pdfs/NETFLIX_2015_10K.pdf
+pdfs/NETFLIX_2016_10K.pdf
+pdfs/NETFLIX_2017_10K.pdf
+pdfs/NETFLIX_2018_10K.pdf
+pdfs/NETFLIX_2019_10K.pdf
+pdfs/NETFLIX_2020_10K.pdf
+pdfs/NETFLIX_2021_10K.pdf
+pdfs/NETFLIX_2022_10K.pdf
+pdfs/NETFLIX_2023Q2_10Q.pdf
+pdfs/NIKE_2015_10K.pdf
+pdfs/NIKE_2016_10K.pdf
+pdfs/NIKE_2017_10K.pdf
+pdfs/NIKE_2018_10K.pdf
+pdfs/NIKE_2019_10K.pdf
+pdfs/NIKE_2020_10K.pdf
+pdfs/NIKE_2021_10K.pdf
+pdfs/NIKE_2022_10K.pdf
+pdfs/NIKE_2023_10K.pdf
+pdfs/ORACLE_2015_10K.pdf
+pdfs/ORACLE_2016_10K.pdf
+pdfs/ORACLE_2017_10K.pdf
+pdfs/ORACLE_2018_10K.pdf
+pdfs/ORACLE_2019_10K.pdf
+pdfs/ORACLE_2020_10K.pdf
+pdfs/ORACLE_2021_10K.pdf
+pdfs/ORACLE_2022_10K.pdf
+pdfs/ORACLE_2023_10K.pdf
+pdfs/PAYPAL_2022_10K.pdf
+pdfs/PAYPAL_2023Q2_10Q.pdf
+pdfs/PEPSICO_2015_10K.pdf
+pdfs/PEPSICO_2016_10K.pdf
+pdfs/PEPSICO_2017_10K.pdf
+pdfs/PEPSICO_2018_10K.pdf
+pdfs/PEPSICO_2019_10K.pdf
+pdfs/PEPSICO_2020_10K.pdf
+pdfs/PEPSICO_2021_10K.pdf
+pdfs/PEPSICO_2022Q4_EARNINGS.pdf
+pdfs/PEPSICO_2022_10K.pdf
+pdfs/PEPSICO_2023Q1_EARNINGS.pdf
+pdfs/PEPSICO_2023Q2_EARNINGS.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-05.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-30.pdf
+pdfs/PFIZER_2015_10K.pdf
+pdfs/PFIZER_2016_10K.pdf
+pdfs/PFIZER_2017_10K.pdf
+pdfs/PFIZER_2018_10K.pdf
+pdfs/PFIZER_2019_10K.pdf
+pdfs/PFIZER_2020_10K.pdf
+pdfs/PFIZER_2021_10K.pdf
+pdfs/PFIZER_2022_10K.pdf
+pdfs/PFIZER_2023Q2_EARNINGS.pdf
+pdfs/PG_E_2015_10K.pdf
+pdfs/PG_E_2016_10K.pdf
+pdfs/PG_E_2017_10K.pdf
+pdfs/PG_E_2018_10K.pdf
+pdfs/PG_E_2019_10K.pdf
+pdfs/PG_E_2020_10K.pdf
+pdfs/PG_E_2021_10K.pdf
+pdfs/PG_E_2022_10K.pdf
+pdfs/PG_E_2023Q3_10Q.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-06-01.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-07-27.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-04.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-31.pdf
+pdfs/Pfizer_2023Q2_10Q.pdf
+pdfs/SALESFORCE_2021_8K_dated-2021-07-21.pdf
+pdfs/SALESFORCE_2021_8K_dated-2023-01-04.pdf
+pdfs/SALESFORCE_2023Q3_10Q.pdf
+pdfs/SALESFORCE_2023_10K.pdf
+pdfs/SALESFORCE_2024Q1_EARNINGS.pdf
+pdfs/SALESFORCE_2024Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q4_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023_10K.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-06-07.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-09-18.pdf
+pdfs/ULTABEAUTY_2024Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2024Q2_EARNINGS.pdf
+pdfs/VERIZON_2015_10K.pdf
+pdfs/VERIZON_2016_10K.pdf
+pdfs/VERIZON_2017_10K.pdf
+pdfs/VERIZON_2018_10K.pdf
+pdfs/VERIZON_2019_10K.pdf
+pdfs/VERIZON_2020_10K.pdf
+pdfs/VERIZON_2021_10K.pdf
+pdfs/VERIZON_2022_10K.pdf
+pdfs/WALMART_2015_10K.pdf
+pdfs/WALMART_2016_10K.pdf
+pdfs/WALMART_2017_10K.pdf
+pdfs/WALMART_2018_10K.pdf
+pdfs/WALMART_2019_10K.pdf
+pdfs/WALMART_2020_10K.pdf
+pdfs/WALMART_2021_10K.pdf
+pdfs/WALMART_2022_10K.pdf
+pdfs/WALMART_2023_10K.pdf
+pdfs/WALMART_2023_annualreport.pdf
+pdfs/WALMART_2024Q1_10Q.pdf
+results/
+results/gpt-4o-2024-05-13_openai_direct_oracle.csv
+results/gpt-4o-2024-05-13_sharedStore.csv
+results/gpt-4o-2024-05-13_singleStore.csv
+results/gpt4_oracle_direct.csv
+results/big2small/
+results/big2small/20260112/
+results/big2small/20260112/big2small_20260112_155144_scored.json
+results/big2small/20260112/big2small_20260112_164052_scored.json
+results/big2small/20260112/big2small_20260112_171420_scored.json
+results/big2small/20260112/big2small_20260112_172815_scored.json
+results/big2small/20260112/big2small_20260112_181911_scored.json
+results/bm25/
+results/bm25/20260112/
+results/bm25/20260112/bm25_20260112_192701_scored.json
+results/closed_book/
+results/closed_book/20260106/
+results/closed_book/20260106/closed_book_20260106_161953_scored.json
+results/closed_book/20260106/closed_book_20260106_171608_scored.json
+results/closed_book/20260107/
+results/expanded_shared/
+results/expanded_shared/20260114/
+results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json
+results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json
+results/hybrid/
+results/hybrid/20260115/
+results/hyde_shared/
+results/hyde_shared/20260114/
+results/multi_hyde_shared/
+results/multi_hyde_shared/20260114/
+results/open_book/
+results/open_book/20260102/
+results/open_book/20260102/open_book_20260102_165042_scored.json
+results/open_book/20260102/open_book_20260102_173713_scored.json
+results/shared_vector/
+results/shared_vector/20251229/
+results/shared_vector/20251229/shared_vector_20251229_181122_scored.json
+results/shared_vector/20251229/shared_vector_20251229_190013_scored.json
+results/shared_vector/20260107/
+results/shared_vector/20260107/shared_vector_20260107_164341_scored.json
+results/shared_vector/20260113/
+results/single_vector/
+results/single_vector/20251229/
+results/single_vector/20251229/single_vector_20251229_162507_scored.json
+results/single_vector/20251229/single_vector_20251229_171641_scored.json
+results/splade/
+results/splade/20260115/
+results/splade/20260115/splade_20260115_144031_scored.json
+scripts/
+scripts/hybrid_ret.sh
+scripts/query.sh
+scripts/rag_embeddings_exp.sh
+scripts/run_rag_experiments.sh
+src/
+src/__init__.py
+src/core/
+src/core/__init__.py
+src/core/rag_dependencies.py
+src/core/rag_experiment_mixins.py
+src/core/rag_experiments.py
+src/core/results/
+src/core/results/splade/
+src/core/results/splade/20260115/
+src/evaluation/
+src/evaluation/__init__.py
+src/evaluation/evaluate_outputs.py
+src/evaluation/evaluator.py
+src/evaluation/generative_evaluator.py
+src/evaluation/posthoc_evaluator.py
+src/evaluation/retrieval_evaluator.py
+src/experiments/
+src/experiments/__init__.py
+src/experiments/hybrid_retrieval.py
+src/experiments/query_expansion.py
+src/experiments/rag_closed_book.py
+src/experiments/rag_expanded_shared.py
+src/experiments/rag_hyde_shared.py
+src/experiments/rag_open_book.py
+src/experiments/rag_shared_vector.py
+src/experiments/rag_single_vector.py
+src/experiments/random_single_store.py
+src/experiments/splade.py
+src/ingestion/
+src/ingestion/__init__.py
+src/ingestion/chunking.py
+src/ingestion/data_loader.py
+src/ingestion/pdf_utils.py
+src/retrieval/
+src/retrieval/__init__.py
+src/retrieval/big2small.py
+src/retrieval/bm25.py
+src/retrieval/vectorstore.py
+
+sent 776,198,550 bytes  received 8,535 bytes  47,042,853.64 bytes/sec
+total size is 775,976,835  speedup is 1.00
+Activating venv from: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/venv
+--- Starting SPLADE (1024 tokens / 128 overlap) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-15 15:55:57,365 - RAGExperiment - INFO - ================================================================================
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: SPLADE
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - ================================================================================
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - Configuration:
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Experiment Type: splade
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Embedding Model: sentence-transformers/all-mpnet-base-v2
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4825/outputs/splade_1024/splade/20260115
+2026-01-15 15:55:57,366 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - ================================================================================
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-15 15:55:57,366 - RAGExperiment - INFO - ✓ Embeddings skipped for splade
+2026-01-15 15:55:58,277 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-15 15:55:58,277 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-15 15:55:58,277 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 15:55:58,277 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-15 15:55:58,277 - RAGExperiment - INFO - ================================================================================
+2026-01-15 15:55:58,277 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-15 15:55:59,762 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 15:55:59,805 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-15 15:55:59,805 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-15 15:55:59,805 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-15 15:55:59,805 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-15 15:55:59,807 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-15 15:55:59,807 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-15 15:55:59,807 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-15 15:55:59,807 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-15 15:55:59,820 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-15 15:55:59,820 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-15 15:55:59,820 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-15 15:55:59,821 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-15 15:55:59,821 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-15 15:55:59,821 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-15 15:55:59,829 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-15 15:55:59,830 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-15 15:55:59,830 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-15 15:55:59,830 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-15 15:55:59,831 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 15:55:59,832 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-15 15:55:59,849 - RAGExperiment - INFO - Processing 150 samples
+2026-01-15 15:55:59,849 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-15 15:55:59,849 - src.experiments.splade - INFO - 
+================================================================================
+2026-01-15 15:55:59,849 - src.experiments.splade - INFO - RUNNING SPLADE EXPERIMENT
+2026-01-15 15:55:59,849 - src.experiments.splade - INFO - ================================================================================
+2026-01-15 15:55:59,849 - src.experiments.splade - INFO - Loading SPLADE model (naver/splade-cocondenser-ensembledistil) on cuda...
+2026-01-15 15:56:06,173 - src.experiments.splade - INFO - Building SPLADE index...
+
+================================================================================
+Running experiment: splade | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : splade
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : pending
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Loading PDFs: 0it [00:00, ?it/s]Loading PDFs: 0it [00:00, ?it/s]
+2026-01-15 15:56:06,174 - src.experiments.splade - INFO - Chunked corpus into 0 chunks.
+2026-01-15 15:56:06,174 - src.experiments.splade - INFO - Encoding chunks with SPLADE (top_n_terms=256)...
+Indexing: 0it [00:00, ?it/s]Indexing: 0it [00:00, ?it/s]
+2026-01-15 15:56:06,175 - src.experiments.splade - INFO - Running SPLADE retrieval...
+Inference:   0%|          | 0/150 [00:00<?, ?it/s]2026-01-15 15:56:08,964 - RAGExperiment - INFO - 
+Initializing LLM: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 15:56:08,965 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 15:56:08,965 - RAGExperiment - INFO -   8-bit: True
+2026-01-15 15:56:08,965 - RAGExperiment - INFO - Loading tokenizer...
+2026-01-15 15:56:09,340 - RAGExperiment - INFO - Loading model (this may take a moment)...
+2026-01-15 15:56:09,340 - RAGExperiment - INFO -   Using 8-bit quantization for memory efficiency
+`torch_dtype` is deprecated! Use `dtype` instead!
+The `load_in_4bit` and `load_in_8bit` arguments are deprecated and will be removed in the future versions. Please, pass a `BitsAndBytesConfig` object in `quantization_config` argument instead.
+2026-01-15 15:56:10,162 - accelerate.utils.modeling - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][A
+Loading checkpoint shards:  25%|██▌       | 1/4 [01:07<03:23, 67.76s/it][A
+Loading checkpoint shards:  50%|█████     | 2/4 [01:54<01:51, 55.67s/it][A
+Loading checkpoint shards:  75%|███████▌  | 3/4 [02:37<00:49, 49.80s/it][A
+Loading checkpoint shards: 100%|██████████| 4/4 [03:17<00:00, 45.70s/it][ALoading checkpoint shards: 100%|██████████| 4/4 [03:17<00:00, 49.30s/it]
+Device set to use cuda:0
+2026-01-15 15:59:27,590 - RAGExperiment - INFO - ✓ LLM initialized successfully
+/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py:480: LangChainDeprecationWarning: The class `HuggingFacePipeline` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-huggingface package and should be used instead. To use it run `pip install -U `langchain-huggingface` and import as `from `langchain_huggingface import HuggingFacePipeline``.
+  self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+2026-01-15 15:59:27,590 - RAGExperiment - INFO - ✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA
+2026-01-15 15:59:40,138 - RAGExperiment - INFO - [Progress] 1/150 samples processed
+Inference:   1%|          | 1/150 [03:33<8:51:20, 213.96s/it]2026-01-15 16:00:09,055 - RAGExperiment - INFO - [Progress] 2/150 samples processed
+Inference:   1%|▏         | 2/150 [04:02<4:19:16, 105.11s/it]2026-01-15 16:00:37,610 - RAGExperiment - INFO - [Progress] 3/150 samples processed
+Inference:   2%|▏         | 3/150 [04:31<2:51:52, 70.15s/it] 2026-01-15 16:01:06,391 - RAGExperiment - INFO - [Progress] 4/150 samples processed
+Inference:   3%|▎         | 4/150 [05:00<2:10:57, 53.82s/it]2026-01-15 16:01:34,988 - RAGExperiment - INFO - [Progress] 5/150 samples processed
+Inference:   3%|▎         | 5/150 [05:28<1:48:05, 44.73s/it]2026-01-15 16:02:03,510 - RAGExperiment - INFO - [Progress] 6/150 samples processed
+Inference:   4%|▍         | 6/150 [05:57<1:34:07, 39.22s/it]2026-01-15 16:02:32,006 - RAGExperiment - INFO - [Progress] 7/150 samples processed
+Inference:   5%|▍         | 7/150 [06:25<1:25:06, 35.71s/it]2026-01-15 16:03:00,641 - RAGExperiment - INFO - [Progress] 8/150 samples processed
+Inference:   5%|▌         | 8/150 [06:54<1:19:11, 33.46s/it]2026-01-15 16:03:29,580 - RAGExperiment - INFO - [Progress] 9/150 samples processed
+Inference:   6%|▌         | 9/150 [07:23<1:15:18, 32.05s/it]2026-01-15 16:03:58,441 - RAGExperiment - INFO - [Progress] 10/150 samples processed
+Inference:   7%|▋         | 10/150 [07:52<1:12:28, 31.06s/it]You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+2026-01-15 16:04:27,026 - RAGExperiment - INFO - [Progress] 11/150 samples processed
+Inference:   7%|▋         | 11/150 [08:20<1:10:12, 30.30s/it]2026-01-15 16:04:55,720 - RAGExperiment - INFO - [Progress] 12/150 samples processed
+Inference:   8%|▊         | 12/150 [08:49<1:08:34, 29.81s/it]2026-01-15 16:05:24,646 - RAGExperiment - INFO - [Progress] 13/150 samples processed
+Inference:   9%|▊         | 13/150 [09:18<1:07:27, 29.55s/it]2026-01-15 16:05:53,178 - RAGExperiment - INFO - [Progress] 14/150 samples processed
+Inference:   9%|▉         | 14/150 [09:47<1:06:16, 29.24s/it]2026-01-15 16:06:21,715 - RAGExperiment - INFO - [Progress] 15/150 samples processed
+Inference:  10%|█         | 15/150 [10:15<1:05:18, 29.03s/it]2026-01-15 16:06:50,221 - RAGExperiment - INFO - [Progress] 16/150 samples processed
+Inference:  11%|█         | 16/150 [10:44<1:04:28, 28.87s/it]2026-01-15 16:07:19,026 - RAGExperiment - INFO - [Progress] 17/150 samples processed
+Inference:  11%|█▏        | 17/150 [11:12<1:03:57, 28.85s/it]2026-01-15 16:07:47,714 - RAGExperiment - INFO - [Progress] 18/150 samples processed
+Inference:  12%|█▏        | 18/150 [11:41<1:03:21, 28.80s/it]2026-01-15 16:08:16,539 - RAGExperiment - INFO - [Progress] 19/150 samples processed
+Inference:  13%|█▎        | 19/150 [12:10<1:02:53, 28.81s/it]2026-01-15 16:08:31,904 - RAGExperiment - INFO - [Progress] 20/150 samples processed
+Inference:  13%|█▎        | 20/150 [12:25<53:40, 24.77s/it]  2026-01-15 16:09:00,484 - RAGExperiment - INFO - [Progress] 21/150 samples processed
+Inference:  14%|█▍        | 21/150 [12:54<55:43, 25.92s/it]2026-01-15 16:09:29,036 - RAGExperiment - INFO - [Progress] 22/150 samples processed
+Inference:  15%|█▍        | 22/150 [13:22<56:58, 26.71s/it]2026-01-15 16:09:57,784 - RAGExperiment - INFO - [Progress] 23/150 samples processed
+Inference:  15%|█▌        | 23/150 [13:51<57:49, 27.32s/it]2026-01-15 16:10:26,335 - RAGExperiment - INFO - [Progress] 24/150 samples processed
+Inference:  16%|█▌        | 24/150 [14:20<58:08, 27.69s/it]2026-01-15 16:10:55,112 - RAGExperiment - INFO - [Progress] 25/150 samples processed
+Inference:  17%|█▋        | 25/150 [14:48<58:21, 28.02s/it]2026-01-15 16:11:02,323 - RAGExperiment - INFO - [Progress] 26/150 samples processed
+Inference:  17%|█▋        | 26/150 [14:56<44:59, 21.77s/it]2026-01-15 16:11:30,933 - RAGExperiment - INFO - [Progress] 27/150 samples processed
+Inference:  18%|█▊        | 27/150 [15:24<48:50, 23.82s/it]2026-01-15 16:11:59,607 - RAGExperiment - INFO - [Progress] 28/150 samples processed
+Inference:  19%|█▊        | 28/150 [15:53<51:24, 25.28s/it]2026-01-15 16:12:28,124 - RAGExperiment - INFO - [Progress] 29/150 samples processed
+Inference:  19%|█▉        | 29/150 [16:21<52:56, 26.25s/it]2026-01-15 16:12:56,853 - RAGExperiment - INFO - [Progress] 30/150 samples processed
+Inference:  20%|██        | 30/150 [16:50<53:59, 26.99s/it]2026-01-15 16:13:25,496 - RAGExperiment - INFO - [Progress] 31/150 samples processed
+Inference:  21%|██        | 31/150 [17:19<54:31, 27.49s/it]2026-01-15 16:13:54,058 - RAGExperiment - INFO - [Progress] 32/150 samples processed
+Inference:  21%|██▏       | 32/150 [17:47<54:41, 27.81s/it]2026-01-15 16:14:23,170 - RAGExperiment - INFO - [Progress] 33/150 samples processed
+Inference:  22%|██▏       | 33/150 [18:16<54:59, 28.20s/it]2026-01-15 16:14:52,163 - RAGExperiment - INFO - [Progress] 34/150 samples processed
+Inference:  23%|██▎       | 34/150 [18:45<54:58, 28.44s/it]2026-01-15 16:15:20,960 - RAGExperiment - INFO - [Progress] 35/150 samples processed
+Inference:  23%|██▎       | 35/150 [19:14<54:42, 28.55s/it]2026-01-15 16:15:49,487 - RAGExperiment - INFO - [Progress] 36/150 samples processed
+Inference:  24%|██▍       | 36/150 [19:43<54:13, 28.54s/it]2026-01-15 16:15:50,506 - RAGExperiment - INFO - [Progress] 37/150 samples processed
+Inference:  25%|██▍       | 37/150 [19:44<38:12, 20.28s/it]2026-01-15 16:16:19,103 - RAGExperiment - INFO - [Progress] 38/150 samples processed
+Inference:  25%|██▌       | 38/150 [20:12<42:31, 22.78s/it]2026-01-15 16:16:43,137 - RAGExperiment - INFO - [Progress] 39/150 samples processed
+Inference:  26%|██▌       | 39/150 [20:36<42:50, 23.15s/it]2026-01-15 16:17:12,036 - RAGExperiment - INFO - [Progress] 40/150 samples processed
+Inference:  27%|██▋       | 40/150 [21:05<45:36, 24.88s/it]2026-01-15 16:17:40,726 - RAGExperiment - INFO - [Progress] 41/150 samples processed
+Inference:  27%|██▋       | 41/150 [21:34<47:16, 26.02s/it]2026-01-15 16:18:09,581 - RAGExperiment - INFO - [Progress] 42/150 samples processed
+Inference:  28%|██▊       | 42/150 [22:03<48:22, 26.87s/it]2026-01-15 16:18:38,006 - RAGExperiment - INFO - [Progress] 43/150 samples processed
+Inference:  29%|██▊       | 43/150 [22:31<48:45, 27.34s/it]2026-01-15 16:19:06,476 - RAGExperiment - INFO - [Progress] 44/150 samples processed
+Inference:  29%|██▉       | 44/150 [23:00<48:53, 27.68s/it]2026-01-15 16:19:35,102 - RAGExperiment - INFO - [Progress] 45/150 samples processed
+Inference:  30%|███       | 45/150 [23:28<48:56, 27.96s/it]2026-01-15 16:19:48,742 - RAGExperiment - INFO - [Progress] 46/150 samples processed
+Inference:  31%|███       | 46/150 [23:42<41:01, 23.67s/it]2026-01-15 16:20:17,463 - RAGExperiment - INFO - [Progress] 47/150 samples processed
+Inference:  31%|███▏      | 47/150 [24:11<43:13, 25.18s/it]2026-01-15 16:20:45,950 - RAGExperiment - INFO - [Progress] 48/150 samples processed
+Inference:  32%|███▏      | 48/150 [24:39<44:29, 26.17s/it]2026-01-15 16:21:14,682 - RAGExperiment - INFO - [Progress] 49/150 samples processed
+Inference:  33%|███▎      | 49/150 [25:08<45:21, 26.94s/it]2026-01-15 16:21:21,686 - RAGExperiment - INFO - [Progress] 50/150 samples processed
+Inference:  33%|███▎      | 50/150 [25:15<34:55, 20.96s/it]2026-01-15 16:21:50,376 - RAGExperiment - INFO - [Progress] 51/150 samples processed
+Inference:  34%|███▍      | 51/150 [25:44<38:24, 23.28s/it]2026-01-15 16:22:19,128 - RAGExperiment - INFO - [Progress] 52/150 samples processed
+Inference:  35%|███▍      | 52/150 [26:12<40:42, 24.92s/it]2026-01-15 16:22:47,744 - RAGExperiment - INFO - [Progress] 53/150 samples processed
+Inference:  35%|███▌      | 53/150 [26:41<42:04, 26.03s/it]2026-01-15 16:23:16,401 - RAGExperiment - INFO - [Progress] 54/150 samples processed
+Inference:  36%|███▌      | 54/150 [27:10<42:54, 26.82s/it]2026-01-15 16:23:45,106 - RAGExperiment - INFO - [Progress] 55/150 samples processed
+Inference:  37%|███▋      | 55/150 [27:38<43:21, 27.38s/it]2026-01-15 16:24:13,724 - RAGExperiment - INFO - [Progress] 56/150 samples processed
+Inference:  37%|███▋      | 56/150 [28:07<43:28, 27.75s/it]2026-01-15 16:24:36,814 - RAGExperiment - INFO - [Progress] 57/150 samples processed
+Inference:  38%|███▊      | 57/150 [28:30<40:50, 26.35s/it]2026-01-15 16:25:05,501 - RAGExperiment - INFO - [Progress] 58/150 samples processed
+Inference:  39%|███▊      | 58/150 [28:59<41:29, 27.05s/it]2026-01-15 16:25:33,948 - RAGExperiment - INFO - [Progress] 59/150 samples processed
+Inference:  39%|███▉      | 59/150 [29:27<41:39, 27.47s/it]2026-01-15 16:26:02,400 - RAGExperiment - INFO - [Progress] 60/150 samples processed
+Inference:  40%|████      | 60/150 [29:56<41:38, 27.77s/it]2026-01-15 16:26:30,870 - RAGExperiment - INFO - [Progress] 61/150 samples processed
+Inference:  41%|████      | 61/150 [30:24<41:29, 27.98s/it]2026-01-15 16:26:52,458 - RAGExperiment - INFO - [Progress] 62/150 samples processed
+Inference:  41%|████▏     | 62/150 [30:46<38:13, 26.06s/it]2026-01-15 16:27:21,032 - RAGExperiment - INFO - [Progress] 63/150 samples processed
+Inference:  42%|████▏     | 63/150 [31:14<38:52, 26.81s/it]2026-01-15 16:27:32,026 - RAGExperiment - INFO - [Progress] 64/150 samples processed
+Inference:  43%|████▎     | 64/150 [31:25<31:37, 22.07s/it]2026-01-15 16:27:46,794 - RAGExperiment - INFO - [Progress] 65/150 samples processed
+Inference:  43%|████▎     | 65/150 [31:40<28:09, 19.88s/it]2026-01-15 16:28:13,741 - RAGExperiment - INFO - [Progress] 66/150 samples processed
+Inference:  44%|████▍     | 66/150 [32:07<30:47, 22.00s/it]2026-01-15 16:28:42,100 - RAGExperiment - INFO - [Progress] 67/150 samples processed
+Inference:  45%|████▍     | 67/150 [32:35<33:04, 23.91s/it]2026-01-15 16:29:10,914 - RAGExperiment - INFO - [Progress] 68/150 samples processed
+Inference:  45%|████▌     | 68/150 [33:04<34:41, 25.38s/it]2026-01-15 16:29:39,572 - RAGExperiment - INFO - [Progress] 69/150 samples processed
+Inference:  46%|████▌     | 69/150 [33:33<35:35, 26.36s/it]2026-01-15 16:30:08,216 - RAGExperiment - INFO - [Progress] 70/150 samples processed
+Inference:  47%|████▋     | 70/150 [34:02<36:03, 27.05s/it]2026-01-15 16:30:37,037 - RAGExperiment - INFO - [Progress] 71/150 samples processed
+Inference:  47%|████▋     | 71/150 [34:30<36:18, 27.58s/it]2026-01-15 16:31:05,864 - RAGExperiment - INFO - [Progress] 72/150 samples processed
+Inference:  48%|████▊     | 72/150 [34:59<36:20, 27.95s/it]2026-01-15 16:31:32,997 - RAGExperiment - INFO - [Progress] 73/150 samples processed
+Inference:  49%|████▊     | 73/150 [35:26<35:33, 27.71s/it]2026-01-15 16:32:01,634 - RAGExperiment - INFO - [Progress] 74/150 samples processed
+Inference:  49%|████▉     | 74/150 [35:55<35:26, 27.99s/it]2026-01-15 16:32:30,143 - RAGExperiment - INFO - [Progress] 75/150 samples processed
+Inference:  50%|█████     | 75/150 [36:23<35:10, 28.14s/it]2026-01-15 16:32:46,028 - RAGExperiment - INFO - [Progress] 76/150 samples processed
+Inference:  51%|█████     | 76/150 [36:39<30:10, 24.47s/it]2026-01-15 16:33:14,474 - RAGExperiment - INFO - [Progress] 77/150 samples processed
+Inference:  51%|█████▏    | 77/150 [37:08<31:13, 25.66s/it]2026-01-15 16:33:43,124 - RAGExperiment - INFO - [Progress] 78/150 samples processed
+Inference:  52%|█████▏    | 78/150 [37:36<31:52, 26.56s/it]2026-01-15 16:33:59,793 - RAGExperiment - INFO - [Progress] 79/150 samples processed
+Inference:  53%|█████▎    | 79/150 [37:53<27:54, 23.59s/it]2026-01-15 16:34:25,188 - RAGExperiment - INFO - [Progress] 80/150 samples processed
+Inference:  53%|█████▎    | 80/150 [38:19<28:09, 24.13s/it]2026-01-15 16:34:39,263 - RAGExperiment - INFO - [Progress] 81/150 samples processed
+Inference:  54%|█████▍    | 81/150 [38:33<24:16, 21.11s/it]2026-01-15 16:35:08,242 - RAGExperiment - INFO - [Progress] 82/150 samples processed
+Inference:  55%|█████▍    | 82/150 [39:02<26:36, 23.47s/it]2026-01-15 16:35:37,216 - RAGExperiment - INFO - [Progress] 83/150 samples processed
+Inference:  55%|█████▌    | 83/150 [39:31<28:03, 25.12s/it]2026-01-15 16:36:05,745 - RAGExperiment - INFO - [Progress] 84/150 samples processed
+Inference:  56%|█████▌    | 84/150 [39:59<28:45, 26.15s/it]2026-01-15 16:36:34,714 - RAGExperiment - INFO - [Progress] 85/150 samples processed
+Inference:  57%|█████▋    | 85/150 [40:28<29:14, 26.99s/it]2026-01-15 16:37:03,480 - RAGExperiment - INFO - [Progress] 86/150 samples processed
+Inference:  57%|█████▋    | 86/150 [40:57<29:21, 27.52s/it]2026-01-15 16:37:32,058 - RAGExperiment - INFO - [Progress] 87/150 samples processed
+Inference:  58%|█████▊    | 87/150 [41:25<29:13, 27.84s/it]2026-01-15 16:38:01,031 - RAGExperiment - INFO - [Progress] 88/150 samples processed
+Inference:  59%|█████▊    | 88/150 [41:54<29:07, 28.18s/it]2026-01-15 16:38:29,945 - RAGExperiment - INFO - [Progress] 89/150 samples processed
+Inference:  59%|█████▉    | 89/150 [42:23<28:52, 28.40s/it]2026-01-15 16:38:58,907 - RAGExperiment - INFO - [Progress] 90/150 samples processed
+Inference:  60%|██████    | 90/150 [42:52<28:34, 28.57s/it]2026-01-15 16:39:14,886 - RAGExperiment - INFO - [Progress] 91/150 samples processed
+Inference:  61%|██████    | 91/150 [43:08<24:22, 24.79s/it]2026-01-15 16:39:45,165 - RAGExperiment - INFO - [Progress] 92/150 samples processed
+Inference:  61%|██████▏   | 92/150 [43:38<25:33, 26.44s/it]2026-01-15 16:40:13,884 - RAGExperiment - INFO - [Progress] 93/150 samples processed
+Inference:  62%|██████▏   | 93/150 [44:07<25:45, 27.12s/it]2026-01-15 16:40:42,569 - RAGExperiment - INFO - [Progress] 94/150 samples processed
+Inference:  63%|██████▎   | 94/150 [44:36<25:45, 27.59s/it]2026-01-15 16:41:06,360 - RAGExperiment - INFO - [Progress] 95/150 samples processed
+Inference:  63%|██████▎   | 95/150 [45:00<24:14, 26.45s/it]2026-01-15 16:41:35,207 - RAGExperiment - INFO - [Progress] 96/150 samples processed
+Inference:  64%|██████▍   | 96/150 [45:29<24:27, 27.17s/it]2026-01-15 16:42:04,715 - RAGExperiment - INFO - [Progress] 97/150 samples processed
+Inference:  65%|██████▍   | 97/150 [45:58<24:37, 27.87s/it]2026-01-15 16:42:33,504 - RAGExperiment - INFO - [Progress] 98/150 samples processed
+Inference:  65%|██████▌   | 98/150 [46:27<24:23, 28.15s/it]2026-01-15 16:43:02,279 - RAGExperiment - INFO - [Progress] 99/150 samples processed
+Inference:  66%|██████▌   | 99/150 [46:56<24:05, 28.34s/it]2026-01-15 16:43:31,233 - RAGExperiment - INFO - [Progress] 100/150 samples processed
+Inference:  67%|██████▋   | 100/150 [47:25<23:46, 28.52s/it]2026-01-15 16:44:00,367 - RAGExperiment - INFO - [Progress] 101/150 samples processed
+Inference:  67%|██████▋   | 101/150 [47:54<23:26, 28.70s/it]2026-01-15 16:44:29,138 - RAGExperiment - INFO - [Progress] 102/150 samples processed
+Inference:  68%|██████▊   | 102/150 [48:22<22:58, 28.72s/it]2026-01-15 16:44:57,945 - RAGExperiment - INFO - [Progress] 103/150 samples processed
+Inference:  69%|██████▊   | 103/150 [48:51<22:31, 28.75s/it]2026-01-15 16:45:22,862 - RAGExperiment - INFO - [Progress] 104/150 samples processed
+Inference:  69%|██████▉   | 104/150 [49:16<21:09, 27.60s/it]2026-01-15 16:45:52,207 - RAGExperiment - INFO - [Progress] 105/150 samples processed
+Inference:  70%|███████   | 105/150 [49:46<21:05, 28.12s/it]2026-01-15 16:46:21,038 - RAGExperiment - INFO - [Progress] 106/150 samples processed
+Inference:  71%|███████   | 106/150 [50:14<20:46, 28.34s/it]2026-01-15 16:46:50,136 - RAGExperiment - INFO - [Progress] 107/150 samples processed
+Inference:  71%|███████▏  | 107/150 [50:43<20:28, 28.56s/it]2026-01-15 16:47:18,859 - RAGExperiment - INFO - [Progress] 108/150 samples processed
+Inference:  72%|███████▏  | 108/150 [51:12<20:01, 28.61s/it]2026-01-15 16:47:47,631 - RAGExperiment - INFO - [Progress] 109/150 samples processed
+Inference:  73%|███████▎  | 109/150 [51:41<19:35, 28.66s/it]2026-01-15 16:48:16,479 - RAGExperiment - INFO - [Progress] 110/150 samples processed
+Inference:  73%|███████▎  | 110/150 [52:10<19:08, 28.72s/it]2026-01-15 16:48:45,113 - RAGExperiment - INFO - [Progress] 111/150 samples processed
+Inference:  74%|███████▍  | 111/150 [52:38<18:38, 28.69s/it]2026-01-15 16:49:13,708 - RAGExperiment - INFO - [Progress] 112/150 samples processed
+Inference:  75%|███████▍  | 112/150 [53:07<18:09, 28.66s/it]2026-01-15 16:49:42,711 - RAGExperiment - INFO - [Progress] 113/150 samples processed
+Inference:  75%|███████▌  | 113/150 [53:36<17:44, 28.76s/it]2026-01-15 16:49:53,599 - RAGExperiment - INFO - [Progress] 114/150 samples processed
+Inference:  76%|███████▌  | 114/150 [53:47<14:02, 23.40s/it]2026-01-15 16:50:22,548 - RAGExperiment - INFO - [Progress] 115/150 samples processed
+Inference:  77%|███████▋  | 115/150 [54:16<14:37, 25.07s/it]2026-01-15 16:50:44,432 - RAGExperiment - INFO - [Progress] 116/150 samples processed
+Inference:  77%|███████▋  | 116/150 [54:38<13:39, 24.11s/it]2026-01-15 16:51:13,471 - RAGExperiment - INFO - [Progress] 117/150 samples processed
+Inference:  78%|███████▊  | 117/150 [55:07<14:04, 25.59s/it]2026-01-15 16:51:42,201 - RAGExperiment - INFO - [Progress] 118/150 samples processed
+Inference:  79%|███████▊  | 118/150 [55:36<14:09, 26.53s/it]2026-01-15 16:52:10,880 - RAGExperiment - INFO - [Progress] 119/150 samples processed
+Inference:  79%|███████▉  | 119/150 [56:04<14:02, 27.18s/it]2026-01-15 16:52:39,629 - RAGExperiment - INFO - [Progress] 120/150 samples processed
+Inference:  80%|████████  | 120/150 [56:33<13:49, 27.65s/it]2026-01-15 16:53:08,737 - RAGExperiment - INFO - [Progress] 121/150 samples processed
+Inference:  81%|████████  | 121/150 [57:02<13:34, 28.09s/it]2026-01-15 16:53:37,448 - RAGExperiment - INFO - [Progress] 122/150 samples processed
+Inference:  81%|████████▏ | 122/150 [57:31<13:11, 28.27s/it]2026-01-15 16:54:02,363 - RAGExperiment - INFO - [Progress] 123/150 samples processed
+Inference:  82%|████████▏ | 123/150 [57:56<12:16, 27.27s/it]2026-01-15 16:54:31,381 - RAGExperiment - INFO - [Progress] 124/150 samples processed
+Inference:  83%|████████▎ | 124/150 [58:25<12:02, 27.79s/it]2026-01-15 16:55:00,167 - RAGExperiment - INFO - [Progress] 125/150 samples processed
+Inference:  83%|████████▎ | 125/150 [58:53<11:42, 28.09s/it]2026-01-15 16:55:29,105 - RAGExperiment - INFO - [Progress] 126/150 samples processed
+Inference:  84%|████████▍ | 126/150 [59:22<11:20, 28.34s/it]2026-01-15 16:55:35,255 - RAGExperiment - INFO - [Progress] 127/150 samples processed
+Inference:  85%|████████▍ | 127/150 [59:29<08:18, 21.69s/it]2026-01-15 16:56:03,923 - RAGExperiment - INFO - [Progress] 128/150 samples processed
+Inference:  85%|████████▌ | 128/150 [59:57<08:43, 23.78s/it]2026-01-15 16:56:18,504 - RAGExperiment - INFO - [Progress] 129/150 samples processed
+Inference:  86%|████████▌ | 129/150 [1:00:12<07:21, 21.02s/it]2026-01-15 16:56:25,641 - RAGExperiment - INFO - [Progress] 130/150 samples processed
+Inference:  87%|████████▋ | 130/150 [1:00:19<05:37, 16.86s/it]2026-01-15 16:56:42,188 - RAGExperiment - INFO - [Progress] 131/150 samples processed
+Inference:  87%|████████▋ | 131/150 [1:00:36<05:18, 16.76s/it]2026-01-15 16:57:11,090 - RAGExperiment - INFO - [Progress] 132/150 samples processed
+Inference:  88%|████████▊ | 132/150 [1:01:04<06:07, 20.40s/it]2026-01-15 16:57:39,792 - RAGExperiment - INFO - [Progress] 133/150 samples processed
+Inference:  89%|████████▊ | 133/150 [1:01:33<06:29, 22.89s/it]2026-01-15 16:57:48,001 - RAGExperiment - INFO - [Progress] 134/150 samples processed
+Inference:  89%|████████▉ | 134/150 [1:01:41<04:55, 18.49s/it]2026-01-15 16:58:16,985 - RAGExperiment - INFO - [Progress] 135/150 samples processed
+Inference:  90%|█████████ | 135/150 [1:02:10<05:24, 21.64s/it]2026-01-15 16:58:39,415 - RAGExperiment - INFO - [Progress] 136/150 samples processed
+Inference:  91%|█████████ | 136/150 [1:02:33<05:06, 21.87s/it]2026-01-15 16:59:08,253 - RAGExperiment - INFO - [Progress] 137/150 samples processed
+Inference:  91%|█████████▏| 137/150 [1:03:02<05:11, 23.96s/it]2026-01-15 16:59:37,617 - RAGExperiment - INFO - [Progress] 138/150 samples processed
+Inference:  92%|█████████▏| 138/150 [1:03:31<05:07, 25.58s/it]2026-01-15 16:59:48,096 - RAGExperiment - INFO - [Progress] 139/150 samples processed
+Inference:  93%|█████████▎| 139/150 [1:03:41<03:51, 21.05s/it]2026-01-15 17:00:17,310 - RAGExperiment - INFO - [Progress] 140/150 samples processed
+Inference:  93%|█████████▎| 140/150 [1:04:11<03:55, 23.50s/it]2026-01-15 17:00:46,100 - RAGExperiment - INFO - [Progress] 141/150 samples processed
+Inference:  94%|█████████▍| 141/150 [1:04:39<03:45, 25.09s/it]2026-01-15 17:01:15,238 - RAGExperiment - INFO - [Progress] 142/150 samples processed
+Inference:  95%|█████████▍| 142/150 [1:05:09<03:30, 26.30s/it]2026-01-15 17:01:44,183 - RAGExperiment - INFO - [Progress] 143/150 samples processed
+Inference:  95%|█████████▌| 143/150 [1:05:38<03:09, 27.10s/it]2026-01-15 17:02:13,072 - RAGExperiment - INFO - [Progress] 144/150 samples processed
+Inference:  96%|█████████▌| 144/150 [1:06:06<02:45, 27.63s/it]2026-01-15 17:02:42,154 - RAGExperiment - INFO - [Progress] 145/150 samples processed
+Inference:  97%|█████████▋| 145/150 [1:06:35<02:20, 28.07s/it]2026-01-15 17:03:10,994 - RAGExperiment - INFO - [Progress] 146/150 samples processed
+Inference:  97%|█████████▋| 146/150 [1:07:04<01:53, 28.30s/it]2026-01-15 17:03:39,672 - RAGExperiment - INFO - [Progress] 147/150 samples processed
+Inference:  98%|█████████▊| 147/150 [1:07:33<01:25, 28.41s/it]2026-01-15 17:04:08,672 - RAGExperiment - INFO - [Progress] 148/150 samples processed
+Inference:  99%|█████████▊| 148/150 [1:08:02<00:57, 28.59s/it]2026-01-15 17:04:37,625 - RAGExperiment - INFO - [Progress] 149/150 samples processed
+Inference:  99%|█████████▉| 149/150 [1:08:31<00:28, 28.70s/it]2026-01-15 17:05:06,645 - RAGExperiment - INFO - [Progress] 150/150 samples processed
+Inference: 100%|██████████| 150/150 [1:09:00<00:00, 28.79s/it]Inference: 100%|██████████| 150/150 [1:09:00<00:00, 27.60s/it]
+2026-01-15 17:05:06,653 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 17:05:06,653 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-15 17:05:06,653 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:05:06,653 - RAGExperiment - INFO - 
+Generated Answer Lengths:
+2026-01-15 17:05:06,653 - RAGExperiment - INFO -   Mean: 0.00 chars
+2026-01-15 17:05:06,653 - RAGExperiment - INFO -   Min: 0 chars
+2026-01-15 17:05:06,653 - RAGExperiment - INFO -   Max: 0 chars
+2026-01-15 17:05:06,656 - RAGExperiment - INFO -   Median: 0.00 chars
+2026-01-15 17:05:06,656 - RAGExperiment - INFO - 
+No automatic BLEU/ROUGE metrics computed during the run (evaluation is now post-hoc).
+2026-01-15 17:05:06,656 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - 
+Results saved to: /part/01/Tmp/kobeissa/4825/outputs/splade_1024/splade/20260115/splade_20260115_170506.json
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - EXPERIMENT COMPLETE
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - STARTING AUTOMATED EVALUATION
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - Input file: /part/01/Tmp/kobeissa/4825/outputs/splade_1024/splade/20260115/splade_20260115_170506.json
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - Results dir: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115
+2026-01-15 17:05:06,674 - RAGExperiment - INFO - Eval Type: both
+2026-01-15 17:05:06,681 - RAGExperiment - INFO - Unloading generator model to free memory for evaluation...
+2026-01-15 17:05:07,089 - RAGExperiment - INFO - ✓ Model unloaded
+2026-01-15 17:05:07,089 - RAGExperiment - INFO - Running Retrieval Evaluation...
+2026-01-15 17:05:07,090 - absl - INFO - Using default tokenizer.
+2026-01-15 17:05:07,094 - RAGExperiment - INFO - Retrieval Evaluation Complete.
+2026-01-15 17:05:07,094 - RAGExperiment - INFO - MRR: 0.0000
+2026-01-15 17:05:07,094 - RAGExperiment - INFO - Running Generative Evaluation...
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2026-01-15 17:05:25,544 - src.evaluation.generative_evaluator - INFO - BERTScore initialized.
+2026-01-15 17:05:25,544 - absl - INFO - Using default tokenizer.
+2026-01-15 17:05:29,725 - RAGExperiment - INFO - Generative Evaluation Complete.
+2026-01-15 17:05:29,745 - RAGExperiment - INFO - Evaluation results saved to: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115/splade_20260115_170506_scored.json
+[Progress] 1/150 samples processed
+[Progress] 2/150 samples processed
+[Progress] 3/150 samples processed
+[Progress] 4/150 samples processed
+[Progress] 5/150 samples processed
+[Progress] 6/150 samples processed
+[Progress] 7/150 samples processed
+[Progress] 8/150 samples processed
+[Progress] 9/150 samples processed
+[Progress] 10/150 samples processed
+[Progress] 11/150 samples processed
+[Progress] 12/150 samples processed
+[Progress] 13/150 samples processed
+[Progress] 14/150 samples processed
+[Progress] 15/150 samples processed
+[Progress] 16/150 samples processed
+[Progress] 17/150 samples processed
+[Progress] 18/150 samples processed
+[Progress] 19/150 samples processed
+[Progress] 20/150 samples processed
+[Progress] 21/150 samples processed
+[Progress] 22/150 samples processed
+[Progress] 23/150 samples processed
+[Progress] 24/150 samples processed
+[Progress] 25/150 samples processed
+[Progress] 26/150 samples processed
+[Progress] 27/150 samples processed
+[Progress] 28/150 samples processed
+[Progress] 29/150 samples processed
+[Progress] 30/150 samples processed
+[Progress] 31/150 samples processed
+[Progress] 32/150 samples processed
+[Progress] 33/150 samples processed
+[Progress] 34/150 samples processed
+[Progress] 35/150 samples processed
+[Progress] 36/150 samples processed
+[Progress] 37/150 samples processed
+[Progress] 38/150 samples processed
+[Progress] 39/150 samples processed
+[Progress] 40/150 samples processed
+[Progress] 41/150 samples processed
+[Progress] 42/150 samples processed
+[Progress] 43/150 samples processed
+[Progress] 44/150 samples processed
+[Progress] 45/150 samples processed
+[Progress] 46/150 samples processed
+[Progress] 47/150 samples processed
+[Progress] 48/150 samples processed
+[Progress] 49/150 samples processed
+[Progress] 50/150 samples processed
+[Progress] 51/150 samples processed
+[Progress] 52/150 samples processed
+[Progress] 53/150 samples processed
+[Progress] 54/150 samples processed
+[Progress] 55/150 samples processed
+[Progress] 56/150 samples processed
+[Progress] 57/150 samples processed
+[Progress] 58/150 samples processed
+[Progress] 59/150 samples processed
+[Progress] 60/150 samples processed
+[Progress] 61/150 samples processed
+[Progress] 62/150 samples processed
+[Progress] 63/150 samples processed
+[Progress] 64/150 samples processed
+[Progress] 65/150 samples processed
+[Progress] 66/150 samples processed
+[Progress] 67/150 samples processed
+[Progress] 68/150 samples processed
+[Progress] 69/150 samples processed
+[Progress] 70/150 samples processed
+[Progress] 71/150 samples processed
+[Progress] 72/150 samples processed
+[Progress] 73/150 samples processed
+[Progress] 74/150 samples processed
+[Progress] 75/150 samples processed
+[Progress] 76/150 samples processed
+[Progress] 77/150 samples processed
+[Progress] 78/150 samples processed
+[Progress] 79/150 samples processed
+[Progress] 80/150 samples processed
+[Progress] 81/150 samples processed
+[Progress] 82/150 samples processed
+[Progress] 83/150 samples processed
+[Progress] 84/150 samples processed
+[Progress] 85/150 samples processed
+[Progress] 86/150 samples processed
+[Progress] 87/150 samples processed
+[Progress] 88/150 samples processed
+[Progress] 89/150 samples processed
+[Progress] 90/150 samples processed
+[Progress] 91/150 samples processed
+[Progress] 92/150 samples processed
+[Progress] 93/150 samples processed
+[Progress] 94/150 samples processed
+[Progress] 95/150 samples processed
+[Progress] 96/150 samples processed
+[Progress] 97/150 samples processed
+[Progress] 98/150 samples processed
+[Progress] 99/150 samples processed
+[Progress] 100/150 samples processed
+[Progress] 101/150 samples processed
+[Progress] 102/150 samples processed
+[Progress] 103/150 samples processed
+[Progress] 104/150 samples processed
+[Progress] 105/150 samples processed
+[Progress] 106/150 samples processed
+[Progress] 107/150 samples processed
+[Progress] 108/150 samples processed
+[Progress] 109/150 samples processed
+[Progress] 110/150 samples processed
+[Progress] 111/150 samples processed
+[Progress] 112/150 samples processed
+[Progress] 113/150 samples processed
+[Progress] 114/150 samples processed
+[Progress] 115/150 samples processed
+[Progress] 116/150 samples processed
+[Progress] 117/150 samples processed
+[Progress] 118/150 samples processed
+[Progress] 119/150 samples processed
+[Progress] 120/150 samples processed
+[Progress] 121/150 samples processed
+[Progress] 122/150 samples processed
+[Progress] 123/150 samples processed
+[Progress] 124/150 samples processed
+[Progress] 125/150 samples processed
+[Progress] 126/150 samples processed
+[Progress] 127/150 samples processed
+[Progress] 128/150 samples processed
+[Progress] 129/150 samples processed
+[Progress] 130/150 samples processed
+[Progress] 131/150 samples processed
+[Progress] 132/150 samples processed
+[Progress] 133/150 samples processed
+[Progress] 134/150 samples processed
+[Progress] 135/150 samples processed
+[Progress] 136/150 samples processed
+[Progress] 137/150 samples processed
+[Progress] 138/150 samples processed
+[Progress] 139/150 samples processed
+[Progress] 140/150 samples processed
+[Progress] 141/150 samples processed
+[Progress] 142/150 samples processed
+[Progress] 143/150 samples processed
+[Progress] 144/150 samples processed
+[Progress] 145/150 samples processed
+[Progress] 146/150 samples processed
+[Progress] 147/150 samples processed
+[Progress] 148/150 samples processed
+[Progress] 149/150 samples processed
+[Progress] 150/150 samples processed
+
+================================================================================
+Experiment Component Summary [final]
+================================================================================
+Experiment Type : splade
+LLM Generator   : HuggingFacePipeline (Qwen/Qwen2.5-7B-Instruct) (package=transformers.pipelines.text_generation, load_in_8bit=True, device=cuda)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : pending
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+--- Starting SPLADE (512 tokens / 64 overlap) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: SPLADE
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - Configuration:
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Experiment Type: splade
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Chunk Size: 512
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Chunk Overlap: 64
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Embedding Model: sentence-transformers/all-mpnet-base-v2
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4825/outputs/splade_512/splade/20260115
+2026-01-15 17:06:05,591 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-15 17:06:05,591 - RAGExperiment - INFO - ✓ Embeddings skipped for splade
+2026-01-15 17:06:06,638 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-15 17:06:06,638 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=512)
+2026-01-15 17:06:06,638 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 17:06:06,638 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-15 17:06:06,638 - RAGExperiment - INFO - ================================================================================
+2026-01-15 17:06:06,638 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-15 17:06:09,066 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-15 17:06:09,067 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-15 17:06:09,068 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-15 17:06:09,068 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-15 17:06:09,068 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-15 17:06:09,076 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-15 17:06:09,077 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-15 17:06:09,077 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-15 17:06:09,077 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-15 17:06:09,078 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 17:06:09,078 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-15 17:06:09,082 - RAGExperiment - INFO - Processing 150 samples
+2026-01-15 17:06:09,082 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-15 17:06:09,082 - src.experiments.splade - INFO - 
+================================================================================
+2026-01-15 17:06:09,082 - src.experiments.splade - INFO - RUNNING SPLADE EXPERIMENT
+2026-01-15 17:06:09,082 - src.experiments.splade - INFO - ================================================================================
+2026-01-15 17:06:09,082 - src.experiments.splade - INFO - Loading SPLADE model (naver/splade-cocondenser-ensembledistil) on cuda...
+2026-01-15 17:06:10,732 - src.experiments.splade - INFO - Building SPLADE index...
+
+================================================================================
+Running experiment: splade | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : splade
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=512, chunk_overlap=64)
+Embeddings      : pending
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=512, overlap=64
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Loading PDFs: 0it [00:00, ?it/s]Loading PDFs: 0it [00:00, ?it/s]
+2026-01-15 17:06:10,733 - src.experiments.splade - INFO - Chunked corpus into 0 chunks.
+2026-01-15 17:06:10,733 - src.experiments.splade - INFO - Encoding chunks with SPLADE (top_n_terms=256)...
+Indexing: 0it [00:00, ?it/s]Indexing: 0it [00:00, ?it/s]
+2026-01-15 17:06:10,734 - src.experiments.splade - INFO - Running SPLADE retrieval...
+Inference:   0%|          | 0/150 [00:00<?, ?it/s]2026-01-15 17:06:10,931 - RAGExperiment - INFO - 
+Initializing LLM: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 17:06:10,931 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 17:06:10,931 - RAGExperiment - INFO -   8-bit: True
+2026-01-15 17:06:10,931 - RAGExperiment - INFO - Loading tokenizer...
+2026-01-15 17:06:11,728 - RAGExperiment - INFO - Loading model (this may take a moment)...
+2026-01-15 17:06:11,728 - RAGExperiment - INFO -   Using 8-bit quantization for memory efficiency
+`torch_dtype` is deprecated! Use `dtype` instead!
+The `load_in_4bit` and `load_in_8bit` arguments are deprecated and will be removed in the future versions. Please, pass a `BitsAndBytesConfig` object in `quantization_config` argument instead.
+2026-01-15 17:06:12,489 - accelerate.utils.modeling - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][A
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:02<00:06,  2.10s/it][A
+Loading checkpoint shards:  50%|█████     | 2/4 [00:04<00:04,  2.45s/it][A
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:07<00:02,  2.59s/it][A
+Loading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.30s/it][ALoading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.35s/it]
+Device set to use cuda:0
+2026-01-15 17:06:22,505 - RAGExperiment - INFO - ✓ LLM initialized successfully
+/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py:480: LangChainDeprecationWarning: The class `HuggingFacePipeline` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-huggingface package and should be used instead. To use it run `pip install -U `langchain-huggingface` and import as `from `langchain_huggingface import HuggingFacePipeline``.
+  self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+2026-01-15 17:06:22,505 - RAGExperiment - INFO - ✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA
+2026-01-15 17:06:51,373 - RAGExperiment - INFO - [Progress] 1/150 samples processed
+Inference:   1%|          | 1/150 [00:40<1:40:55, 40.64s/it]2026-01-15 17:07:19,762 - RAGExperiment - INFO - [Progress] 2/150 samples processed
+Inference:   1%|▏         | 2/150 [01:09<1:22:28, 33.43s/it]2026-01-15 17:07:48,211 - RAGExperiment - INFO - [Progress] 3/150 samples processed
+Inference:   2%|▏         | 3/150 [01:37<1:16:20, 31.16s/it]2026-01-15 17:08:16,802 - RAGExperiment - INFO - [Progress] 4/150 samples processed
+Inference:   3%|▎         | 4/150 [02:06<1:13:21, 30.14s/it]2026-01-15 17:08:45,408 - RAGExperiment - INFO - [Progress] 5/150 samples processed
+Inference:   3%|▎         | 5/150 [02:34<1:11:30, 29.59s/it]2026-01-15 17:09:13,963 - RAGExperiment - INFO - [Progress] 6/150 samples processed
+Inference:   4%|▍         | 6/150 [03:03<1:10:10, 29.24s/it]2026-01-15 17:09:42,412 - RAGExperiment - INFO - [Progress] 7/150 samples processed
+Inference:   5%|▍         | 7/150 [03:31<1:09:04, 28.98s/it]2026-01-15 17:10:10,975 - RAGExperiment - INFO - [Progress] 8/150 samples processed
+Inference:   5%|▌         | 8/150 [04:00<1:08:16, 28.85s/it]2026-01-15 17:10:39,728 - RAGExperiment - INFO - [Progress] 9/150 samples processed
+Inference:   6%|▌         | 9/150 [04:28<1:07:43, 28.82s/it]2026-01-15 17:11:08,449 - RAGExperiment - INFO - [Progress] 10/150 samples processed
+Inference:   7%|▋         | 10/150 [04:57<1:07:10, 28.79s/it]You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+2026-01-15 17:11:37,076 - RAGExperiment - INFO - [Progress] 11/150 samples processed
+Inference:   7%|▋         | 11/150 [05:26<1:06:34, 28.74s/it]2026-01-15 17:12:05,760 - RAGExperiment - INFO - [Progress] 12/150 samples processed
+Inference:   8%|▊         | 12/150 [05:55<1:06:03, 28.72s/it]2026-01-15 17:12:34,379 - RAGExperiment - INFO - [Progress] 13/150 samples processed
+Inference:   9%|▊         | 13/150 [06:23<1:05:30, 28.69s/it]2026-01-15 17:13:02,819 - RAGExperiment - INFO - [Progress] 14/150 samples processed
+Inference:   9%|▉         | 14/150 [06:52<1:04:51, 28.61s/it]2026-01-15 17:13:31,347 - RAGExperiment - INFO - [Progress] 15/150 samples processed
+Inference:  10%|█         | 15/150 [07:20<1:04:19, 28.59s/it]2026-01-15 17:13:48,902 - RAGExperiment - INFO - [Progress] 16/150 samples processed
+Inference:  11%|█         | 16/150 [07:38<56:25, 25.27s/it]  2026-01-15 17:14:17,465 - RAGExperiment - INFO - [Progress] 17/150 samples processed
+Inference:  11%|█▏        | 17/150 [08:06<58:12, 26.26s/it]2026-01-15 17:14:46,583 - RAGExperiment - INFO - [Progress] 18/150 samples processed
+Inference:  12%|█▏        | 18/150 [08:35<59:39, 27.12s/it]2026-01-15 17:15:15,209 - RAGExperiment - INFO - [Progress] 19/150 samples processed
+Inference:  13%|█▎        | 19/150 [09:04<1:00:11, 27.57s/it]2026-01-15 17:15:43,792 - RAGExperiment - INFO - [Progress] 20/150 samples processed
+Inference:  13%|█▎        | 20/150 [09:33<1:00:23, 27.87s/it]2026-01-15 17:16:11,208 - RAGExperiment - INFO - [Progress] 21/150 samples processed
+Inference:  14%|█▍        | 21/150 [10:00<59:38, 27.74s/it]  2026-01-15 17:16:39,719 - RAGExperiment - INFO - [Progress] 22/150 samples processed
+Inference:  15%|█▍        | 22/150 [10:28<59:40, 27.97s/it]2026-01-15 17:16:56,968 - RAGExperiment - INFO - [Progress] 23/150 samples processed
+Inference:  15%|█▌        | 23/150 [10:46<52:23, 24.75s/it]2026-01-15 17:17:25,456 - RAGExperiment - INFO - [Progress] 24/150 samples processed
+Inference:  16%|█▌        | 24/150 [11:14<54:20, 25.87s/it]2026-01-15 17:17:54,411 - RAGExperiment - INFO - [Progress] 25/150 samples processed
+Inference:  17%|█▋        | 25/150 [11:43<55:49, 26.80s/it]2026-01-15 17:18:00,373 - RAGExperiment - INFO - [Progress] 26/150 samples processed
+Inference:  17%|█▋        | 26/150 [11:49<42:27, 20.55s/it]2026-01-15 17:18:29,044 - RAGExperiment - INFO - [Progress] 27/150 samples processed
+Inference:  18%|█▊        | 27/150 [12:18<47:07, 22.98s/it]2026-01-15 17:18:36,668 - RAGExperiment - INFO - [Progress] 28/150 samples processed
+Inference:  19%|█▊        | 28/150 [12:25<37:21, 18.38s/it]2026-01-15 17:19:03,680 - RAGExperiment - INFO - [Progress] 29/150 samples processed
+Inference:  19%|█▉        | 29/150 [12:52<42:16, 20.97s/it]2026-01-15 17:19:32,363 - RAGExperiment - INFO - [Progress] 30/150 samples processed
+Inference:  20%|██        | 30/150 [13:21<46:33, 23.28s/it]2026-01-15 17:20:01,001 - RAGExperiment - INFO - [Progress] 31/150 samples processed
+Inference:  21%|██        | 31/150 [13:50<49:21, 24.89s/it]2026-01-15 17:20:29,564 - RAGExperiment - INFO - [Progress] 32/150 samples processed
+Inference:  21%|██▏       | 32/150 [14:18<51:06, 25.99s/it]2026-01-15 17:20:58,574 - RAGExperiment - INFO - [Progress] 33/150 samples processed
+Inference:  22%|██▏       | 33/150 [14:47<52:26, 26.90s/it]2026-01-15 17:21:08,621 - RAGExperiment - INFO - [Progress] 34/150 samples processed
+Inference:  23%|██▎       | 34/150 [14:57<42:13, 21.84s/it]2026-01-15 17:21:37,253 - RAGExperiment - INFO - [Progress] 35/150 samples processed
+Inference:  23%|██▎       | 35/150 [15:26<45:46, 23.88s/it]2026-01-15 17:22:05,831 - RAGExperiment - INFO - [Progress] 36/150 samples processed
+Inference:  24%|██▍       | 36/150 [15:55<48:02, 25.29s/it]2026-01-15 17:22:34,814 - RAGExperiment - INFO - [Progress] 37/150 samples processed
+Inference:  25%|██▍       | 37/150 [16:24<49:42, 26.40s/it]2026-01-15 17:22:50,294 - RAGExperiment - INFO - [Progress] 38/150 samples processed
+Inference:  25%|██▌       | 38/150 [16:39<43:09, 23.12s/it]2026-01-15 17:23:19,036 - RAGExperiment - INFO - [Progress] 39/150 samples processed
+Inference:  26%|██▌       | 39/150 [17:08<45:53, 24.81s/it]2026-01-15 17:23:39,204 - RAGExperiment - INFO - [Progress] 40/150 samples processed
+Inference:  27%|██▋       | 40/150 [17:28<42:55, 23.42s/it]2026-01-15 17:24:07,950 - RAGExperiment - INFO - [Progress] 41/150 samples processed
+Inference:  27%|██▋       | 41/150 [17:57<45:26, 25.01s/it]2026-01-15 17:24:36,555 - RAGExperiment - INFO - [Progress] 42/150 samples processed
+Inference:  28%|██▊       | 42/150 [18:25<46:57, 26.09s/it]2026-01-15 17:25:00,827 - RAGExperiment - INFO - [Progress] 43/150 samples processed
+Inference:  29%|██▊       | 43/150 [18:50<45:33, 25.55s/it]2026-01-15 17:25:29,198 - RAGExperiment - INFO - [Progress] 44/150 samples processed
+Inference:  29%|██▉       | 44/150 [19:18<46:37, 26.39s/it]2026-01-15 17:25:57,899 - RAGExperiment - INFO - [Progress] 45/150 samples processed
+Inference:  30%|███       | 45/150 [19:47<47:24, 27.09s/it]2026-01-15 17:26:10,497 - RAGExperiment - INFO - [Progress] 46/150 samples processed
+Inference:  31%|███       | 46/150 [19:59<39:24, 22.74s/it]2026-01-15 17:26:39,135 - RAGExperiment - INFO - [Progress] 47/150 samples processed
+Inference:  31%|███▏      | 47/150 [20:28<42:04, 24.51s/it]2026-01-15 17:27:07,630 - RAGExperiment - INFO - [Progress] 48/150 samples processed
+Inference:  32%|███▏      | 48/150 [20:56<43:41, 25.70s/it]2026-01-15 17:27:36,418 - RAGExperiment - INFO - [Progress] 49/150 samples processed
+Inference:  33%|███▎      | 49/150 [21:25<44:49, 26.63s/it]2026-01-15 17:27:46,466 - RAGExperiment - INFO - [Progress] 50/150 samples processed
+Inference:  33%|███▎      | 50/150 [21:35<36:05, 21.66s/it]2026-01-15 17:28:06,291 - RAGExperiment - INFO - [Progress] 51/150 samples processed
+Inference:  34%|███▍      | 51/150 [21:55<34:49, 21.11s/it]2026-01-15 17:28:35,253 - RAGExperiment - INFO - [Progress] 52/150 samples processed
+Inference:  35%|███▍      | 52/150 [22:24<38:19, 23.46s/it]2026-01-15 17:29:03,801 - RAGExperiment - INFO - [Progress] 53/150 samples processed
+Inference:  35%|███▌      | 53/150 [22:53<40:23, 24.99s/it]2026-01-15 17:29:32,328 - RAGExperiment - INFO - [Progress] 54/150 samples processed
+Inference:  36%|███▌      | 54/150 [23:21<41:40, 26.05s/it]2026-01-15 17:29:58,569 - RAGExperiment - INFO - [Progress] 55/150 samples processed
+Inference:  37%|███▋      | 55/150 [23:47<41:20, 26.11s/it]2026-01-15 17:30:15,634 - RAGExperiment - INFO - [Progress] 56/150 samples processed
+Inference:  37%|███▋      | 56/150 [24:04<36:39, 23.39s/it]2026-01-15 17:30:40,502 - RAGExperiment - INFO - [Progress] 57/150 samples processed
+Inference:  38%|███▊      | 57/150 [24:29<36:56, 23.84s/it]2026-01-15 17:31:09,329 - RAGExperiment - INFO - [Progress] 58/150 samples processed
+Inference:  39%|███▊      | 58/150 [24:58<38:50, 25.33s/it]2026-01-15 17:31:37,836 - RAGExperiment - INFO - [Progress] 59/150 samples processed
+Inference:  39%|███▉      | 59/150 [25:27<39:51, 26.29s/it]2026-01-15 17:32:06,404 - RAGExperiment - INFO - [Progress] 60/150 samples processed
+Inference:  40%|████      | 60/150 [25:55<40:27, 26.97s/it]2026-01-15 17:32:35,007 - RAGExperiment - INFO - [Progress] 61/150 samples processed
+Inference:  41%|████      | 61/150 [26:24<40:43, 27.46s/it]2026-01-15 17:33:03,754 - RAGExperiment - INFO - [Progress] 62/150 samples processed
+Inference:  41%|████▏     | 62/150 [26:53<40:50, 27.85s/it]2026-01-15 17:33:32,484 - RAGExperiment - INFO - [Progress] 63/150 samples processed
+Inference:  42%|████▏     | 63/150 [27:21<40:45, 28.11s/it]2026-01-15 17:33:48,601 - RAGExperiment - INFO - [Progress] 64/150 samples processed
+Inference:  43%|████▎     | 64/150 [27:37<35:08, 24.51s/it]2026-01-15 17:34:17,440 - RAGExperiment - INFO - [Progress] 65/150 samples processed
+Inference:  43%|████▎     | 65/150 [28:06<36:33, 25.81s/it]2026-01-15 17:34:41,697 - RAGExperiment - INFO - [Progress] 66/150 samples processed
+Inference:  44%|████▍     | 66/150 [28:30<35:28, 25.34s/it]2026-01-15 17:35:10,224 - RAGExperiment - INFO - [Progress] 67/150 samples processed
+Inference:  45%|████▍     | 67/150 [28:59<36:22, 26.30s/it]2026-01-15 17:35:38,959 - RAGExperiment - INFO - [Progress] 68/150 samples processed
+Inference:  45%|████▌     | 68/150 [29:28<36:56, 27.03s/it]2026-01-15 17:36:07,708 - RAGExperiment - INFO - [Progress] 69/150 samples processed
+Inference:  46%|████▌     | 69/150 [29:56<37:11, 27.55s/it]2026-01-15 17:36:36,488 - RAGExperiment - INFO - [Progress] 70/150 samples processed
+Inference:  47%|████▋     | 70/150 [30:25<37:13, 27.92s/it]2026-01-15 17:37:05,301 - RAGExperiment - INFO - [Progress] 71/150 samples processed
+Inference:  47%|████▋     | 71/150 [30:54<37:06, 28.19s/it]2026-01-15 17:37:33,981 - RAGExperiment - INFO - [Progress] 72/150 samples processed
+Inference:  48%|████▊     | 72/150 [31:23<36:50, 28.33s/it]2026-01-15 17:38:02,380 - RAGExperiment - INFO - [Progress] 73/150 samples processed
+Inference:  49%|████▊     | 73/150 [31:51<36:23, 28.35s/it]2026-01-15 17:38:30,925 - RAGExperiment - INFO - [Progress] 74/150 samples processed
+Inference:  49%|████▉     | 74/150 [32:20<35:59, 28.41s/it]2026-01-15 17:38:58,759 - RAGExperiment - INFO - [Progress] 75/150 samples processed
+Inference:  50%|█████     | 75/150 [32:48<35:17, 28.24s/it]2026-01-15 17:39:21,285 - RAGExperiment - INFO - [Progress] 76/150 samples processed
+Inference:  51%|█████     | 76/150 [33:10<32:42, 26.52s/it]2026-01-15 17:39:49,819 - RAGExperiment - INFO - [Progress] 77/150 samples processed
+Inference:  51%|█████▏    | 77/150 [33:39<33:00, 27.13s/it]2026-01-15 17:40:18,292 - RAGExperiment - INFO - [Progress] 78/150 samples processed
+Inference:  52%|█████▏    | 78/150 [34:07<33:02, 27.53s/it]2026-01-15 17:40:46,834 - RAGExperiment - INFO - [Progress] 79/150 samples processed
+Inference:  53%|█████▎    | 79/150 [34:36<32:56, 27.83s/it]2026-01-15 17:41:15,578 - RAGExperiment - INFO - [Progress] 80/150 samples processed
+Inference:  53%|█████▎    | 80/150 [35:04<32:47, 28.11s/it]2026-01-15 17:41:37,588 - RAGExperiment - INFO - [Progress] 81/150 samples processed
+Inference:  54%|█████▍    | 81/150 [35:26<30:13, 26.28s/it]2026-01-15 17:42:06,576 - RAGExperiment - INFO - [Progress] 82/150 samples processed
+Inference:  55%|█████▍    | 82/150 [35:55<30:42, 27.09s/it]2026-01-15 17:42:17,944 - RAGExperiment - INFO - [Progress] 83/150 samples processed
+Inference:  55%|█████▌    | 83/150 [36:07<24:59, 22.37s/it]2026-01-15 17:42:46,547 - RAGExperiment - INFO - [Progress] 84/150 samples processed
+Inference:  56%|█████▌    | 84/150 [36:35<26:40, 24.24s/it]2026-01-15 17:43:15,308 - RAGExperiment - INFO - [Progress] 85/150 samples processed
+Inference:  57%|█████▋    | 85/150 [37:04<27:43, 25.60s/it]2026-01-15 17:43:30,030 - RAGExperiment - INFO - [Progress] 86/150 samples processed
+Inference:  57%|█████▋    | 86/150 [37:19<23:49, 22.34s/it]2026-01-15 17:43:58,791 - RAGExperiment - INFO - [Progress] 87/150 samples processed
+Inference:  58%|█████▊    | 87/150 [37:48<25:28, 24.26s/it]2026-01-15 17:44:27,456 - RAGExperiment - INFO - [Progress] 88/150 samples processed
+Inference:  59%|█████▊    | 88/150 [38:16<26:26, 25.58s/it]2026-01-15 17:44:56,045 - RAGExperiment - INFO - [Progress] 89/150 samples processed
+Inference:  59%|█████▉    | 89/150 [38:45<26:55, 26.49s/it]2026-01-15 17:45:25,389 - RAGExperiment - INFO - [Progress] 90/150 samples processed
+Inference:  60%|██████    | 90/150 [39:14<27:20, 27.34s/it]2026-01-15 17:45:34,277 - RAGExperiment - INFO - [Progress] 91/150 samples processed
+Inference:  61%|██████    | 91/150 [39:23<21:26, 21.81s/it]2026-01-15 17:46:03,029 - RAGExperiment - INFO - [Progress] 92/150 samples processed
+Inference:  61%|██████▏   | 92/150 [39:52<23:05, 23.89s/it]2026-01-15 17:46:31,624 - RAGExperiment - INFO - [Progress] 93/150 samples processed
+Inference:  62%|██████▏   | 93/150 [40:20<24:02, 25.30s/it]2026-01-15 17:47:00,156 - RAGExperiment - INFO - [Progress] 94/150 samples processed
+Inference:  63%|██████▎   | 94/150 [40:49<24:31, 26.27s/it]2026-01-15 17:47:28,598 - RAGExperiment - INFO - [Progress] 95/150 samples processed
+Inference:  63%|██████▎   | 95/150 [41:17<24:40, 26.92s/it]2026-01-15 17:47:57,363 - RAGExperiment - INFO - [Progress] 96/150 samples processed
+Inference:  64%|██████▍   | 96/150 [41:46<24:43, 27.47s/it]2026-01-15 17:48:26,026 - RAGExperiment - INFO - [Progress] 97/150 samples processed
+Inference:  65%|██████▍   | 97/150 [42:15<24:35, 27.83s/it]2026-01-15 17:48:54,524 - RAGExperiment - INFO - [Progress] 98/150 samples processed
+Inference:  65%|██████▌   | 98/150 [42:43<24:17, 28.03s/it]2026-01-15 17:49:23,250 - RAGExperiment - INFO - [Progress] 99/150 samples processed
+Inference:  66%|██████▌   | 99/150 [43:12<24:00, 28.24s/it]2026-01-15 17:49:51,988 - RAGExperiment - INFO - [Progress] 100/150 samples processed
+Inference:  67%|██████▋   | 100/150 [43:41<23:39, 28.39s/it]2026-01-15 17:50:20,799 - RAGExperiment - INFO - [Progress] 101/150 samples processed
+Inference:  67%|██████▋   | 101/150 [44:10<23:17, 28.52s/it]2026-01-15 17:50:49,421 - RAGExperiment - INFO - [Progress] 102/150 samples processed
+Inference:  68%|██████▊   | 102/150 [44:38<22:50, 28.55s/it]2026-01-15 17:51:18,048 - RAGExperiment - INFO - [Progress] 103/150 samples processed
+Inference:  69%|██████▊   | 103/150 [45:07<22:22, 28.57s/it]2026-01-15 17:51:46,465 - RAGExperiment - INFO - [Progress] 104/150 samples processed
+Inference:  69%|██████▉   | 104/150 [45:35<21:52, 28.52s/it]2026-01-15 17:52:15,221 - RAGExperiment - INFO - [Progress] 105/150 samples processed
+Inference:  70%|███████   | 105/150 [46:04<21:26, 28.59s/it]2026-01-15 17:52:43,678 - RAGExperiment - INFO - [Progress] 106/150 samples processed
+Inference:  71%|███████   | 106/150 [46:32<20:56, 28.55s/it]2026-01-15 17:53:12,285 - RAGExperiment - INFO - [Progress] 107/150 samples processed
+Inference:  71%|███████▏  | 107/150 [47:01<20:28, 28.57s/it]2026-01-15 17:53:39,705 - RAGExperiment - INFO - [Progress] 108/150 samples processed
+Inference:  72%|███████▏  | 108/150 [47:28<19:45, 28.22s/it]2026-01-15 17:54:08,282 - RAGExperiment - INFO - [Progress] 109/150 samples processed
+Inference:  73%|███████▎  | 109/150 [47:57<19:21, 28.33s/it]2026-01-15 17:54:27,100 - RAGExperiment - INFO - [Progress] 110/150 samples processed
+Inference:  73%|███████▎  | 110/150 [48:16<16:59, 25.48s/it]2026-01-15 17:54:45,497 - RAGExperiment - INFO - [Progress] 111/150 samples processed
+Inference:  74%|███████▍  | 111/150 [48:34<15:10, 23.35s/it]2026-01-15 17:55:14,002 - RAGExperiment - INFO - [Progress] 112/150 samples processed
+Inference:  75%|███████▍  | 112/150 [49:03<15:46, 24.90s/it]2026-01-15 17:55:42,663 - RAGExperiment - INFO - [Progress] 113/150 samples processed
+Inference:  75%|███████▌  | 113/150 [49:31<16:03, 26.03s/it]2026-01-15 17:56:03,250 - RAGExperiment - INFO - [Progress] 114/150 samples processed
+Inference:  76%|███████▌  | 114/150 [49:52<14:38, 24.40s/it]2026-01-15 17:56:31,984 - RAGExperiment - INFO - [Progress] 115/150 samples processed
+Inference:  77%|███████▋  | 115/150 [50:21<14:59, 25.70s/it]2026-01-15 17:57:00,343 - RAGExperiment - INFO - [Progress] 116/150 samples processed
+Inference:  77%|███████▋  | 116/150 [50:49<15:00, 26.50s/it]2026-01-15 17:57:29,100 - RAGExperiment - INFO - [Progress] 117/150 samples processed
+Inference:  78%|███████▊  | 117/150 [51:18<14:56, 27.17s/it]2026-01-15 17:57:57,707 - RAGExperiment - INFO - [Progress] 118/150 samples processed
+Inference:  79%|███████▊  | 118/150 [51:46<14:43, 27.60s/it]2026-01-15 17:58:26,172 - RAGExperiment - INFO - [Progress] 119/150 samples processed
+Inference:  79%|███████▉  | 119/150 [52:15<14:23, 27.86s/it]2026-01-15 17:58:54,601 - RAGExperiment - INFO - [Progress] 120/150 samples processed
+Inference:  80%|████████  | 120/150 [52:43<14:00, 28.03s/it]2026-01-15 17:59:14,840 - RAGExperiment - INFO - [Progress] 121/150 samples processed
+Inference:  81%|████████  | 121/150 [53:04<12:25, 25.69s/it]2026-01-15 17:59:43,584 - RAGExperiment - INFO - [Progress] 122/150 samples processed
+Inference:  81%|████████▏ | 122/150 [53:32<12:25, 26.61s/it]2026-01-15 18:00:12,558 - RAGExperiment - INFO - [Progress] 123/150 samples processed
+Inference:  82%|████████▏ | 123/150 [54:01<12:17, 27.32s/it]2026-01-15 18:00:41,654 - RAGExperiment - INFO - [Progress] 124/150 samples processed
+Inference:  83%|████████▎ | 124/150 [54:30<12:04, 27.85s/it]2026-01-15 18:01:10,959 - RAGExperiment - INFO - [Progress] 125/150 samples processed
+Inference:  83%|████████▎ | 125/150 [55:00<11:47, 28.29s/it]2026-01-15 18:01:39,807 - RAGExperiment - INFO - [Progress] 126/150 samples processed
+Inference:  84%|████████▍ | 126/150 [55:29<11:22, 28.46s/it]2026-01-15 18:02:04,617 - RAGExperiment - INFO - [Progress] 127/150 samples processed
+Inference:  85%|████████▍ | 127/150 [55:53<10:29, 27.36s/it]2026-01-15 18:02:30,835 - RAGExperiment - INFO - [Progress] 128/150 samples processed
+Inference:  85%|████████▌ | 128/150 [56:20<09:54, 27.02s/it]2026-01-15 18:02:48,965 - RAGExperiment - INFO - [Progress] 129/150 samples processed
+Inference:  86%|████████▌ | 129/150 [56:38<08:31, 24.35s/it]2026-01-15 18:02:54,831 - RAGExperiment - INFO - [Progress] 130/150 samples processed
+Inference:  87%|████████▋ | 130/150 [56:44<06:16, 18.81s/it]2026-01-15 18:03:23,136 - RAGExperiment - INFO - [Progress] 131/150 samples processed
+Inference:  87%|████████▋ | 131/150 [57:12<06:51, 21.66s/it]2026-01-15 18:03:50,158 - RAGExperiment - INFO - [Progress] 132/150 samples processed
+Inference:  88%|████████▊ | 132/150 [57:39<06:58, 23.27s/it]2026-01-15 18:04:14,653 - RAGExperiment - INFO - [Progress] 133/150 samples processed
+Inference:  89%|████████▊ | 133/150 [58:03<06:41, 23.63s/it]2026-01-15 18:04:20,489 - RAGExperiment - INFO - [Progress] 134/150 samples processed
+Inference:  89%|████████▉ | 134/150 [58:09<04:52, 18.29s/it]2026-01-15 18:04:49,397 - RAGExperiment - INFO - [Progress] 135/150 samples processed
+Inference:  90%|█████████ | 135/150 [58:38<05:22, 21.48s/it]2026-01-15 18:05:18,090 - RAGExperiment - INFO - [Progress] 136/150 samples processed
+Inference:  91%|█████████ | 136/150 [59:07<05:31, 23.64s/it]2026-01-15 18:05:46,698 - RAGExperiment - INFO - [Progress] 137/150 samples processed
+Inference:  91%|█████████▏| 137/150 [59:35<05:26, 25.13s/it]2026-01-15 18:06:15,851 - RAGExperiment - INFO - [Progress] 138/150 samples processed
+Inference:  92%|█████████▏| 138/150 [1:00:05<05:16, 26.34s/it]2026-01-15 18:06:44,306 - RAGExperiment - INFO - [Progress] 139/150 samples processed
+Inference:  93%|█████████▎| 139/150 [1:00:33<04:56, 26.97s/it]2026-01-15 18:07:13,323 - RAGExperiment - INFO - [Progress] 140/150 samples processed
+Inference:  93%|█████████▎| 140/150 [1:01:02<04:35, 27.59s/it]2026-01-15 18:07:41,849 - RAGExperiment - INFO - [Progress] 141/150 samples processed
+Inference:  94%|█████████▍| 141/150 [1:01:31<04:10, 27.87s/it]2026-01-15 18:08:10,324 - RAGExperiment - INFO - [Progress] 142/150 samples processed
+Inference:  95%|█████████▍| 142/150 [1:01:59<03:44, 28.05s/it]2026-01-15 18:08:38,761 - RAGExperiment - INFO - [Progress] 143/150 samples processed
+Inference:  95%|█████████▌| 143/150 [1:02:28<03:17, 28.17s/it]2026-01-15 18:09:07,253 - RAGExperiment - INFO - [Progress] 144/150 samples processed
+Inference:  96%|█████████▌| 144/150 [1:02:56<02:49, 28.26s/it]2026-01-15 18:09:35,706 - RAGExperiment - INFO - [Progress] 145/150 samples processed
+Inference:  97%|█████████▋| 145/150 [1:03:24<02:21, 28.32s/it]2026-01-15 18:10:00,219 - RAGExperiment - INFO - [Progress] 146/150 samples processed
+Inference:  97%|█████████▋| 146/150 [1:03:49<01:48, 27.18s/it]2026-01-15 18:10:28,487 - RAGExperiment - INFO - [Progress] 147/150 samples processed
+Inference:  98%|█████████▊| 147/150 [1:04:17<01:22, 27.51s/it]2026-01-15 18:10:57,256 - RAGExperiment - INFO - [Progress] 148/150 samples processed
+Inference:  99%|█████████▊| 148/150 [1:04:46<00:55, 27.88s/it]2026-01-15 18:11:26,317 - RAGExperiment - INFO - [Progress] 149/150 samples processed
+Inference:  99%|█████████▉| 149/150 [1:05:15<00:28, 28.24s/it]2026-01-15 18:11:55,128 - RAGExperiment - INFO - [Progress] 150/150 samples processed
+Inference: 100%|██████████| 150/150 [1:05:44<00:00, 28.41s/it]Inference: 100%|██████████| 150/150 [1:05:44<00:00, 26.30s/it]
+2026-01-15 18:11:55,136 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 18:11:55,137 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-15 18:11:55,137 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:11:55,137 - RAGExperiment - INFO - 
+Generated Answer Lengths:
+2026-01-15 18:11:55,137 - RAGExperiment - INFO -   Mean: 0.00 chars
+2026-01-15 18:11:55,137 - RAGExperiment - INFO -   Min: 0 chars
+2026-01-15 18:11:55,137 - RAGExperiment - INFO -   Max: 0 chars
+2026-01-15 18:11:55,137 - RAGExperiment - INFO -   Median: 0.00 chars
+2026-01-15 18:11:55,137 - RAGExperiment - INFO - 
+No automatic BLEU/ROUGE metrics computed during the run (evaluation is now post-hoc).
+2026-01-15 18:11:55,137 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - 
+Results saved to: /part/01/Tmp/kobeissa/4825/outputs/splade_512/splade/20260115/splade_20260115_181155.json
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - EXPERIMENT COMPLETE
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - STARTING AUTOMATED EVALUATION
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - Input file: /part/01/Tmp/kobeissa/4825/outputs/splade_512/splade/20260115/splade_20260115_181155.json
+2026-01-15 18:11:55,155 - RAGExperiment - INFO - Results dir: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115
+2026-01-15 18:11:55,156 - RAGExperiment - INFO - Eval Type: both
+2026-01-15 18:11:55,164 - RAGExperiment - INFO - Unloading generator model to free memory for evaluation...
+2026-01-15 18:11:55,569 - RAGExperiment - INFO - ✓ Model unloaded
+2026-01-15 18:11:55,569 - RAGExperiment - INFO - Running Retrieval Evaluation...
+2026-01-15 18:11:55,569 - absl - INFO - Using default tokenizer.
+2026-01-15 18:11:55,573 - RAGExperiment - INFO - Retrieval Evaluation Complete.
+2026-01-15 18:11:55,573 - RAGExperiment - INFO - MRR: 0.0000
+2026-01-15 18:11:55,573 - RAGExperiment - INFO - Running Generative Evaluation...
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2026-01-15 18:11:58,294 - src.evaluation.generative_evaluator - INFO - BERTScore initialized.
+2026-01-15 18:11:58,294 - absl - INFO - Using default tokenizer.
+2026-01-15 18:12:01,869 - RAGExperiment - INFO - Generative Evaluation Complete.
+2026-01-15 18:12:01,889 - RAGExperiment - INFO - Evaluation results saved to: /part/01/Tmp/kobeissa/4825/outputs/results/splade/20260115/splade_20260115_181155_scored.json
+[Progress] 1/150 samples processed
+[Progress] 2/150 samples processed
+[Progress] 3/150 samples processed
+[Progress] 4/150 samples processed
+[Progress] 5/150 samples processed
+[Progress] 6/150 samples processed
+[Progress] 7/150 samples processed
+[Progress] 8/150 samples processed
+[Progress] 9/150 samples processed
+[Progress] 10/150 samples processed
+[Progress] 11/150 samples processed
+[Progress] 12/150 samples processed
+[Progress] 13/150 samples processed
+[Progress] 14/150 samples processed
+[Progress] 15/150 samples processed
+[Progress] 16/150 samples processed
+[Progress] 17/150 samples processed
+[Progress] 18/150 samples processed
+[Progress] 19/150 samples processed
+[Progress] 20/150 samples processed
+[Progress] 21/150 samples processed
+[Progress] 22/150 samples processed
+[Progress] 23/150 samples processed
+[Progress] 24/150 samples processed
+[Progress] 25/150 samples processed
+[Progress] 26/150 samples processed
+[Progress] 27/150 samples processed
+[Progress] 28/150 samples processed
+[Progress] 29/150 samples processed
+[Progress] 30/150 samples processed
+[Progress] 31/150 samples processed
+[Progress] 32/150 samples processed
+[Progress] 33/150 samples processed
+[Progress] 34/150 samples processed
+[Progress] 35/150 samples processed
+[Progress] 36/150 samples processed
+[Progress] 37/150 samples processed
+[Progress] 38/150 samples processed
+[Progress] 39/150 samples processed
+[Progress] 40/150 samples processed
+[Progress] 41/150 samples processed
+[Progress] 42/150 samples processed
+[Progress] 43/150 samples processed
+[Progress] 44/150 samples processed
+[Progress] 45/150 samples processed
+[Progress] 46/150 samples processed
+[Progress] 47/150 samples processed
+[Progress] 48/150 samples processed
+[Progress] 49/150 samples processed
+[Progress] 50/150 samples processed
+[Progress] 51/150 samples processed
+[Progress] 52/150 samples processed
+[Progress] 53/150 samples processed
+[Progress] 54/150 samples processed
+[Progress] 55/150 samples processed
+[Progress] 56/150 samples processed
+[Progress] 57/150 samples processed
+[Progress] 58/150 samples processed
+[Progress] 59/150 samples processed
+[Progress] 60/150 samples processed
+[Progress] 61/150 samples processed
+[Progress] 62/150 samples processed
+[Progress] 63/150 samples processed
+[Progress] 64/150 samples processed
+[Progress] 65/150 samples processed
+[Progress] 66/150 samples processed
+[Progress] 67/150 samples processed
+[Progress] 68/150 samples processed
+[Progress] 69/150 samples processed
+[Progress] 70/150 samples processed
+[Progress] 71/150 samples processed
+[Progress] 72/150 samples processed
+[Progress] 73/150 samples processed
+[Progress] 74/150 samples processed
+[Progress] 75/150 samples processed
+[Progress] 76/150 samples processed
+[Progress] 77/150 samples processed
+[Progress] 78/150 samples processed
+[Progress] 79/150 samples processed
+[Progress] 80/150 samples processed
+[Progress] 81/150 samples processed
+[Progress] 82/150 samples processed
+[Progress] 83/150 samples processed
+[Progress] 84/150 samples processed
+[Progress] 85/150 samples processed
+[Progress] 86/150 samples processed
+[Progress] 87/150 samples processed
+[Progress] 88/150 samples processed
+[Progress] 89/150 samples processed
+[Progress] 90/150 samples processed
+[Progress] 91/150 samples processed
+[Progress] 92/150 samples processed
+[Progress] 93/150 samples processed
+[Progress] 94/150 samples processed
+[Progress] 95/150 samples processed
+[Progress] 96/150 samples processed
+[Progress] 97/150 samples processed
+[Progress] 98/150 samples processed
+[Progress] 99/150 samples processed
+[Progress] 100/150 samples processed
+[Progress] 101/150 samples processed
+[Progress] 102/150 samples processed
+[Progress] 103/150 samples processed
+[Progress] 104/150 samples processed
+[Progress] 105/150 samples processed
+[Progress] 106/150 samples processed
+[Progress] 107/150 samples processed
+[Progress] 108/150 samples processed
+[Progress] 109/150 samples processed
+[Progress] 110/150 samples processed
+[Progress] 111/150 samples processed
+[Progress] 112/150 samples processed
+[Progress] 113/150 samples processed
+[Progress] 114/150 samples processed
+[Progress] 115/150 samples processed
+[Progress] 116/150 samples processed
+[Progress] 117/150 samples processed
+[Progress] 118/150 samples processed
+[Progress] 119/150 samples processed
+[Progress] 120/150 samples processed
+[Progress] 121/150 samples processed
+[Progress] 122/150 samples processed
+[Progress] 123/150 samples processed
+[Progress] 124/150 samples processed
+[Progress] 125/150 samples processed
+[Progress] 126/150 samples processed
+[Progress] 127/150 samples processed
+[Progress] 128/150 samples processed
+[Progress] 129/150 samples processed
+[Progress] 130/150 samples processed
+[Progress] 131/150 samples processed
+[Progress] 132/150 samples processed
+[Progress] 133/150 samples processed
+[Progress] 134/150 samples processed
+[Progress] 135/150 samples processed
+[Progress] 136/150 samples processed
+[Progress] 137/150 samples processed
+[Progress] 138/150 samples processed
+[Progress] 139/150 samples processed
+[Progress] 140/150 samples processed
+[Progress] 141/150 samples processed
+[Progress] 142/150 samples processed
+[Progress] 143/150 samples processed
+[Progress] 144/150 samples processed
+[Progress] 145/150 samples processed
+[Progress] 146/150 samples processed
+[Progress] 147/150 samples processed
+[Progress] 148/150 samples processed
+[Progress] 149/150 samples processed
+[Progress] 150/150 samples processed
+
+================================================================================
+Experiment Component Summary [final]
+================================================================================
+Experiment Type : splade
+LLM Generator   : HuggingFacePipeline (Qwen/Qwen2.5-7B-Instruct) (package=transformers.pipelines.text_generation, load_in_8bit=True, device=cuda)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=512, chunk_overlap=64)
+Embeddings      : pending
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=512, overlap=64
+Generation Mode : Local HF weights
+================================================================================
+
+--- Starting Hybrid [Base/MPNet] (1024 tokens / 128 overlap) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: HYBRID
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - Configuration:
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Experiment Type: hybrid
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Embedding Model: mpnet
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4825/outputs/hybrid_base_1024/hybrid/20260115
+2026-01-15 18:12:26,167 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4825/outputs/results/hybrid/20260115
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-15 18:12:26,167 - RAGExperiment - INFO - Loading HuggingFace embeddings: sentence-transformers/all-mpnet-base-v2 (Requested: mpnet)
+2026-01-15 18:12:26,178 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-mpnet-base-v2
+2026-01-15 18:12:40,774 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-15 18:12:42,363 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-15 18:12:42,364 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-15 18:12:42,364 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 18:12:42,364 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-15 18:12:42,364 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:12:42,364 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-15 18:12:46,687 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-15 18:12:46,688 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-15 18:12:46,688 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-15 18:12:46,688 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-15 18:12:46,688 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-15 18:12:46,688 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-15 18:12:46,689 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-15 18:12:46,689 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-15 18:12:46,689 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-15 18:12:46,689 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-15 18:12:46,689 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-15 18:12:46,697 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-15 18:12:46,698 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-15 18:12:46,698 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-15 18:12:46,698 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-15 18:12:46,699 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:12:46,699 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-15 18:12:46,703 - RAGExperiment - INFO - Processing 150 samples
+2026-01-15 18:12:46,703 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-15 18:12:46,703 - src.experiments.hybrid_retrieval - INFO - 
+================================================================================
+2026-01-15 18:12:46,703 - src.experiments.hybrid_retrieval - INFO - RUNNING HYBRID EXPERIMENT
+2026-01-15 18:12:46,703 - src.experiments.hybrid_retrieval - INFO - ================================================================================
+/part/01/Tmp/kobeissa/4825/src/retrieval/vectorstore.py:370: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
+2026-01-15 18:12:50,661 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 1007, in <module>
+    main()
+    ~~~~^^
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 1003, in main
+    experiment.run_experiment(num_samples=args.num_samples)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 575, in run_experiment
+    results = self.run_hybrid_search(data)
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 525, in run_hybrid_search
+    return _run_hybrid_search(self, data)
+  File "/part/01/Tmp/kobeissa/4825/src/experiments/hybrid_retrieval.py", line 90, in run_hybrid_search
+    dense_retriever, _ = build_chroma_store(experiment, docs="all", lazy_load=False)
+                         ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/part/01/Tmp/kobeissa/4825/src/retrieval/vectorstore.py", line 412, in build_chroma_store
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Chroma DB 'shared_recursive_36758529' is empty and no documents were provided to populate it.
+
+================================================================================
+Running experiment: hybrid | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : hybrid
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=mpnet, resolved_model=sentence-transformers/all-mpnet-base-v2)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+--- Starting Hybrid [BGE-M3] (1024 tokens / 128 overlap) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: HYBRID
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - Configuration:
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Experiment Type: hybrid
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Device: cuda
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Embedding Model: bge-m3
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4825/outputs/hybrid_bge_1024/hybrid/20260115
+2026-01-15 18:13:11,065 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4825/outputs/results/hybrid/20260115
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:13:11,065 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-15 18:13:11,066 - RAGExperiment - INFO - Loading HuggingFace embeddings: BAAI/bge-m3 (Requested: bge-m3)
+2026-01-15 18:13:11,070 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: BAAI/bge-m3
+2026-01-15 18:13:42,606 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-15 18:13:44,038 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-15 18:13:44,038 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-15 18:13:44,039 - RAGExperiment - INFO - 
+================================================================================
+2026-01-15 18:13:44,039 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-15 18:13:44,039 - RAGExperiment - INFO - ================================================================================
+2026-01-15 18:13:44,039 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-15 18:13:47,863 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-15 18:13:47,864 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-15 18:13:47,865 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-15 18:13:47,866 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-15 18:13:47,873 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-15 18:13:47,873 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-15 18:13:47,873 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-15 18:13:47,873 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-15 18:13:47,874 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-15 18:13:47,874 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-15 18:13:47,874 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-15 18:13:47,874 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-15 18:13:47,875 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-15 18:13:47,875 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-15 18:13:47,875 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-15 18:13:48,179 - RAGExperiment - INFO - Processing 150 samples
+2026-01-15 18:13:48,179 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-15 18:13:48,179 - src.experiments.hybrid_retrieval - INFO - 
+================================================================================
+2026-01-15 18:13:48,179 - src.experiments.hybrid_retrieval - INFO - RUNNING HYBRID EXPERIMENT
+2026-01-15 18:13:48,180 - src.experiments.hybrid_retrieval - INFO - ================================================================================
+/part/01/Tmp/kobeissa/4825/src/retrieval/vectorstore.py:370: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
+2026-01-15 18:13:48,962 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 1007, in <module>
+    main()
+    ~~~~^^
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 1003, in main
+    experiment.run_experiment(num_samples=args.num_samples)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 575, in run_experiment
+    results = self.run_hybrid_search(data)
+  File "/part/01/Tmp/kobeissa/4825/src/core/rag_experiments.py", line 525, in run_hybrid_search
+    return _run_hybrid_search(self, data)
+  File "/part/01/Tmp/kobeissa/4825/src/experiments/hybrid_retrieval.py", line 90, in run_hybrid_search
+    dense_retriever, _ = build_chroma_store(experiment, docs="all", lazy_load=False)
+                         ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/part/01/Tmp/kobeissa/4825/src/retrieval/vectorstore.py", line 412, in build_chroma_store
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Chroma DB 'shared_recursive_8fc98cdd' is empty and no documents were provided to populate it.
+
+================================================================================
+Running experiment: hybrid | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : hybrid
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=bge-m3, resolved_model=BAAI/bge-m3)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Copying results back to: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/outputs
+Done!
