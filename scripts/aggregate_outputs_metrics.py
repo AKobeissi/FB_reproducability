@@ -14,6 +14,7 @@ What it does
     - Retrieved chunks vs gold evidence: max(BLEU-4), max(ROUGE-L F1)
     - Retrieved chunks vs reference answer: max(BLEU-4), max(ROUGE-L F1)
     - Ranking vs reference answer: MRR@5, NDCG@5 (based on token-overlap relevance)
+    - Ranking vs gold evidence text: MRR@5, NDCG@5 (based on token-overlap relevance)
   Generation:
     - BLEU-4, ROUGE-L F1, BERTScore F1
     - For question_type == "metrics-generated": numeric string-match accuracy
@@ -278,6 +279,8 @@ class PerSampleMetrics:
     retrieval_chunk_rougeL_f1_max_vs_reference_at_5: Optional[float]
     retrieval_mrr_at_5_vs_reference: Optional[float]
     retrieval_ndcg_at_5_vs_reference: Optional[float]
+    retrieval_mrr_at_5_vs_evidence: Optional[float]
+    retrieval_ndcg_at_5_vs_evidence: Optional[float]
     # Generation
     generation_bleu4: Optional[float]
     generation_rougeL_f1: Optional[float]
@@ -363,6 +366,19 @@ def compute_per_sample_metrics(
                 break
         mrr = 1.0 / first_rank if first_rank else 0.0
 
+    # Retrieval ranking metrics vs gold evidence: MRR@k, NDCG@k
+    mrr_evidence = None
+    ndcg_evidence = None
+    if gold_evidence_text and chunk_texts_k:
+        rels_evi = [_token_overlap_ratio(t, gold_evidence_text) for t in chunk_texts_k]
+        ndcg_evidence = float(_ndcg(rels_evi))
+        first_rank_evi: Optional[int] = None
+        for i, rel in enumerate(rels_evi, start=1):
+            if rel >= overlap_threshold:
+                first_rank_evi = i
+                break
+        mrr_evidence = 1.0 / first_rank_evi if first_rank_evi else 0.0
+
     # Generation metrics vs reference answer
     gen_bleu4 = None
     gen_rougeL = None
@@ -395,6 +411,8 @@ def compute_per_sample_metrics(
         retrieval_chunk_rougeL_f1_max_vs_reference_at_5=chunk_rougeL_max_vs_reference,
         retrieval_mrr_at_5_vs_reference=mrr,
         retrieval_ndcg_at_5_vs_reference=ndcg,
+        retrieval_mrr_at_5_vs_evidence=mrr_evidence,
+        retrieval_ndcg_at_5_vs_evidence=ndcg_evidence,
         generation_bleu4=gen_bleu4,
         generation_rougeL_f1=gen_rougeL,
         generation_bertscore_f1=gen_bertscore_f1,
