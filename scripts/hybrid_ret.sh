@@ -57,6 +57,7 @@ python -m src.core.rag_experiments qwen \
   --chunking-unit tokens \
   --chunk-size 1024 \
   --chunk-overlap 128 \
+  --pdf-dir pdfs \
   --output-dir "$SCRATCH_OUT/splade_1024"
 
 echo "--- Starting SPLADE (512 tokens / 64 overlap) ---"
@@ -65,30 +66,9 @@ python -m src.core.rag_experiments qwen \
   --chunking-unit tokens \
   --chunk-size 512 \
   --chunk-overlap 64 \
+  --pdf-dir pdfs \
   --output-dir "$SCRATCH_OUT/splade_512"
   
-# ---------------- HYBRID EXPERIMENTS ----------------
-
-# 1. Hybrid with Base Embedding (Default: all-mpnet-base-v2)
-echo "--- Starting Hybrid [Base/MPNet] (1024 tokens / 128 overlap) ---"
-python -m src.core.rag_experiments qwen \
-  -e hybrid \
-  --chunking-unit tokens \
-  --chunk-size 1024 \
-  --chunk-overlap 128 \
-  --embedding-model mpnet \
-  --output-dir "$SCRATCH_OUT/hybrid_base_1024"
-
-# 2. Hybrid with BGE Embedding (BGE-M3)
-echo "--- Starting Hybrid [BGE-M3] (1024 tokens / 128 overlap) ---"
-python -m src.core.rag_experiments qwen \
-  -e hybrid \
-  --chunking-unit tokens \
-  --chunk-size 1024 \
-  --chunk-overlap 128 \
-  --embedding-model bge-m3 \
-  --output-dir "$SCRATCH_OUT/hybrid_bge_1024"
-
 # --- 5. SAVE RESULTS ---
 # Copy results back to the original submission directory's output folder
 FINAL_DEST="$SUBMIT_DIR/outputs"
