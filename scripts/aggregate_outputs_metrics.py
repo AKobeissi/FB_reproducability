@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Aggregate FinanceBench metrics across all hidden output/result folders.
+Aggregate FinanceBench metrics across all hidden output folders.
 
 What it does
 ------------
 - Recursively searches for JSON/JSONL experiment output files under any folder
-  named "outputs" or "results" (these are gitignored in this repo).
+  named "outputs" (this is gitignored in this repo). It intentionally does NOT
+  scan "results/" to avoid mixing derived artifacts with raw experiment outputs.
 - For each file, computes:
   Retrieval (at k=5 by default):
     - Doc: Hit@5, Recall@5
@@ -73,6 +74,17 @@ DEFAULT_METADATA_COLUMNS: List[str] = [
     "child_chunk_size",
     "child_chunk_overlap",
 ]
+
+
+def _iso_mtime(path: Path) -> str:
+    """
+    File modified time as ISO-8601 string (UTC-naive).
+    Only used as a fallback when the experiment metadata has no timestamp.
+    """
+    try:
+        return pd.Timestamp(path.stat().st_mtime, unit="s").isoformat()
+    except Exception:
+        return ""
 
 
 def _as_list(x: Any) -> List[Any]:
@@ -420,6 +432,14 @@ def discover_experiment_files(root: Path, *, dir_names: Sequence[str]) -> List[P
         for fp in r.rglob("*"):
             if not fp.is_file():
                 continue
+            # Avoid scanning nested "results/" directories under outputs/,
+            # which are typically derived artifacts.
+            try:
+                rel = fp.relative_to(r)
+                if any(part == "results" for part in rel.parts[:-1]):
+                    continue
+            except Exception:
+                pass
             if fp.suffix.lower() not in {".json", ".jsonl"}:
                 continue
             if fp in seen:
@@ -488,15 +508,15 @@ def _aggregate_table(df: pd.DataFrame, group_cols: List[str]) -> pd.DataFrame:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="Scan outputs/results folders and compute aggregated FinanceBench metrics.",
+        description="Scan outputs/ folders and compute aggregated FinanceBench metrics.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     p.add_argument("--root", type=str, default=".", help="Repo/workspace root to scan from.")
     p.add_argument(
         "--search-dirs",
         type=str,
-        default="outputs,results",
-        help='Comma-separated directory names to scan (e.g. "outputs,results").',
+        default="outputs",
+        help='Comma-separated directory names to scan (e.g. "outputs").',
     )
     p.add_argument("--dataset", type=str, default="data/financebench_open_source.jsonl")
     p.add_argument("--k", type=int, default=5, help="Top-k used for retrieval metrics.")
@@ -543,8 +563,7 @@ def main() -> int:
         if not samples or not isinstance(samples, list):
             continue
 
-        # Filter out obvious non-experiment JSONs inside results/ (e.g. metric-only JSONs)
-        # We require at least one sample with the expected answer fields.
+        # Require at least one sample with the expected answer fields.
         if not any(isinstance(s, dict) and ("generated_answer" in s or "reference_answer" in s) for s in samples[:5]):
             continue
 
@@ -552,6 +571,9 @@ def main() -> int:
 
         # Normalize metadata columns (only those requested; extra metadata is ignored for grouping)
         meta_row = {k: metadata.get(k) for k in DEFAULT_METADATA_COLUMNS}
+        # Ensure a timestamp is always present so multiple runs don't get merged.
+        if not meta_row.get("timestamp"):
+            meta_row["timestamp"] = _iso_mtime(fp)
 
         for s in samples:
             if not isinstance(s, dict):
