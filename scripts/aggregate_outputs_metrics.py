@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import math
 import re
 import sys
@@ -40,6 +41,10 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 
+
+# Silence extremely verbose per-sample logs from the shared Evaluator.
+# (Users can still enable verbosity via --verbose.)
+logging.getLogger("src.evaluation.evaluator").setLevel(logging.WARNING)
 
 # Ensure repo root is importable when running as a script
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -246,6 +251,9 @@ def _extract_retrieved_doc_pages(retrieved_chunks: Sequence[Dict[str, Any]], k: 
     docs: List[str] = []
     pages: List[Tuple[str, str]] = []
     for chunk in list(retrieved_chunks)[:k]:
+        if not isinstance(chunk, dict):
+            # Some outputs store retrieved chunks as plain strings (no metadata).
+            continue
         meta = chunk.get("metadata") or {}
         doc = meta.get("doc_name") or meta.get("source") or meta.get("document")
         page = meta.get("page") or meta.get("page_number")
@@ -308,11 +316,20 @@ def compute_per_sample_metrics(
 
     # Retrieval: chunk text similarity vs evidence/reference (take max across retrieved @k)
     gold_evidence_text = _extract_gold_evidence_text(sample)
-    chunk_texts_k = [
-        str(c.get("text") or c.get("page_content") or "").strip()
-        for c in list(retrieved)[:k]
-        if (c.get("text") or c.get("page_content"))
-    ]
+    chunk_texts_k: List[str] = []
+    for c in list(retrieved)[:k]:
+        # Support both schemas:
+        # - dict: {"text": "...", "metadata": {...}}
+        # - str:  "..."
+        if isinstance(c, str):
+            t = c.strip()
+            if t:
+                chunk_texts_k.append(t)
+            continue
+        if isinstance(c, dict):
+            t = str(c.get("text") or c.get("page_content") or "").strip()
+            if t:
+                chunk_texts_k.append(t)
 
     bleu4_evi: List[float] = []
     rougeL_evi: List[float] = []
@@ -528,6 +545,11 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--skip-bertscore", action="store_true", help="Skip BERTScore (faster/lighter).")
     p.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging (including per-sample metric logs).",
+    )
+    p.add_argument(
         "--output-dir",
         type=str,
         default="results/metrics_aggregated",
@@ -538,6 +560,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    if args.verbose:
+        logging.getLogger("src.evaluation.evaluator").setLevel(logging.INFO)
     root = Path(args.root).resolve()
     dataset_path = (root / args.dataset).resolve() if not Path(args.dataset).is_absolute() else Path(args.dataset)
     out_dir = (root / args.output_dir).resolve() if not Path(args.output_dir).is_absolute() else Path(args.output_dir)
