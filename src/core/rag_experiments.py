@@ -4,7 +4,7 @@ Uses LangChain, Chroma, and HuggingFace models (Llama 3.2 3B, Qwen 2.5 7B)
 Supports multiple experiment types: closed-book, single vector store, 
 shared vector store, and open-book (evidence).
 
-MODIFIED: Added support for BGE-M3, FinanceMTEB, and Expanded Shared experiments.
+MODIFIED: Added support for BGE-M3, FinanceMTEB, Expanded Shared, and Hybrid Sweep experiments.
 """
 
 from __future__ import annotations
@@ -44,7 +44,8 @@ from src.experiments.random_single_store import run_random_single_store as _run_
 from src.experiments.rag_open_book import run_open_book as _run_open_book
 from src.experiments.rag_expanded_shared import run_expanded_shared as _run_expanded_shared
 from src.experiments.rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
-from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search
+# --- MODIFIED IMPORT: Added run_hybrid_rrf_sweep ---
+from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search, run_hybrid_rrf_sweep as _run_hybrid_sweep
 from src.experiments.splade import run_splade as _run_splade
 from src.experiments.reranking import run_reranking as _run_reranking  
 
@@ -103,6 +104,7 @@ class RAGExperiment(
     HYDE_SHARED = "hyde_shared"
     MULTI_HYDE_SHARED = "multi_hyde_shared"
     HYBRID = "hybrid"
+    HYBRID_SWEEP = "hybrid_sweep" # <--- ADDED
     SPLADE = "splade"
     RERANKING = "reranking"  
     
@@ -322,7 +324,7 @@ class RAGExperiment(
 
     
     def _initialize_components(self):
-        """Initialize LangChain embeddings and text splitter"""
+        """Initialize LangChain components"""
         self.logger.info("\nInitializing LangChain components...")
         
         if self.experiment_type not in [self.BM25, self.SPLADE]: 
@@ -340,7 +342,7 @@ class RAGExperiment(
         else:
             self.logger.info(f"✓ Embeddings skipped for {self.experiment_type}")
 
-        # Initialize text splitter using LangChain
+        # Initialize text splitter
         self.text_splitter, self.child_splitter = get_splitters(self)
         
         # Logging
@@ -362,7 +364,7 @@ class RAGExperiment(
         self.logger.info(f"✓ Text splitter initialized (strategy={self.chunking_strategy}, unit={self.chunking_unit}, size={self.chunk_size})")
 
     def _build_embeddings(self):
-        """Create FinanceBench-style embeddings using HuggingFace or OpenAI models."""
+        """Create FinanceBench-style embeddings."""
         if self._is_openai_embedding_model(self.embedding_model):
             return self._build_openai_embeddings()
         return self._build_hf_embeddings()
@@ -388,22 +390,15 @@ class RAGExperiment(
         )
 
     def _build_hf_embeddings(self):
-        """
-        Build HuggingFace embeddings.
-        Updated to support aliases for BGE-M3 and FinanceMTEB/FinE5.
-        """
-        # Resolve alias if present (e.g., 'bge-m3' -> 'BAAI/bge-m3')
+        """Build HuggingFace embeddings."""
         resolved_name = self.EMBEDDING_ALIASES.get(self.embedding_model.lower(), self.embedding_model)
-        
         self.logger.info(f"Loading HuggingFace embeddings: {resolved_name} (Requested: {self.embedding_model})")
         
-        # Default kwargs
         model_kwargs = {
             'device': self.device, 
-            'trust_remote_code': True # Required for some newer models like FinE5/Mistral
+            'trust_remote_code': True 
         }
         
-        # Specific optimizations or warnings
         if "fine5" in resolved_name.lower() or "mistral" in resolved_name.lower():
             self.logger.info("Note: FinE5/Mistral embeddings are large (7B). Ensure you have sufficient VRAM.")
         
@@ -414,7 +409,7 @@ class RAGExperiment(
         )
     
     def _initialize_llm(self):
-        """Initialize HuggingFace LLM for generation"""
+        """Initialize LLM for generation"""
         if self.use_api:
             if self.api_client is not None:
                 return
@@ -442,7 +437,7 @@ class RAGExperiment(
                 raise
 
         if self.llm_pipeline is not None:
-            return  # Already initialized
+            return 
         
         self.logger.info(f"\nInitializing LLM: {self.llm_model_name}")
         self.logger.info(f"  Device: {self.device}")
@@ -576,15 +571,22 @@ class RAGExperiment(
             results = _run_multi_hyde_shared(self, data)
         elif self.experiment_type == self.HYBRID:
             results = self.run_hybrid_search(data)
+        elif self.experiment_type == self.HYBRID_SWEEP: # <--- ADDED SWEEP CALL
+            # Note: Sweep returns a dictionary of results, not a list.
+            results = _run_hybrid_sweep(self, data)
         elif self.experiment_type == self.SPLADE:
             results = self.run_splade(data)
-        elif self.experiment_type == self.RERANKING:  # <--- ADD THIS BLOCK
+        elif self.experiment_type == self.RERANKING:  
             results = _run_reranking(self, data)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
         self.results = results
-        self._compute_aggregate_stats()
+        
+        # If running a sweep, skip aggregate stats calculation as structure differs
+        if self.experiment_type != self.HYBRID_SWEEP:
+            self._compute_aggregate_stats()
+            
         output_file = self._save_results()
         
         self.logger.info("\n" + "=" * 80)
@@ -592,8 +594,11 @@ class RAGExperiment(
         self.logger.info("=" * 80)
         self._print_component_overview(stage="final")
         
-        if self.eval_type:
+        # Skip automatic evaluation for sweeps to avoid type errors
+        if self.eval_type and self.experiment_type != self.HYBRID_SWEEP:
             self.run_evaluation(output_file)
+        elif self.experiment_type == self.HYBRID_SWEEP:
+            self.logger.info("Note: Sweep results saved. Run custom evaluation script on the output file.")
 
     def _unload_model(self):
         """Unload generator model to free memory."""
@@ -761,8 +766,8 @@ def main():
     parser.add_argument(
         "-e",
         "--experiment",
-        # --- MODIFIED CHOICES ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "splade", "reranking"],
+        # --- MODIFIED CHOICES: Added hybrid_sweep ---
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking"],
         default="single",
         help="Experiment type.",
     )
@@ -930,6 +935,14 @@ def main():
         default=None,
         help="Pipeline version string for cache busting."
     )
+   
+    parser.add_argument(
+    "--sparse-model",
+    type=str,
+    default="bm25",
+    choices=["bm25", "splade"],
+    help="Sparse retrieval model to use for hybrid search (default: bm25)."
+)
 
     args = parser.parse_args()
 
@@ -945,6 +958,7 @@ def main():
         "hyde_shared": RAGExperiment.HYDE_SHARED,
         "multi_hyde_shared": RAGExperiment.MULTI_HYDE_SHARED,
         "hybrid": RAGExperiment.HYBRID,
+        "hybrid_sweep": RAGExperiment.HYBRID_SWEEP, # <--- ADDED MAPPING
         "splade": RAGExperiment.SPLADE,
         "reranking": RAGExperiment.RERANKING,  
     }
@@ -1004,6 +1018,8 @@ def main():
             patch_size=args.patch_size,
             pipeline_version=args.pipeline_version
         )
+
+        experiment.hybrid_sparse_model = args.sparse_model
 
         experiment.run_experiment(num_samples=args.num_samples)
 

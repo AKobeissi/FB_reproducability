@@ -351,12 +351,20 @@ def compute_per_sample_metrics(
     chunk_bleu4_max_vs_reference = max(bleu4_ref) if bleu4_ref else None
     chunk_rougeL_max_vs_reference = max(rougeL_ref) if rougeL_ref else None
 
+    # --- NDCG FIX: Assume 1 perfect match exists in the corpus for IDCG ---
+    ideal_rels = [1.0]
+
     # Retrieval ranking metrics vs reference answer: MRR@k, NDCG@k
     mrr = None
     ndcg = None
     if ref_answer and chunk_texts_k:
         rels = [_token_overlap_ratio(t, ref_answer) for t in chunk_texts_k]
-        ndcg = float(_ndcg(rels))
+        
+        # Calculate NDCG using the fixed ideal_rels
+        dcg_val = _dcg(rels)
+        idcg_val = _dcg(ideal_rels)
+        ndcg = float(dcg_val / idcg_val) if idcg_val > 0 else 0.0
+
         first_rank: Optional[int] = None
         for i, rel in enumerate(rels, start=1):
             if rel >= overlap_threshold:
@@ -369,7 +377,12 @@ def compute_per_sample_metrics(
     ndcg_evidence = None
     if gold_evidence_text and chunk_texts_k:
         rels_evi = [_token_overlap_ratio(t, gold_evidence_text) for t in chunk_texts_k]
-        ndcg_evidence = float(_ndcg(rels_evi))
+        
+        # Calculate NDCG using the fixed ideal_rels
+        dcg_val = _dcg(rels_evi)
+        idcg_val = _dcg(ideal_rels)
+        ndcg_evidence = float(dcg_val / idcg_val) if idcg_val > 0 else 0.0
+
         first_rank_evi: Optional[int] = None
         for i, rel in enumerate(rels_evi, start=1):
             if rel >= overlap_threshold:
@@ -416,7 +429,6 @@ def compute_per_sample_metrics(
         generation_bertscore_f1=gen_bertscore_f1,
         generation_numeric_match=gen_numeric,
     )
-
 
 def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
