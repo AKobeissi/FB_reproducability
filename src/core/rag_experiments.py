@@ -48,6 +48,7 @@ from src.experiments.rag_hyde_shared import run_hyde_shared as _run_hyde_shared,
 from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search, run_hybrid_rrf_sweep as _run_hybrid_sweep
 from src.experiments.splade import run_splade as _run_splade
 from src.experiments.reranking import run_reranking as _run_reranking  
+from src.experiments.rag_oracle import run_oracle_document, run_oracle_page as _run_oracle_document, _run_oracle_page
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -107,7 +108,9 @@ class RAGExperiment(
     HYBRID_SWEEP = "hybrid_sweep" # <--- ADDED
     SPLADE = "splade"
     RERANKING = "reranking"  
-    
+    ORACLE_DOC = "oracle_doc"
+    ORACLE_PAGE = "oracle_page"
+
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -524,7 +527,12 @@ class RAGExperiment(
     def run_splade(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_splade(self, data)
     
-  
+    def run_oracle_document(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_oracle_document(self, data)
+
+    def run_oracle_page(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_oracle_page(self, data)
+
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
         Run the configured experiment
@@ -567,6 +575,10 @@ class RAGExperiment(
             results = _run_expanded_shared(self, data)
         elif self.experiment_type == self.HYDE_SHARED:
             results = _run_hyde_shared(self, data)
+        elif self.experiment_type == self.ORACLE_DOC:  # <--- NEW
+            results = self.run_oracle_document(data)
+        elif self.experiment_type == self.ORACLE_PAGE: # <--- NEW
+            results = self.run_oracle_page(data)
         elif self.experiment_type == self.MULTI_HYDE_SHARED:
             results = _run_multi_hyde_shared(self, data)
         elif self.experiment_type == self.HYBRID:
@@ -767,7 +779,7 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page"],
         default="single",
         help="Experiment type.",
     )
@@ -961,6 +973,8 @@ def main():
         "hybrid_sweep": RAGExperiment.HYBRID_SWEEP, # <--- ADDED MAPPING
         "splade": RAGExperiment.SPLADE,
         "reranking": RAGExperiment.RERANKING,  
+        "oracle_doc": RAGExperiment.ORACLE_DOC,    # <--- NEW
+        "oracle_page": RAGExperiment.ORACLE_PAGE,  # <--- NEW
     }
     
     # Simple error handling for bad keys
