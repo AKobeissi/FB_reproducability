@@ -45,10 +45,16 @@ from src.experiments.rag_open_book import run_open_book as _run_open_book
 from src.experiments.rag_expanded_shared import run_expanded_shared as _run_expanded_shared
 from src.experiments.rag_hyde_shared import run_hyde_shared as _run_hyde_shared, run_multi_hyde_shared as _run_multi_hyde_shared
 # --- MODIFIED IMPORT: Added run_hybrid_rrf_sweep ---
-from src.experiments.hybrid_retrieval import run_hybrid_search as _run_hybrid_search, run_hybrid_rrf_sweep as _run_hybrid_sweep
+from src.experiments.hybrid_retrieval import (
+    run_hybrid_search as _run_hybrid_search,        # Imports 'run_hybrid_search', renames to '_run_hybrid_search'
+    run_hybrid_rrf_sweep as _run_hybrid_sweep       # Imports 'run_hybrid_rrf_sweep', renames to '_run_hybrid_sweep'
+)
 from src.experiments.splade import run_splade as _run_splade
 from src.experiments.reranking import run_reranking as _run_reranking  
-from src.experiments.rag_oracle import run_oracle_document, run_oracle_page as _run_oracle_document, _run_oracle_page
+from src.experiments.rag_oracle import (
+    run_oracle_document as _run_oracle_document,
+    run_oracle_page as _run_oracle_page
+)
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):

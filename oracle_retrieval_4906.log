@@ -1,0 +1,2456 @@
+Working in scratch: /Tmp/kobeissa/4906
+Copying repository content from /u/kobeissa/Documents/thesis/experiments/FB_reproducability to scratch...
+sending incremental file list
+./
+.env
+.gitignore
+EVALUATION.md
+LICENSE
+README.md
+core
+difficulty_distributions.png
+difficulty_regime_summary.csv
+requirements.txt
+runner.py
+analysis/
+analysis/query_difficulty/
+analysis/query_difficulty/ALL__diagnostics.csv
+analysis/query_difficulty/ALL__regime_summary.csv
+analysis/query_difficulty/analysis.py
+analysis/query_difficulty/difficulty_signals.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__bm25_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__diagnostics.json
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__lexical_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__merged_samples.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__regime_summary.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__semantic_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__bm25_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__diagnostics.json
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__lexical_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__merged_samples.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__regime_summary.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__semantic_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__bm25_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__diagnostics.json
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__lexical_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__merged_samples.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__regime_summary.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__semantic_vs_hit.png
+data/
+data/financebench_document_information.jsonl
+data/financebench_open_source.jsonl
+notebooks/
+notebooks/playground.ipynb
+notebooks/tensor_logic.ipynb
+pdfs/
+pdfs/3M_2015_10K.pdf
+pdfs/3M_2016_10K.pdf
+pdfs/3M_2017_10K.pdf
+pdfs/3M_2018_10K.pdf
+pdfs/3M_2019_10K.pdf
+pdfs/3M_2020_10K.pdf
+pdfs/3M_2021_10K.pdf
+pdfs/3M_2022_10K.pdf
+pdfs/3M_2023Q2_10Q.pdf
+pdfs/ACTIVISIONBLIZZARD_2015_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2016_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2017_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2018_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2019_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2020_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2021_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2022_10K.pdf
+pdfs/ACTIVSIONBLIZZARD_2023Q2_10Q.pdf
+pdfs/ADOBE_2015_10K.pdf
+pdfs/ADOBE_2016_10K.pdf
+pdfs/ADOBE_2017_10K.pdf
+pdfs/ADOBE_2018_10K.pdf
+pdfs/ADOBE_2019_10K.pdf
+pdfs/ADOBE_2020_10K.pdf
+pdfs/ADOBE_2021_10K.pdf
+pdfs/ADOBE_2022Q2_10Q.pdf
+pdfs/ADOBE_2022_10K.pdf
+pdfs/AES_2015_10K.pdf
+pdfs/AES_2016_10K.pdf
+pdfs/AES_2017_10K.pdf
+pdfs/AES_2018_10K.pdf
+pdfs/AES_2019_10K.pdf
+pdfs/AES_2020_10K.pdf
+pdfs/AES_2021_10K.pdf
+pdfs/AES_2022_10K.pdf
+pdfs/AMAZON_2015_10K.pdf
+pdfs/AMAZON_2016_10K.pdf
+pdfs/AMAZON_2017_10K.pdf
+pdfs/AMAZON_2018_10K.pdf
+pdfs/AMAZON_2019_10K.pdf
+pdfs/AMAZON_2020_10K.pdf
+pdfs/AMAZON_2021_10K.pdf
+pdfs/AMAZON_2022_10K.pdf
+pdfs/AMCOR_2019_10K.pdf
+pdfs/AMCOR_2020_10K.pdf
+pdfs/AMCOR_2021_10K.pdf
+pdfs/AMCOR_2022_10K.pdf
+pdfs/AMCOR_2022_8K_2022-04-26.pdf
+pdfs/AMCOR_2022_8K_2022-07-01.pdf
+pdfs/AMCOR_2022_8K_dated-2022-04-26.pdf
+pdfs/AMCOR_2022_8K_dated-2022-07-01.pdf
+pdfs/AMCOR_2023Q2_10Q.pdf
+pdfs/AMCOR_2023Q4_EARNINGS.pdf
+pdfs/AMCOR_2023_10K.pdf
+pdfs/AMD_2015_10K.pdf
+pdfs/AMD_2016_10K.pdf
+pdfs/AMD_2017_10K.pdf
+pdfs/AMD_2018_10K.pdf
+pdfs/AMD_2019_10K.pdf
+pdfs/AMD_2020_10K.pdf
+pdfs/AMD_2021_10K.pdf
+pdfs/AMD_2022_10K.pdf
+pdfs/AMD_2022_annualreport.pdf
+pdfs/AMERICANEXPRESS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2015_10K.pdf
+pdfs/AMERICANWATERWORKS_2016_10K.pdf
+pdfs/AMERICANWATERWORKS_2017_10K.pdf
+pdfs/AMERICANWATERWORKS_2018_10K.pdf
+pdfs/AMERICANWATERWORKS_2019_10K.pdf
+pdfs/AMERICANWATERWORKS_2020_10K.pdf
+pdfs/AMERICANWATERWORKS_2021_10K.pdf
+pdfs/AMERICANWATERWORKS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2023Q2_10Q.pdf
+pdfs/APPLE_2015_10K.pdf
+pdfs/APPLE_2016_10K.pdf
+pdfs/APPLE_2017_10K.pdf
+pdfs/APPLE_2018_10K.pdf
+pdfs/APPLE_2019_10K.pdf
+pdfs/APPLE_2020_10K.pdf
+pdfs/APPLE_2021_10K.pdf
+pdfs/APPLE_2022_10K.pdf
+pdfs/APPLE_2023Q3_10Q.pdf
+pdfs/BESTBUY_2015_10K.pdf
+pdfs/BESTBUY_2016_10K.pdf
+pdfs/BESTBUY_2017_10K.pdf
+pdfs/BESTBUY_2018_10K.pdf
+pdfs/BESTBUY_2019_10K.pdf
+pdfs/BESTBUY_2020_10K.pdf
+pdfs/BESTBUY_2021_10K.pdf
+pdfs/BESTBUY_2022_10K.pdf
+pdfs/BESTBUY_2023Q4_EARNINGS.pdf
+pdfs/BESTBUY_2023_10K.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-12.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-24.pdf
+pdfs/BESTBUY_2024Q2_10Q.pdf
+pdfs/BESTBUY_2024Q2_EARNINGS.pdf
+pdfs/BLOCK_2015_10K.pdf
+pdfs/BLOCK_2016_10K.pdf
+pdfs/BLOCK_2017_10K.pdf
+pdfs/BLOCK_2018_10K.pdf
+pdfs/BLOCK_2019_10K.pdf
+pdfs/BLOCK_2020_10K.pdf
+pdfs/BLOCK_2021_10K.pdf
+pdfs/BLOCK_2022_10K.pdf
+pdfs/BLOCK_2022_8K_dated-2022-01-28.pdf
+pdfs/BOEING_2015_10K.pdf
+pdfs/BOEING_2016_10K.pdf
+pdfs/BOEING_2017_10K.pdf
+pdfs/BOEING_2018_10K.pdf
+pdfs/BOEING_2019_10K.pdf
+pdfs/BOEING_2020_10K.pdf
+pdfs/BOEING_2021_10K.pdf
+pdfs/BOEING_2022_10K.pdf
+pdfs/BOSTONPROPERTIES_2015_10K.pdf
+pdfs/COCACOLA_2015_10K.pdf
+pdfs/COCACOLA_2016_10K.pdf
+pdfs/COCACOLA_2017_10K.pdf
+pdfs/COCACOLA_2018_10K.pdf
+pdfs/COCACOLA_2019_10K.pdf
+pdfs/COCACOLA_2020_10K.pdf
+pdfs/COCACOLA_2021_10K.pdf
+pdfs/COCACOLA_2022_10K.pdf
+pdfs/CORNING_2015_10K.pdf
+pdfs/CORNING_2016_10K.pdf
+pdfs/CORNING_2017_10K.pdf
+pdfs/CORNING_2018_10K.pdf
+pdfs/CORNING_2019_10K.pdf
+pdfs/CORNING_2020_10K.pdf
+pdfs/CORNING_2021_10K.pdf
+pdfs/CORNING_2022_10K.pdf
+pdfs/CORNING_2023Q2_10Q.pdf
+pdfs/COSTCO_2015_10K.pdf
+pdfs/COSTCO_2016_10K.pdf
+pdfs/COSTCO_2017_10K.pdf
+pdfs/COSTCO_2018_10K.pdf
+pdfs/COSTCO_2019_10K.pdf
+pdfs/COSTCO_2020_10K.pdf
+pdfs/COSTCO_2021_10K.pdf
+pdfs/COSTCO_2022_10K.pdf
+pdfs/COSTCO_2023Q1_EARNINGS.pdf
+pdfs/COSTCO_2023Q3_EARNINGS.pdf
+pdfs/COSTCO_2023_8K_dated-2023-01-19.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-09.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-16.pdf
+pdfs/CVSHEALTH_2015_10K.pdf
+pdfs/CVSHEALTH_2016_10K.pdf
+pdfs/CVSHEALTH_2017_10K.pdf
+pdfs/CVSHEALTH_2018_10K.pdf
+pdfs/CVSHEALTH_2019_10K.pdf
+pdfs/CVSHEALTH_2020_10K.pdf
+pdfs/CVSHEALTH_2021_10K.pdf
+pdfs/CVSHEALTH_2022_10K.pdf
+pdfs/EBAY_2015_10K.pdf
+pdfs/EBAY_2016_10K.pdf
+pdfs/EBAY_2017_10K.pdf
+pdfs/EBAY_2018_10K.pdf
+pdfs/EBAY_2019_10K.pdf
+pdfs/EBAY_2020_10K.pdf
+pdfs/EBAY_2021_10K.pdf
+pdfs/EBAY_2022_10K.pdf
+pdfs/EBAY_2023Q1_8K.pdf
+pdfs/EBAY_2023Q1_EARNINGS.pdf
+pdfs/EBAY_2023Q2_10Q.pdf
+pdfs/EBAY_2023Q2_8K.pdf
+pdfs/EBAY_2023Q2_EARNINGS.pdf
+pdfs/FEDEX_2023_10K.pdf
+pdfs/FEDEX_2023_annualreport.pdf
+pdfs/FOOTLOCKER_2022_10K.pdf
+pdfs/FOOTLOCKER_2022_10Q.pdf
+pdfs/FOOTLOCKER_2022_8K_dated-2022-05-20.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2022-08-19.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2023-02-21.pdf
+pdfs/FOOTLOCKER_2023Q3_10Q.pdf
+pdfs/FOOTLOCKER_2023_10K.pdf
+pdfs/FOOTLOCKER_2023_annualreport.pdf
+pdfs/GENERALMILLS_2015_10K.pdf
+pdfs/GENERALMILLS_2016_10K.pdf
+pdfs/GENERALMILLS_2017_10K.pdf
+pdfs/GENERALMILLS_2018_10K.pdf
+pdfs/GENERALMILLS_2019_10K.pdf
+pdfs/GENERALMILLS_2020_10K.pdf
+pdfs/GENERALMILLS_2021_10K.pdf
+pdfs/GENERALMILLS_2022_10K.pdf
+pdfs/GENERALMILLS_2023_10K.pdf
+pdfs/GENERALMILLS_2023_annualreport.pdf
+pdfs/INTEL_2015_10K.pdf
+pdfs/INTEL_2016_10K.pdf
+pdfs/INTEL_2017_10K.pdf
+pdfs/INTEL_2018_10K.pdf
+pdfs/INTEL_2019_10K.pdf
+pdfs/INTEL_2020_10K.pdf
+pdfs/INTEL_2021_10K.pdf
+pdfs/INTEL_2022Q4_EARNINGS.pdf
+pdfs/INTEL_2022_10K.pdf
+pdfs/INTEL_2023Q1_EARNINGS.pdf
+pdfs/INTEL_2023_8K_dated-2022-11-22.pdf
+pdfs/INTEL_2023_8K_dated-2023-02-10.pdf
+pdfs/INTEL_2023_8K_dated-2023-08-16.pdf
+pdfs/JOHNSON_JOHNSON_2015_10K.pdf
+pdfs/JOHNSON_JOHNSON_2016_10K.pdf
+pdfs/JOHNSON_JOHNSON_2017_10K.pdf
+pdfs/JOHNSON_JOHNSON_2018_10K.pdf
+pdfs/JOHNSON_JOHNSON_2019_10K.pdf
+pdfs/JOHNSON_JOHNSON_2020_10K.pdf
+pdfs/JOHNSON_JOHNSON_2021_10K.pdf
+pdfs/JOHNSON_JOHNSON_2022Q4_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2022_10K.pdf
+pdfs/JOHNSON_JOHNSON_2023Q1_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023Q2_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-23.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-30.pdf
+pdfs/JPMORGAN_2021Q1_10Q.pdf
+pdfs/JPMORGAN_2021Q2_10Q.pdf
+pdfs/JPMORGAN_2021Q3_10Q.pdf
+pdfs/JPMORGAN_2021_10K.pdf
+pdfs/JPMORGAN_2022Q1_10Q.pdf
+pdfs/JPMORGAN_2022Q2_10Q.pdf
+pdfs/JPMORGAN_2022Q3_10Q.pdf
+pdfs/JPMORGAN_2022_10K.pdf
+pdfs/JPMORGAN_2023Q1_10Q.pdf
+pdfs/JPMORGAN_2023Q2_10Q.pdf
+pdfs/KRAFTHEINZ_2015_10K.pdf
+pdfs/KRAFTHEINZ_2016_10K.pdf
+pdfs/KRAFTHEINZ_2017_10K.pdf
+pdfs/KRAFTHEINZ_2018_10K.pdf
+pdfs/KRAFTHEINZ_2019_10K.pdf
+pdfs/KRAFTHEINZ_2020_10K.pdf
+pdfs/KRAFTHEINZ_2021_10K.pdf
+pdfs/KRAFTHEINZ_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2015_10K.pdf
+pdfs/LOCKHEEDMARTIN_2016_10K.pdf
+pdfs/LOCKHEEDMARTIN_2017_10K.pdf
+pdfs/LOCKHEEDMARTIN_2018_10K.pdf
+pdfs/LOCKHEEDMARTIN_2019_10K.pdf
+pdfs/LOCKHEEDMARTIN_2020_10K.pdf
+pdfs/LOCKHEEDMARTIN_2021_10K.pdf
+pdfs/LOCKHEEDMARTIN_2022Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2023Q1_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-05-25.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-08-24.pdf
+pdfs/MCDONALDS_2022Q4_EARNINGS.pdf
+pdfs/MCDONALDS_2022_10K.pdf
+pdfs/MCDONALDS_2023Q1_EARNINGS.pdf
+pdfs/MCDONALDS_2023Q2_EARNINGS.pdf
+pdfs/MCDONALDS_8K_dated-2023-01-06.pdf
+pdfs/MCDONALDS_8K_dated-2023-02-13.pdf
+pdfs/MCDONALDS_8K_dated-2023-08-14.pdf
+pdfs/MGMRESORTS_2015_10K.pdf
+pdfs/MGMRESORTS_2016_10K.pdf
+pdfs/MGMRESORTS_2017_10K.pdf
+pdfs/MGMRESORTS_2018_10K.pdf
+pdfs/MGMRESORTS_2019_10K.pdf
+pdfs/MGMRESORTS_2020_10K.pdf
+pdfs/MGMRESORTS_2021_10K.pdf
+pdfs/MGMRESORTS_2022Q4_EARNINGS.pdf
+pdfs/MGMRESORTS_2022_10K.pdf
+pdfs/MGMRESORTS_2023Q2_10Q.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-03-01.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-09-12.pdf
+pdfs/MICROSOFT_2015_10K.pdf
+pdfs/MICROSOFT_2016_10K.pdf
+pdfs/MICROSOFT_2017_10K.pdf
+pdfs/MICROSOFT_2018_10K.pdf
+pdfs/MICROSOFT_2019_10K.pdf
+pdfs/MICROSOFT_2020_10K.pdf
+pdfs/MICROSOFT_2021_10K.pdf
+pdfs/MICROSOFT_2022_10K.pdf
+pdfs/MICROSOFT_2023_10K.pdf
+pdfs/NETFLIX_2015_10K.pdf
+pdfs/NETFLIX_2016_10K.pdf
+pdfs/NETFLIX_2017_10K.pdf
+pdfs/NETFLIX_2018_10K.pdf
+pdfs/NETFLIX_2019_10K.pdf
+pdfs/NETFLIX_2020_10K.pdf
+pdfs/NETFLIX_2021_10K.pdf
+pdfs/NETFLIX_2022_10K.pdf
+pdfs/NETFLIX_2023Q2_10Q.pdf
+pdfs/NIKE_2015_10K.pdf
+pdfs/NIKE_2016_10K.pdf
+pdfs/NIKE_2017_10K.pdf
+pdfs/NIKE_2018_10K.pdf
+pdfs/NIKE_2019_10K.pdf
+pdfs/NIKE_2020_10K.pdf
+pdfs/NIKE_2021_10K.pdf
+pdfs/NIKE_2022_10K.pdf
+pdfs/NIKE_2023_10K.pdf
+pdfs/ORACLE_2015_10K.pdf
+pdfs/ORACLE_2016_10K.pdf
+pdfs/ORACLE_2017_10K.pdf
+pdfs/ORACLE_2018_10K.pdf
+pdfs/ORACLE_2019_10K.pdf
+pdfs/ORACLE_2020_10K.pdf
+pdfs/ORACLE_2021_10K.pdf
+pdfs/ORACLE_2022_10K.pdf
+pdfs/ORACLE_2023_10K.pdf
+pdfs/PAYPAL_2022_10K.pdf
+pdfs/PAYPAL_2023Q2_10Q.pdf
+pdfs/PEPSICO_2015_10K.pdf
+pdfs/PEPSICO_2016_10K.pdf
+pdfs/PEPSICO_2017_10K.pdf
+pdfs/PEPSICO_2018_10K.pdf
+pdfs/PEPSICO_2019_10K.pdf
+pdfs/PEPSICO_2020_10K.pdf
+pdfs/PEPSICO_2021_10K.pdf
+pdfs/PEPSICO_2022Q4_EARNINGS.pdf
+pdfs/PEPSICO_2022_10K.pdf
+pdfs/PEPSICO_2023Q1_EARNINGS.pdf
+pdfs/PEPSICO_2023Q2_EARNINGS.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-05.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-30.pdf
+pdfs/PFIZER_2015_10K.pdf
+pdfs/PFIZER_2016_10K.pdf
+pdfs/PFIZER_2017_10K.pdf
+pdfs/PFIZER_2018_10K.pdf
+pdfs/PFIZER_2019_10K.pdf
+pdfs/PFIZER_2020_10K.pdf
+pdfs/PFIZER_2021_10K.pdf
+pdfs/PFIZER_2022_10K.pdf
+pdfs/PFIZER_2023Q2_EARNINGS.pdf
+pdfs/PG_E_2015_10K.pdf
+pdfs/PG_E_2016_10K.pdf
+pdfs/PG_E_2017_10K.pdf
+pdfs/PG_E_2018_10K.pdf
+pdfs/PG_E_2019_10K.pdf
+pdfs/PG_E_2020_10K.pdf
+pdfs/PG_E_2021_10K.pdf
+pdfs/PG_E_2022_10K.pdf
+pdfs/PG_E_2023Q3_10Q.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-06-01.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-07-27.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-04.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-31.pdf
+pdfs/Pfizer_2023Q2_10Q.pdf
+pdfs/SALESFORCE_2021_8K_dated-2021-07-21.pdf
+pdfs/SALESFORCE_2021_8K_dated-2023-01-04.pdf
+pdfs/SALESFORCE_2023Q3_10Q.pdf
+pdfs/SALESFORCE_2023_10K.pdf
+pdfs/SALESFORCE_2024Q1_EARNINGS.pdf
+pdfs/SALESFORCE_2024Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q4_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023_10K.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-06-07.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-09-18.pdf
+pdfs/ULTABEAUTY_2024Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2024Q2_EARNINGS.pdf
+pdfs/VERIZON_2015_10K.pdf
+pdfs/VERIZON_2016_10K.pdf
+pdfs/VERIZON_2017_10K.pdf
+pdfs/VERIZON_2018_10K.pdf
+pdfs/VERIZON_2019_10K.pdf
+pdfs/VERIZON_2020_10K.pdf
+pdfs/VERIZON_2021_10K.pdf
+pdfs/VERIZON_2022_10K.pdf
+pdfs/WALMART_2015_10K.pdf
+pdfs/WALMART_2016_10K.pdf
+pdfs/WALMART_2017_10K.pdf
+pdfs/WALMART_2018_10K.pdf
+pdfs/WALMART_2019_10K.pdf
+pdfs/WALMART_2020_10K.pdf
+pdfs/WALMART_2021_10K.pdf
+pdfs/WALMART_2022_10K.pdf
+pdfs/WALMART_2023_10K.pdf
+pdfs/WALMART_2023_annualreport.pdf
+pdfs/WALMART_2024Q1_10Q.pdf
+results/
+results/gpt-4o-2024-05-13_openai_direct_oracle.csv
+results/gpt-4o-2024-05-13_sharedStore.csv
+results/gpt-4o-2024-05-13_singleStore.csv
+results/gpt4_oracle_direct.csv
+results/big2small/
+results/big2small/20260112/
+results/big2small/20260112/big2small_20260112_155144_scored.json
+results/big2small/20260112/big2small_20260112_164052_scored.json
+results/big2small/20260112/big2small_20260112_171420_scored.json
+results/big2small/20260112/big2small_20260112_172815_scored.json
+results/big2small/20260112/big2small_20260112_181911_scored.json
+results/bm25/
+results/bm25/20260112/
+results/bm25/20260112/bm25_20260112_192701_scored.json
+results/closed_book/
+results/closed_book/20260106/
+results/closed_book/20260106/closed_book_20260106_161953_scored.json
+results/closed_book/20260106/closed_book_20260106_171608_scored.json
+results/closed_book/20260107/
+results/expanded_shared/
+results/expanded_shared/20260114/
+results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json
+results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json
+results/hybrid/
+results/hybrid/20260115/
+results/hyde_shared/
+results/hyde_shared/20260114/
+results/metrics_agg/
+results/metrics_agg/table__by_question_reasoning.csv
+results/metrics_agg/table__by_question_type.csv
+results/metrics_agg/table__overall_by_metadata.csv
+results/metrics_agg2/
+results/metrics_agg2/.~lock.table__by_question_reasoning.csv#
+results/metrics_agg2/.~lock.table__by_question_type.csv#
+results/metrics_agg2/.~lock.table__overall_by_metadata.csv#
+results/metrics_agg2/table__by_question_reasoning.csv
+results/metrics_agg2/table__by_question_type.csv
+results/metrics_agg2/table__overall_by_metadata.csv
+results/multi_hyde_shared/
+results/multi_hyde_shared/20260114/
+results/open_book/
+results/open_book/20260102/
+results/open_book/20260102/open_book_20260102_165042_scored.json
+results/open_book/20260102/open_book_20260102_173713_scored.json
+results/shared_vector/
+results/shared_vector/20251229/
+results/shared_vector/20251229/shared_vector_20251229_181122_scored.json
+results/shared_vector/20251229/shared_vector_20251229_190013_scored.json
+results/shared_vector/20260107/
+results/shared_vector/20260107/shared_vector_20260107_164341_scored.json
+results/shared_vector/20260113/
+results/single_vector/
+results/single_vector/20251229/
+results/single_vector/20251229/single_vector_20251229_162507_scored.json
+results/single_vector/20251229/single_vector_20251229_171641_scored.json
+results/splade/
+results/splade/20260115/
+results/splade/20260115/splade_20260115_144031_scored.json
+scripts/
+scripts/aggregate_output_metrics.py
+scripts/hybrid_RRF.sh
+scripts/hybrid_ret.sh
+scripts/oracle.sh
+scripts/query.sh
+scripts/rag_embeddings_exp.sh
+scripts/run_rag_experiments.sh
+src/
+src/__init__.py
+src/analysis/
+src/analysis/query_difficulty_analysis.py
+src/core/
+src/core/__init__.py
+src/core/rag_dependencies.py
+src/core/rag_experiment_mixins.py
+src/core/rag_experiments.py
+src/core/results/
+src/core/results/hybrid/
+src/core/results/hybrid/20260116/
+src/core/results/hybrid/20260116/hybrid_20260116_162648_scored.json
+src/core/results/reranking/
+src/core/results/reranking/20260115/
+src/core/results/reranking/20260115/reranking_20260115_190636_scored.json
+src/core/results/reranking/20260116/
+src/core/results/reranking/20260116/reranking_20260116_133234_scored.json
+src/core/results/shared_vector/
+src/core/results/shared_vector/20260116/
+src/core/results/shared_vector/20260119/
+src/core/results/splade/
+src/core/results/splade/20260115/
+src/core/results/splade/20260116/
+src/core/results/splade/20260116/splade_20260116_174714_scored.json
+src/core/results/splade/20260117/
+src/core/results/splade/20260117/splade_20260117_012611_scored.json
+src/evaluation/
+src/evaluation/__init__.py
+src/evaluation/evaluate_outputs.py
+src/evaluation/evaluator.py
+src/evaluation/generative_evaluator.py
+src/evaluation/posthoc_evaluator.py
+src/evaluation/retrieval_evaluator.py
+src/experiments/
+src/experiments/__init__.py
+src/experiments/hybrid_retrieval.py
+src/experiments/query_expansion.py
+src/experiments/rag_closed_book.py
+src/experiments/rag_expanded_shared.py
+src/experiments/rag_hyde_shared.py
+src/experiments/rag_open_book.py
+src/experiments/rag_oracle.py
+src/experiments/rag_shared_vector.py
+src/experiments/rag_single_vector.py
+src/experiments/random_single_store.py
+src/experiments/reranking.py
+src/experiments/splade.py
+src/ingestion/
+src/ingestion/__init__.py
+src/ingestion/chunking.py
+src/ingestion/data_loader.py
+src/ingestion/pdf_utils.py
+src/retrieval/
+src/retrieval/__init__.py
+src/retrieval/big2small.py
+src/retrieval/bm25.py
+src/retrieval/vectorstore.py
+
+sent 802,925,008 bytes  received 9,491 bytes  123,528,384.46 bytes/sec
+total size is 802,692,374  speedup is 1.00
+Activating venv from: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/venv
+--- Starting Oracle Document Experiment (Llama + Qwen) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - ================================================================================
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: ORACLE_DOC
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - ================================================================================
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - Configuration:
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Experiment Type: oracle_doc
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Device: cuda
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Chunking Unit: chars
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Chunk Overlap: 30
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Embedding Model: sentence-transformers/all-mpnet-base-v2
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4906/outputs/oracle_doc/oracle_doc/20260119
+2026-01-19 22:43:30,183 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_doc/20260119
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - ================================================================================
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-19 22:43:30,183 - RAGExperiment - INFO - Loading HuggingFace embeddings: sentence-transformers/all-mpnet-base-v2 (Requested: sentence-transformers/all-mpnet-base-v2)
+2026-01-19 22:43:30,186 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-mpnet-base-v2
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=chars, size=1024)
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-19 22:43:38,204 - RAGExperiment - INFO - ================================================================================
+2026-01-19 22:43:38,204 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-19 22:43:41,267 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 22:43:41,288 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-19 22:43:41,288 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-19 22:43:41,288 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-19 22:43:41,288 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-19 22:43:41,298 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-19 22:43:41,298 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-19 22:43:41,298 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-19 22:43:41,298 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-19 22:43:41,318 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-19 22:43:41,324 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-19 22:43:41,325 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-19 22:43:41,325 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-19 22:43:41,325 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-19 22:43:41,326 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 22:43:41,335 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-19 22:43:41,350 - RAGExperiment - INFO - Processing 150 samples
+2026-01-19 22:43:41,350 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-19 22:43:41,350 - src.experiments.rag_oracle - INFO - 
+================================================================================
+2026-01-19 22:43:41,350 - src.experiments.rag_oracle - INFO - RUNNING ORACLE EXPERIMENT: DOCUMENT
+2026-01-19 22:43:41,350 - src.experiments.rag_oracle - INFO - ================================================================================
+2026-01-19 22:43:41,350 - src.experiments.rag_oracle - INFO - Processing 84 unique documents
+2026-01-19 22:43:41,350 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2018_10K (2 samples)
+2026-01-19 22:43:42,646 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:43:42,646 - RAGExperiment - INFO -   Total chunks: 706
+2026-01-19 22:43:42,646 - RAGExperiment - INFO -   Avg chunk size: 864.53 chars
+2026-01-19 22:43:42,646 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-19 22:43:42,646 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:43:42,657 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 22:43:46,639 - RAGExperiment - INFO - 
+Initializing LLM: Qwen/Qwen2.5-7B-Instruct
+2026-01-19 22:43:46,639 - RAGExperiment - INFO -   Device: cuda
+2026-01-19 22:43:46,639 - RAGExperiment - INFO -   8-bit: True
+2026-01-19 22:43:46,639 - RAGExperiment - INFO - Loading tokenizer...
+2026-01-19 22:43:47,526 - RAGExperiment - INFO - Loading model (this may take a moment)...
+2026-01-19 22:43:47,527 - RAGExperiment - INFO -   Using 8-bit quantization for memory efficiency
+`torch_dtype` is deprecated! Use `dtype` instead!
+The `load_in_4bit` and `load_in_8bit` arguments are deprecated and will be removed in the future versions. Please, pass a `BitsAndBytesConfig` object in `quantization_config` argument instead.
+2026-01-19 22:43:48,189 - accelerate.utils.modeling - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+
+================================================================================
+Running experiment: oracle_doc | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : oracle_doc
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=chars, chunk_size=1024, chunk_overlap=30)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=sentence-transformers/all-mpnet-base-v2, resolved_model=sentence-transformers/all-mpnet-base-v2)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=30
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:20<01:00, 20.01s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:40<00:40, 20.00s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:59<00:19, 19.98s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:17<00:00, 19.13s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:17<00:00, 19.44s/it]
+Device set to use cuda:0
+2026-01-19 22:45:06,718 - RAGExperiment - INFO - ✓ LLM initialized successfully
+/part/01/Tmp/kobeissa/4906/src/core/rag_experiments.py:486: LangChainDeprecationWarning: The class `HuggingFacePipeline` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-huggingface package and should be used instead. To use it run `pip install -U `langchain-huggingface` and import as `from `langchain_huggingface import HuggingFacePipeline``.
+  self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+2026-01-19 22:45:06,718 - RAGExperiment - INFO - ✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA
+2026-01-19 22:45:35,728 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2022_10K (3 samples)
+2026-01-19 22:45:36,221 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:45:36,221 - RAGExperiment - INFO -   Total chunks: 1082
+2026-01-19 22:45:36,221 - RAGExperiment - INFO -   Avg chunk size: 858.68 chars
+2026-01-19 22:45:36,221 - RAGExperiment - INFO -   Min chunk size: 34 chars
+2026-01-19 22:45:36,221 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:45:36,221 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-19 22:46:45,104 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2023Q2_10Q (3 samples)
+2026-01-19 22:46:45,561 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:46:45,561 - RAGExperiment - INFO -   Total chunks: 411
+2026-01-19 22:46:45,561 - RAGExperiment - INFO -   Avg chunk size: 862.36 chars
+2026-01-19 22:46:45,561 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 22:46:45,561 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:46:45,577 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-19 22:47:52,501 - src.experiments.rag_oracle - INFO - 
+Processing Document: ACTIVISIONBLIZZARD_2019_10K (2 samples)
+2026-01-19 22:47:52,774 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:47:52,775 - RAGExperiment - INFO -   Total chunks: 752
+2026-01-19 22:47:52,775 - RAGExperiment - INFO -   Avg chunk size: 842.75 chars
+2026-01-19 22:47:52,775 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-19 22:47:52,775 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:47:52,775 - RAGExperiment - INFO -   Median chunk size: 939.50 chars
+2026-01-19 22:48:39,647 - src.experiments.rag_oracle - INFO - Processed 10 samples...
+2026-01-19 22:48:39,647 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2015_10K (1 samples)
+2026-01-19 22:48:39,825 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:48:39,825 - RAGExperiment - INFO -   Total chunks: 545
+2026-01-19 22:48:39,825 - RAGExperiment - INFO -   Avg chunk size: 874.63 chars
+2026-01-19 22:48:39,825 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-19 22:48:39,825 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:48:39,825 - RAGExperiment - INFO -   Median chunk size: 949.00 chars
+You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+2026-01-19 22:49:04,279 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2016_10K (1 samples)
+2026-01-19 22:49:04,447 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:49:04,447 - RAGExperiment - INFO -   Total chunks: 479
+2026-01-19 22:49:04,447 - RAGExperiment - INFO -   Avg chunk size: 867.63 chars
+2026-01-19 22:49:04,447 - RAGExperiment - INFO -   Min chunk size: 58 chars
+2026-01-19 22:49:04,447 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:49:04,447 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+2026-01-19 22:49:28,031 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2017_10K (1 samples)
+2026-01-19 22:49:28,190 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:49:28,190 - RAGExperiment - INFO -   Total chunks: 465
+2026-01-19 22:49:28,190 - RAGExperiment - INFO -   Avg chunk size: 864.52 chars
+2026-01-19 22:49:28,190 - RAGExperiment - INFO -   Min chunk size: 27 chars
+2026-01-19 22:49:28,190 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:49:28,190 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 22:49:51,456 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2022_10K (2 samples)
+2026-01-19 22:49:51,663 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:49:51,663 - RAGExperiment - INFO -   Total chunks: 432
+2026-01-19 22:49:51,663 - RAGExperiment - INFO -   Avg chunk size: 871.94 chars
+2026-01-19 22:49:51,663 - RAGExperiment - INFO -   Min chunk size: 41 chars
+2026-01-19 22:49:51,663 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 22:49:51,664 - RAGExperiment - INFO -   Median chunk size: 954.00 chars
+2026-01-19 22:50:35,908 - src.experiments.rag_oracle - INFO - 
+Processing Document: AES_2022_10K (3 samples)
+2026-01-19 22:50:36,350 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:50:36,351 - RAGExperiment - INFO -   Total chunks: 1054
+2026-01-19 22:50:36,351 - RAGExperiment - INFO -   Avg chunk size: 863.97 chars
+2026-01-19 22:50:36,351 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-19 22:50:36,351 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:50:36,351 - RAGExperiment - INFO -   Median chunk size: 956.50 chars
+2026-01-19 22:51:45,597 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMAZON_2017_10K (2 samples)
+2026-01-19 22:51:45,713 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:51:45,713 - RAGExperiment - INFO -   Total chunks: 347
+2026-01-19 22:51:45,713 - RAGExperiment - INFO -   Avg chunk size: 846.67 chars
+2026-01-19 22:51:45,713 - RAGExperiment - INFO -   Min chunk size: 52 chars
+2026-01-19 22:51:45,713 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:51:45,713 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+2026-01-19 22:52:29,988 - src.experiments.rag_oracle - INFO - Processed 20 samples...
+2026-01-19 22:52:29,988 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMAZON_2019_10K (1 samples)
+2026-01-19 22:52:30,098 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:52:30,098 - RAGExperiment - INFO -   Total chunks: 329
+2026-01-19 22:52:30,098 - RAGExperiment - INFO -   Avg chunk size: 851.69 chars
+2026-01-19 22:52:30,098 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 22:52:30,098 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:52:30,098 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 22:52:41,840 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2020_10K (1 samples)
+2026-01-19 22:52:42,091 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:52:42,091 - RAGExperiment - INFO -   Total chunks: 686
+2026-01-19 22:52:42,091 - RAGExperiment - INFO -   Avg chunk size: 819.64 chars
+2026-01-19 22:52:42,091 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-19 22:52:42,091 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:52:42,091 - RAGExperiment - INFO -   Median chunk size: 913.00 chars
+2026-01-19 22:53:06,668 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2022_8K_dated-2022-07-01 (1 samples)
+2026-01-19 22:53:06,687 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:53:06,687 - RAGExperiment - INFO -   Total chunks: 30
+2026-01-19 22:53:06,687 - RAGExperiment - INFO -   Avg chunk size: 810.77 chars
+2026-01-19 22:53:06,687 - RAGExperiment - INFO -   Min chunk size: 82 chars
+2026-01-19 22:53:06,687 - RAGExperiment - INFO -   Max chunk size: 1016 chars
+2026-01-19 22:53:06,687 - RAGExperiment - INFO -   Median chunk size: 977.00 chars
+2026-01-19 22:53:28,029 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023_10K (4 samples)
+2026-01-19 22:53:28,265 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:53:28,265 - RAGExperiment - INFO -   Total chunks: 587
+2026-01-19 22:53:28,265 - RAGExperiment - INFO -   Avg chunk size: 830.55 chars
+2026-01-19 22:53:28,265 - RAGExperiment - INFO -   Min chunk size: 35 chars
+2026-01-19 22:53:28,265 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:53:28,265 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-19 22:54:41,423 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023Q2_10Q (1 samples)
+2026-01-19 22:54:41,499 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:54:41,499 - RAGExperiment - INFO -   Total chunks: 154
+2026-01-19 22:54:41,499 - RAGExperiment - INFO -   Avg chunk size: 808.89 chars
+2026-01-19 22:54:41,499 - RAGExperiment - INFO -   Min chunk size: 71 chars
+2026-01-19 22:54:41,499 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:54:41,499 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-19 22:55:01,551 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023Q4_EARNINGS (2 samples)
+2026-01-19 22:55:01,578 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:55:01,578 - RAGExperiment - INFO -   Total chunks: 53
+2026-01-19 22:55:01,578 - RAGExperiment - INFO -   Avg chunk size: 851.64 chars
+2026-01-19 22:55:01,578 - RAGExperiment - INFO -   Min chunk size: 218 chars
+2026-01-19 22:55:01,578 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 22:55:01,578 - RAGExperiment - INFO -   Median chunk size: 967.00 chars
+2026-01-19 22:55:36,461 - src.experiments.rag_oracle - INFO - Processed 30 samples...
+2026-01-19 22:55:36,461 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMD_2015_10K (1 samples)
+2026-01-19 22:55:36,798 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:55:36,798 - RAGExperiment - INFO -   Total chunks: 896
+2026-01-19 22:55:36,798 - RAGExperiment - INFO -   Avg chunk size: 850.88 chars
+2026-01-19 22:55:36,798 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-19 22:55:36,798 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:55:36,798 - RAGExperiment - INFO -   Median chunk size: 932.50 chars
+2026-01-19 22:56:01,632 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMD_2022_10K (7 samples)
+2026-01-19 22:56:02,047 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:56:02,047 - RAGExperiment - INFO -   Total chunks: 483
+2026-01-19 22:56:02,047 - RAGExperiment - INFO -   Avg chunk size: 857.64 chars
+2026-01-19 22:56:02,047 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 22:56:02,047 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:56:02,048 - RAGExperiment - INFO -   Median chunk size: 935.00 chars
+2026-01-19 22:58:17,596 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANEXPRESS_2022_10K (7 samples)
+2026-01-19 22:58:17,984 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 22:58:17,984 - RAGExperiment - INFO -   Total chunks: 975
+2026-01-19 22:58:17,985 - RAGExperiment - INFO -   Avg chunk size: 847.07 chars
+2026-01-19 22:58:17,985 - RAGExperiment - INFO -   Min chunk size: 4 chars
+2026-01-19 22:58:17,985 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 22:58:17,985 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 22:59:05,982 - src.experiments.rag_oracle - INFO - Processed 40 samples...
+2026-01-19 23:00:31,826 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2020_10K (1 samples)
+2026-01-19 23:00:32,057 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:00:32,057 - RAGExperiment - INFO -   Total chunks: 711
+2026-01-19 23:00:32,057 - RAGExperiment - INFO -   Avg chunk size: 878.63 chars
+2026-01-19 23:00:32,057 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:00:32,058 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:00:32,058 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 23:00:50,103 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2021_10K (1 samples)
+2026-01-19 23:00:50,348 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:00:50,348 - RAGExperiment - INFO -   Total chunks: 792
+2026-01-19 23:00:50,348 - RAGExperiment - INFO -   Avg chunk size: 856.12 chars
+2026-01-19 23:00:50,348 - RAGExperiment - INFO -   Min chunk size: 13 chars
+2026-01-19 23:00:50,348 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:00:50,348 - RAGExperiment - INFO -   Median chunk size: 934.50 chars
+2026-01-19 23:01:06,694 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2022_10K (1 samples)
+2026-01-19 23:01:07,141 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:01:07,141 - RAGExperiment - INFO -   Total chunks: 1189
+2026-01-19 23:01:07,141 - RAGExperiment - INFO -   Avg chunk size: 856.24 chars
+2026-01-19 23:01:07,141 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-19 23:01:07,141 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:01:07,141 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:01:33,024 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2017_10K (1 samples)
+2026-01-19 23:01:33,169 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:01:33,169 - RAGExperiment - INFO -   Total chunks: 409
+2026-01-19 23:01:33,169 - RAGExperiment - INFO -   Avg chunk size: 849.04 chars
+2026-01-19 23:01:33,169 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:01:33,169 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:01:33,169 - RAGExperiment - INFO -   Median chunk size: 937.00 chars
+2026-01-19 23:01:56,598 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2019_10K (1 samples)
+2026-01-19 23:01:56,744 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:01:56,744 - RAGExperiment - INFO -   Total chunks: 416
+2026-01-19 23:01:56,744 - RAGExperiment - INFO -   Avg chunk size: 852.45 chars
+2026-01-19 23:01:56,744 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:01:56,744 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:01:56,744 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:02:07,478 - src.experiments.rag_oracle - INFO - Processed 50 samples...
+2026-01-19 23:02:07,478 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2023_10K (3 samples)
+2026-01-19 23:02:07,601 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:02:07,601 - RAGExperiment - INFO -   Total chunks: 354
+2026-01-19 23:02:07,601 - RAGExperiment - INFO -   Avg chunk size: 866.28 chars
+2026-01-19 23:02:07,601 - RAGExperiment - INFO -   Min chunk size: 33 chars
+2026-01-19 23:02:07,601 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:02:07,601 - RAGExperiment - INFO -   Median chunk size: 955.00 chars
+2026-01-19 23:03:13,838 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2024Q2_10Q (3 samples)
+2026-01-19 23:03:13,906 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:03:13,906 - RAGExperiment - INFO -   Total chunks: 118
+2026-01-19 23:03:13,906 - RAGExperiment - INFO -   Avg chunk size: 884.77 chars
+2026-01-19 23:03:13,906 - RAGExperiment - INFO -   Min chunk size: 68 chars
+2026-01-19 23:03:13,906 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:03:13,906 - RAGExperiment - INFO -   Median chunk size: 953.50 chars
+2026-01-19 23:04:19,695 - src.experiments.rag_oracle - INFO - 
+Processing Document: BLOCK_2016_10K (1 samples)
+2026-01-19 23:04:19,852 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:04:19,852 - RAGExperiment - INFO -   Total chunks: 452
+2026-01-19 23:04:19,852 - RAGExperiment - INFO -   Avg chunk size: 844.52 chars
+2026-01-19 23:04:19,852 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:04:19,852 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:04:19,852 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:04:43,805 - src.experiments.rag_oracle - INFO - 
+Processing Document: BLOCK_2020_10K (2 samples)
+2026-01-19 23:04:44,014 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:04:44,014 - RAGExperiment - INFO -   Total chunks: 637
+2026-01-19 23:04:44,014 - RAGExperiment - INFO -   Avg chunk size: 851.06 chars
+2026-01-19 23:04:44,014 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:04:44,014 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:04:44,014 - RAGExperiment - INFO -   Median chunk size: 947.00 chars
+2026-01-19 23:05:21,455 - src.experiments.rag_oracle - INFO - 
+Processing Document: BOEING_2018_10K (1 samples)
+2026-01-19 23:05:21,626 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:05:21,626 - RAGExperiment - INFO -   Total chunks: 455
+2026-01-19 23:05:21,626 - RAGExperiment - INFO -   Avg chunk size: 834.81 chars
+2026-01-19 23:05:21,626 - RAGExperiment - INFO -   Min chunk size: 16 chars
+2026-01-19 23:05:21,626 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:05:21,626 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-19 23:05:37,069 - src.experiments.rag_oracle - INFO - Processed 60 samples...
+2026-01-19 23:05:37,069 - src.experiments.rag_oracle - INFO - 
+Processing Document: BOEING_2022_10K (7 samples)
+2026-01-19 23:05:37,316 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:05:37,317 - RAGExperiment - INFO -   Total chunks: 615
+2026-01-19 23:05:37,317 - RAGExperiment - INFO -   Avg chunk size: 830.92 chars
+2026-01-19 23:05:37,317 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:05:37,317 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:05:37,317 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:07:59,357 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2017_10K (1 samples)
+2026-01-19 23:07:59,879 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:07:59,879 - RAGExperiment - INFO -   Total chunks: 871
+2026-01-19 23:07:59,879 - RAGExperiment - INFO -   Avg chunk size: 849.57 chars
+2026-01-19 23:07:59,879 - RAGExperiment - INFO -   Min chunk size: 27 chars
+2026-01-19 23:07:59,880 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:07:59,880 - RAGExperiment - INFO -   Median chunk size: 927.00 chars
+2026-01-19 23:08:24,914 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2021_10K (1 samples)
+2026-01-19 23:08:25,763 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:08:25,763 - RAGExperiment - INFO -   Total chunks: 823
+2026-01-19 23:08:25,763 - RAGExperiment - INFO -   Avg chunk size: 845.95 chars
+2026-01-19 23:08:25,763 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-19 23:08:25,763 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:08:25,763 - RAGExperiment - INFO -   Median chunk size: 925.00 chars
+2026-01-19 23:08:40,448 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2022_10K (1 samples)
+2026-01-19 23:08:41,273 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:08:41,273 - RAGExperiment - INFO -   Total chunks: 802
+2026-01-19 23:08:41,273 - RAGExperiment - INFO -   Avg chunk size: 840.54 chars
+2026-01-19 23:08:41,273 - RAGExperiment - INFO -   Min chunk size: 30 chars
+2026-01-19 23:08:41,273 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:08:41,273 - RAGExperiment - INFO -   Median chunk size: 919.00 chars
+2026-01-19 23:09:05,134 - src.experiments.rag_oracle - INFO - Processed 70 samples...
+2026-01-19 23:09:05,134 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2020_10K (1 samples)
+2026-01-19 23:09:05,347 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:09:05,347 - RAGExperiment - INFO -   Total chunks: 524
+2026-01-19 23:09:05,347 - RAGExperiment - INFO -   Avg chunk size: 842.68 chars
+2026-01-19 23:09:05,347 - RAGExperiment - INFO -   Min chunk size: 3 chars
+2026-01-19 23:09:05,347 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:09:05,347 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 23:09:28,360 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2021_10K (1 samples)
+2026-01-19 23:09:28,564 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:09:28,564 - RAGExperiment - INFO -   Total chunks: 508
+2026-01-19 23:09:28,564 - RAGExperiment - INFO -   Avg chunk size: 854.02 chars
+2026-01-19 23:09:28,564 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:09:28,564 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:09:28,565 - RAGExperiment - INFO -   Median chunk size: 945.00 chars
+2026-01-19 23:09:51,526 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2022_10K (2 samples)
+2026-01-19 23:09:51,779 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:09:51,779 - RAGExperiment - INFO -   Total chunks: 589
+2026-01-19 23:09:51,779 - RAGExperiment - INFO -   Avg chunk size: 850.11 chars
+2026-01-19 23:09:51,779 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:09:51,779 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:09:51,779 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-19 23:10:36,263 - src.experiments.rag_oracle - INFO - 
+Processing Document: COSTCO_2021_10K (1 samples)
+2026-01-19 23:10:36,379 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:10:36,379 - RAGExperiment - INFO -   Total chunks: 265
+2026-01-19 23:10:36,379 - RAGExperiment - INFO -   Avg chunk size: 839.98 chars
+2026-01-19 23:10:36,379 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:10:36,379 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:10:36,379 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+2026-01-19 23:10:42,736 - src.experiments.rag_oracle - INFO - 
+Processing Document: CVSHEALTH_2018_10K (1 samples)
+2026-01-19 23:10:43,219 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:10:43,219 - RAGExperiment - INFO -   Total chunks: 1666
+2026-01-19 23:10:43,219 - RAGExperiment - INFO -   Avg chunk size: 858.76 chars
+2026-01-19 23:10:43,219 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:10:43,219 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:10:43,219 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+2026-01-19 23:11:11,329 - src.experiments.rag_oracle - INFO - 
+Processing Document: CVSHEALTH_2022_10K (3 samples)
+2026-01-19 23:11:11,735 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:11:11,735 - RAGExperiment - INFO -   Total chunks: 985
+2026-01-19 23:11:11,735 - RAGExperiment - INFO -   Avg chunk size: 870.79 chars
+2026-01-19 23:11:11,735 - RAGExperiment - INFO -   Min chunk size: 42 chars
+2026-01-19 23:11:11,735 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:11:11,735 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:12:16,647 - src.experiments.rag_oracle - INFO - 
+Processing Document: FOOTLOCKER_2022_8K_dated_2022-08-19 (1 samples)
+2026-01-19 23:12:16,709 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:12:16,709 - RAGExperiment - INFO -   Total chunks: 101
+2026-01-19 23:12:16,709 - RAGExperiment - INFO -   Avg chunk size: 839.28 chars
+2026-01-19 23:12:16,709 - RAGExperiment - INFO -   Min chunk size: 26 chars
+2026-01-19 23:12:16,709 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:12:16,709 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:12:27,560 - src.experiments.rag_oracle - INFO - Processed 80 samples...
+2026-01-19 23:12:27,560 - src.experiments.rag_oracle - INFO - 
+Processing Document: FOOTLOCKER_2022_8K_dated-2022-05-20 (1 samples)
+2026-01-19 23:12:27,577 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:12:27,577 - RAGExperiment - INFO -   Total chunks: 9
+2026-01-19 23:12:27,577 - RAGExperiment - INFO -   Avg chunk size: 753.44 chars
+2026-01-19 23:12:27,577 - RAGExperiment - INFO -   Min chunk size: 96 chars
+2026-01-19 23:12:27,578 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:12:27,578 - RAGExperiment - INFO -   Median chunk size: 990.00 chars
+2026-01-19 23:12:49,401 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2019_10K (1 samples)
+2026-01-19 23:12:49,595 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:12:49,595 - RAGExperiment - INFO -   Total chunks: 527
+2026-01-19 23:12:49,595 - RAGExperiment - INFO -   Avg chunk size: 859.18 chars
+2026-01-19 23:12:49,595 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:12:49,595 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:12:49,596 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:13:13,571 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2020_10K (2 samples)
+2026-01-19 23:13:13,827 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:13:13,827 - RAGExperiment - INFO -   Total chunks: 509
+2026-01-19 23:13:13,827 - RAGExperiment - INFO -   Avg chunk size: 858.24 chars
+2026-01-19 23:13:13,827 - RAGExperiment - INFO -   Min chunk size: 54 chars
+2026-01-19 23:13:13,827 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:13:13,827 - RAGExperiment - INFO -   Median chunk size: 949.00 chars
+2026-01-19 23:13:59,156 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2022_10K (1 samples)
+2026-01-19 23:13:59,399 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:13:59,399 - RAGExperiment - INFO -   Total chunks: 476
+2026-01-19 23:13:59,399 - RAGExperiment - INFO -   Avg chunk size: 861.74 chars
+2026-01-19 23:13:59,399 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-19 23:13:59,399 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:13:59,399 - RAGExperiment - INFO -   Median chunk size: 947.50 chars
+2026-01-19 23:14:22,640 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2022_10K (3 samples)
+2026-01-19 23:14:23,115 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:14:23,115 - RAGExperiment - INFO -   Total chunks: 631
+2026-01-19 23:14:23,115 - RAGExperiment - INFO -   Avg chunk size: 828.77 chars
+2026-01-19 23:14:23,115 - RAGExperiment - INFO -   Min chunk size: 6 chars
+2026-01-19 23:14:23,115 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:14:23,116 - RAGExperiment - INFO -   Median chunk size: 926.00 chars
+2026-01-19 23:15:31,265 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2022Q4_EARNINGS (2 samples)
+2026-01-19 23:15:31,409 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:15:31,409 - RAGExperiment - INFO -   Total chunks: 86
+2026-01-19 23:15:31,409 - RAGExperiment - INFO -   Avg chunk size: 882.85 chars
+2026-01-19 23:15:31,409 - RAGExperiment - INFO -   Min chunk size: 66 chars
+2026-01-19 23:15:31,409 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:15:31,409 - RAGExperiment - INFO -   Median chunk size: 994.00 chars
+2026-01-19 23:16:14,206 - src.experiments.rag_oracle - INFO - Processed 90 samples...
+2026-01-19 23:16:14,206 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2023_8K_dated-2023-08-30 (3 samples)
+2026-01-19 23:16:14,373 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:16:14,373 - RAGExperiment - INFO -   Total chunks: 72
+2026-01-19 23:16:14,373 - RAGExperiment - INFO -   Avg chunk size: 798.14 chars
+2026-01-19 23:16:14,374 - RAGExperiment - INFO -   Min chunk size: 85 chars
+2026-01-19 23:16:14,374 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:16:14,374 - RAGExperiment - INFO -   Median chunk size: 972.00 chars
+2026-01-19 23:17:04,328 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2023Q2_EARNINGS (1 samples)
+2026-01-19 23:17:04,394 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:17:04,394 - RAGExperiment - INFO -   Total chunks: 86
+2026-01-19 23:17:04,394 - RAGExperiment - INFO -   Avg chunk size: 851.64 chars
+2026-01-19 23:17:04,394 - RAGExperiment - INFO -   Min chunk size: 68 chars
+2026-01-19 23:17:04,394 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:17:04,394 - RAGExperiment - INFO -   Median chunk size: 999.00 chars
+2026-01-19 23:17:26,318 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2021Q1_10Q (2 samples)
+2026-01-19 23:17:26,626 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:17:26,626 - RAGExperiment - INFO -   Total chunks: 708
+2026-01-19 23:17:26,626 - RAGExperiment - INFO -   Avg chunk size: 864.90 chars
+2026-01-19 23:17:26,626 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:17:26,626 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:17:26,626 - RAGExperiment - INFO -   Median chunk size: 988.00 chars
+2026-01-19 23:18:12,252 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2022_10K (1 samples)
+2026-01-19 23:18:12,934 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:18:12,934 - RAGExperiment - INFO -   Total chunks: 1750
+2026-01-19 23:18:12,934 - RAGExperiment - INFO -   Avg chunk size: 891.75 chars
+2026-01-19 23:18:12,934 - RAGExperiment - INFO -   Min chunk size: 3 chars
+2026-01-19 23:18:12,934 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:18:12,934 - RAGExperiment - INFO -   Median chunk size: 984.00 chars
+2026-01-19 23:18:42,823 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2022Q2_10Q (1 samples)
+2026-01-19 23:18:43,167 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:18:43,167 - RAGExperiment - INFO -   Total chunks: 756
+2026-01-19 23:18:43,167 - RAGExperiment - INFO -   Avg chunk size: 868.77 chars
+2026-01-19 23:18:43,167 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-19 23:18:43,168 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:18:43,168 - RAGExperiment - INFO -   Median chunk size: 986.50 chars
+2026-01-19 23:19:07,407 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2023Q2_10Q (1 samples)
+2026-01-19 23:19:07,797 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:19:07,797 - RAGExperiment - INFO -   Total chunks: 858
+2026-01-19 23:19:07,797 - RAGExperiment - INFO -   Avg chunk size: 874.14 chars
+2026-01-19 23:19:07,797 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:19:07,797 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:19:07,797 - RAGExperiment - INFO -   Median chunk size: 987.00 chars
+2026-01-19 23:19:32,530 - src.experiments.rag_oracle - INFO - 
+Processing Document: KRAFTHEINZ_2019_10K (1 samples)
+2026-01-19 23:19:32,795 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:19:32,795 - RAGExperiment - INFO -   Total chunks: 652
+2026-01-19 23:19:32,795 - RAGExperiment - INFO -   Avg chunk size: 848.83 chars
+2026-01-19 23:19:32,795 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:19:32,795 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:19:32,795 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:19:57,150 - src.experiments.rag_oracle - INFO - Processed 100 samples...
+2026-01-19 23:19:57,150 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2020_10K (1 samples)
+2026-01-19 23:19:57,393 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:19:57,393 - RAGExperiment - INFO -   Total chunks: 607
+2026-01-19 23:19:57,393 - RAGExperiment - INFO -   Avg chunk size: 866.19 chars
+2026-01-19 23:19:57,393 - RAGExperiment - INFO -   Min chunk size: 99 chars
+2026-01-19 23:19:57,394 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:19:57,394 - RAGExperiment - INFO -   Median chunk size: 931.00 chars
+2026-01-19 23:20:21,276 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2021_10K (1 samples)
+2026-01-19 23:20:21,525 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:20:21,525 - RAGExperiment - INFO -   Total chunks: 623
+2026-01-19 23:20:21,525 - RAGExperiment - INFO -   Avg chunk size: 863.26 chars
+2026-01-19 23:20:21,525 - RAGExperiment - INFO -   Min chunk size: 25 chars
+2026-01-19 23:20:21,525 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:20:21,525 - RAGExperiment - INFO -   Median chunk size: 931.00 chars
+2026-01-19 23:20:45,218 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2022_10K (1 samples)
+2026-01-19 23:20:45,463 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:20:45,463 - RAGExperiment - INFO -   Total chunks: 596
+2026-01-19 23:20:45,463 - RAGExperiment - INFO -   Avg chunk size: 875.77 chars
+2026-01-19 23:20:45,463 - RAGExperiment - INFO -   Min chunk size: 21 chars
+2026-01-19 23:20:45,463 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:20:45,463 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-19 23:21:10,094 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2018_10K (1 samples)
+2026-01-19 23:21:10,383 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:21:10,383 - RAGExperiment - INFO -   Total chunks: 810
+2026-01-19 23:21:10,383 - RAGExperiment - INFO -   Avg chunk size: 867.43 chars
+2026-01-19 23:21:10,384 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:21:10,384 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:21:10,384 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:21:22,697 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2020_10K (1 samples)
+2026-01-19 23:21:22,938 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:21:22,938 - RAGExperiment - INFO -   Total chunks: 696
+2026-01-19 23:21:22,938 - RAGExperiment - INFO -   Avg chunk size: 862.93 chars
+2026-01-19 23:21:22,938 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:21:22,938 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:21:22,938 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:21:46,828 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2022_10K (1 samples)
+2026-01-19 23:21:47,150 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:21:47,150 - RAGExperiment - INFO -   Total chunks: 825
+2026-01-19 23:21:47,150 - RAGExperiment - INFO -   Avg chunk size: 851.37 chars
+2026-01-19 23:21:47,151 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-19 23:21:47,151 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:21:47,151 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:22:11,932 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2022Q4_EARNINGS (3 samples)
+2026-01-19 23:22:12,006 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:22:12,006 - RAGExperiment - INFO -   Total chunks: 58
+2026-01-19 23:22:12,006 - RAGExperiment - INFO -   Avg chunk size: 843.50 chars
+2026-01-19 23:22:12,006 - RAGExperiment - INFO -   Min chunk size: 98 chars
+2026-01-19 23:22:12,006 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:22:12,006 - RAGExperiment - INFO -   Median chunk size: 955.00 chars
+2026-01-19 23:23:03,396 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2023Q2_10Q (1 samples)
+2026-01-19 23:23:03,490 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:23:03,490 - RAGExperiment - INFO -   Total chunks: 212
+2026-01-19 23:23:03,490 - RAGExperiment - INFO -   Avg chunk size: 826.83 chars
+2026-01-19 23:23:03,490 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:23:03,490 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:23:03,490 - RAGExperiment - INFO -   Median chunk size: 939.50 chars
+2026-01-19 23:23:26,355 - src.experiments.rag_oracle - INFO - Processed 110 samples...
+2026-01-19 23:23:26,356 - src.experiments.rag_oracle - INFO - 
+Processing Document: MICROSOFT_2016_10K (1 samples)
+2026-01-19 23:23:26,511 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:23:26,511 - RAGExperiment - INFO -   Total chunks: 482
+2026-01-19 23:23:26,511 - RAGExperiment - INFO -   Avg chunk size: 859.66 chars
+2026-01-19 23:23:26,511 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:23:26,511 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:23:26,512 - RAGExperiment - INFO -   Median chunk size: 949.50 chars
+2026-01-19 23:23:49,817 - src.experiments.rag_oracle - INFO - 
+Processing Document: MICROSOFT_2023_10K (1 samples)
+2026-01-19 23:23:50,056 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:23:50,056 - RAGExperiment - INFO -   Total chunks: 438
+2026-01-19 23:23:50,056 - RAGExperiment - INFO -   Avg chunk size: 848.43 chars
+2026-01-19 23:23:50,056 - RAGExperiment - INFO -   Min chunk size: 25 chars
+2026-01-19 23:23:50,056 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:23:50,056 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-19 23:24:09,714 - src.experiments.rag_oracle - INFO - 
+Processing Document: NETFLIX_2015_10K (1 samples)
+2026-01-19 23:24:09,808 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:24:09,808 - RAGExperiment - INFO -   Total chunks: 276
+2026-01-19 23:24:09,808 - RAGExperiment - INFO -   Avg chunk size: 845.11 chars
+2026-01-19 23:24:09,808 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:24:09,808 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:24:09,808 - RAGExperiment - INFO -   Median chunk size: 931.50 chars
+2026-01-19 23:24:32,913 - src.experiments.rag_oracle - INFO - 
+Processing Document: NETFLIX_2017_10K (1 samples)
+2026-01-19 23:24:33,013 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:24:33,013 - RAGExperiment - INFO -   Total chunks: 280
+2026-01-19 23:24:33,013 - RAGExperiment - INFO -   Avg chunk size: 844.82 chars
+2026-01-19 23:24:33,013 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-19 23:24:33,013 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:24:33,013 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-19 23:24:47,877 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2018_10K (1 samples)
+2026-01-19 23:24:48,043 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:24:48,043 - RAGExperiment - INFO -   Total chunks: 466
+2026-01-19 23:24:48,043 - RAGExperiment - INFO -   Avg chunk size: 858.78 chars
+2026-01-19 23:24:48,043 - RAGExperiment - INFO -   Min chunk size: 26 chars
+2026-01-19 23:24:48,043 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:24:48,043 - RAGExperiment - INFO -   Median chunk size: 930.50 chars
+2026-01-19 23:25:11,666 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2019_10K (1 samples)
+2026-01-19 23:25:11,817 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:25:11,817 - RAGExperiment - INFO -   Total chunks: 439
+2026-01-19 23:25:11,817 - RAGExperiment - INFO -   Avg chunk size: 846.36 chars
+2026-01-19 23:25:11,817 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-19 23:25:11,817 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:25:11,817 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-19 23:25:19,658 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2021_10K (1 samples)
+2026-01-19 23:25:19,807 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:25:19,807 - RAGExperiment - INFO -   Total chunks: 472
+2026-01-19 23:25:19,807 - RAGExperiment - INFO -   Avg chunk size: 856.45 chars
+2026-01-19 23:25:19,807 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-19 23:25:19,807 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:25:19,808 - RAGExperiment - INFO -   Median chunk size: 926.00 chars
+2026-01-19 23:25:43,612 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2023_10K (1 samples)
+2026-01-19 23:25:43,771 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:25:43,771 - RAGExperiment - INFO -   Total chunks: 433
+2026-01-19 23:25:43,771 - RAGExperiment - INFO -   Avg chunk size: 870.92 chars
+2026-01-19 23:25:43,771 - RAGExperiment - INFO -   Min chunk size: 19 chars
+2026-01-19 23:25:43,771 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:25:43,771 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:26:06,823 - src.experiments.rag_oracle - INFO - 
+Processing Document: PAYPAL_2022_10K (1 samples)
+2026-01-19 23:26:07,059 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:26:07,059 - RAGExperiment - INFO -   Total chunks: 568
+2026-01-19 23:26:07,059 - RAGExperiment - INFO -   Avg chunk size: 853.18 chars
+2026-01-19 23:26:07,059 - RAGExperiment - INFO -   Min chunk size: 30 chars
+2026-01-19 23:26:07,059 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:26:07,059 - RAGExperiment - INFO -   Median chunk size: 936.00 chars
+2026-01-19 23:26:30,793 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2021_10K (1 samples)
+2026-01-19 23:26:31,196 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:26:31,196 - RAGExperiment - INFO -   Total chunks: 1372
+2026-01-19 23:26:31,196 - RAGExperiment - INFO -   Avg chunk size: 817.40 chars
+2026-01-19 23:26:31,196 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-19 23:26:31,196 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:26:31,197 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-19 23:26:57,446 - src.experiments.rag_oracle - INFO - Processed 120 samples...
+2026-01-19 23:26:57,446 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2022_10K (5 samples)
+2026-01-19 23:26:58,267 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:26:58,268 - RAGExperiment - INFO -   Total chunks: 1447
+2026-01-19 23:26:58,268 - RAGExperiment - INFO -   Avg chunk size: 816.49 chars
+2026-01-19 23:26:58,268 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:26:58,268 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:26:58,268 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:28:39,712 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023_8K_dated-2023-05-05 (1 samples)
+2026-01-19 23:28:39,734 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:28:39,734 - RAGExperiment - INFO -   Total chunks: 9
+2026-01-19 23:28:39,734 - RAGExperiment - INFO -   Avg chunk size: 693.11 chars
+2026-01-19 23:28:39,734 - RAGExperiment - INFO -   Min chunk size: 234 chars
+2026-01-19 23:28:39,734 - RAGExperiment - INFO -   Max chunk size: 1020 chars
+2026-01-19 23:28:39,735 - RAGExperiment - INFO -   Median chunk size: 789.00 chars
+2026-01-19 23:29:01,547 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023_8K_dated-2023-05-30 (2 samples)
+2026-01-19 23:29:01,936 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:29:01,936 - RAGExperiment - INFO -   Total chunks: 641
+2026-01-19 23:29:01,936 - RAGExperiment - INFO -   Avg chunk size: 837.18 chars
+2026-01-19 23:29:01,936 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:29:01,936 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:29:01,936 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+2026-01-19 23:29:46,835 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023Q1_EARNINGS (2 samples)
+2026-01-19 23:29:46,862 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:29:46,862 - RAGExperiment - INFO -   Total chunks: 45
+2026-01-19 23:29:46,862 - RAGExperiment - INFO -   Avg chunk size: 826.82 chars
+2026-01-19 23:29:46,862 - RAGExperiment - INFO -   Min chunk size: 123 chars
+2026-01-19 23:29:46,862 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:29:46,862 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-19 23:30:30,021 - src.experiments.rag_oracle - INFO - Processed 130 samples...
+2026-01-19 23:30:30,021 - src.experiments.rag_oracle - INFO - 
+Processing Document: PFIZER_2021_10K (3 samples)
+2026-01-19 23:30:30,265 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:30:30,265 - RAGExperiment - INFO -   Total chunks: 798
+2026-01-19 23:30:30,265 - RAGExperiment - INFO -   Avg chunk size: 874.16 chars
+2026-01-19 23:30:30,265 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-19 23:30:30,266 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:30:30,266 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+2026-01-19 23:31:37,348 - src.experiments.rag_oracle - INFO - 
+Processing Document: Pfizer_2023Q2_10Q (3 samples)
+2026-01-19 23:31:37,488 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:31:37,488 - RAGExperiment - INFO -   Total chunks: 315
+2026-01-19 23:31:37,488 - RAGExperiment - INFO -   Avg chunk size: 867.42 chars
+2026-01-19 23:31:37,488 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-19 23:31:37,488 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:31:37,488 - RAGExperiment - INFO -   Median chunk size: 953.00 chars
+2026-01-19 23:32:42,975 - src.experiments.rag_oracle - INFO - 
+Processing Document: ULTABEAUTY_2023_10K (2 samples)
+2026-01-19 23:32:43,319 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:32:43,319 - RAGExperiment - INFO -   Total chunks: 381
+2026-01-19 23:32:43,319 - RAGExperiment - INFO -   Avg chunk size: 836.05 chars
+2026-01-19 23:32:43,319 - RAGExperiment - INFO -   Min chunk size: 28 chars
+2026-01-19 23:32:43,319 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:32:43,319 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:33:20,250 - src.experiments.rag_oracle - INFO - 
+Processing Document: ULTABEAUTY_2023Q4_EARNINGS (4 samples)
+2026-01-19 23:33:20,272 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:33:20,272 - RAGExperiment - INFO -   Total chunks: 26
+2026-01-19 23:33:20,272 - RAGExperiment - INFO -   Avg chunk size: 795.23 chars
+2026-01-19 23:33:20,272 - RAGExperiment - INFO -   Min chunk size: 151 chars
+2026-01-19 23:33:20,272 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:33:20,272 - RAGExperiment - INFO -   Median chunk size: 972.50 chars
+2026-01-19 23:34:03,162 - src.experiments.rag_oracle - INFO - Processed 140 samples...
+2026-01-19 23:34:37,248 - src.experiments.rag_oracle - INFO - 
+Processing Document: VERIZON_2021_10K (2 samples)
+2026-01-19 23:34:37,509 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:34:37,509 - RAGExperiment - INFO -   Total chunks: 563
+2026-01-19 23:34:37,509 - RAGExperiment - INFO -   Avg chunk size: 869.01 chars
+2026-01-19 23:34:37,509 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:34:37,509 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:34:37,509 - RAGExperiment - INFO -   Median chunk size: 954.00 chars
+2026-01-19 23:35:12,219 - src.experiments.rag_oracle - INFO - 
+Processing Document: VERIZON_2022_10K (3 samples)
+2026-01-19 23:35:12,509 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:35:12,509 - RAGExperiment - INFO -   Total chunks: 569
+2026-01-19 23:35:12,509 - RAGExperiment - INFO -   Avg chunk size: 869.27 chars
+2026-01-19 23:35:12,510 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:35:12,510 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:35:12,510 - RAGExperiment - INFO -   Median chunk size: 959.00 chars
+2026-01-19 23:36:16,480 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2018_10K (1 samples)
+2026-01-19 23:36:16,820 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:36:16,820 - RAGExperiment - INFO -   Total chunks: 1121
+2026-01-19 23:36:16,821 - RAGExperiment - INFO -   Avg chunk size: 847.98 chars
+2026-01-19 23:36:16,821 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:36:16,821 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:36:16,821 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:36:42,484 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2019_10K (1 samples)
+2026-01-19 23:36:42,665 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:36:42,665 - RAGExperiment - INFO -   Total chunks: 554
+2026-01-19 23:36:42,665 - RAGExperiment - INFO -   Avg chunk size: 813.14 chars
+2026-01-19 23:36:42,665 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:36:42,665 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:36:42,665 - RAGExperiment - INFO -   Median chunk size: 899.00 chars
+2026-01-19 23:37:06,661 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2020_10K (1 samples)
+2026-01-19 23:37:06,879 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:37:06,879 - RAGExperiment - INFO -   Total chunks: 696
+2026-01-19 23:37:06,880 - RAGExperiment - INFO -   Avg chunk size: 856.54 chars
+2026-01-19 23:37:06,880 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:37:06,880 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:37:06,880 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:37:31,442 - src.experiments.rag_oracle - INFO - Processed 150 samples...
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - 
+Generated Answer Lengths:
+2026-01-19 23:37:31,443 - RAGExperiment - INFO -   Mean: 920.99 chars
+2026-01-19 23:37:31,443 - RAGExperiment - INFO -   Min: 218 chars
+2026-01-19 23:37:31,443 - RAGExperiment - INFO -   Max: 1471 chars
+2026-01-19 23:37:31,443 - RAGExperiment - INFO -   Median: 905.50 chars
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - 
+No automatic BLEU/ROUGE metrics computed during the run (evaluation is now post-hoc).
+2026-01-19 23:37:31,443 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - 
+Results saved to: /part/01/Tmp/kobeissa/4906/outputs/oracle_doc/oracle_doc/20260119/oracle_doc_20260119_233731.json
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - EXPERIMENT COMPLETE
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - STARTING AUTOMATED EVALUATION
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - Input file: /part/01/Tmp/kobeissa/4906/outputs/oracle_doc/oracle_doc/20260119/oracle_doc_20260119_233731.json
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - Results dir: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_doc/20260119
+2026-01-19 23:37:31,483 - RAGExperiment - INFO - Eval Type: both
+2026-01-19 23:37:31,495 - RAGExperiment - INFO - Unloading generator model to free memory for evaluation...
+2026-01-19 23:37:31,875 - RAGExperiment - INFO - ✓ Model unloaded
+2026-01-19 23:37:31,876 - RAGExperiment - INFO - Running Retrieval Evaluation...
+2026-01-19 23:37:31,876 - absl - INFO - Using default tokenizer.
+2026-01-19 23:37:45,943 - RAGExperiment - INFO - Retrieval Evaluation Complete.
+2026-01-19 23:37:45,943 - RAGExperiment - INFO - MRR: 0.2128
+2026-01-19 23:37:45,943 - RAGExperiment - INFO - Running Generative Evaluation...
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2026-01-19 23:37:53,314 - src.evaluation.generative_evaluator - INFO - BERTScore initialized.
+2026-01-19 23:37:53,314 - absl - INFO - Using default tokenizer.
+2026-01-19 23:37:56,451 - RAGExperiment - INFO - Generative Evaluation Complete.
+2026-01-19 23:37:56,487 - RAGExperiment - INFO - Evaluation results saved to: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_doc/20260119/oracle_doc_20260119_233731_scored.json
+
+================================================================================
+Experiment Component Summary [final]
+================================================================================
+Experiment Type : oracle_doc
+LLM Generator   : HuggingFacePipeline (Qwen/Qwen2.5-7B-Instruct) (package=transformers.pipelines.text_generation, load_in_8bit=True, device=cuda)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=chars, chunk_size=1024, chunk_overlap=30)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=sentence-transformers/all-mpnet-base-v2, resolved_model=sentence-transformers/all-mpnet-base-v2)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=30
+Generation Mode : Local HF weights
+================================================================================
+
+--- Starting Oracle Page Experiment (Llama + Qwen) ---
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: ORACLE_PAGE
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - Configuration:
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Experiment Type: oracle_page
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Device: cuda
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Chunking Unit: chars
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Chunk Overlap: 30
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Embedding Model: sentence-transformers/all-mpnet-base-v2
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4906/outputs/oracle_page/oracle_page/20260119
+2026-01-19 23:38:25,632 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_page/20260119
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-19 23:38:25,632 - RAGExperiment - INFO - Loading HuggingFace embeddings: sentence-transformers/all-mpnet-base-v2 (Requested: sentence-transformers/all-mpnet-base-v2)
+2026-01-19 23:38:25,635 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-mpnet-base-v2
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=chars, size=1024)
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-19 23:38:27,982 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:38:27,982 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-19 23:38:30,370 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-19 23:38:30,371 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-19 23:38:30,372 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-19 23:38:30,378 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-19 23:38:30,379 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-19 23:38:30,379 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-19 23:38:30,379 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:38:30,380 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-19 23:38:30,382 - RAGExperiment - INFO - Processing 150 samples
+2026-01-19 23:38:30,382 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-19 23:38:30,382 - src.experiments.rag_oracle - INFO - 
+================================================================================
+2026-01-19 23:38:30,382 - src.experiments.rag_oracle - INFO - RUNNING ORACLE EXPERIMENT: PAGE
+2026-01-19 23:38:30,382 - src.experiments.rag_oracle - INFO - ================================================================================
+2026-01-19 23:38:30,383 - src.experiments.rag_oracle - INFO - Processing 84 unique documents
+2026-01-19 23:38:30,383 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2018_10K (2 samples)
+2026-01-19 23:38:31,186 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:38:31,186 - RAGExperiment - INFO -   Total chunks: 706
+2026-01-19 23:38:31,186 - RAGExperiment - INFO -   Avg chunk size: 864.53 chars
+2026-01-19 23:38:31,186 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-19 23:38:31,186 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:38:31,186 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:38:33,758 - RAGExperiment - INFO - 
+Initializing LLM: Qwen/Qwen2.5-7B-Instruct
+2026-01-19 23:38:33,758 - RAGExperiment - INFO -   Device: cuda
+2026-01-19 23:38:33,758 - RAGExperiment - INFO -   8-bit: True
+2026-01-19 23:38:33,758 - RAGExperiment - INFO - Loading tokenizer...
+2026-01-19 23:38:34,194 - RAGExperiment - INFO - Loading model (this may take a moment)...
+2026-01-19 23:38:34,194 - RAGExperiment - INFO -   Using 8-bit quantization for memory efficiency
+`torch_dtype` is deprecated! Use `dtype` instead!
+The `load_in_4bit` and `load_in_8bit` arguments are deprecated and will be removed in the future versions. Please, pass a `BitsAndBytesConfig` object in `quantization_config` argument instead.
+2026-01-19 23:38:34,467 - accelerate.utils.modeling - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+
+================================================================================
+Running experiment: oracle_page | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : oracle_page
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=chars, chunk_size=1024, chunk_overlap=30)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=sentence-transformers/all-mpnet-base-v2, resolved_model=sentence-transformers/all-mpnet-base-v2)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=30
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:02<00:06,  2.15s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:04<00:04,  2.49s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:07<00:02,  2.60s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.32s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.37s/it]
+Device set to use cuda:0
+2026-01-19 23:38:44,252 - RAGExperiment - INFO - ✓ LLM initialized successfully
+/part/01/Tmp/kobeissa/4906/src/core/rag_experiments.py:486: LangChainDeprecationWarning: The class `HuggingFacePipeline` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-huggingface package and should be used instead. To use it run `pip install -U `langchain-huggingface` and import as `from `langchain_huggingface import HuggingFacePipeline``.
+  self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+2026-01-19 23:38:44,252 - RAGExperiment - INFO - ✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA
+2026-01-19 23:39:18,827 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2022_10K (3 samples)
+2026-01-19 23:39:19,325 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:39:19,325 - RAGExperiment - INFO -   Total chunks: 1082
+2026-01-19 23:39:19,325 - RAGExperiment - INFO -   Avg chunk size: 858.68 chars
+2026-01-19 23:39:19,325 - RAGExperiment - INFO -   Min chunk size: 34 chars
+2026-01-19 23:39:19,325 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:39:19,325 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-19 23:39:23,394 - src.experiments.rag_oracle - ERROR - Error processing sample Is 3M a capital-intensive busi: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:40:04,969 - src.experiments.rag_oracle - INFO - 
+Processing Document: 3M_2023Q2_10Q (3 samples)
+2026-01-19 23:40:05,430 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:40:05,430 - RAGExperiment - INFO -   Total chunks: 411
+2026-01-19 23:40:05,430 - RAGExperiment - INFO -   Avg chunk size: 862.36 chars
+2026-01-19 23:40:05,430 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:40:05,430 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:40:05,430 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-19 23:41:09,840 - src.experiments.rag_oracle - INFO - 
+Processing Document: ACTIVISIONBLIZZARD_2019_10K (2 samples)
+2026-01-19 23:41:10,114 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:41:10,115 - RAGExperiment - INFO -   Total chunks: 752
+2026-01-19 23:41:10,115 - RAGExperiment - INFO -   Avg chunk size: 842.75 chars
+2026-01-19 23:41:10,115 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-19 23:41:10,115 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:41:10,115 - RAGExperiment - INFO -   Median chunk size: 939.50 chars
+2026-01-19 23:41:12,452 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2019 fixed asset: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:41:12,452 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2017 - FY2019 3 : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:41:12,452 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2015_10K (1 samples)
+2026-01-19 23:41:12,634 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:41:12,634 - RAGExperiment - INFO -   Total chunks: 545
+2026-01-19 23:41:12,634 - RAGExperiment - INFO -   Avg chunk size: 874.63 chars
+2026-01-19 23:41:12,634 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-19 23:41:12,634 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:41:12,634 - RAGExperiment - INFO -   Median chunk size: 949.00 chars
+2026-01-19 23:41:15,551 - src.experiments.rag_oracle - ERROR - Error processing sample You are an investment banker a: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:41:15,551 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2016_10K (1 samples)
+2026-01-19 23:41:15,719 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:41:15,719 - RAGExperiment - INFO -   Total chunks: 479
+2026-01-19 23:41:15,719 - RAGExperiment - INFO -   Avg chunk size: 867.63 chars
+2026-01-19 23:41:15,719 - RAGExperiment - INFO -   Min chunk size: 58 chars
+2026-01-19 23:41:15,719 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:41:15,719 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+2026-01-19 23:41:38,984 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2017_10K (1 samples)
+2026-01-19 23:41:39,144 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:41:39,144 - RAGExperiment - INFO -   Total chunks: 465
+2026-01-19 23:41:39,144 - RAGExperiment - INFO -   Avg chunk size: 864.52 chars
+2026-01-19 23:41:39,144 - RAGExperiment - INFO -   Min chunk size: 27 chars
+2026-01-19 23:41:39,144 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:41:39,144 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 23:41:41,076 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2017 operating c: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:41:41,076 - src.experiments.rag_oracle - INFO - 
+Processing Document: ADOBE_2022_10K (2 samples)
+2026-01-19 23:41:41,286 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:41:41,286 - RAGExperiment - INFO -   Total chunks: 432
+2026-01-19 23:41:41,286 - RAGExperiment - INFO -   Avg chunk size: 871.94 chars
+2026-01-19 23:41:41,286 - RAGExperiment - INFO -   Min chunk size: 41 chars
+2026-01-19 23:41:41,286 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:41:41,286 - RAGExperiment - INFO -   Median chunk size: 954.00 chars
+2026-01-19 23:42:24,922 - src.experiments.rag_oracle - INFO - Processed 10 samples...
+2026-01-19 23:42:24,922 - src.experiments.rag_oracle - INFO - 
+Processing Document: AES_2022_10K (3 samples)
+2026-01-19 23:42:25,366 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:42:25,366 - RAGExperiment - INFO -   Total chunks: 1054
+2026-01-19 23:42:25,366 - RAGExperiment - INFO -   Avg chunk size: 863.97 chars
+2026-01-19 23:42:25,366 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-19 23:42:25,366 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:42:25,366 - RAGExperiment - INFO -   Median chunk size: 956.50 chars
+You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+2026-01-19 23:42:33,088 - src.experiments.rag_oracle - ERROR - Error processing sample Roughly how many times has AES: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:42:33,088 - src.experiments.rag_oracle - ERROR - Error processing sample Based on the information provi: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:42:33,088 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMAZON_2017_10K (2 samples)
+2026-01-19 23:42:33,204 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:42:33,204 - RAGExperiment - INFO -   Total chunks: 347
+2026-01-19 23:42:33,204 - RAGExperiment - INFO -   Avg chunk size: 846.67 chars
+2026-01-19 23:42:33,204 - RAGExperiment - INFO -   Min chunk size: 52 chars
+2026-01-19 23:42:33,204 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:42:33,204 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+2026-01-19 23:42:34,495 - src.experiments.rag_oracle - ERROR - Error processing sample What is Amazon's FY2017 days p: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:42:55,804 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMAZON_2019_10K (1 samples)
+2026-01-19 23:42:55,915 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:42:55,915 - RAGExperiment - INFO -   Total chunks: 329
+2026-01-19 23:42:55,915 - RAGExperiment - INFO -   Avg chunk size: 851.69 chars
+2026-01-19 23:42:55,915 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:42:55,915 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:42:55,915 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-19 23:43:08,615 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2020_10K (1 samples)
+2026-01-19 23:43:08,867 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:43:08,867 - RAGExperiment - INFO -   Total chunks: 686
+2026-01-19 23:43:08,867 - RAGExperiment - INFO -   Avg chunk size: 819.64 chars
+2026-01-19 23:43:08,867 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-19 23:43:08,867 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:43:08,867 - RAGExperiment - INFO -   Median chunk size: 913.00 chars
+2026-01-19 23:43:32,585 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2022_8K_dated-2022-07-01 (1 samples)
+2026-01-19 23:43:32,604 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:43:32,604 - RAGExperiment - INFO -   Total chunks: 30
+2026-01-19 23:43:32,604 - RAGExperiment - INFO -   Avg chunk size: 810.77 chars
+2026-01-19 23:43:32,604 - RAGExperiment - INFO -   Min chunk size: 82 chars
+2026-01-19 23:43:32,604 - RAGExperiment - INFO -   Max chunk size: 1016 chars
+2026-01-19 23:43:32,604 - RAGExperiment - INFO -   Median chunk size: 977.00 chars
+2026-01-19 23:43:53,371 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023_10K (4 samples)
+2026-01-19 23:43:53,607 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:43:53,607 - RAGExperiment - INFO -   Total chunks: 587
+2026-01-19 23:43:53,607 - RAGExperiment - INFO -   Avg chunk size: 830.55 chars
+2026-01-19 23:43:53,607 - RAGExperiment - INFO -   Min chunk size: 35 chars
+2026-01-19 23:43:53,607 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:43:53,607 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-19 23:45:08,654 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023Q2_10Q (1 samples)
+2026-01-19 23:45:08,725 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:45:08,725 - RAGExperiment - INFO -   Total chunks: 154
+2026-01-19 23:45:08,725 - RAGExperiment - INFO -   Avg chunk size: 808.89 chars
+2026-01-19 23:45:08,725 - RAGExperiment - INFO -   Min chunk size: 71 chars
+2026-01-19 23:45:08,725 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:45:08,725 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-19 23:45:30,162 - src.experiments.rag_oracle - INFO - Processed 20 samples...
+2026-01-19 23:45:30,162 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMCOR_2023Q4_EARNINGS (2 samples)
+2026-01-19 23:45:30,188 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:45:30,188 - RAGExperiment - INFO -   Total chunks: 53
+2026-01-19 23:45:30,189 - RAGExperiment - INFO -   Avg chunk size: 851.64 chars
+2026-01-19 23:45:30,189 - RAGExperiment - INFO -   Min chunk size: 218 chars
+2026-01-19 23:45:30,189 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:45:30,189 - RAGExperiment - INFO -   Median chunk size: 967.00 chars
+2026-01-19 23:46:08,333 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMD_2015_10K (1 samples)
+2026-01-19 23:46:08,668 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:46:08,668 - RAGExperiment - INFO -   Total chunks: 896
+2026-01-19 23:46:08,668 - RAGExperiment - INFO -   Avg chunk size: 850.88 chars
+2026-01-19 23:46:08,668 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-19 23:46:08,668 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:46:08,668 - RAGExperiment - INFO -   Median chunk size: 932.50 chars
+2026-01-19 23:46:11,924 - src.experiments.rag_oracle - ERROR - Error processing sample Answer the following question : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:46:11,924 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMD_2022_10K (7 samples)
+2026-01-19 23:46:12,340 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:46:12,340 - RAGExperiment - INFO -   Total chunks: 483
+2026-01-19 23:46:12,340 - RAGExperiment - INFO -   Avg chunk size: 857.64 chars
+2026-01-19 23:46:12,340 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:46:12,340 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:46:12,340 - RAGExperiment - INFO -   Median chunk size: 935.00 chars
+2026-01-19 23:48:21,859 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANEXPRESS_2022_10K (7 samples)
+2026-01-19 23:48:22,247 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:48:22,247 - RAGExperiment - INFO -   Total chunks: 975
+2026-01-19 23:48:22,248 - RAGExperiment - INFO -   Avg chunk size: 847.07 chars
+2026-01-19 23:48:22,248 - RAGExperiment - INFO -   Min chunk size: 4 chars
+2026-01-19 23:48:22,248 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:48:22,248 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:48:46,729 - src.experiments.rag_oracle - INFO - Processed 30 samples...
+2026-01-19 23:50:45,049 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2020_10K (1 samples)
+2026-01-19 23:50:45,284 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:50:45,284 - RAGExperiment - INFO -   Total chunks: 711
+2026-01-19 23:50:45,284 - RAGExperiment - INFO -   Avg chunk size: 878.63 chars
+2026-01-19 23:50:45,284 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:50:45,284 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:50:45,284 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 23:51:03,087 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2021_10K (1 samples)
+2026-01-19 23:51:03,332 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:51:03,332 - RAGExperiment - INFO -   Total chunks: 792
+2026-01-19 23:51:03,332 - RAGExperiment - INFO -   Avg chunk size: 856.12 chars
+2026-01-19 23:51:03,332 - RAGExperiment - INFO -   Min chunk size: 13 chars
+2026-01-19 23:51:03,332 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:51:03,332 - RAGExperiment - INFO -   Median chunk size: 934.50 chars
+2026-01-19 23:51:05,819 - src.experiments.rag_oracle - ERROR - Error processing sample Basing your judgments off of t: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:51:05,819 - src.experiments.rag_oracle - INFO - 
+Processing Document: AMERICANWATERWORKS_2022_10K (1 samples)
+2026-01-19 23:51:06,269 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:51:06,269 - RAGExperiment - INFO -   Total chunks: 1189
+2026-01-19 23:51:06,269 - RAGExperiment - INFO -   Avg chunk size: 856.24 chars
+2026-01-19 23:51:06,269 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-19 23:51:06,269 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:51:06,269 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:51:09,933 - src.experiments.rag_oracle - ERROR - Error processing sample Does American Water Works have: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:51:09,933 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2017_10K (1 samples)
+2026-01-19 23:51:10,079 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:51:10,079 - RAGExperiment - INFO -   Total chunks: 409
+2026-01-19 23:51:10,080 - RAGExperiment - INFO -   Avg chunk size: 849.04 chars
+2026-01-19 23:51:10,080 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:51:10,080 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:51:10,080 - RAGExperiment - INFO -   Median chunk size: 937.00 chars
+2026-01-19 23:51:32,861 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2019_10K (1 samples)
+2026-01-19 23:51:33,007 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:51:33,007 - RAGExperiment - INFO -   Total chunks: 416
+2026-01-19 23:51:33,007 - RAGExperiment - INFO -   Avg chunk size: 852.45 chars
+2026-01-19 23:51:33,007 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:51:33,007 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:51:33,007 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:51:50,472 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2023_10K (3 samples)
+2026-01-19 23:51:50,596 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:51:50,596 - RAGExperiment - INFO -   Total chunks: 354
+2026-01-19 23:51:50,596 - RAGExperiment - INFO -   Avg chunk size: 866.28 chars
+2026-01-19 23:51:50,596 - RAGExperiment - INFO -   Min chunk size: 33 chars
+2026-01-19 23:51:50,596 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:51:50,596 - RAGExperiment - INFO -   Median chunk size: 955.00 chars
+2026-01-19 23:52:12,575 - src.experiments.rag_oracle - INFO - Processed 40 samples...
+2026-01-19 23:52:54,576 - src.experiments.rag_oracle - INFO - 
+Processing Document: BESTBUY_2024Q2_10Q (3 samples)
+2026-01-19 23:52:54,643 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:52:54,643 - RAGExperiment - INFO -   Total chunks: 118
+2026-01-19 23:52:54,644 - RAGExperiment - INFO -   Avg chunk size: 884.77 chars
+2026-01-19 23:52:54,644 - RAGExperiment - INFO -   Min chunk size: 68 chars
+2026-01-19 23:52:54,644 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:52:54,644 - RAGExperiment - INFO -   Median chunk size: 953.50 chars
+2026-01-19 23:53:47,143 - src.experiments.rag_oracle - INFO - 
+Processing Document: BLOCK_2016_10K (1 samples)
+2026-01-19 23:53:47,301 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:53:47,301 - RAGExperiment - INFO -   Total chunks: 452
+2026-01-19 23:53:47,301 - RAGExperiment - INFO -   Avg chunk size: 844.52 chars
+2026-01-19 23:53:47,301 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:53:47,301 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:53:47,301 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:54:08,046 - src.experiments.rag_oracle - INFO - 
+Processing Document: BLOCK_2020_10K (2 samples)
+2026-01-19 23:54:08,256 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:54:08,256 - RAGExperiment - INFO -   Total chunks: 637
+2026-01-19 23:54:08,256 - RAGExperiment - INFO -   Avg chunk size: 851.06 chars
+2026-01-19 23:54:08,256 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:54:08,256 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:54:08,256 - RAGExperiment - INFO -   Median chunk size: 947.00 chars
+2026-01-19 23:54:53,122 - src.experiments.rag_oracle - INFO - 
+Processing Document: BOEING_2018_10K (1 samples)
+2026-01-19 23:54:53,293 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:54:53,293 - RAGExperiment - INFO -   Total chunks: 455
+2026-01-19 23:54:53,293 - RAGExperiment - INFO -   Avg chunk size: 834.81 chars
+2026-01-19 23:54:53,293 - RAGExperiment - INFO -   Min chunk size: 16 chars
+2026-01-19 23:54:53,293 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:54:53,294 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-19 23:55:05,833 - src.experiments.rag_oracle - INFO - 
+Processing Document: BOEING_2022_10K (7 samples)
+2026-01-19 23:55:06,080 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:55:06,080 - RAGExperiment - INFO -   Total chunks: 615
+2026-01-19 23:55:06,080 - RAGExperiment - INFO -   Avg chunk size: 830.92 chars
+2026-01-19 23:55:06,080 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:55:06,080 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:55:06,080 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+2026-01-19 23:55:29,160 - src.experiments.rag_oracle - INFO - Processed 50 samples...
+2026-01-19 23:56:09,859 - src.experiments.rag_oracle - ERROR - Error processing sample Who are the primary customers : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:57:04,983 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2017_10K (1 samples)
+2026-01-19 23:57:05,506 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:57:05,506 - RAGExperiment - INFO -   Total chunks: 871
+2026-01-19 23:57:05,506 - RAGExperiment - INFO -   Avg chunk size: 849.57 chars
+2026-01-19 23:57:05,506 - RAGExperiment - INFO -   Min chunk size: 27 chars
+2026-01-19 23:57:05,506 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:57:05,506 - RAGExperiment - INFO -   Median chunk size: 927.00 chars
+2026-01-19 23:57:08,448 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2017 return on a: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:57:08,448 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2021_10K (1 samples)
+2026-01-19 23:57:09,301 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:57:09,301 - RAGExperiment - INFO -   Total chunks: 823
+2026-01-19 23:57:09,301 - RAGExperiment - INFO -   Avg chunk size: 845.95 chars
+2026-01-19 23:57:09,301 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-19 23:57:09,301 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:57:09,302 - RAGExperiment - INFO -   Median chunk size: 925.00 chars
+2026-01-19 23:57:33,090 - src.experiments.rag_oracle - INFO - 
+Processing Document: COCACOLA_2022_10K (1 samples)
+2026-01-19 23:57:33,918 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:57:33,918 - RAGExperiment - INFO -   Total chunks: 802
+2026-01-19 23:57:33,918 - RAGExperiment - INFO -   Avg chunk size: 840.54 chars
+2026-01-19 23:57:33,919 - RAGExperiment - INFO -   Min chunk size: 30 chars
+2026-01-19 23:57:33,919 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:57:33,919 - RAGExperiment - INFO -   Median chunk size: 919.00 chars
+2026-01-19 23:57:36,544 - src.experiments.rag_oracle - ERROR - Error processing sample What is Coca Cola's FY2022 div: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:57:36,544 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2020_10K (1 samples)
+2026-01-19 23:57:36,758 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:57:36,758 - RAGExperiment - INFO -   Total chunks: 524
+2026-01-19 23:57:36,758 - RAGExperiment - INFO -   Avg chunk size: 842.68 chars
+2026-01-19 23:57:36,758 - RAGExperiment - INFO -   Min chunk size: 3 chars
+2026-01-19 23:57:36,758 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:57:36,758 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+2026-01-19 23:57:38,322 - src.experiments.rag_oracle - ERROR - Error processing sample Based on the information provi: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:57:38,322 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2021_10K (1 samples)
+2026-01-19 23:57:38,527 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:57:38,527 - RAGExperiment - INFO -   Total chunks: 508
+2026-01-19 23:57:38,527 - RAGExperiment - INFO -   Avg chunk size: 854.02 chars
+2026-01-19 23:57:38,527 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:57:38,527 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:57:38,527 - RAGExperiment - INFO -   Median chunk size: 945.00 chars
+2026-01-19 23:58:01,983 - src.experiments.rag_oracle - INFO - 
+Processing Document: CORNING_2022_10K (2 samples)
+2026-01-19 23:58:02,237 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:58:02,237 - RAGExperiment - INFO -   Total chunks: 589
+2026-01-19 23:58:02,238 - RAGExperiment - INFO -   Avg chunk size: 850.11 chars
+2026-01-19 23:58:02,238 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:58:02,238 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:58:02,238 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-19 23:58:42,975 - src.experiments.rag_oracle - INFO - 
+Processing Document: COSTCO_2021_10K (1 samples)
+2026-01-19 23:58:43,091 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:58:43,091 - RAGExperiment - INFO -   Total chunks: 265
+2026-01-19 23:58:43,091 - RAGExperiment - INFO -   Avg chunk size: 839.98 chars
+2026-01-19 23:58:43,091 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:58:43,091 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:58:43,091 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+2026-01-19 23:58:54,062 - src.experiments.rag_oracle - INFO - Processed 60 samples...
+2026-01-19 23:58:54,062 - src.experiments.rag_oracle - INFO - 
+Processing Document: CVSHEALTH_2018_10K (1 samples)
+2026-01-19 23:58:54,546 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:58:54,546 - RAGExperiment - INFO -   Total chunks: 1666
+2026-01-19 23:58:54,546 - RAGExperiment - INFO -   Avg chunk size: 858.76 chars
+2026-01-19 23:58:54,546 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-19 23:58:54,547 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:58:54,547 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+2026-01-19 23:59:00,494 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2018 fixed asset: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:59:00,494 - src.experiments.rag_oracle - INFO - Processed 60 samples...
+2026-01-19 23:59:00,494 - src.experiments.rag_oracle - INFO - 
+Processing Document: CVSHEALTH_2022_10K (3 samples)
+2026-01-19 23:59:00,901 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:59:00,901 - RAGExperiment - INFO -   Total chunks: 985
+2026-01-19 23:59:00,901 - RAGExperiment - INFO -   Avg chunk size: 870.79 chars
+2026-01-19 23:59:00,901 - RAGExperiment - INFO -   Min chunk size: 42 chars
+2026-01-19 23:59:00,901 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:59:00,901 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:59:04,621 - src.experiments.rag_oracle - ERROR - Error processing sample Is CVS Health a capital-intens: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:59:04,621 - src.experiments.rag_oracle - INFO - Processed 60 samples...
+2026-01-19 23:59:04,621 - src.experiments.rag_oracle - ERROR - Error processing sample Has CVS Health reported any ma: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:59:04,621 - src.experiments.rag_oracle - INFO - Processed 60 samples...
+2026-01-19 23:59:18,245 - src.experiments.rag_oracle - INFO - 
+Processing Document: FOOTLOCKER_2022_8K_dated_2022-08-19 (1 samples)
+2026-01-19 23:59:18,307 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:59:18,307 - RAGExperiment - INFO -   Total chunks: 101
+2026-01-19 23:59:18,307 - RAGExperiment - INFO -   Avg chunk size: 839.28 chars
+2026-01-19 23:59:18,307 - RAGExperiment - INFO -   Min chunk size: 26 chars
+2026-01-19 23:59:18,307 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:59:18,307 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-19 23:59:28,841 - src.experiments.rag_oracle - INFO - 
+Processing Document: FOOTLOCKER_2022_8K_dated-2022-05-20 (1 samples)
+2026-01-19 23:59:28,858 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:59:28,858 - RAGExperiment - INFO -   Total chunks: 9
+2026-01-19 23:59:28,858 - RAGExperiment - INFO -   Avg chunk size: 753.44 chars
+2026-01-19 23:59:28,858 - RAGExperiment - INFO -   Min chunk size: 96 chars
+2026-01-19 23:59:28,858 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-19 23:59:28,858 - RAGExperiment - INFO -   Median chunk size: 990.00 chars
+2026-01-19 23:59:50,053 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2019_10K (1 samples)
+2026-01-19 23:59:50,248 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:59:50,248 - RAGExperiment - INFO -   Total chunks: 527
+2026-01-19 23:59:50,248 - RAGExperiment - INFO -   Avg chunk size: 859.18 chars
+2026-01-19 23:59:50,248 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-19 23:59:50,248 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:59:50,248 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-19 23:59:52,040 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2019 cash conver: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-19 23:59:52,040 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2020_10K (2 samples)
+2026-01-19 23:59:52,296 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-19 23:59:52,296 - RAGExperiment - INFO -   Total chunks: 509
+2026-01-19 23:59:52,296 - RAGExperiment - INFO -   Avg chunk size: 858.24 chars
+2026-01-19 23:59:52,296 - RAGExperiment - INFO -   Min chunk size: 54 chars
+2026-01-19 23:59:52,296 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-19 23:59:52,296 - RAGExperiment - INFO -   Median chunk size: 949.00 chars
+2026-01-20 00:00:36,647 - src.experiments.rag_oracle - INFO - 
+Processing Document: GENERALMILLS_2022_10K (1 samples)
+2026-01-20 00:00:36,890 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:00:36,890 - RAGExperiment - INFO -   Total chunks: 476
+2026-01-20 00:00:36,891 - RAGExperiment - INFO -   Avg chunk size: 861.74 chars
+2026-01-20 00:00:36,891 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-20 00:00:36,891 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:00:36,891 - RAGExperiment - INFO -   Median chunk size: 947.50 chars
+2026-01-20 00:00:38,820 - src.experiments.rag_oracle - ERROR - Error processing sample We want to calculate a financi: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:00:38,820 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2022_10K (3 samples)
+2026-01-20 00:00:39,297 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:00:39,297 - RAGExperiment - INFO -   Total chunks: 631
+2026-01-20 00:00:39,297 - RAGExperiment - INFO -   Avg chunk size: 828.77 chars
+2026-01-20 00:00:39,297 - RAGExperiment - INFO -   Min chunk size: 6 chars
+2026-01-20 00:00:39,297 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:00:39,297 - RAGExperiment - INFO -   Median chunk size: 926.00 chars
+2026-01-20 00:01:24,270 - src.experiments.rag_oracle - ERROR - Error processing sample Roughly how many times has JnJ: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:01:24,270 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2022Q4_EARNINGS (2 samples)
+2026-01-20 00:01:24,361 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:01:24,361 - RAGExperiment - INFO -   Total chunks: 86
+2026-01-20 00:01:24,361 - RAGExperiment - INFO -   Avg chunk size: 882.85 chars
+2026-01-20 00:01:24,361 - RAGExperiment - INFO -   Min chunk size: 66 chars
+2026-01-20 00:01:24,361 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:01:24,361 - RAGExperiment - INFO -   Median chunk size: 994.00 chars
+2026-01-20 00:02:05,915 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2023_8K_dated-2023-08-30 (3 samples)
+2026-01-20 00:02:06,083 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:02:06,083 - RAGExperiment - INFO -   Total chunks: 72
+2026-01-20 00:02:06,083 - RAGExperiment - INFO -   Avg chunk size: 798.14 chars
+2026-01-20 00:02:06,083 - RAGExperiment - INFO -   Min chunk size: 85 chars
+2026-01-20 00:02:06,083 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:02:06,083 - RAGExperiment - INFO -   Median chunk size: 972.00 chars
+2026-01-20 00:02:27,531 - src.experiments.rag_oracle - INFO - Processed 70 samples...
+2026-01-20 00:02:45,619 - src.experiments.rag_oracle - INFO - 
+Processing Document: JOHNSON_JOHNSON_2023Q2_EARNINGS (1 samples)
+2026-01-20 00:02:45,685 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:02:45,685 - RAGExperiment - INFO -   Total chunks: 86
+2026-01-20 00:02:45,685 - RAGExperiment - INFO -   Avg chunk size: 851.64 chars
+2026-01-20 00:02:45,685 - RAGExperiment - INFO -   Min chunk size: 68 chars
+2026-01-20 00:02:45,685 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:02:45,686 - RAGExperiment - INFO -   Median chunk size: 999.00 chars
+2026-01-20 00:03:07,175 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2021Q1_10Q (2 samples)
+2026-01-20 00:03:07,484 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:03:07,484 - RAGExperiment - INFO -   Total chunks: 708
+2026-01-20 00:03:07,484 - RAGExperiment - INFO -   Avg chunk size: 864.90 chars
+2026-01-20 00:03:07,484 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:03:07,484 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:03:07,485 - RAGExperiment - INFO -   Median chunk size: 988.00 chars
+2026-01-20 00:03:52,802 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2022_10K (1 samples)
+2026-01-20 00:03:53,486 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:03:53,486 - RAGExperiment - INFO -   Total chunks: 1750
+2026-01-20 00:03:53,486 - RAGExperiment - INFO -   Avg chunk size: 891.75 chars
+2026-01-20 00:03:53,486 - RAGExperiment - INFO -   Min chunk size: 3 chars
+2026-01-20 00:03:53,486 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:03:53,486 - RAGExperiment - INFO -   Median chunk size: 984.00 chars
+2026-01-20 00:04:21,504 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2022Q2_10Q (1 samples)
+2026-01-20 00:04:21,848 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:04:21,848 - RAGExperiment - INFO -   Total chunks: 756
+2026-01-20 00:04:21,848 - RAGExperiment - INFO -   Avg chunk size: 868.77 chars
+2026-01-20 00:04:21,849 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-20 00:04:21,849 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:04:21,849 - RAGExperiment - INFO -   Median chunk size: 986.50 chars
+2026-01-20 00:04:45,787 - src.experiments.rag_oracle - INFO - 
+Processing Document: JPMORGAN_2023Q2_10Q (1 samples)
+2026-01-20 00:04:46,177 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:04:46,177 - RAGExperiment - INFO -   Total chunks: 858
+2026-01-20 00:04:46,177 - RAGExperiment - INFO -   Avg chunk size: 874.14 chars
+2026-01-20 00:04:46,177 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:04:46,178 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:04:46,178 - RAGExperiment - INFO -   Median chunk size: 987.00 chars
+2026-01-20 00:05:06,748 - src.experiments.rag_oracle - INFO - 
+Processing Document: KRAFTHEINZ_2019_10K (1 samples)
+2026-01-20 00:05:07,014 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:05:07,014 - RAGExperiment - INFO -   Total chunks: 652
+2026-01-20 00:05:07,014 - RAGExperiment - INFO -   Avg chunk size: 848.83 chars
+2026-01-20 00:05:07,014 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:05:07,014 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:05:07,014 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-20 00:05:09,265 - src.experiments.rag_oracle - ERROR - Error processing sample What is Kraft Heinz's FY2019 i: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:05:09,265 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2020_10K (1 samples)
+2026-01-20 00:05:09,510 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:05:09,510 - RAGExperiment - INFO -   Total chunks: 607
+2026-01-20 00:05:09,510 - RAGExperiment - INFO -   Avg chunk size: 866.19 chars
+2026-01-20 00:05:09,510 - RAGExperiment - INFO -   Min chunk size: 99 chars
+2026-01-20 00:05:09,511 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:05:09,511 - RAGExperiment - INFO -   Median chunk size: 931.00 chars
+2026-01-20 00:05:11,698 - src.experiments.rag_oracle - ERROR - Error processing sample We need to calculate a reasona: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:05:11,698 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2021_10K (1 samples)
+2026-01-20 00:05:11,948 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:05:11,948 - RAGExperiment - INFO -   Total chunks: 623
+2026-01-20 00:05:11,949 - RAGExperiment - INFO -   Avg chunk size: 863.26 chars
+2026-01-20 00:05:11,949 - RAGExperiment - INFO -   Min chunk size: 25 chars
+2026-01-20 00:05:11,949 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:05:11,949 - RAGExperiment - INFO -   Median chunk size: 931.00 chars
+2026-01-20 00:05:35,132 - src.experiments.rag_oracle - INFO - 
+Processing Document: LOCKHEEDMARTIN_2022_10K (1 samples)
+2026-01-20 00:05:35,382 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:05:35,382 - RAGExperiment - INFO -   Total chunks: 596
+2026-01-20 00:05:35,382 - RAGExperiment - INFO -   Avg chunk size: 875.77 chars
+2026-01-20 00:05:35,382 - RAGExperiment - INFO -   Min chunk size: 21 chars
+2026-01-20 00:05:35,382 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:05:35,382 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-20 00:05:58,821 - src.experiments.rag_oracle - INFO - Processed 80 samples...
+2026-01-20 00:05:58,821 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2018_10K (1 samples)
+2026-01-20 00:05:59,112 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:05:59,112 - RAGExperiment - INFO -   Total chunks: 810
+2026-01-20 00:05:59,112 - RAGExperiment - INFO -   Avg chunk size: 867.43 chars
+2026-01-20 00:05:59,112 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:05:59,112 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:05:59,112 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-20 00:06:22,982 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2020_10K (1 samples)
+2026-01-20 00:06:23,223 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:06:23,223 - RAGExperiment - INFO -   Total chunks: 696
+2026-01-20 00:06:23,223 - RAGExperiment - INFO -   Avg chunk size: 862.93 chars
+2026-01-20 00:06:23,223 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:06:23,223 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:06:23,223 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-20 00:06:25,504 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2018 - FY2020 3 : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:06:25,504 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2022_10K (1 samples)
+2026-01-20 00:06:25,828 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:06:25,828 - RAGExperiment - INFO -   Total chunks: 825
+2026-01-20 00:06:25,828 - RAGExperiment - INFO -   Avg chunk size: 851.37 chars
+2026-01-20 00:06:25,828 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-20 00:06:25,828 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:06:25,828 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+2026-01-20 00:06:48,687 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2022Q4_EARNINGS (3 samples)
+2026-01-20 00:06:48,761 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:06:48,761 - RAGExperiment - INFO -   Total chunks: 58
+2026-01-20 00:06:48,761 - RAGExperiment - INFO -   Avg chunk size: 843.50 chars
+2026-01-20 00:06:48,761 - RAGExperiment - INFO -   Min chunk size: 98 chars
+2026-01-20 00:06:48,761 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:06:48,761 - RAGExperiment - INFO -   Median chunk size: 955.00 chars
+2026-01-20 00:07:24,811 - src.experiments.rag_oracle - ERROR - Error processing sample Which region had the worst top: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:07:24,811 - src.experiments.rag_oracle - INFO - 
+Processing Document: MGMRESORTS_2023Q2_10Q (1 samples)
+2026-01-20 00:07:24,905 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:07:24,905 - RAGExperiment - INFO -   Total chunks: 212
+2026-01-20 00:07:24,905 - RAGExperiment - INFO -   Avg chunk size: 826.83 chars
+2026-01-20 00:07:24,905 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:07:24,905 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:07:24,905 - RAGExperiment - INFO -   Median chunk size: 939.50 chars
+2026-01-20 00:07:46,667 - src.experiments.rag_oracle - INFO - 
+Processing Document: MICROSOFT_2016_10K (1 samples)
+2026-01-20 00:07:46,824 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:07:46,824 - RAGExperiment - INFO -   Total chunks: 482
+2026-01-20 00:07:46,824 - RAGExperiment - INFO -   Avg chunk size: 859.66 chars
+2026-01-20 00:07:46,824 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:07:46,824 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:07:46,824 - RAGExperiment - INFO -   Median chunk size: 949.50 chars
+2026-01-20 00:08:09,605 - src.experiments.rag_oracle - INFO - 
+Processing Document: MICROSOFT_2023_10K (1 samples)
+2026-01-20 00:08:09,845 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:08:09,845 - RAGExperiment - INFO -   Total chunks: 438
+2026-01-20 00:08:09,845 - RAGExperiment - INFO -   Avg chunk size: 848.43 chars
+2026-01-20 00:08:09,845 - RAGExperiment - INFO -   Min chunk size: 25 chars
+2026-01-20 00:08:09,846 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:08:09,846 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-20 00:08:31,707 - src.experiments.rag_oracle - INFO - 
+Processing Document: NETFLIX_2015_10K (1 samples)
+2026-01-20 00:08:31,801 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:08:31,801 - RAGExperiment - INFO -   Total chunks: 276
+2026-01-20 00:08:31,802 - RAGExperiment - INFO -   Avg chunk size: 845.11 chars
+2026-01-20 00:08:31,802 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:08:31,802 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:08:31,802 - RAGExperiment - INFO -   Median chunk size: 931.50 chars
+2026-01-20 00:08:32,895 - src.experiments.rag_oracle - ERROR - Error processing sample We want to calculate a financi: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:08:32,896 - src.experiments.rag_oracle - INFO - 
+Processing Document: NETFLIX_2017_10K (1 samples)
+2026-01-20 00:08:32,996 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:08:32,996 - RAGExperiment - INFO -   Total chunks: 280
+2026-01-20 00:08:32,996 - RAGExperiment - INFO -   Avg chunk size: 844.82 chars
+2026-01-20 00:08:32,996 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-20 00:08:32,996 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:08:32,996 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+2026-01-20 00:08:55,309 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2018_10K (1 samples)
+2026-01-20 00:08:55,475 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:08:55,475 - RAGExperiment - INFO -   Total chunks: 466
+2026-01-20 00:08:55,476 - RAGExperiment - INFO -   Avg chunk size: 858.78 chars
+2026-01-20 00:08:55,476 - RAGExperiment - INFO -   Min chunk size: 26 chars
+2026-01-20 00:08:55,476 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:08:55,476 - RAGExperiment - INFO -   Median chunk size: 930.50 chars
+2026-01-20 00:09:18,346 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2019_10K (1 samples)
+2026-01-20 00:09:18,497 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:09:18,497 - RAGExperiment - INFO -   Total chunks: 439
+2026-01-20 00:09:18,497 - RAGExperiment - INFO -   Avg chunk size: 846.36 chars
+2026-01-20 00:09:18,497 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-20 00:09:18,497 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:09:18,497 - RAGExperiment - INFO -   Median chunk size: 928.00 chars
+2026-01-20 00:09:28,578 - src.experiments.rag_oracle - INFO - Processed 90 samples...
+2026-01-20 00:09:28,578 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2021_10K (1 samples)
+2026-01-20 00:09:28,728 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:09:28,728 - RAGExperiment - INFO -   Total chunks: 472
+2026-01-20 00:09:28,728 - RAGExperiment - INFO -   Avg chunk size: 856.45 chars
+2026-01-20 00:09:28,728 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-20 00:09:28,728 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:09:28,729 - RAGExperiment - INFO -   Median chunk size: 926.00 chars
+2026-01-20 00:09:30,437 - src.experiments.rag_oracle - ERROR - Error processing sample When primarily referencing the: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:09:30,437 - src.experiments.rag_oracle - INFO - Processed 90 samples...
+2026-01-20 00:09:30,437 - src.experiments.rag_oracle - INFO - 
+Processing Document: NIKE_2023_10K (1 samples)
+2026-01-20 00:09:30,598 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:09:30,598 - RAGExperiment - INFO -   Total chunks: 433
+2026-01-20 00:09:30,598 - RAGExperiment - INFO -   Avg chunk size: 870.92 chars
+2026-01-20 00:09:30,598 - RAGExperiment - INFO -   Min chunk size: 19 chars
+2026-01-20 00:09:30,598 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:09:30,598 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-20 00:09:53,006 - src.experiments.rag_oracle - INFO - 
+Processing Document: PAYPAL_2022_10K (1 samples)
+2026-01-20 00:09:53,242 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:09:53,242 - RAGExperiment - INFO -   Total chunks: 568
+2026-01-20 00:09:53,242 - RAGExperiment - INFO -   Avg chunk size: 853.18 chars
+2026-01-20 00:09:53,242 - RAGExperiment - INFO -   Min chunk size: 30 chars
+2026-01-20 00:09:53,242 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:09:53,242 - RAGExperiment - INFO -   Median chunk size: 936.00 chars
+2026-01-20 00:10:16,005 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2021_10K (1 samples)
+2026-01-20 00:10:16,408 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:10:16,408 - RAGExperiment - INFO -   Total chunks: 1372
+2026-01-20 00:10:16,408 - RAGExperiment - INFO -   Avg chunk size: 817.40 chars
+2026-01-20 00:10:16,408 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-20 00:10:16,408 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:10:16,408 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+2026-01-20 00:10:42,325 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2022_10K (5 samples)
+2026-01-20 00:10:43,148 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:10:43,148 - RAGExperiment - INFO -   Total chunks: 1447
+2026-01-20 00:10:43,148 - RAGExperiment - INFO -   Avg chunk size: 816.49 chars
+2026-01-20 00:10:43,148 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:10:43,148 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:10:43,148 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-20 00:10:47,940 - src.experiments.rag_oracle - ERROR - Error processing sample What are the geographies that : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:11:22,609 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2022 unadjusted : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:11:22,609 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2022 unadjusted : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:11:22,609 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023_8K_dated-2023-05-05 (1 samples)
+2026-01-20 00:11:22,623 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:11:22,623 - RAGExperiment - INFO -   Total chunks: 9
+2026-01-20 00:11:22,623 - RAGExperiment - INFO -   Avg chunk size: 693.11 chars
+2026-01-20 00:11:22,623 - RAGExperiment - INFO -   Min chunk size: 234 chars
+2026-01-20 00:11:22,623 - RAGExperiment - INFO -   Max chunk size: 1020 chars
+2026-01-20 00:11:22,623 - RAGExperiment - INFO -   Median chunk size: 789.00 chars
+2026-01-20 00:11:34,708 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023_8K_dated-2023-05-30 (2 samples)
+2026-01-20 00:11:35,099 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:11:35,099 - RAGExperiment - INFO -   Total chunks: 641
+2026-01-20 00:11:35,099 - RAGExperiment - INFO -   Avg chunk size: 837.18 chars
+2026-01-20 00:11:35,099 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:11:35,099 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:11:35,099 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+2026-01-20 00:12:15,579 - src.experiments.rag_oracle - INFO - 
+Processing Document: PEPSICO_2023Q1_EARNINGS (2 samples)
+2026-01-20 00:12:15,606 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:12:15,606 - RAGExperiment - INFO -   Total chunks: 45
+2026-01-20 00:12:15,607 - RAGExperiment - INFO -   Avg chunk size: 826.82 chars
+2026-01-20 00:12:15,607 - RAGExperiment - INFO -   Min chunk size: 123 chars
+2026-01-20 00:12:15,607 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:12:15,607 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+2026-01-20 00:12:45,038 - src.experiments.rag_oracle - INFO - Processed 100 samples...
+2026-01-20 00:12:45,038 - src.experiments.rag_oracle - INFO - 
+Processing Document: PFIZER_2021_10K (3 samples)
+2026-01-20 00:12:45,283 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:12:45,283 - RAGExperiment - INFO -   Total chunks: 798
+2026-01-20 00:12:45,283 - RAGExperiment - INFO -   Avg chunk size: 874.16 chars
+2026-01-20 00:12:45,283 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-20 00:12:45,283 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:12:45,283 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+2026-01-20 00:13:30,551 - src.experiments.rag_oracle - ERROR - Error processing sample What are three main companies : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:13:30,551 - src.experiments.rag_oracle - INFO - 
+Processing Document: Pfizer_2023Q2_10Q (3 samples)
+2026-01-20 00:13:30,690 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:13:30,690 - RAGExperiment - INFO -   Total chunks: 315
+2026-01-20 00:13:30,690 - RAGExperiment - INFO -   Avg chunk size: 867.42 chars
+2026-01-20 00:13:30,690 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-20 00:13:30,690 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:13:30,690 - RAGExperiment - INFO -   Median chunk size: 953.00 chars
+2026-01-20 00:14:24,392 - src.experiments.rag_oracle - INFO - 
+Processing Document: ULTABEAUTY_2023_10K (2 samples)
+2026-01-20 00:14:24,736 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:14:24,736 - RAGExperiment - INFO -   Total chunks: 381
+2026-01-20 00:14:24,736 - RAGExperiment - INFO -   Avg chunk size: 836.05 chars
+2026-01-20 00:14:24,736 - RAGExperiment - INFO -   Min chunk size: 28 chars
+2026-01-20 00:14:24,736 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:14:24,736 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+2026-01-20 00:14:59,420 - src.experiments.rag_oracle - INFO - 
+Processing Document: ULTABEAUTY_2023Q4_EARNINGS (4 samples)
+2026-01-20 00:14:59,442 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:14:59,442 - RAGExperiment - INFO -   Total chunks: 26
+2026-01-20 00:14:59,442 - RAGExperiment - INFO -   Avg chunk size: 795.23 chars
+2026-01-20 00:14:59,442 - RAGExperiment - INFO -   Min chunk size: 151 chars
+2026-01-20 00:14:59,442 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:14:59,442 - RAGExperiment - INFO -   Median chunk size: 972.50 chars
+2026-01-20 00:15:56,698 - src.experiments.rag_oracle - INFO - Processed 110 samples...
+2026-01-20 00:16:18,120 - src.experiments.rag_oracle - INFO - 
+Processing Document: VERIZON_2021_10K (2 samples)
+2026-01-20 00:16:18,381 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:16:18,381 - RAGExperiment - INFO -   Total chunks: 563
+2026-01-20 00:16:18,381 - RAGExperiment - INFO -   Avg chunk size: 869.01 chars
+2026-01-20 00:16:18,381 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-20 00:16:18,381 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:16:18,381 - RAGExperiment - INFO -   Median chunk size: 954.00 chars
+2026-01-20 00:16:35,829 - src.experiments.rag_oracle - ERROR - Error processing sample As of FY 2021, how much did Ve: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:16:35,829 - src.experiments.rag_oracle - INFO - 
+Processing Document: VERIZON_2022_10K (3 samples)
+2026-01-20 00:16:36,118 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:16:36,118 - RAGExperiment - INFO -   Total chunks: 569
+2026-01-20 00:16:36,118 - RAGExperiment - INFO -   Avg chunk size: 869.27 chars
+2026-01-20 00:16:36,118 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-20 00:16:36,118 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-20 00:16:36,118 - RAGExperiment - INFO -   Median chunk size: 959.00 chars
+2026-01-20 00:16:58,778 - src.experiments.rag_oracle - ERROR - Error processing sample Is Verizon a capital intensive: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:17:19,476 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2018_10K (1 samples)
+2026-01-20 00:17:19,816 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:17:19,816 - RAGExperiment - INFO -   Total chunks: 1121
+2026-01-20 00:17:19,816 - RAGExperiment - INFO -   Avg chunk size: 847.98 chars
+2026-01-20 00:17:19,816 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:17:19,816 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:17:19,816 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-20 00:17:23,939 - src.experiments.rag_oracle - ERROR - Error processing sample What is FY2018 days payable ou: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:17:23,939 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2019_10K (1 samples)
+2026-01-20 00:17:24,121 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:17:24,121 - RAGExperiment - INFO -   Total chunks: 554
+2026-01-20 00:17:24,121 - RAGExperiment - INFO -   Avg chunk size: 813.14 chars
+2026-01-20 00:17:24,121 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-20 00:17:24,121 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:17:24,121 - RAGExperiment - INFO -   Median chunk size: 899.00 chars
+2026-01-20 00:17:47,587 - src.experiments.rag_oracle - INFO - 
+Processing Document: WALMART_2020_10K (1 samples)
+2026-01-20 00:17:47,805 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-20 00:17:47,805 - RAGExperiment - INFO -   Total chunks: 696
+2026-01-20 00:17:47,805 - RAGExperiment - INFO -   Avg chunk size: 856.54 chars
+2026-01-20 00:17:47,805 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-20 00:17:47,805 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-20 00:17:47,806 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+2026-01-20 00:17:50,886 - src.experiments.rag_oracle - ERROR - Error processing sample What is the FY2018 - FY2020 3 : The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - 
+================================================================================
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - ================================================================================
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - 
+Generated Answer Lengths:
+2026-01-20 00:17:50,887 - RAGExperiment - INFO -   Mean: 908.75 chars
+2026-01-20 00:17:50,887 - RAGExperiment - INFO -   Min: 212 chars
+2026-01-20 00:17:50,887 - RAGExperiment - INFO -   Max: 1488 chars
+2026-01-20 00:17:50,887 - RAGExperiment - INFO -   Median: 900.00 chars
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - 
+No automatic BLEU/ROUGE metrics computed during the run (evaluation is now post-hoc).
+2026-01-20 00:17:50,887 - RAGExperiment - INFO - ================================================================================
+2026-01-20 00:17:50,915 - RAGExperiment - INFO - 
+Results saved to: /part/01/Tmp/kobeissa/4906/outputs/oracle_page/oracle_page/20260119/oracle_page_20260120_001750.json
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - 
+================================================================================
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - EXPERIMENT COMPLETE
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - ================================================================================
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - 
+================================================================================
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - STARTING AUTOMATED EVALUATION
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - ================================================================================
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - Input file: /part/01/Tmp/kobeissa/4906/outputs/oracle_page/oracle_page/20260119/oracle_page_20260120_001750.json
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - Results dir: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_page/20260119
+2026-01-20 00:17:50,916 - RAGExperiment - INFO - Eval Type: both
+2026-01-20 00:17:50,924 - RAGExperiment - INFO - Unloading generator model to free memory for evaluation...
+2026-01-20 00:17:51,292 - RAGExperiment - INFO - ✓ Model unloaded
+2026-01-20 00:17:51,292 - RAGExperiment - INFO - Running Retrieval Evaluation...
+2026-01-20 00:17:51,292 - absl - INFO - Using default tokenizer.
+2026-01-20 00:17:59,666 - RAGExperiment - INFO - Retrieval Evaluation Complete.
+2026-01-20 00:17:59,666 - RAGExperiment - INFO - MRR: 0.2304
+2026-01-20 00:17:59,666 - RAGExperiment - INFO - Running Generative Evaluation...
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2026-01-20 00:18:01,139 - src.evaluation.generative_evaluator - INFO - BERTScore initialized.
+2026-01-20 00:18:01,139 - absl - INFO - Using default tokenizer.
+2026-01-20 00:18:03,431 - RAGExperiment - INFO - Generative Evaluation Complete.
+2026-01-20 00:18:03,457 - RAGExperiment - INFO - Evaluation results saved to: /part/01/Tmp/kobeissa/4906/outputs/results/oracle_page/20260119/oracle_page_20260120_001750_scored.json
+
+================================================================================
+Experiment Component Summary [final]
+================================================================================
+Experiment Type : oracle_page
+LLM Generator   : HuggingFacePipeline (Qwen/Qwen2.5-7B-Instruct) (package=transformers.pipelines.text_generation, load_in_8bit=True, device=cuda)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=chars, chunk_size=1024, chunk_overlap=30)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=sentence-transformers/all-mpnet-base-v2, resolved_model=sentence-transformers/all-mpnet-base-v2)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=30
+Generation Mode : Local HF weights
+================================================================================
+
+Copying results back to: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/outputs
+Done!

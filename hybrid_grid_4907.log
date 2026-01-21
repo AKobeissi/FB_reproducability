@@ -1,0 +1,663 @@
+Working in scratch: /Tmp/kobeissa/4907
+Copying repository content from /u/kobeissa/Documents/thesis/experiments/FB_reproducability to scratch...
+sending incremental file list
+./
+.env
+.gitignore
+EVALUATION.md
+LICENSE
+README.md
+core
+difficulty_distributions.png
+difficulty_regime_summary.csv
+requirements.txt
+runner.py
+analysis/
+analysis/query_difficulty/
+analysis/query_difficulty/ALL__diagnostics.csv
+analysis/query_difficulty/ALL__regime_summary.csv
+analysis/query_difficulty/analysis.py
+analysis/query_difficulty/difficulty_signals.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__bm25_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__diagnostics.json
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__lexical_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__merged_samples.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__regime_summary.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__semantic_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__bm25_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__diagnostics.json
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__lexical_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__merged_samples.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__regime_summary.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__semantic_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__bm25_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__diagnostics.json
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__lexical_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__merged_samples.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__regime_summary.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__semantic_vs_hit.png
+data/
+data/financebench_document_information.jsonl
+data/financebench_open_source.jsonl
+notebooks/
+notebooks/playground.ipynb
+notebooks/tensor_logic.ipynb
+pdfs/
+pdfs/3M_2015_10K.pdf
+pdfs/3M_2016_10K.pdf
+pdfs/3M_2017_10K.pdf
+pdfs/3M_2018_10K.pdf
+pdfs/3M_2019_10K.pdf
+pdfs/3M_2020_10K.pdf
+pdfs/3M_2021_10K.pdf
+pdfs/3M_2022_10K.pdf
+pdfs/3M_2023Q2_10Q.pdf
+pdfs/ACTIVISIONBLIZZARD_2015_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2016_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2017_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2018_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2019_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2020_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2021_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2022_10K.pdf
+pdfs/ACTIVSIONBLIZZARD_2023Q2_10Q.pdf
+pdfs/ADOBE_2015_10K.pdf
+pdfs/ADOBE_2016_10K.pdf
+pdfs/ADOBE_2017_10K.pdf
+pdfs/ADOBE_2018_10K.pdf
+pdfs/ADOBE_2019_10K.pdf
+pdfs/ADOBE_2020_10K.pdf
+pdfs/ADOBE_2021_10K.pdf
+pdfs/ADOBE_2022Q2_10Q.pdf
+pdfs/ADOBE_2022_10K.pdf
+pdfs/AES_2015_10K.pdf
+pdfs/AES_2016_10K.pdf
+pdfs/AES_2017_10K.pdf
+pdfs/AES_2018_10K.pdf
+pdfs/AES_2019_10K.pdf
+pdfs/AES_2020_10K.pdf
+pdfs/AES_2021_10K.pdf
+pdfs/AES_2022_10K.pdf
+pdfs/AMAZON_2015_10K.pdf
+pdfs/AMAZON_2016_10K.pdf
+pdfs/AMAZON_2017_10K.pdf
+pdfs/AMAZON_2018_10K.pdf
+pdfs/AMAZON_2019_10K.pdf
+pdfs/AMAZON_2020_10K.pdf
+pdfs/AMAZON_2021_10K.pdf
+pdfs/AMAZON_2022_10K.pdf
+pdfs/AMCOR_2019_10K.pdf
+pdfs/AMCOR_2020_10K.pdf
+pdfs/AMCOR_2021_10K.pdf
+pdfs/AMCOR_2022_10K.pdf
+pdfs/AMCOR_2022_8K_2022-04-26.pdf
+pdfs/AMCOR_2022_8K_2022-07-01.pdf
+pdfs/AMCOR_2022_8K_dated-2022-04-26.pdf
+pdfs/AMCOR_2022_8K_dated-2022-07-01.pdf
+pdfs/AMCOR_2023Q2_10Q.pdf
+pdfs/AMCOR_2023Q4_EARNINGS.pdf
+pdfs/AMCOR_2023_10K.pdf
+pdfs/AMD_2015_10K.pdf
+pdfs/AMD_2016_10K.pdf
+pdfs/AMD_2017_10K.pdf
+pdfs/AMD_2018_10K.pdf
+pdfs/AMD_2019_10K.pdf
+pdfs/AMD_2020_10K.pdf
+pdfs/AMD_2021_10K.pdf
+pdfs/AMD_2022_10K.pdf
+pdfs/AMD_2022_annualreport.pdf
+pdfs/AMERICANEXPRESS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2015_10K.pdf
+pdfs/AMERICANWATERWORKS_2016_10K.pdf
+pdfs/AMERICANWATERWORKS_2017_10K.pdf
+pdfs/AMERICANWATERWORKS_2018_10K.pdf
+pdfs/AMERICANWATERWORKS_2019_10K.pdf
+pdfs/AMERICANWATERWORKS_2020_10K.pdf
+pdfs/AMERICANWATERWORKS_2021_10K.pdf
+pdfs/AMERICANWATERWORKS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2023Q2_10Q.pdf
+pdfs/APPLE_2015_10K.pdf
+pdfs/APPLE_2016_10K.pdf
+pdfs/APPLE_2017_10K.pdf
+pdfs/APPLE_2018_10K.pdf
+pdfs/APPLE_2019_10K.pdf
+pdfs/APPLE_2020_10K.pdf
+pdfs/APPLE_2021_10K.pdf
+pdfs/APPLE_2022_10K.pdf
+pdfs/APPLE_2023Q3_10Q.pdf
+pdfs/BESTBUY_2015_10K.pdf
+pdfs/BESTBUY_2016_10K.pdf
+pdfs/BESTBUY_2017_10K.pdf
+pdfs/BESTBUY_2018_10K.pdf
+pdfs/BESTBUY_2019_10K.pdf
+pdfs/BESTBUY_2020_10K.pdf
+pdfs/BESTBUY_2021_10K.pdf
+pdfs/BESTBUY_2022_10K.pdf
+pdfs/BESTBUY_2023Q4_EARNINGS.pdf
+pdfs/BESTBUY_2023_10K.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-12.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-24.pdf
+pdfs/BESTBUY_2024Q2_10Q.pdf
+pdfs/BESTBUY_2024Q2_EARNINGS.pdf
+pdfs/BLOCK_2015_10K.pdf
+pdfs/BLOCK_2016_10K.pdf
+pdfs/BLOCK_2017_10K.pdf
+pdfs/BLOCK_2018_10K.pdf
+pdfs/BLOCK_2019_10K.pdf
+pdfs/BLOCK_2020_10K.pdf
+pdfs/BLOCK_2021_10K.pdf
+pdfs/BLOCK_2022_10K.pdf
+pdfs/BLOCK_2022_8K_dated-2022-01-28.pdf
+pdfs/BOEING_2015_10K.pdf
+pdfs/BOEING_2016_10K.pdf
+pdfs/BOEING_2017_10K.pdf
+pdfs/BOEING_2018_10K.pdf
+pdfs/BOEING_2019_10K.pdf
+pdfs/BOEING_2020_10K.pdf
+pdfs/BOEING_2021_10K.pdf
+pdfs/BOEING_2022_10K.pdf
+pdfs/BOSTONPROPERTIES_2015_10K.pdf
+pdfs/COCACOLA_2015_10K.pdf
+pdfs/COCACOLA_2016_10K.pdf
+pdfs/COCACOLA_2017_10K.pdf
+pdfs/COCACOLA_2018_10K.pdf
+pdfs/COCACOLA_2019_10K.pdf
+pdfs/COCACOLA_2020_10K.pdf
+pdfs/COCACOLA_2021_10K.pdf
+pdfs/COCACOLA_2022_10K.pdf
+pdfs/CORNING_2015_10K.pdf
+pdfs/CORNING_2016_10K.pdf
+pdfs/CORNING_2017_10K.pdf
+pdfs/CORNING_2018_10K.pdf
+pdfs/CORNING_2019_10K.pdf
+pdfs/CORNING_2020_10K.pdf
+pdfs/CORNING_2021_10K.pdf
+pdfs/CORNING_2022_10K.pdf
+pdfs/CORNING_2023Q2_10Q.pdf
+pdfs/COSTCO_2015_10K.pdf
+pdfs/COSTCO_2016_10K.pdf
+pdfs/COSTCO_2017_10K.pdf
+pdfs/COSTCO_2018_10K.pdf
+pdfs/COSTCO_2019_10K.pdf
+pdfs/COSTCO_2020_10K.pdf
+pdfs/COSTCO_2021_10K.pdf
+pdfs/COSTCO_2022_10K.pdf
+pdfs/COSTCO_2023Q1_EARNINGS.pdf
+pdfs/COSTCO_2023Q3_EARNINGS.pdf
+pdfs/COSTCO_2023_8K_dated-2023-01-19.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-09.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-16.pdf
+pdfs/CVSHEALTH_2015_10K.pdf
+pdfs/CVSHEALTH_2016_10K.pdf
+pdfs/CVSHEALTH_2017_10K.pdf
+pdfs/CVSHEALTH_2018_10K.pdf
+pdfs/CVSHEALTH_2019_10K.pdf
+pdfs/CVSHEALTH_2020_10K.pdf
+pdfs/CVSHEALTH_2021_10K.pdf
+pdfs/CVSHEALTH_2022_10K.pdf
+pdfs/EBAY_2015_10K.pdf
+pdfs/EBAY_2016_10K.pdf
+pdfs/EBAY_2017_10K.pdf
+pdfs/EBAY_2018_10K.pdf
+pdfs/EBAY_2019_10K.pdf
+pdfs/EBAY_2020_10K.pdf
+pdfs/EBAY_2021_10K.pdf
+pdfs/EBAY_2022_10K.pdf
+pdfs/EBAY_2023Q1_8K.pdf
+pdfs/EBAY_2023Q1_EARNINGS.pdf
+pdfs/EBAY_2023Q2_10Q.pdf
+pdfs/EBAY_2023Q2_8K.pdf
+pdfs/EBAY_2023Q2_EARNINGS.pdf
+pdfs/FEDEX_2023_10K.pdf
+pdfs/FEDEX_2023_annualreport.pdf
+pdfs/FOOTLOCKER_2022_10K.pdf
+pdfs/FOOTLOCKER_2022_10Q.pdf
+pdfs/FOOTLOCKER_2022_8K_dated-2022-05-20.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2022-08-19.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2023-02-21.pdf
+pdfs/FOOTLOCKER_2023Q3_10Q.pdf
+pdfs/FOOTLOCKER_2023_10K.pdf
+pdfs/FOOTLOCKER_2023_annualreport.pdf
+pdfs/GENERALMILLS_2015_10K.pdf
+pdfs/GENERALMILLS_2016_10K.pdf
+pdfs/GENERALMILLS_2017_10K.pdf
+pdfs/GENERALMILLS_2018_10K.pdf
+pdfs/GENERALMILLS_2019_10K.pdf
+pdfs/GENERALMILLS_2020_10K.pdf
+pdfs/GENERALMILLS_2021_10K.pdf
+pdfs/GENERALMILLS_2022_10K.pdf
+pdfs/GENERALMILLS_2023_10K.pdf
+pdfs/GENERALMILLS_2023_annualreport.pdf
+pdfs/INTEL_2015_10K.pdf
+pdfs/INTEL_2016_10K.pdf
+pdfs/INTEL_2017_10K.pdf
+pdfs/INTEL_2018_10K.pdf
+pdfs/INTEL_2019_10K.pdf
+pdfs/INTEL_2020_10K.pdf
+pdfs/INTEL_2021_10K.pdf
+pdfs/INTEL_2022Q4_EARNINGS.pdf
+pdfs/INTEL_2022_10K.pdf
+pdfs/INTEL_2023Q1_EARNINGS.pdf
+pdfs/INTEL_2023_8K_dated-2022-11-22.pdf
+pdfs/INTEL_2023_8K_dated-2023-02-10.pdf
+pdfs/INTEL_2023_8K_dated-2023-08-16.pdf
+pdfs/JOHNSON_JOHNSON_2015_10K.pdf
+pdfs/JOHNSON_JOHNSON_2016_10K.pdf
+pdfs/JOHNSON_JOHNSON_2017_10K.pdf
+pdfs/JOHNSON_JOHNSON_2018_10K.pdf
+pdfs/JOHNSON_JOHNSON_2019_10K.pdf
+pdfs/JOHNSON_JOHNSON_2020_10K.pdf
+pdfs/JOHNSON_JOHNSON_2021_10K.pdf
+pdfs/JOHNSON_JOHNSON_2022Q4_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2022_10K.pdf
+pdfs/JOHNSON_JOHNSON_2023Q1_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023Q2_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-23.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-30.pdf
+pdfs/JPMORGAN_2021Q1_10Q.pdf
+pdfs/JPMORGAN_2021Q2_10Q.pdf
+pdfs/JPMORGAN_2021Q3_10Q.pdf
+pdfs/JPMORGAN_2021_10K.pdf
+pdfs/JPMORGAN_2022Q1_10Q.pdf
+pdfs/JPMORGAN_2022Q2_10Q.pdf
+pdfs/JPMORGAN_2022Q3_10Q.pdf
+pdfs/JPMORGAN_2022_10K.pdf
+pdfs/JPMORGAN_2023Q1_10Q.pdf
+pdfs/JPMORGAN_2023Q2_10Q.pdf
+pdfs/KRAFTHEINZ_2015_10K.pdf
+pdfs/KRAFTHEINZ_2016_10K.pdf
+pdfs/KRAFTHEINZ_2017_10K.pdf
+pdfs/KRAFTHEINZ_2018_10K.pdf
+pdfs/KRAFTHEINZ_2019_10K.pdf
+pdfs/KRAFTHEINZ_2020_10K.pdf
+pdfs/KRAFTHEINZ_2021_10K.pdf
+pdfs/KRAFTHEINZ_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2015_10K.pdf
+pdfs/LOCKHEEDMARTIN_2016_10K.pdf
+pdfs/LOCKHEEDMARTIN_2017_10K.pdf
+pdfs/LOCKHEEDMARTIN_2018_10K.pdf
+pdfs/LOCKHEEDMARTIN_2019_10K.pdf
+pdfs/LOCKHEEDMARTIN_2020_10K.pdf
+pdfs/LOCKHEEDMARTIN_2021_10K.pdf
+pdfs/LOCKHEEDMARTIN_2022Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2023Q1_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-05-25.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-08-24.pdf
+pdfs/MCDONALDS_2022Q4_EARNINGS.pdf
+pdfs/MCDONALDS_2022_10K.pdf
+pdfs/MCDONALDS_2023Q1_EARNINGS.pdf
+pdfs/MCDONALDS_2023Q2_EARNINGS.pdf
+pdfs/MCDONALDS_8K_dated-2023-01-06.pdf
+pdfs/MCDONALDS_8K_dated-2023-02-13.pdf
+pdfs/MCDONALDS_8K_dated-2023-08-14.pdf
+pdfs/MGMRESORTS_2015_10K.pdf
+pdfs/MGMRESORTS_2016_10K.pdf
+pdfs/MGMRESORTS_2017_10K.pdf
+pdfs/MGMRESORTS_2018_10K.pdf
+pdfs/MGMRESORTS_2019_10K.pdf
+pdfs/MGMRESORTS_2020_10K.pdf
+pdfs/MGMRESORTS_2021_10K.pdf
+pdfs/MGMRESORTS_2022Q4_EARNINGS.pdf
+pdfs/MGMRESORTS_2022_10K.pdf
+pdfs/MGMRESORTS_2023Q2_10Q.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-03-01.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-09-12.pdf
+pdfs/MICROSOFT_2015_10K.pdf
+pdfs/MICROSOFT_2016_10K.pdf
+pdfs/MICROSOFT_2017_10K.pdf
+pdfs/MICROSOFT_2018_10K.pdf
+pdfs/MICROSOFT_2019_10K.pdf
+pdfs/MICROSOFT_2020_10K.pdf
+pdfs/MICROSOFT_2021_10K.pdf
+pdfs/MICROSOFT_2022_10K.pdf
+pdfs/MICROSOFT_2023_10K.pdf
+pdfs/NETFLIX_2015_10K.pdf
+pdfs/NETFLIX_2016_10K.pdf
+pdfs/NETFLIX_2017_10K.pdf
+pdfs/NETFLIX_2018_10K.pdf
+pdfs/NETFLIX_2019_10K.pdf
+pdfs/NETFLIX_2020_10K.pdf
+pdfs/NETFLIX_2021_10K.pdf
+pdfs/NETFLIX_2022_10K.pdf
+pdfs/NETFLIX_2023Q2_10Q.pdf
+pdfs/NIKE_2015_10K.pdf
+pdfs/NIKE_2016_10K.pdf
+pdfs/NIKE_2017_10K.pdf
+pdfs/NIKE_2018_10K.pdf
+pdfs/NIKE_2019_10K.pdf
+pdfs/NIKE_2020_10K.pdf
+pdfs/NIKE_2021_10K.pdf
+pdfs/NIKE_2022_10K.pdf
+pdfs/NIKE_2023_10K.pdf
+pdfs/ORACLE_2015_10K.pdf
+pdfs/ORACLE_2016_10K.pdf
+pdfs/ORACLE_2017_10K.pdf
+pdfs/ORACLE_2018_10K.pdf
+pdfs/ORACLE_2019_10K.pdf
+pdfs/ORACLE_2020_10K.pdf
+pdfs/ORACLE_2021_10K.pdf
+pdfs/ORACLE_2022_10K.pdf
+pdfs/ORACLE_2023_10K.pdf
+pdfs/PAYPAL_2022_10K.pdf
+pdfs/PAYPAL_2023Q2_10Q.pdf
+pdfs/PEPSICO_2015_10K.pdf
+pdfs/PEPSICO_2016_10K.pdf
+pdfs/PEPSICO_2017_10K.pdf
+pdfs/PEPSICO_2018_10K.pdf
+pdfs/PEPSICO_2019_10K.pdf
+pdfs/PEPSICO_2020_10K.pdf
+pdfs/PEPSICO_2021_10K.pdf
+pdfs/PEPSICO_2022Q4_EARNINGS.pdf
+pdfs/PEPSICO_2022_10K.pdf
+pdfs/PEPSICO_2023Q1_EARNINGS.pdf
+pdfs/PEPSICO_2023Q2_EARNINGS.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-05.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-30.pdf
+pdfs/PFIZER_2015_10K.pdf
+pdfs/PFIZER_2016_10K.pdf
+pdfs/PFIZER_2017_10K.pdf
+pdfs/PFIZER_2018_10K.pdf
+pdfs/PFIZER_2019_10K.pdf
+pdfs/PFIZER_2020_10K.pdf
+pdfs/PFIZER_2021_10K.pdf
+pdfs/PFIZER_2022_10K.pdf
+pdfs/PFIZER_2023Q2_EARNINGS.pdf
+pdfs/PG_E_2015_10K.pdf
+pdfs/PG_E_2016_10K.pdf
+pdfs/PG_E_2017_10K.pdf
+pdfs/PG_E_2018_10K.pdf
+pdfs/PG_E_2019_10K.pdf
+pdfs/PG_E_2020_10K.pdf
+pdfs/PG_E_2021_10K.pdf
+pdfs/PG_E_2022_10K.pdf
+pdfs/PG_E_2023Q3_10Q.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-06-01.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-07-27.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-04.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-31.pdf
+pdfs/Pfizer_2023Q2_10Q.pdf
+pdfs/SALESFORCE_2021_8K_dated-2021-07-21.pdf
+pdfs/SALESFORCE_2021_8K_dated-2023-01-04.pdf
+pdfs/SALESFORCE_2023Q3_10Q.pdf
+pdfs/SALESFORCE_2023_10K.pdf
+pdfs/SALESFORCE_2024Q1_EARNINGS.pdf
+pdfs/SALESFORCE_2024Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q4_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023_10K.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-06-07.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-09-18.pdf
+pdfs/ULTABEAUTY_2024Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2024Q2_EARNINGS.pdf
+pdfs/VERIZON_2015_10K.pdf
+pdfs/VERIZON_2016_10K.pdf
+pdfs/VERIZON_2017_10K.pdf
+pdfs/VERIZON_2018_10K.pdf
+pdfs/VERIZON_2019_10K.pdf
+pdfs/VERIZON_2020_10K.pdf
+pdfs/VERIZON_2021_10K.pdf
+pdfs/VERIZON_2022_10K.pdf
+pdfs/WALMART_2015_10K.pdf
+pdfs/WALMART_2016_10K.pdf
+pdfs/WALMART_2017_10K.pdf
+pdfs/WALMART_2018_10K.pdf
+pdfs/WALMART_2019_10K.pdf
+pdfs/WALMART_2020_10K.pdf
+pdfs/WALMART_2021_10K.pdf
+pdfs/WALMART_2022_10K.pdf
+pdfs/WALMART_2023_10K.pdf
+pdfs/WALMART_2023_annualreport.pdf
+pdfs/WALMART_2024Q1_10Q.pdf
+results/
+results/gpt-4o-2024-05-13_openai_direct_oracle.csv
+results/gpt-4o-2024-05-13_sharedStore.csv
+results/gpt-4o-2024-05-13_singleStore.csv
+results/gpt4_oracle_direct.csv
+results/big2small/
+results/big2small/20260112/
+results/big2small/20260112/big2small_20260112_155144_scored.json
+results/big2small/20260112/big2small_20260112_164052_scored.json
+results/big2small/20260112/big2small_20260112_171420_scored.json
+results/big2small/20260112/big2small_20260112_172815_scored.json
+results/big2small/20260112/big2small_20260112_181911_scored.json
+results/bm25/
+results/bm25/20260112/
+results/bm25/20260112/bm25_20260112_192701_scored.json
+results/closed_book/
+results/closed_book/20260106/
+results/closed_book/20260106/closed_book_20260106_161953_scored.json
+results/closed_book/20260106/closed_book_20260106_171608_scored.json
+results/closed_book/20260107/
+results/expanded_shared/
+results/expanded_shared/20260114/
+results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json
+results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json
+results/hybrid/
+results/hybrid/20260115/
+results/hyde_shared/
+results/hyde_shared/20260114/
+results/metrics_agg/
+results/metrics_agg/table__by_question_reasoning.csv
+results/metrics_agg/table__by_question_type.csv
+results/metrics_agg/table__overall_by_metadata.csv
+results/metrics_agg2/
+results/metrics_agg2/.~lock.table__by_question_reasoning.csv#
+results/metrics_agg2/.~lock.table__by_question_type.csv#
+results/metrics_agg2/.~lock.table__overall_by_metadata.csv#
+results/metrics_agg2/table__by_question_reasoning.csv
+results/metrics_agg2/table__by_question_type.csv
+results/metrics_agg2/table__overall_by_metadata.csv
+results/multi_hyde_shared/
+results/multi_hyde_shared/20260114/
+results/open_book/
+results/open_book/20260102/
+results/open_book/20260102/open_book_20260102_165042_scored.json
+results/open_book/20260102/open_book_20260102_173713_scored.json
+results/shared_vector/
+results/shared_vector/20251229/
+results/shared_vector/20251229/shared_vector_20251229_181122_scored.json
+results/shared_vector/20251229/shared_vector_20251229_190013_scored.json
+results/shared_vector/20260107/
+results/shared_vector/20260107/shared_vector_20260107_164341_scored.json
+results/shared_vector/20260113/
+results/single_vector/
+results/single_vector/20251229/
+results/single_vector/20251229/single_vector_20251229_162507_scored.json
+results/single_vector/20251229/single_vector_20251229_171641_scored.json
+results/splade/
+results/splade/20260115/
+results/splade/20260115/splade_20260115_144031_scored.json
+scripts/
+scripts/aggregate_output_metrics.py
+scripts/hybrid_RRF.sh
+scripts/hybrid_ret.sh
+scripts/oracle.sh
+scripts/query.sh
+scripts/rag_embeddings_exp.sh
+scripts/run_rag_experiments.sh
+src/
+src/__init__.py
+src/analysis/
+src/analysis/query_difficulty_analysis.py
+src/core/
+src/core/__init__.py
+src/core/rag_dependencies.py
+src/core/rag_experiment_mixins.py
+src/core/rag_experiments.py
+src/core/results/
+src/core/results/hybrid/
+src/core/results/hybrid/20260116/
+src/core/results/hybrid/20260116/hybrid_20260116_162648_scored.json
+src/core/results/reranking/
+src/core/results/reranking/20260115/
+src/core/results/reranking/20260115/reranking_20260115_190636_scored.json
+src/core/results/reranking/20260116/
+src/core/results/reranking/20260116/reranking_20260116_133234_scored.json
+src/core/results/shared_vector/
+src/core/results/shared_vector/20260116/
+src/core/results/shared_vector/20260119/
+src/core/results/splade/
+src/core/results/splade/20260115/
+src/core/results/splade/20260116/
+src/core/results/splade/20260116/splade_20260116_174714_scored.json
+src/core/results/splade/20260117/
+src/core/results/splade/20260117/splade_20260117_012611_scored.json
+src/evaluation/
+src/evaluation/__init__.py
+src/evaluation/evaluate_outputs.py
+src/evaluation/evaluator.py
+src/evaluation/generative_evaluator.py
+src/evaluation/posthoc_evaluator.py
+src/evaluation/retrieval_evaluator.py
+src/experiments/
+src/experiments/__init__.py
+src/experiments/hybrid_retrieval.py
+src/experiments/query_expansion.py
+src/experiments/rag_closed_book.py
+src/experiments/rag_expanded_shared.py
+src/experiments/rag_hyde_shared.py
+src/experiments/rag_open_book.py
+src/experiments/rag_oracle.py
+src/experiments/rag_shared_vector.py
+src/experiments/rag_single_vector.py
+src/experiments/random_single_store.py
+src/experiments/reranking.py
+src/experiments/splade.py
+src/ingestion/
+src/ingestion/__init__.py
+src/ingestion/chunking.py
+src/ingestion/data_loader.py
+src/ingestion/pdf_utils.py
+src/retrieval/
+src/retrieval/__init__.py
+src/retrieval/big2small.py
+src/retrieval/bm25.py
+src/retrieval/vectorstore.py
+
+sent 802,925,008 bytes  received 9,491 bytes  76,469,952.29 bytes/sec
+total size is 802,692,374  speedup is 1.00
+Activating venv from: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/venv
+----------------------------------------------------------------
+[RUNNING] Hybrid Grid | Emb: BAAI/bge-m3 | Sparse: bm25
+----------------------------------------------------------------
+   > Mode: Standard Hybrid (Generative)
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-19 23:28:21,554 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: HYBRID
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - Configuration:
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Experiment Type: hybrid
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Device: cuda
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Embedding Model: BAAI/bge-m3
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/4907/outputs/hybrid_BAAI_bge-m3_bm25/hybrid/20260119
+2026-01-19 23:28:21,555 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/4907/outputs/results/hybrid/20260119
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-19 23:28:21,555 - RAGExperiment - INFO - Loading HuggingFace embeddings: BAAI/bge-m3 (Requested: BAAI/bge-m3)
+2026-01-19 23:28:21,557 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: BAAI/bge-m3
+2026-01-19 23:28:47,698 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-19 23:28:48,571 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-19 23:28:48,571 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-19 23:28:48,571 - RAGExperiment - INFO - 
+================================================================================
+2026-01-19 23:28:48,571 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-19 23:28:48,571 - RAGExperiment - INFO - ================================================================================
+2026-01-19 23:28:48,571 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-19 23:28:51,386 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-19 23:28:51,397 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-19 23:28:51,397 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-19 23:28:51,397 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-19 23:28:51,397 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-19 23:28:51,398 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-19 23:28:51,399 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-19 23:28:51,399 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-19 23:28:51,399 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-19 23:28:51,404 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-19 23:28:51,405 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-19 23:28:51,405 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-19 23:28:51,405 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-19 23:28:51,405 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-19 23:28:51,405 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-19 23:28:51,412 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-19 23:28:51,413 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-19 23:28:51,413 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-19 23:28:51,413 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-19 23:28:51,414 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-19 23:28:51,415 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-19 23:28:51,677 - RAGExperiment - INFO - Processing 150 samples
+2026-01-19 23:28:51,677 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - 
+================================================================================
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - RUNNING HYBRID EXPERIMENT (wRRF)
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - ================================================================================
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - Config: candidate_k=50, sparse_model=bm25, top_k=5
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - Fusion: rrf_k=60, dense_weight=1.000, sparse_weight=1.000
+2026-01-19 23:28:51,677 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Initializing Dense Retriever (Embeddings: BAAI/bge-m3)...
+/part/01/Tmp/kobeissa/4907/src/retrieval/vectorstore.py:370: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
+2026-01-19 23:28:52,966 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-19 23:28:53,951 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Store flagged as empty by builder.
+2026-01-19 23:28:53,951 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Building VectorStore from scratch (this may take time)...
+2026-01-19 23:28:53,951 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Loading PDFs from pdfs...
+
+================================================================================
+Running experiment: hybrid | model=qwen2.5-7b
+================================================================================
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : hybrid
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=BAAI/bge-m3, resolved_model=BAAI/bge-m3)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Loading PDFs:   0%|          | 0/368 [00:00<?, ?it/s]Loading PDFs:   0%|          | 1/368 [00:01<06:15,  1.02s/it]Loading PDFs:   1%|          | 2/368 [00:01<04:53,  1.25it/s]Loading PDFs:   1%|          | 3/368 [00:02<04:17,  1.42it/s]Loading PDFs:   1%|          | 4/368 [00:02<03:58,  1.53it/s]Loading PDFs:   1%|▏         | 5/368 [00:03<03:43,  1.63it/s]Loading PDFs:   2%|▏         | 6/368 [00:03<03:28,  1.73it/s]Loading PDFs:   2%|▏         | 7/368 [00:04<03:14,  1.86it/s]Loading PDFs:   2%|▏         | 8/368 [00:05<03:27,  1.73it/s]Loading PDFs:   2%|▏         | 9/368 [00:05<03:31,  1.69it/s]Loading PDFs:   3%|▎         | 10/368 [00:05<02:53,  2.07it/s]Loading PDFs:   3%|▎         | 11/368 [00:06<02:46,  2.15it/s]Loading PDFs:   3%|▎         | 12/368 [00:06<02:16,  2.60it/s]Loading PDFs:   4%|▎         | 13/368 [00:06<02:18,  2.56it/s]Loading PDFs:   4%|▍         | 14/368 [00:07<02:13,  2.66it/s]Loading PDFs:   4%|▍         | 15/368 [00:07<02:02,  2.88it/s]Loading PDFs:   4%|▍         | 16/368 [00:08<02:17,  2.56it/s]Loading PDFs:   5%|▍         | 17/368 [00:08<03:07,  1.88it/s]Loading PDFs:   5%|▍         | 18/368 [00:09<02:51,  2.04it/s]Loading PDFs:   5%|▌         | 19/368 [00:09<02:23,  2.43it/s]Loading PDFs:   5%|▌         | 20/368 [00:09<02:01,  2.86it/s]Loading PDFs:   6%|▌         | 21/368 [00:09<01:46,  3.27it/s]Loading PDFs:   6%|▌         | 22/368 [00:10<01:35,  3.60it/s]Loading PDFs:   6%|▋         | 23/368 [00:10<01:31,  3.79it/s]Loading PDFs:   7%|▋         | 24/368 [00:10<01:36,  3.56it/s]Loading PDFs:   7%|▋         | 25/368 [00:10<01:36,  3.57it/s]Loading PDFs:   7%|▋         | 26/368 [00:11<01:24,  4.06it/s]Loading PDFs:   7%|▋         | 27/368 [00:11<01:26,  3.93it/s]Loading PDFs:   8%|▊         | 28/368 [00:11<01:49,  3.11it/s]Loading PDFs:   8%|▊         | 29/368 [00:12<02:13,  2.54it/s]Loading PDFs:   8%|▊         | 30/368 [00:12<02:03,  2.73it/s]Loading PDFs:   8%|▊         | 31/368 [00:13<01:56,  2.89it/s]Loading PDFs:   9%|▊         | 32/368 [00:13<01:53,  2.97it/s]Loading PDFs:   9%|▉         | 33/368 [00:13<02:06,  2.65it/s]Loading PDFs:   9%|▉         | 34/368 [00:14<02:12,  2.52it/s]Loading PDFs:  10%|▉         | 35/368 [00:14<02:29,  2.23it/s]Loading PDFs:  10%|▉         | 36/368 [00:14<01:57,  2.82it/s]Loading PDFs:  10%|█         | 37/368 [00:15<01:35,  3.45it/s]Loading PDFs:  10%|█         | 38/368 [00:15<01:20,  4.08it/s]Loading PDFs:  11%|█         | 39/368 [00:15<01:10,  4.65it/s]Loading PDFs:  11%|█         | 40/368 [00:15<01:02,  5.24it/s]Loading PDFs:  11%|█         | 41/368 [00:15<00:55,  5.87it/s]Loading PDFs:  11%|█▏        | 42/368 [00:15<01:05,  4.98it/s]Loading PDFs:  12%|█▏        | 43/368 [00:16<01:02,  5.17it/s]Loading PDFs:  12%|█▏        | 44/368 [00:16<01:07,  4.82it/s]Loading PDFs:  12%|█▏        | 45/368 [00:16<01:17,  4.18it/s]Loading PDFs:  12%|█▎        | 46/368 [00:16<01:23,  3.85it/s]Loading PDFs:  13%|█▎        | 47/368 [00:17<01:25,  3.75it/s]Loading PDFs:  13%|█▎        | 48/368 [00:17<01:50,  2.89it/s]Loading PDFs:  14%|█▎        | 50/368 [00:18<01:39,  3.19it/s]Loading PDFs:  14%|█▍        | 52/368 [00:18<01:06,  4.77it/s]Loading PDFs:  15%|█▍        | 54/368 [00:18<01:00,  5.18it/s]Loading PDFs:  15%|█▍        | 55/368 [00:19<01:15,  4.15it/s]Loading PDFs:  15%|█▌        | 56/368 [00:19<01:30,  3.45it/s]Loading PDFs:  15%|█▌        | 57/368 [00:20<01:50,  2.81it/s]Loading PDFs:  16%|█▌        | 58/368 [00:20<01:52,  2.75it/s]Loading PDFs:  16%|█▌        | 59/368 [00:20<01:43,  3.00it/s]Loading PDFs:  16%|█▋        | 60/368 [00:21<01:41,  3.04it/s]Loading PDFs:  17%|█▋        | 61/368 [00:21<01:35,  3.22it/s]Loading PDFs:  17%|█▋        | 62/368 [00:21<01:57,  2.60it/s]Loading PDFs:  17%|█▋        | 63/368 [00:22<01:42,  2.97it/s]Loading PDFs:  17%|█▋        | 64/368 [00:22<01:56,  2.62it/s]Loading PDFs:  18%|█▊        | 65/368 [00:23<01:58,  2.56it/s]Loading PDFs:  18%|█▊        | 66/368 [00:23<01:48,  2.78it/s]Loading PDFs:  18%|█▊        | 67/368 [00:23<01:41,  2.97it/s]Loading PDFs:  18%|█▊        | 68/368 [00:24<01:44,  2.86it/s]Loading PDFs:  19%|█▉        | 69/368 [00:24<01:54,  2.62it/s]Loading PDFs:  19%|█▉        | 70/368 [00:24<01:45,  2.83it/s]Loading PDFs:  19%|█▉        | 71/368 [00:25<01:40,  2.96it/s]Loading PDFs:  20%|█▉        | 72/368 [00:25<02:00,  2.46it/s]Loading PDFs:  20%|█▉        | 73/368 [00:25<01:36,  3.07it/s]Loading PDFs:  20%|██        | 74/368 [00:25<01:21,  3.60it/s]Loading PDFs:  20%|██        | 75/368 [00:26<01:12,  4.02it/s]Loading PDFs:  21%|██        | 76/368 [00:26<01:09,  4.22it/s]Loading PDFs:  21%|██        | 77/368 [00:26<01:03,  4.59it/s]Loading PDFs:  21%|██        | 78/368 [00:26<00:59,  4.91it/s]Loading PDFs:  21%|██▏       | 79/368 [00:26<00:55,  5.17it/s]Loading PDFs:  22%|██▏       | 80/368 [00:26<00:50,  5.71it/s]Loading PDFs:  22%|██▏       | 81/368 [00:27<00:50,  5.74it/s]Loading PDFs:  23%|██▎       | 83/368 [00:27<00:51,  5.53it/s]Loading PDFs:  23%|██▎       | 84/368 [00:27<00:51,  5.47it/s]Loading PDFs:  23%|██▎       | 85/368 [00:27<00:51,  5.49it/s]Loading PDFs:  23%|██▎       | 86/368 [00:28<00:51,  5.47it/s]Loading PDFs:  24%|██▎       | 87/368 [00:28<00:51,  5.50it/s]Loading PDFs:  24%|██▍       | 88/368 [00:28<01:10,  3.95it/s]Loading PDFs:  24%|██▍       | 89/368 [00:28<01:07,  4.12it/s]Loading PDFs:  24%|██▍       | 90/368 [00:29<01:04,  4.28it/s]Loading PDFs:  25%|██▌       | 92/368 [00:29<00:47,  5.79it/s]Loading PDFs:  25%|██▌       | 93/368 [00:29<00:49,  5.57it/s]Loading PDFs:  26%|██▌       | 96/368 [00:29<00:29,  9.31it/s]Loading PDFs:  27%|██▋       | 98/368 [00:30<00:37,  7.11it/s]Loading PDFs:  27%|██▋       | 99/368 [00:30<00:42,  6.31it/s]Loading PDFs:  27%|██▋       | 100/368 [00:30<00:46,  5.73it/s]Loading PDFs:  27%|██▋       | 101/368 [00:30<00:50,  5.32it/s]Loading PDFs:  28%|██▊       | 102/368 [00:31<00:54,  4.84it/s]Loading PDFs:  28%|██▊       | 103/368 [00:31<01:24,  3.14it/s]Loading PDFs:  28%|██▊       | 104/368 [00:32<01:30,  2.93it/s]Loading PDFs:  29%|██▊       | 105/368 [00:32<01:15,  3.47it/s]Loading PDFs:  29%|██▉       | 106/368 [00:32<01:13,  3.57it/s]Loading PDFs:  29%|██▉       | 107/368 [00:32<01:13,  3.55it/s]Loading PDFs:  29%|██▉       | 108/368 [00:32<01:06,  3.89it/s]Loading PDFs:  30%|██▉       | 109/368 [00:33<01:03,  4.10it/s]Loading PDFs:  30%|██▉       | 110/368 [00:33<01:01,  4.22it/s]Loading PDFs:  30%|███       | 111/368 [00:33<01:00,  4.25it/s]Loading PDFs:  30%|███       | 112/368 [00:33<01:04,  3.98it/s]Loading PDFs:  31%|███       | 113/368 [00:34<01:08,  3.72it/s]Loading PDFs:  31%|███       | 114/368 [00:34<01:22,  3.08it/s]Loading PDFs:  31%|███▏      | 115/368 [00:35<01:54,  2.22it/s]Loading PDFs:  32%|███▏      | 116/368 [00:36<02:14,  1.87it/s]Loading PDFs:  32%|███▏      | 117/368 [00:36<02:28,  1.70it/s]Loading PDFs:  32%|███▏      | 118/368 [00:37<02:37,  1.59it/s]Loading PDFs:  32%|███▏      | 119/368 [00:38<02:38,  1.57it/s]Loading PDFs:  33%|███▎      | 120/368 [00:38<02:29,  1.66it/s]Loading PDFs:  33%|███▎      | 121/368 [00:39<03:11,  1.29it/s]Loading PDFs:  33%|███▎      | 122/368 [00:41<03:38,  1.13it/s]Loading PDFs:  33%|███▎      | 123/368 [00:41<03:04,  1.33it/s]Loading PDFs:  34%|███▎      | 124/368 [00:41<02:29,  1.63it/s]Loading PDFs:  34%|███▍      | 125/368 [00:42<02:03,  1.96it/s]Loading PDFs:  34%|███▍      | 126/368 [00:42<01:42,  2.37it/s]Loading PDFs:  35%|███▍      | 127/368 [00:42<01:31,  2.65it/s]Loading PDFs:  35%|███▍      | 128/368 [00:42<01:22,  2.91it/s]Loading PDFs:  35%|███▌      | 129/368 [00:43<01:16,  3.14it/s]Loading PDFs:  35%|███▌      | 130/368 [00:43<01:15,  3.13it/s]Loading PDFs:  36%|███▌      | 131/368 [00:43<01:00,  3.94it/s]Loading PDFs:  36%|███▌      | 132/368 [00:43<00:51,  4.58it/s]Loading PDFs:  36%|███▌      | 133/368 [00:43<00:44,  5.26it/s]Loading PDFs:  36%|███▋      | 134/368 [00:43<00:39,  5.89it/s]Loading PDFs:  37%|███▋      | 135/368 [00:44<00:35,  6.50it/s]Loading PDFs:  37%|███▋      | 136/368 [00:44<00:33,  6.93it/s]Loading PDFs:  37%|███▋      | 137/368 [00:44<00:31,  7.28it/s]Loading PDFs:  38%|███▊      | 138/368 [00:44<00:31,  7.20it/s]Loading PDFs:  38%|███▊      | 139/368 [00:44<00:32,  7.00it/s]Loading PDFs:  38%|███▊      | 141/368 [00:44<00:24,  9.16it/s]Loading PDFs:  39%|███▉      | 145/368 [00:45<00:23,  9.69it/s]Loading PDFs:  40%|███▉      | 146/368 [00:45<00:34,  6.43it/s]Loading PDFs:  40%|███▉      | 147/368 [00:45<00:38,  5.76it/s]Loading PDFs:  40%|████      | 148/368 [00:46<00:59,  3.72it/s]Loading PDFs:  40%|████      | 149/368 [00:46<01:09,  3.15it/s]Loading PDFs:  41%|████      | 150/368 [00:47<01:12,  3.02it/s]Loading PDFs:  41%|████      | 151/368 [00:47<01:16,  2.83it/s]Loading PDFs:  41%|████▏     | 152/368 [00:48<01:25,  2.51it/s]Loading PDFs:  42%|████▏     | 153/368 [00:48<01:12,  2.96it/s]Loading PDFs:  42%|████▏     | 154/368 [00:48<01:03,  3.37it/s]Loading PDFs:  42%|████▏     | 155/368 [00:48<00:56,  3.74it/s]Loading PDFs:  42%|████▏     | 156/368 [00:49<00:59,  3.58it/s]Loading PDFs:  43%|████▎     | 157/368 [00:49<00:57,  3.70it/s]Loading PDFs:  43%|████▎     | 158/368 [00:49<00:52,  4.00it/s]Loading PDFs:  43%|████▎     | 159/368 [00:49<00:50,  4.11it/s]Loading PDFs:  43%|████▎     | 160/368 [00:49<00:51,  4.04it/s]Loading PDFs:  44%|████▍     | 162/368 [00:50<00:44,  4.65it/s]Loading PDFs:  44%|████▍     | 163/368 [00:50<00:47,  4.30it/s]Loading PDFs:  45%|████▍     | 165/368 [00:50<00:42,  4.82it/s]Loading PDFs:  45%|████▌     | 166/368 [00:51<00:56,  3.59it/s]Loading PDFs:  45%|████▌     | 167/368 [00:51<01:05,  3.08it/s]Loading PDFs:  46%|████▌     | 168/368 [00:52<01:00,  3.32it/s]Loading PDFs:  46%|████▌     | 169/368 [00:52<00:57,  3.47it/s]Loading PDFs:  47%|████▋     | 172/368 [00:52<00:29,  6.55it/s]Loading PDFs:  47%|████▋     | 174/368 [00:53<00:48,  3.99it/s]Loading PDFs:  48%|████▊     | 175/368 [00:53<00:56,  3.40it/s]Loading PDFs:  48%|████▊     | 176/368 [00:54<00:58,  3.28it/s]Loading PDFs:  48%|████▊     | 177/368 [00:54<00:54,  3.48it/s]Loading PDFs:  48%|████▊     | 178/368 [00:54<00:52,  3.61it/s]Loading PDFs:  49%|████▊     | 179/368 [00:55<00:54,  3.44it/s]Loading PDFs:  49%|████▉     | 180/368 [00:55<00:51,  3.62it/s]Loading PDFs:  49%|████▉     | 181/368 [00:55<00:55,  3.40it/s]Loading PDFs:  49%|████▉     | 182/368 [00:55<00:50,  3.68it/s]Loading PDFs:  50%|████▉     | 183/368 [00:56<00:52,  3.53it/s]Loading PDFs:  50%|█████     | 184/368 [00:56<01:06,  2.77it/s]Loading PDFs:  50%|█████     | 185/368 [00:57<01:08,  2.66it/s]Loading PDFs:  51%|█████     | 186/368 [00:57<01:04,  2.81it/s]Loading PDFs:  51%|█████     | 187/368 [00:57<01:01,  2.92it/s]Loading PDFs:  51%|█████     | 188/368 [00:57<00:56,  3.16it/s]Loading PDFs:  51%|█████▏    | 189/368 [00:58<00:51,  3.49it/s]Loading PDFs:  52%|█████▏    | 190/368 [00:58<00:46,  3.82it/s]Loading PDFs:  52%|█████▏    | 191/368 [00:58<00:41,  4.24it/s]Loading PDFs:  52%|█████▏    | 192/368 [00:58<00:43,  4.09it/s]Loading PDFs:  53%|█████▎    | 194/368 [00:59<00:51,  3.37it/s]Loading PDFs:  53%|█████▎    | 196/368 [00:59<00:44,  3.83it/s]Loading PDFs:  54%|█████▎    | 197/368 [01:00<00:57,  3.00it/s]Loading PDFs:  54%|█████▍    | 199/368 [01:01<01:13,  2.31it/s]Loading PDFs:  54%|█████▍    | 200/368 [01:02<01:39,  1.68it/s]Loading PDFs:  55%|█████▍    | 201/368 [01:04<02:03,  1.36it/s]Loading PDFs:  55%|█████▍    | 202/368 [01:05<02:35,  1.07it/s]Loading PDFs:  55%|█████▌    | 203/368 [01:07<03:01,  1.10s/it]Loading PDFs:  55%|█████▌    | 204/368 [01:07<02:42,  1.01it/s]Loading PDFs:  56%|█████▌    | 205/368 [01:08<02:26,  1.11it/s]Loading PDFs:  56%|█████▌    | 206/368 [01:08<01:49,  1.48it/s]Loading PDFs:  56%|█████▋    | 207/368 [01:09<01:49,  1.47it/s]Loading PDFs:  57%|█████▋    | 209/368 [01:09<01:04,  2.46it/s]Loading PDFs:  57%|█████▋    | 211/368 [01:09<00:46,  3.37it/s]Loading PDFs:  58%|█████▊    | 212/368 [01:10<00:49,  3.14it/s]Loading PDFs:  58%|█████▊    | 213/368 [01:10<00:53,  2.87it/s]Loading PDFs:  58%|█████▊    | 214/368 [01:11<00:57,  2.67it/s]Loading PDFs:  58%|█████▊    | 215/368 [01:11<01:19,  1.93it/s]Loading PDFs:  59%|█████▊    | 216/368 [01:12<01:13,  2.08it/s]Loading PDFs:  59%|█████▉    | 217/368 [01:12<01:10,  2.13it/s]Loading PDFs:  59%|█████▉    | 218/368 [01:13<01:09,  2.16it/s]Loading PDFs:  60%|█████▉    | 219/368 [01:14<01:27,  1.70it/s]Loading PDFs:  60%|█████▉    | 220/368 [01:14<01:18,  1.88it/s]Loading PDFs:  60%|██████    | 221/368 [01:15<01:16,  1.92it/s]Loading PDFs:  60%|██████    | 222/368 [01:15<01:05,  2.22it/s]Loading PDFs:  61%|██████    | 223/368 [01:15<00:59,  2.44it/s]Loading PDFs:  61%|██████    | 224/368 [01:16<00:56,  2.55it/s]Loading PDFs:  61%|██████    | 225/368 [01:16<01:14,  1.91it/s]Loading PDFs:  61%|██████▏   | 226/368 [01:17<01:06,  2.14it/s]Loading PDFs:  62%|██████▏   | 227/368 [01:17<01:00,  2.33it/s]Loading PDFs:  62%|██████▏   | 228/368 [01:17<00:55,  2.51it/s]Loading PDFs:  62%|██████▏   | 229/368 [01:18<01:22,  1.69it/s]Loading PDFs:  62%|██████▎   | 230/368 [01:19<01:11,  1.93it/s]Loading PDFs:  63%|██████▎   | 231/368 [01:19<01:11,  1.91it/s]Loading PDFs:  63%|██████▎   | 232/368 [01:20<01:09,  1.95it/s]Loading PDFs:  63%|██████▎   | 233/368 [01:20<01:04,  2.08it/s]Loading PDFs:  64%|██████▎   | 234/368 [01:20<00:58,  2.27it/s]Loading PDFs:  64%|██████▍   | 235/368 [01:21<00:53,  2.49it/s]Loading PDFs:  64%|██████▍   | 236/368 [01:21<00:49,  2.66it/s]Loading PDFs:  64%|██████▍   | 237/368 [01:21<00:47,  2.78it/s]Loading PDFs:  65%|██████▍   | 238/368 [01:22<00:45,  2.85it/s]Loading PDFs:  65%|██████▌   | 241/368 [01:22<00:25,  5.02it/s]Loading PDFs:  66%|██████▌   | 243/368 [01:22<00:22,  5.65it/s]Loading PDFs:  66%|██████▋   | 244/368 [01:22<00:22,  5.59it/s]Loading PDFs:  68%|██████▊   | 250/368 [01:23<00:14,  8.35it/s]Loading PDFs:  68%|██████▊   | 251/368 [01:24<00:20,  5.67it/s]Loading PDFs:  68%|██████▊   | 252/368 [01:24<00:24,  4.79it/s]Loading PDFs:  69%|██████▉   | 253/368 [01:24<00:27,  4.22it/s]Loading PDFs:  69%|██████▉   | 254/368 [01:25<00:32,  3.46it/s]Loading PDFs:  69%|██████▉   | 255/368 [01:25<00:32,  3.42it/s]Loading PDFs:  70%|██████▉   | 256/368 [01:25<00:34,  3.27it/s]Loading PDFs:  70%|██████▉   | 257/368 [01:26<00:27,  3.96it/s]Loading PDFs:  70%|███████   | 258/368 [01:26<00:32,  3.39it/s]Loading PDFs:  70%|███████   | 259/368 [01:26<00:26,  4.10it/s]Loading PDFs:  71%|███████   | 262/368 [01:26<00:16,  6.58it/s]Loading PDFs:  71%|███████▏  | 263/368 [01:26<00:16,  6.27it/s]Loading PDFs:  72%|███████▏  | 264/368 [01:27<00:18,  5.61it/s]Loading PDFs:  72%|███████▏  | 265/368 [01:27<00:20,  5.00it/s]Loading PDFs:  72%|███████▏  | 266/368 [01:27<00:22,  4.44it/s]Loading PDFs:  73%|███████▎  | 267/368 [01:27<00:22,  4.40it/s]Loading PDFs:  73%|███████▎  | 268/368 [01:28<00:22,  4.37it/s]Loading PDFs:  73%|███████▎  | 269/368 [01:28<00:22,  4.34it/s]Loading PDFs:  73%|███████▎  | 270/368 [01:28<00:24,  3.95it/s]Loading PDFs:  74%|███████▎  | 271/368 [01:28<00:20,  4.71it/s]Loading PDFs:  74%|███████▍  | 272/368 [01:28<00:17,  5.48it/s]Loading PDFs:  74%|███████▍  | 273/368 [01:29<00:15,  6.08it/s]Loading PDFs:  74%|███████▍  | 274/368 [01:29<00:14,  6.49it/s]Loading PDFs:  75%|███████▍  | 275/368 [01:29<00:13,  6.96it/s]Loading PDFs:  75%|███████▌  | 276/368 [01:29<00:12,  7.17it/s]Loading PDFs:  75%|███████▌  | 277/368 [01:29<00:17,  5.28it/s]Loading PDFs:  76%|███████▌  | 278/368 [01:29<00:16,  5.48it/s]Loading PDFs:  76%|███████▌  | 280/368 [01:30<00:20,  4.31it/s]Loading PDFs:  76%|███████▋  | 281/368 [01:30<00:19,  4.39it/s]Loading PDFs:  77%|███████▋  | 282/368 [01:30<00:19,  4.48it/s]Loading PDFs:  77%|███████▋  | 283/368 [01:31<00:18,  4.57it/s]Loading PDFs:  77%|███████▋  | 284/368 [01:31<00:17,  4.76it/s]Loading PDFs:  77%|███████▋  | 285/368 [01:31<00:17,  4.82it/s]Loading PDFs:  78%|███████▊  | 286/368 [01:31<00:16,  5.00it/s]Loading PDFs:  78%|███████▊  | 287/368 [01:32<00:17,  4.67it/s]Loading PDFs:  78%|███████▊  | 288/368 [01:32<00:16,  4.99it/s]Loading PDFs:  79%|███████▊  | 289/368 [01:32<00:21,  3.65it/s]Loading PDFs:  79%|███████▉  | 290/368 [01:32<00:21,  3.62it/s]Loading PDFs:  79%|███████▉  | 291/368 [01:33<00:20,  3.69it/s]Loading PDFs:  79%|███████▉  | 292/368 [01:33<00:20,  3.69it/s]Loading PDFs:  80%|███████▉  | 293/368 [01:33<00:20,  3.67it/s]Loading PDFs:  80%|███████▉  | 294/368 [01:33<00:19,  3.78it/s]Loading PDFs:  80%|████████  | 295/368 [01:34<00:18,  3.89it/s]Loading PDFs:  80%|████████  | 296/368 [01:34<00:20,  3.59it/s]Loading PDFs:  81%|████████  | 297/368 [01:34<00:20,  3.44it/s]Loading PDFs:  81%|████████  | 298/368 [01:35<00:20,  3.42it/s]Loading PDFs:  81%|████████▏ | 299/368 [01:35<00:17,  3.92it/s]Loading PDFs:  82%|████████▏ | 300/368 [01:35<00:16,  4.10it/s]Loading PDFs:  82%|████████▏ | 301/368 [01:36<00:21,  3.09it/s]Loading PDFs:  82%|████████▏ | 302/368 [01:36<00:25,  2.56it/s]Loading PDFs:  82%|████████▏ | 303/368 [01:37<00:26,  2.43it/s]Loading PDFs:  83%|████████▎ | 304/368 [01:37<00:30,  2.09it/s]Loading PDFs:  83%|████████▎ | 305/368 [01:38<00:31,  2.01it/s]Loading PDFs:  83%|████████▎ | 306/368 [01:38<00:30,  2.00it/s]Loading PDFs:  84%|████████▎ | 308/368 [01:39<00:32,  1.84it/s]Loading PDFs:  85%|████████▍ | 312/368 [01:40<00:18,  3.08it/s]Loading PDFs:  85%|████████▌ | 313/368 [01:40<00:19,  2.89it/s]Loading PDFs:  85%|████████▌ | 314/368 [01:41<00:19,  2.71it/s]Loading PDFs:  86%|████████▌ | 315/368 [01:42<00:21,  2.44it/s]Loading PDFs:  86%|████████▌ | 316/368 [01:43<00:29,  1.74it/s]Loading PDFs:  86%|████████▌ | 317/368 [01:43<00:28,  1.82it/s]Loading PDFs:  86%|████████▋ | 318/368 [01:43<00:24,  2.02it/s]Loading PDFs:  87%|████████▋ | 319/368 [01:44<00:21,  2.26it/s]Loading PDFs:  87%|████████▋ | 320/368 [01:44<00:21,  2.22it/s]Loading PDFs:  88%|████████▊ | 322/368 [01:45<00:16,  2.86it/s]Loading PDFs:  88%|████████▊ | 323/368 [01:45<00:16,  2.73it/s]Loading PDFs:  88%|████████▊ | 324/368 [01:46<00:16,  2.63it/s]Loading PDFs:  88%|████████▊ | 325/368 [01:46<00:16,  2.66it/s]Loading PDFs:  89%|████████▊ | 326/368 [01:47<00:19,  2.21it/s]Loading PDFs:  89%|████████▉ | 327/368 [01:47<00:20,  2.05it/s]Loading PDFs:  89%|████████▉ | 328/368 [01:48<00:22,  1.76it/s]Loading PDFs:  89%|████████▉ | 329/368 [01:49<00:24,  1.57it/s]Loading PDFs:  90%|████████▉ | 330/368 [01:49<00:25,  1.51it/s]Loading PDFs:  90%|████████▉ | 331/368 [01:50<00:19,  1.93it/s]Loading PDFs:  91%|█████████ | 335/368 [01:50<00:07,  4.39it/s]Loading PDFs:  92%|█████████▏| 338/368 [01:50<00:04,  6.06it/s]Loading PDFs:  92%|█████████▏| 339/368 [01:50<00:05,  5.29it/s]Loading PDFs:  93%|█████████▎| 342/368 [01:50<00:03,  7.96it/s]Loading PDFs:  94%|█████████▍| 345/368 [01:51<00:03,  7.03it/s]Loading PDFs:  95%|█████████▍| 348/368 [01:51<00:02,  9.45it/s]Loading PDFs:  95%|█████████▌| 350/368 [01:51<00:01,  9.21it/s]Loading PDFs:  96%|█████████▌| 352/368 [01:52<00:02,  6.85it/s]Loading PDFs:  96%|█████████▌| 354/368 [01:52<00:02,  5.58it/s]Loading PDFs:  96%|█████████▋| 355/368 [01:53<00:02,  5.25it/s]Loading PDFs:  97%|█████████▋| 356/368 [01:53<00:02,  4.55it/s]Loading PDFs:  97%|█████████▋| 357/368 [01:53<00:02,  3.91it/s]Loading PDFs:  97%|█████████▋| 358/368 [01:54<00:02,  3.73it/s]Loading PDFs:  98%|█████████▊| 359/368 [01:54<00:02,  3.41it/s]Loading PDFs:  98%|█████████▊| 360/368 [01:54<00:02,  3.40it/s]Loading PDFs:  98%|█████████▊| 361/368 [01:55<00:02,  3.04it/s]Loading PDFs:  98%|█████████▊| 362/368 [01:55<00:01,  3.35it/s]Loading PDFs:  99%|█████████▊| 363/368 [01:55<00:01,  3.44it/s]Loading PDFs:  99%|█████████▉| 364/368 [01:55<00:01,  3.86it/s]Loading PDFs:  99%|█████████▉| 365/368 [01:56<00:00,  3.60it/s]Loading PDFs:  99%|█████████▉| 366/368 [01:56<00:00,  3.24it/s]Loading PDFs: 100%|█████████▉| 367/368 [01:56<00:00,  3.06it/s]Loading PDFs: 100%|██████████| 368/368 [01:57<00:00,  3.85it/s]Loading PDFs: 100%|██████████| 368/368 [01:57<00:00,  3.14it/s]
+2026-01-19 23:30:51,003 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Splitting 54120 documents...
+2026-01-19 23:38:16,636 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Generated 75098 chunks.
+2026-01-19 23:38:16,678 - RAGExperiment - WARNING - Vector store 'shared_recursive_02083b6c' missing config.json. Rebuilding...
+2026-01-19 23:38:16,696 - RAGExperiment - INFO - Populating Chroma DB 'shared_recursive_02083b6c' from 75098 precomputed chunks
+2026-01-19 23:38:17,010 - RAGExperiment - INFO - Chroma batch limit detected at 2000 – ingesting in 38 batches
+2026-01-19 23:39:40,431 - RAGExperiment - ERROR - Failed to populate Chroma from precomputed documents: Error updating collection: Database error: error returned from database: (code: 1032) attempt to write a readonly database
+2026-01-19 23:39:40,537 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Initializing BM25...
+2026-01-19 23:39:40,552 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Loading PDFs from pdfs...
+Loading PDFs:   0%|          | 0/368 [00:00<?, ?it/s]Loading PDFs:   0%|          | 1/368 [00:00<03:23,  1.80it/s]Loading PDFs:   1%|          | 2/368 [00:01<03:44,  1.63it/s]Loading PDFs:   1%|          | 3/368 [00:01<03:41,  1.65it/s]Loading PDFs:   1%|          | 4/368 [00:02<03:37,  1.67it/s]Loading PDFs:   1%|▏         | 5/368 [00:03<04:06,  1.47it/s]Loading PDFs:   2%|▏         | 6/368 [00:03<03:44,  1.61it/s]Loading PDFs:   2%|▏         | 7/368 [00:04<03:25,  1.76it/s]Loading PDFs:   2%|▏         | 8/368 [00:04<03:36,  1.66it/s]Loading PDFs:   2%|▏         | 9/368 [00:05<03:39,  1.64it/s]Loading PDFs:   3%|▎         | 10/368 [00:05<02:58,  2.00it/s]Loading PDFs:   3%|▎         | 11/368 [00:06<02:50,  2.09it/s]Loading PDFs:   3%|▎         | 12/368 [00:06<02:20,  2.54it/s]Loading PDFs:   4%|▎         | 13/368 [00:06<02:22,  2.50it/s]Loading PDFs:   4%|▍         | 14/368 [00:07<02:16,  2.60it/s]Loading PDFs:   4%|▍         | 15/368 [00:07<02:05,  2.82it/s]Loading PDFs:   4%|▍         | 16/368 [00:07<02:20,  2.51it/s]Loading PDFs:   5%|▍         | 17/368 [00:08<03:10,  1.84it/s]Loading PDFs:   5%|▍         | 18/368 [00:09<02:53,  2.01it/s]Loading PDFs:   5%|▌         | 19/368 [00:09<02:25,  2.40it/s]Loading PDFs:   5%|▌         | 20/368 [00:09<02:03,  2.82it/s]Loading PDFs:   6%|▌         | 21/368 [00:09<01:47,  3.23it/s]Loading PDFs:   6%|▌         | 22/368 [00:10<01:37,  3.56it/s]Loading PDFs:   6%|▋         | 23/368 [00:10<01:31,  3.75it/s]Loading PDFs:   7%|▋         | 24/368 [00:10<01:38,  3.51it/s]Loading PDFs:   7%|▋         | 25/368 [00:10<01:37,  3.51it/s]Loading PDFs:   7%|▋         | 26/368 [00:11<01:25,  4.00it/s]Loading PDFs:   7%|▋         | 27/368 [00:11<01:28,  3.87it/s]Loading PDFs:   8%|▊         | 28/368 [00:11<01:51,  3.05it/s]Loading PDFs:   8%|▊         | 29/368 [00:12<02:15,  2.50it/s]Loading PDFs:   8%|▊         | 30/368 [00:12<02:05,  2.69it/s]Loading PDFs:   8%|▊         | 31/368 [00:13<01:58,  2.84it/s]Loading PDFs:   9%|▊         | 32/368 [00:13<01:54,  2.93it/s]Loading PDFs:   9%|▉         | 33/368 [00:13<02:07,  2.62it/s]Loading PDFs:   9%|▉         | 34/368 [00:14<02:14,  2.49it/s]Loading PDFs:  10%|▉         | 35/368 [00:14<02:30,  2.21it/s]Loading PDFs:  10%|▉         | 36/368 [00:14<01:59,  2.79it/s]Loading PDFs:  10%|█         | 37/368 [00:15<01:36,  3.42it/s]Loading PDFs:  10%|█         | 38/368 [00:15<01:21,  4.04it/s]Loading PDFs:  11%|█         | 39/368 [00:15<01:11,  4.60it/s]Loading PDFs:  11%|█         | 40/368 [00:15<01:03,  5.18it/s]Loading PDFs:  11%|█         | 41/368 [00:15<00:56,  5.81it/s]Loading PDFs:  11%|█▏        | 42/368 [00:15<01:06,  4.91it/s]Loading PDFs:  12%|█▏        | 43/368 [00:16<01:03,  5.10it/s]Loading PDFs:  12%|█▏        | 44/368 [00:16<01:07,  4.77it/s]Loading PDFs:  12%|█▏        | 45/368 [00:16<01:21,  3.98it/s]Loading PDFs:  12%|█▎        | 46/368 [00:17<01:26,  3.71it/s]Loading PDFs:  13%|█▎        | 47/368 [00:17<01:28,  3.64it/s]Loading PDFs:  13%|█▎        | 48/368 [00:17<01:53,  2.82it/s]Loading PDFs:  14%|█▎        | 50/368 [00:18<01:41,  3.13it/s]Loading PDFs:  14%|█▍        | 52/368 [00:18<01:07,  4.68it/s]Loading PDFs:  15%|█▍        | 54/368 [00:18<01:01,  5.09it/s]Loading PDFs:  15%|█▍        | 55/368 [00:19<01:16,  4.07it/s]Loading PDFs:  15%|█▌        | 56/368 [00:19<01:31,  3.40it/s]Loading PDFs:  15%|█▌        | 57/368 [00:20<01:52,  2.77it/s]Loading PDFs:  16%|█▌        | 58/368 [00:20<01:54,  2.71it/s]Loading PDFs:  16%|█▌        | 59/368 [00:20<01:44,  2.95it/s]Loading PDFs:  16%|█▋        | 60/368 [00:21<01:42,  2.99it/s]Loading PDFs:  17%|█▋        | 61/368 [00:21<01:36,  3.17it/s]Loading PDFs:  17%|█▋        | 62/368 [00:22<01:59,  2.57it/s]Loading PDFs:  17%|█▋        | 63/368 [00:22<01:43,  2.96it/s]Loading PDFs:  17%|█▋        | 64/368 [00:22<01:57,  2.59it/s]Loading PDFs:  18%|█▊        | 65/368 [00:23<02:00,  2.52it/s]Loading PDFs:  18%|█▊        | 66/368 [00:23<01:49,  2.75it/s]Loading PDFs:  18%|█▊        | 67/368 [00:23<01:42,  2.93it/s]Loading PDFs:  18%|█▊        | 68/368 [00:24<01:46,  2.82it/s]Loading PDFs:  19%|█▉        | 69/368 [00:24<01:55,  2.58it/s]Loading PDFs:  19%|█▉        | 70/368 [00:24<01:46,  2.79it/s]Loading PDFs:  19%|█▉        | 71/368 [00:25<01:42,  2.91it/s]Loading PDFs:  20%|█▉        | 72/368 [00:25<02:02,  2.42it/s]Loading PDFs:  20%|█▉        | 73/368 [00:25<01:37,  3.02it/s]Loading PDFs:  20%|██        | 74/368 [00:26<01:23,  3.54it/s]Loading PDFs:  20%|██        | 75/368 [00:26<01:13,  3.96it/s]Loading PDFs:  21%|██        | 76/368 [00:26<01:10,  4.15it/s]Loading PDFs:  21%|██        | 77/368 [00:26<01:04,  4.52it/s]Loading PDFs:  21%|██        | 78/368 [00:26<00:59,  4.84it/s]Loading PDFs:  21%|██▏       | 79/368 [00:27<00:56,  5.08it/s]Loading PDFs:  22%|██▏       | 80/368 [00:27<00:51,  5.61it/s]Loading PDFs:  22%|██▏       | 81/368 [00:27<00:50,  5.64it/s]Loading PDFs:  23%|██▎       | 83/368 [00:27<00:52,  5.42it/s]Loading PDFs:  23%|██▎       | 84/368 [00:27<00:52,  5.37it/s]Loading PDFs:  23%|██▎       | 85/368 [00:28<00:52,  5.39it/s]Loading PDFs:  23%|██▎       | 86/368 [00:28<00:52,  5.37it/s]Loading PDFs:  24%|██▎       | 87/368 [00:28<00:52,  5.40it/s]Loading PDFs:  24%|██▍       | 88/368 [00:28<01:11,  3.92it/s]Loading PDFs:  24%|██▍       | 89/368 [00:29<01:08,  4.09it/s]Loading PDFs:  24%|██▍       | 90/368 [00:29<01:05,  4.23it/s]Loading PDFs:  25%|██▌       | 92/368 [00:29<00:48,  5.72it/s]Loading PDFs:  25%|██▌       | 93/368 [00:29<00:49,  5.50it/s]Loading PDFs:  26%|██▌       | 96/368 [00:29<00:29,  9.20it/s]Loading PDFs:  27%|██▋       | 98/368 [00:30<00:38,  7.01it/s]Loading PDFs:  27%|██▋       | 99/368 [00:30<00:43,  6.22it/s]Loading PDFs:  27%|██▋       | 100/368 [00:30<00:47,  5.65it/s]Loading PDFs:  27%|██▋       | 101/368 [00:31<00:51,  5.23it/s]Loading PDFs:  28%|██▊       | 102/368 [00:31<00:55,  4.76it/s]Loading PDFs:  28%|██▊       | 103/368 [00:31<01:26,  3.08it/s]Loading PDFs:  28%|██▊       | 104/368 [00:32<01:31,  2.88it/s]Loading PDFs:  29%|██▊       | 105/368 [00:32<01:17,  3.41it/s]Loading PDFs:  29%|██▉       | 106/368 [00:32<01:14,  3.51it/s]Loading PDFs:  29%|██▉       | 107/368 [00:33<01:14,  3.49it/s]Loading PDFs:  29%|██▉       | 108/368 [00:33<01:08,  3.82it/s]Loading PDFs:  30%|██▉       | 109/368 [00:33<01:04,  4.03it/s]Loading PDFs:  30%|██▉       | 110/368 [00:33<01:02,  4.15it/s]Loading PDFs:  30%|███       | 111/368 [00:33<01:01,  4.17it/s]Loading PDFs:  30%|███       | 112/368 [00:34<01:05,  3.90it/s]Loading PDFs:  31%|███       | 113/368 [00:34<01:09,  3.66it/s]Loading PDFs:  31%|███       | 114/368 [00:35<01:23,  3.04it/s]Loading PDFs:  31%|███▏      | 115/368 [00:35<01:55,  2.19it/s]Loading PDFs:  32%|███▏      | 116/368 [00:36<02:15,  1.85it/s]Loading PDFs:  32%|███▏      | 117/368 [00:37<02:29,  1.68it/s]Loading PDFs:  32%|███▏      | 118/368 [00:37<02:40,  1.56it/s]Loading PDFs:  32%|███▏      | 119/368 [00:38<02:41,  1.54it/s]Loading PDFs:  33%|███▎      | 120/368 [00:39<02:31,  1.64it/s]Loading PDFs:  33%|███▎      | 121/368 [00:40<03:12,  1.28it/s]Loading PDFs:  33%|███▎      | 122/368 [00:41<03:38,  1.12it/s]Loading PDFs:  33%|███▎      | 123/368 [00:41<03:04,  1.32it/s]Loading PDFs:  34%|███▎      | 124/368 [00:42<02:30,  1.62it/s]Loading PDFs:  34%|███▍      | 125/368 [00:42<02:04,  1.95it/s]Loading PDFs:  34%|███▍      | 126/368 [00:42<01:43,  2.35it/s]Loading PDFs:  35%|███▍      | 127/368 [00:42<01:32,  2.62it/s]Loading PDFs:  35%|███▍      | 128/368 [00:43<01:23,  2.87it/s]Loading PDFs:  35%|███▌      | 129/368 [00:43<01:17,  3.10it/s]Loading PDFs:  35%|███▌      | 130/368 [00:43<01:16,  3.10it/s]Loading PDFs:  36%|███▌      | 131/368 [00:43<01:00,  3.89it/s]Loading PDFs:  36%|███▌      | 132/368 [00:44<00:52,  4.52it/s]Loading PDFs:  36%|███▌      | 133/368 [00:44<00:45,  5.19it/s]Loading PDFs:  36%|███▋      | 134/368 [00:44<00:40,  5.81it/s]Loading PDFs:  37%|███▋      | 135/368 [00:44<00:36,  6.41it/s]Loading PDFs:  37%|███▋      | 136/368 [00:44<00:33,  6.84it/s]Loading PDFs:  37%|███▋      | 137/368 [00:44<00:32,  7.19it/s]Loading PDFs:  38%|███▊      | 138/368 [00:44<00:32,  7.08it/s]Loading PDFs:  38%|███▊      | 139/368 [00:44<00:33,  6.89it/s]Loading PDFs:  38%|███▊      | 141/368 [00:45<00:27,  8.17it/s]Loading PDFs:  39%|███▉      | 145/368 [00:45<00:24,  9.13it/s]Loading PDFs:  40%|███▉      | 146/368 [00:46<00:35,  6.18it/s]Loading PDFs:  40%|███▉      | 147/368 [00:46<00:39,  5.59it/s]Loading PDFs:  40%|████      | 148/368 [00:46<01:00,  3.64it/s]Loading PDFs:  40%|████      | 149/368 [00:47<01:10,  3.09it/s]Loading PDFs:  41%|████      | 150/368 [00:47<01:13,  2.97it/s]Loading PDFs:  41%|████      | 151/368 [00:48<01:17,  2.79it/s]Loading PDFs:  41%|████▏     | 152/368 [00:48<01:27,  2.48it/s]Loading PDFs:  42%|████▏     | 153/368 [00:48<01:13,  2.91it/s]Loading PDFs:  42%|████▏     | 154/368 [00:49<01:04,  3.32it/s]Loading PDFs:  42%|████▏     | 155/368 [00:49<00:57,  3.69it/s]Loading PDFs:  42%|████▏     | 156/368 [00:49<00:59,  3.54it/s]Loading PDFs:  43%|████▎     | 157/368 [00:49<00:57,  3.65it/s]Loading PDFs:  43%|████▎     | 158/368 [00:50<00:53,  3.95it/s]Loading PDFs:  43%|████▎     | 159/368 [00:50<00:51,  4.05it/s]Loading PDFs:  43%|████▎     | 160/368 [00:50<00:52,  3.98it/s]Loading PDFs:  44%|████▍     | 162/368 [00:50<00:49,  4.14it/s]Loading PDFs:  44%|████▍     | 163/368 [00:51<00:51,  3.96it/s]Loading PDFs:  45%|████▍     | 165/368 [00:51<00:49,  4.09it/s]Loading PDFs:  45%|████▌     | 166/368 [00:52<01:02,  3.25it/s]Loading PDFs:  45%|████▌     | 167/368 [00:52<01:09,  2.88it/s]Loading PDFs:  46%|████▌     | 168/368 [00:52<01:03,  3.14it/s]Loading PDFs:  46%|████▌     | 169/368 [00:53<01:00,  3.31it/s]Loading PDFs:  46%|████▋     | 171/368 [00:53<00:37,  5.21it/s]Loading PDFs:  47%|████▋     | 173/368 [00:53<00:33,  5.89it/s]Loading PDFs:  47%|████▋     | 174/368 [00:54<00:51,  3.74it/s]Loading PDFs:  48%|████▊     | 175/368 [00:54<00:59,  3.22it/s]Loading PDFs:  48%|████▊     | 176/368 [00:55<01:01,  3.13it/s]Loading PDFs:  48%|████▊     | 177/368 [00:55<00:56,  3.36it/s]Loading PDFs:  48%|████▊     | 178/368 [00:55<00:53,  3.52it/s]Loading PDFs:  49%|████▊     | 179/368 [00:55<00:56,  3.35it/s]Loading PDFs:  49%|████▉     | 180/368 [00:56<00:52,  3.55it/s]Loading PDFs:  49%|████▉     | 181/368 [00:56<00:55,  3.36it/s]Loading PDFs:  49%|████▉     | 182/368 [00:56<00:51,  3.65it/s]Loading PDFs:  50%|████▉     | 183/368 [00:56<00:53,  3.49it/s]Loading PDFs:  50%|█████     | 184/368 [00:57<01:07,  2.73it/s]Loading PDFs:  50%|█████     | 185/368 [00:57<01:09,  2.62it/s]Loading PDFs:  51%|█████     | 186/368 [00:58<01:05,  2.78it/s]Loading PDFs:  51%|█████     | 187/368 [00:58<01:02,  2.89it/s]Loading PDFs:  51%|█████     | 188/368 [00:58<00:57,  3.12it/s]Loading PDFs:  51%|█████▏    | 189/368 [00:59<00:51,  3.44it/s]Loading PDFs:  52%|█████▏    | 190/368 [00:59<00:47,  3.77it/s]Loading PDFs:  52%|█████▏    | 191/368 [00:59<00:42,  4.15it/s]Loading PDFs:  52%|█████▏    | 192/368 [00:59<00:43,  4.01it/s]Loading PDFs:  53%|█████▎    | 194/368 [01:00<00:52,  3.31it/s]Loading PDFs:  53%|█████▎    | 196/368 [01:00<00:45,  3.77it/s]Loading PDFs:  54%|█████▎    | 197/368 [01:01<00:57,  2.97it/s]Loading PDFs:  54%|█████▍    | 199/368 [01:02<01:13,  2.31it/s]Loading PDFs:  54%|█████▍    | 200/368 [01:03<01:39,  1.68it/s]Loading PDFs:  55%|█████▍    | 201/368 [01:04<02:02,  1.36it/s]Loading PDFs:  55%|█████▍    | 202/368 [01:06<02:35,  1.07it/s]Loading PDFs:  55%|█████▌    | 203/368 [01:08<03:01,  1.10s/it]Loading PDFs:  55%|█████▌    | 204/368 [01:08<02:41,  1.01it/s]Loading PDFs:  56%|█████▌    | 205/368 [01:09<02:26,  1.12it/s]Loading PDFs:  56%|█████▌    | 206/368 [01:09<01:49,  1.48it/s]Loading PDFs:  56%|█████▋    | 207/368 [01:10<01:48,  1.48it/s]Loading PDFs:  57%|█████▋    | 209/368 [01:10<01:04,  2.47it/s]Loading PDFs:  57%|█████▋    | 211/368 [01:10<00:46,  3.39it/s]Loading PDFs:  58%|█████▊    | 212/368 [01:10<00:49,  3.15it/s]Loading PDFs:  58%|█████▊    | 213/368 [01:11<00:53,  2.88it/s]Loading PDFs:  58%|█████▊    | 214/368 [01:11<00:57,  2.68it/s]Loading PDFs:  58%|█████▊    | 215/368 [01:12<01:18,  1.94it/s]Loading PDFs:  59%|█████▊    | 216/368 [01:13<01:12,  2.09it/s]Loading PDFs:  59%|█████▉    | 217/368 [01:13<01:10,  2.14it/s]Loading PDFs:  59%|█████▉    | 218/368 [01:14<01:09,  2.16it/s]Loading PDFs:  60%|█████▉    | 219/368 [01:14<01:27,  1.71it/s]Loading PDFs:  60%|█████▉    | 220/368 [01:15<01:18,  1.88it/s]Loading PDFs:  60%|██████    | 221/368 [01:15<01:16,  1.92it/s]Loading PDFs:  60%|██████    | 222/368 [01:16<01:05,  2.21it/s]Loading PDFs:  61%|██████    | 223/368 [01:16<00:59,  2.44it/s]Loading PDFs:  61%|██████    | 224/368 [01:16<00:56,  2.55it/s]Loading PDFs:  61%|██████    | 225/368 [01:17<01:14,  1.91it/s]Loading PDFs:  61%|██████▏   | 226/368 [01:17<01:06,  2.14it/s]Loading PDFs:  62%|██████▏   | 227/368 [01:18<01:00,  2.33it/s]Loading PDFs:  62%|██████▏   | 228/368 [01:18<00:55,  2.51it/s]Loading PDFs:  62%|██████▏   | 229/368 [01:19<01:22,  1.69it/s]Loading PDFs:  62%|██████▎   | 230/368 [01:20<01:11,  1.93it/s]Loading PDFs:  63%|██████▎   | 231/368 [01:20<01:11,  1.90it/s]Loading PDFs:  63%|██████▎   | 232/368 [01:21<01:09,  1.94it/s]Loading PDFs:  63%|██████▎   | 233/368 [01:21<01:05,  2.07it/s]Loading PDFs:  64%|██████▎   | 234/368 [01:21<00:59,  2.26it/s]Loading PDFs:  64%|██████▍   | 235/368 [01:22<00:53,  2.48it/s]Loading PDFs:  64%|██████▍   | 236/368 [01:22<00:49,  2.66it/s]Loading PDFs:  64%|██████▍   | 237/368 [01:22<00:47,  2.77it/s]Loading PDFs:  65%|██████▍   | 238/368 [01:23<00:45,  2.85it/s]Loading PDFs:  65%|██████▌   | 241/368 [01:23<00:25,  5.02it/s]Loading PDFs:  66%|██████▌   | 243/368 [01:23<00:22,  5.66it/s]Loading PDFs:  66%|██████▋   | 244/368 [01:23<00:22,  5.60it/s]Loading PDFs:  68%|██████▊   | 250/368 [01:24<00:14,  8.37it/s]Loading PDFs:  68%|██████▊   | 251/368 [01:24<00:20,  5.66it/s]Loading PDFs:  68%|██████▊   | 252/368 [01:25<00:24,  4.78it/s]Loading PDFs:  69%|██████▉   | 253/368 [01:25<00:27,  4.21it/s]Loading PDFs:  69%|██████▉   | 254/368 [01:26<00:33,  3.45it/s]Loading PDFs:  69%|██████▉   | 255/368 [01:26<00:33,  3.41it/s]Loading PDFs:  70%|██████▉   | 256/368 [01:26<00:34,  3.26it/s]Loading PDFs:  70%|██████▉   | 257/368 [01:26<00:28,  3.94it/s]Loading PDFs:  70%|███████   | 258/368 [01:27<00:32,  3.38it/s]Loading PDFs:  70%|███████   | 259/368 [01:27<00:26,  4.08it/s]Loading PDFs:  71%|███████   | 262/368 [01:27<00:16,  6.55it/s]Loading PDFs:  71%|███████▏  | 263/368 [01:27<00:16,  6.25it/s]Loading PDFs:  72%|███████▏  | 264/368 [01:28<00:18,  5.59it/s]Loading PDFs:  72%|███████▏  | 265/368 [01:28<00:20,  4.98it/s]Loading PDFs:  72%|███████▏  | 266/368 [01:28<00:23,  4.43it/s]Loading PDFs:  73%|███████▎  | 267/368 [01:28<00:22,  4.40it/s]Loading PDFs:  73%|███████▎  | 268/368 [01:29<00:22,  4.37it/s]Loading PDFs:  73%|███████▎  | 269/368 [01:29<00:22,  4.34it/s]Loading PDFs:  73%|███████▎  | 270/368 [01:29<00:24,  3.93it/s]Loading PDFs:  74%|███████▎  | 271/368 [01:29<00:20,  4.69it/s]Loading PDFs:  74%|███████▍  | 272/368 [01:29<00:17,  5.45it/s]Loading PDFs:  74%|███████▍  | 273/368 [01:29<00:15,  6.07it/s]Loading PDFs:  74%|███████▍  | 274/368 [01:30<00:14,  6.48it/s]Loading PDFs:  75%|███████▍  | 275/368 [01:30<00:13,  6.95it/s]Loading PDFs:  75%|███████▌  | 276/368 [01:30<00:12,  7.15it/s]Loading PDFs:  75%|███████▌  | 277/368 [01:30<00:17,  5.26it/s]Loading PDFs:  76%|███████▌  | 278/368 [01:30<00:16,  5.46it/s]Loading PDFs:  76%|███████▌  | 280/368 [01:31<00:20,  4.32it/s]Loading PDFs:  76%|███████▋  | 281/368 [01:31<00:19,  4.40it/s]Loading PDFs:  77%|███████▋  | 282/368 [01:31<00:19,  4.48it/s]Loading PDFs:  77%|███████▋  | 283/368 [01:32<00:18,  4.56it/s]Loading PDFs:  77%|███████▋  | 284/368 [01:32<00:17,  4.75it/s]Loading PDFs:  77%|███████▋  | 285/368 [01:32<00:17,  4.81it/s]Loading PDFs:  78%|███████▊  | 286/368 [01:32<00:16,  4.98it/s]Loading PDFs:  78%|███████▊  | 287/368 [01:32<00:17,  4.65it/s]Loading PDFs:  78%|███████▊  | 288/368 [01:32<00:16,  4.97it/s]Loading PDFs:  79%|███████▊  | 289/368 [01:33<00:21,  3.64it/s]Loading PDFs:  79%|███████▉  | 290/368 [01:33<00:21,  3.61it/s]Loading PDFs:  79%|███████▉  | 291/368 [01:33<00:20,  3.69it/s]Loading PDFs:  79%|███████▉  | 292/368 [01:34<00:20,  3.69it/s]Loading PDFs:  80%|███████▉  | 293/368 [01:34<00:20,  3.67it/s]Loading PDFs:  80%|███████▉  | 294/368 [01:34<00:19,  3.78it/s]Loading PDFs:  80%|████████  | 295/368 [01:35<00:18,  3.89it/s]Loading PDFs:  80%|████████  | 296/368 [01:35<00:20,  3.59it/s]Loading PDFs:  81%|████████  | 297/368 [01:35<00:20,  3.43it/s]Loading PDFs:  81%|████████  | 298/368 [01:35<00:20,  3.42it/s]Loading PDFs:  81%|████████▏ | 299/368 [01:36<00:17,  3.92it/s]Loading PDFs:  82%|████████▏ | 300/368 [01:36<00:16,  4.10it/s]Loading PDFs:  82%|████████▏ | 301/368 [01:36<00:21,  3.09it/s]Loading PDFs:  82%|████████▏ | 302/368 [01:37<00:25,  2.57it/s]Loading PDFs:  82%|████████▏ | 303/368 [01:37<00:26,  2.43it/s]Loading PDFs:  83%|████████▎ | 304/368 [01:38<00:30,  2.09it/s]Loading PDFs:  83%|████████▎ | 305/368 [01:39<00:31,  2.01it/s]Loading PDFs:  83%|████████▎ | 306/368 [01:39<00:30,  2.00it/s]Loading PDFs:  84%|████████▎ | 308/368 [01:40<00:32,  1.85it/s]Loading PDFs:  85%|████████▍ | 312/368 [01:41<00:18,  3.09it/s]Loading PDFs:  85%|████████▌ | 313/368 [01:41<00:18,  2.90it/s]Loading PDFs:  85%|████████▌ | 314/368 [01:42<00:19,  2.72it/s]Loading PDFs:  86%|████████▌ | 315/368 [01:42<00:21,  2.45it/s]Loading PDFs:  86%|████████▌ | 316/368 [01:43<00:26,  1.99it/s]Loading PDFs:  86%|████████▌ | 317/368 [01:44<00:25,  2.01it/s]Loading PDFs:  86%|████████▋ | 318/368 [01:44<00:22,  2.18it/s]Loading PDFs:  87%|████████▋ | 319/368 [01:44<00:20,  2.41it/s]Loading PDFs:  87%|████████▋ | 320/368 [01:45<00:20,  2.32it/s]Loading PDFs:  88%|████████▊ | 322/368 [01:45<00:15,  2.95it/s]Loading PDFs:  88%|████████▊ | 323/368 [01:46<00:16,  2.79it/s]Loading PDFs:  88%|████████▊ | 324/368 [01:46<00:16,  2.68it/s]Loading PDFs:  88%|████████▊ | 325/368 [01:46<00:15,  2.69it/s]Loading PDFs:  89%|████████▊ | 326/368 [01:47<00:18,  2.22it/s]Loading PDFs:  89%|████████▉ | 327/368 [01:48<00:19,  2.06it/s]Loading PDFs:  89%|████████▉ | 328/368 [01:48<00:22,  1.77it/s]Loading PDFs:  89%|████████▉ | 329/368 [01:49<00:24,  1.58it/s]Loading PDFs:  90%|████████▉ | 330/368 [01:50<00:25,  1.51it/s]Loading PDFs:  90%|████████▉ | 331/368 [01:50<00:19,  1.93it/s]Loading PDFs:  91%|█████████ | 335/368 [01:50<00:07,  4.37it/s]Loading PDFs:  92%|█████████▏| 338/368 [01:51<00:04,  6.04it/s]Loading PDFs:  92%|█████████▏| 339/368 [01:51<00:05,  5.28it/s]Loading PDFs:  93%|█████████▎| 342/368 [01:51<00:03,  7.94it/s]Loading PDFs:  94%|█████████▍| 345/368 [01:51<00:03,  7.01it/s]Loading PDFs:  95%|█████████▍| 348/368 [01:52<00:02,  9.42it/s]Loading PDFs:  95%|█████████▌| 350/368 [01:52<00:01,  9.15it/s]Loading PDFs:  96%|█████████▌| 352/368 [01:52<00:02,  6.82it/s]Loading PDFs:  96%|█████████▌| 354/368 [01:53<00:02,  5.56it/s]Loading PDFs:  96%|█████████▋| 355/368 [01:53<00:02,  5.24it/s]Loading PDFs:  97%|█████████▋| 356/368 [01:53<00:02,  4.55it/s]Loading PDFs:  97%|█████████▋| 357/368 [01:54<00:02,  3.92it/s]Loading PDFs:  97%|█████████▋| 358/368 [01:54<00:02,  3.73it/s]Loading PDFs:  98%|█████████▊| 359/368 [01:55<00:02,  3.41it/s]Loading PDFs:  98%|█████████▊| 360/368 [01:55<00:02,  3.40it/s]Loading PDFs:  98%|█████████▊| 361/368 [01:55<00:02,  3.04it/s]Loading PDFs:  98%|█████████▊| 362/368 [01:55<00:01,  3.34it/s]Loading PDFs:  99%|█████████▊| 363/368 [01:56<00:01,  3.44it/s]Loading PDFs:  99%|█████████▉| 364/368 [01:56<00:01,  3.86it/s]Loading PDFs:  99%|█████████▉| 365/368 [01:56<00:00,  3.60it/s]Loading PDFs:  99%|█████████▉| 366/368 [01:57<00:00,  3.25it/s]Loading PDFs: 100%|█████████▉| 367/368 [01:57<00:00,  3.10it/s]Loading PDFs: 100%|██████████| 368/368 [01:57<00:00,  3.88it/s]Loading PDFs: 100%|██████████| 368/368 [01:57<00:00,  3.13it/s]
+2026-01-19 23:41:38,126 - src.experiments.hybrid_retrieval - INFO - [Hybrid] Splitting 54120 documents...
+slurmstepd: error: *** JOB 4907 ON octal31 CANCELLED AT 2026-01-19T23:45:37 ***

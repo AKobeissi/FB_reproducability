@@ -132,12 +132,17 @@ def _load_chunks_from_pdfs(experiment) -> List[Any]:
 def _get_docs(retriever: Any, query: str) -> List[Any]:
     if retriever is None:
         return []
-    if hasattr(retriever, "invoke"):
-        return retriever.invoke(query)
-    if hasattr(retriever, "get_relevant_documents"):
-        return retriever.get_relevant_documents(query)
-    if hasattr(retriever, "similarity_search"):
-        return retriever.similarity_search(query)
+    try:
+        if hasattr(retriever, "invoke"):
+            return retriever.invoke(query)
+        if hasattr(retriever, "get_relevant_documents"):
+            return retriever.get_relevant_documents(query)
+        if hasattr(retriever, "similarity_search"):
+            return retriever.similarity_search(query)
+    except Exception as e:
+        logger.error(f"[Hybrid] Error during retrieval: {e}")
+        return []
+    
     raise AttributeError(f"Provided object {type(retriever)} is not a valid retriever.")
 
 
@@ -209,35 +214,53 @@ class HybridSpladeRetriever:
 def _get_dense_retriever(experiment, k: int):
     logger.info(f"[Hybrid] Initializing Dense Retriever (Embeddings: {experiment.embedding_model})...")
     
-    # 1. Try to load existing store (Lazy)
-    #    'build_chroma_store' returns (retriever, vectordb, is_empty) when lazy_load=True
-    try:
-        retriever, vectordb, is_empty = build_chroma_store(experiment, docs="all", lazy_load=True)
-    except Exception as e:
-        logger.warning(f"[Hybrid] Failed to probe VectorStore: {e}")
-        is_empty = True
-        vectordb = None
+    retriever = None
+    vectordb = None
+    should_build = False
 
-    # 2. If empty/missing, we MUST load chunks and build it
-    if is_empty:
-        logger.info("[Hybrid] Vector store is empty or missing. Building from scratch...")
+    # 1. Attempt Lazy Load (Probe)
+    try:
+        # We try to load. If the DB doesn't exist, Chroma might create an empty shell.
+        # We must verify if it actually contains data.
+        retriever, vectordb, is_empty_flag = build_chroma_store(experiment, docs="all", lazy_load=True)
+        
+        if is_empty_flag:
+            logger.info("[Hybrid] Store flagged as empty by builder.")
+            should_build = True
+        elif vectordb is not None:
+            # SANITY CHECK: Access the collection to ensure tables exist
+            # This catches 'no such table: collections'
+            count = vectordb._collection.count()
+            if count == 0:
+                logger.info("[Hybrid] Vector store exists but has 0 documents. Triggering rebuild.")
+                should_build = True
+            else:
+                logger.info(f"[Hybrid] Successfully loaded existing VectorStore with {count} docs.")
+                
+    except Exception as e:
+        logger.warning(f"[Hybrid] Failed to probe VectorStore (will rebuild): {e}")
+        should_build = True
+
+    # 2. Build from Scratch if needed
+    if should_build:
+        logger.info("[Hybrid] Building VectorStore from scratch (this may take time)...")
         chunks = _load_chunks_from_pdfs(experiment)
         
-        # Call again with 'documents=chunks' and 'lazy_load=False' to populate and persist
-        # Note: We rely on build_chroma_store to handle the internal logic of "populate only if empty"
+        # Call again with actual documents to populate
+        # Note: lazy_load=False ensures it persists
         store_result = build_chroma_store(experiment, docs="all", documents=chunks, lazy_load=False)
         
-        # Unwrap result based on return type (store_result could be just retriever or tuple)
         if isinstance(store_result, tuple):
              retriever = store_result[0]
         else:
              retriever = store_result
     
     # 3. Configure k
-    if hasattr(retriever, "search_kwargs"):
-        retriever.search_kwargs["k"] = k
-    elif hasattr(retriever, "k"):
-        retriever.k = k
+    if retriever:
+        if hasattr(retriever, "search_kwargs"):
+            retriever.search_kwargs["k"] = k
+        elif hasattr(retriever, "k"):
+            retriever.k = k
         
     return retriever
 
@@ -318,7 +341,7 @@ def run_hybrid_search(
     logger.info(f"Config: candidate_k={candidate_k}, sparse_model={sparse_model}, top_k={experiment.top_k}")
     logger.info(f"Fusion: rrf_k={rrf_k}, dense_weight={dense_weight:.3f}, sparse_weight={sparse_weight:.3f}")
 
-    # Initialize Dense (with auto-build support)
+    # Initialize Dense (with robust auto-build)
     dense_retriever = _get_dense_retriever(experiment, k=candidate_k)
 
     # Initialize Sparse
@@ -413,7 +436,7 @@ def run_hybrid_rrf_sweep(
     logger.info(f"Sweep alphas={alphas}")
     logger.info(f"Sweep rrf_ks={rrf_ks}")
 
-    # Initialize Dense (with auto-build support)
+    # Initialize Dense (with robust auto-build)
     dense_retriever = _get_dense_retriever(experiment, k=candidate_k)
 
     # Initialize Sparse

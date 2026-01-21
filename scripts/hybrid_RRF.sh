@@ -61,6 +61,12 @@ declare -a SPARSE_MODELS=(
 SCRATCH_OUT="$SCRATCH_DIR/outputs"
 mkdir -p "$SCRATCH_OUT"
 
+# [OPTION A] Define Vector Store Path in Scratch
+# This ensures databases are built in writable, fast local storage
+VECTOR_STORE_DIR="$SCRATCH_DIR/vector_stores"
+mkdir -p "$VECTOR_STORE_DIR"
+echo "Vector Stores will be created in: $VECTOR_STORE_DIR"
+
 # --- 5. RUN EXPERIMENTS ---
 
 for emb in "${EMBEDDINGS[@]}"; do
@@ -85,6 +91,7 @@ for emb in "${EMBEDDINGS[@]}"; do
             --chunking-unit tokens \
             --pdf-dir pdfs \
             --top-k 5 \
+            --vector-store-dir "$VECTOR_STORE_DIR" \
             --output-dir "$SCRATCH_OUT/hybrid_${emb_safe}_${sparse}"
 
         # B. HYBRID SWEEP (Parameter Search)
@@ -99,6 +106,7 @@ for emb in "${EMBEDDINGS[@]}"; do
             --chunking-unit tokens \
             --pdf-dir pdfs \
             --top-k 5 \
+            --vector-store-dir "$VECTOR_STORE_DIR" \
             --output-dir "$SCRATCH_OUT/sweep_${emb_safe}_${sparse}"
             
     done
