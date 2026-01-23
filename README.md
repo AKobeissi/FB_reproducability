@@ -20,6 +20,7 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 | --- | --- |
 | `runner.py` | Friendly CLI wrapper that maps `model`/`experiment` keywords to `RAGExperiment` constants. |
 | `rag_experiments.py` | Core orchestration plus CLI, invoking mode-specific runners in `rag_*.py`. |
+| `src/pipeline/` | **Standard pipeline** modules (shared indexing + retrieval/generation orchestration). |
 | `rag_closed_book.py`, `rag_single_vector.py`, `random_single_store.py`, `rag_shared_vector.py`, `rag_open_book.py` | Implement the individual experiment strategies (including the random chunk baseline). |
 | `rag_experiment_mixins.py` | Chunking, prompting, vector-store, component-tracking, and result helpers mixed into `RAGExperiment`. |
 | `vectorstore.py`, `pdf_utils.py` | Shared utilities for document ingestion and retrieval backends. |
@@ -62,13 +63,14 @@ FinanceBench RAG Experiments is a reproducible playground for the **PatronusAI/F
 ### Quick CLI (`runner.py`)
 
 ```bash
-python runner.py [llama|qwen|both] [closed|single|random_single|shared|open] \
+python runner.py [llama|qwen|both] [closed|single|random_single|shared|open|unified] \
   --num-samples 50 \
   --pdf-dir /path/to/pdfs \
   --vector-store-dir ./vector_stores \
   --output-dir ./outputs \
   [--no-8bit] [--use-api --api-base-url https://router.huggingface.co --api-key-env HF_TOKEN] \
-  [--llm-model gpt-4o-mini] [--embedding-model text-embedding-ada-002]
+  [--llm-model gpt-4o-mini] [--embedding-model text-embedding-ada-002] \
+  [--unified-retrieval dense|sparse|hybrid] [--unified-hyde --unified-hyde-k 4] [--unified-rerank]
 ```
 
 Key behavior:
@@ -102,6 +104,7 @@ You can also import `RAGExperiment` from Python to embed the workflow in noteboo
 | `random_single` | Uses the same per-document chunks but samples them uniformly at random instead of querying a retriever. | None (random sampler) |
 | `shared` | Ingests all PDFs into a single shared Chroma store so cross-document evidence is possible. | Chroma (global) |
 | `open` | Feeds the gold evidence segments directly to the generator (oracle upper bound). | Gold evidence only |
+| `unified` | **Standard pipeline**: shared index + optional HyDE expansion + dense/sparse/hybrid retrieval + optional reranking. | Chroma + BM25 (optional fusion) |
 
 All retrieval modes rely on LangChain embeddings (`all-mpnet-base-v2` by default), `RecursiveCharacterTextSplitter`, and either LangChain retrieval chains or a manual fallback if advanced utilities are missing.
 
