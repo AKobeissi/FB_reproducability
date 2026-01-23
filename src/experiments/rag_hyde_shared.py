@@ -2,23 +2,13 @@
 HyDE and Multi-HyDE Shared Vector Experiments.
 Generates hypothetical financial passages to query the shared index.
 """
-from typing import List, Dict, Any
 import logging
-import os
-import json
+from typing import Any, Dict, List
+
 import numpy as np
 
-from src.ingestion.pdf_utils import load_pdf_with_fallback
-from src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
-from src.experiments.rag_shared_vector import (
-    _get_or_create_retrieval_prompt, 
-    _get_or_create_documents_chain, 
-    _build_chunks_from_docs, 
-    _fallback_retrieval_qa,
-    _log_pdf_sources,
-    _create_skipped_result,
-    _create_all_skipped_results
-)
+from src.experiments.rag_shared_vector import _create_all_skipped_results, _create_skipped_result, _log_pdf_sources
+from src.pipeline.shared_index import ensure_shared_chroma_index
 
 logger = logging.getLogger(__name__)
 
@@ -35,53 +25,15 @@ def _run_hyde_base(experiment, data, mode, n_generations):
     logger.info(f"RUNNING {mode.upper()} EXPERIMENT ({n_generations} generation(s))")
     logger.info("=" * 80)
 
-    # --- Step 1: Initialize Shared Index (Standard Logic) ---
-    unique_docs = {}
-    if getattr(experiment, "use_all_pdfs", False) and getattr(experiment, "pdf_local_dir", None):
-        if os.path.exists(str(experiment.pdf_local_dir)):
-            import glob
-            p = str(experiment.pdf_local_dir)
-            for f in glob.glob(os.path.join(p, "**", "*.pdf"), recursive=True):
-                unique_docs[os.path.splitext(os.path.basename(f))[0]] = ""
-
-    for sample in data:
-        unique_docs.setdefault(sample.get('doc_name', 'unknown'), sample.get('doc_link', ''))
-
+    # --- Step 1: Ensure Shared Index (centralized helper) ---
     try:
-        # We need the vectordb object explicitly for vector search
-        retriever, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
+        shared = ensure_shared_chroma_index(experiment, data)
+        vectordb = shared.vectordb
+        available_docs = shared.available_docs
+        pdf_source_map = shared.pdf_source_map
     except Exception as e:
-        logger.error("Chroma build failed: %s", e)
+        logger.error("Shared index initialization failed: %s", e)
         return _create_all_skipped_results(data, mode, experiment=experiment)
-
-    # Ingestion Logic (Standard shared store logic)
-    _, db_path = get_chroma_db_path(experiment, "all")
-    meta_path = os.path.join(db_path, "shared_meta.json")
-    available_docs = set()
-    pdf_source_map = {}
-    
-    if not is_new and os.path.exists(meta_path):
-        try:
-            with open(meta_path, 'r') as f:
-                meta = json.load(f)
-                available_docs = set(meta.get("available_docs", []))
-                pdf_source_map = meta.get("pdf_source_map", {})
-        except Exception: pass
-
-    docs_to_process = {k: v for k, v in unique_docs.items() if k not in available_docs}
-    if docs_to_process:
-        logger.info(f"Ingesting {len(docs_to_process)} missing documents...")
-        for doc_name, doc_link in docs_to_process.items():
-            pdf_docs, src = load_pdf_with_fallback(doc_name, doc_link, getattr(experiment, 'pdf_local_dir', None))
-            pdf_source_map[doc_name] = src
-            if pdf_docs:
-                chunks = experiment._chunk_text_langchain(pdf_docs, metadata={'doc_name': doc_name})
-                if chunks:
-                    populate_chroma_store(experiment, vectordb, chunks, "all")
-                    available_docs.add(doc_name)
-        save_store_config(experiment, db_path)
-        with open(meta_path, 'w') as f:
-            json.dump({"available_docs": list(available_docs), "pdf_source_map": pdf_source_map}, f)
 
     _log_pdf_sources(pdf_source_map)
 

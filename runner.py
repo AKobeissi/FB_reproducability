@@ -73,7 +73,7 @@ def parse_args():
         "experiment",
         nargs="?",
         default="closed",
-        choices=["closed", "single", "random_single", "shared", "open", "big2small"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "unified"],
         help="Experiment type"
     )
     
@@ -147,6 +147,31 @@ def parse_args():
         help="Embedding model identifier (HF or OpenAI, e.g., text-embedding-ada-002)"
     )
 
+    # Unified pipeline configuration (only used when experiment=unified)
+    parser.add_argument(
+        "--unified-hyde",
+        action="store_true",
+        help="[Unified] Enable HyDE query expansion."
+    )
+    parser.add_argument(
+        "--unified-hyde-k",
+        type=int,
+        default=1,
+        help="[Unified] Number of HyDE generations (1=Single, >1=Multi)."
+    )
+    parser.add_argument(
+        "--unified-retrieval",
+        type=str,
+        default="dense",
+        choices=["dense", "sparse", "hybrid"],
+        help="[Unified] Retrieval mode."
+    )
+    parser.add_argument(
+        "--unified-rerank",
+        action="store_true",
+        help="[Unified] Enable Cross-Encoder reranking."
+    )
+
     # Evaluation configuration
     parser.add_argument(
         "--eval-type",
@@ -198,6 +223,7 @@ def get_experiment_type(exp_arg: str) -> str:
         "shared": RAGExperiment.SHARED_VECTOR,
         "open": RAGExperiment.OPEN_BOOK,
         "big2small": RAGExperiment.BIG_2_SMALL,
+        "unified": RAGExperiment.UNIFIED,
     }
     return exp_map[exp_arg]
 
@@ -248,6 +274,12 @@ def main():
                 eval_mode=args.eval_mode,
                 judge_model=args.judge_model,
             )
+
+            # Pipeline toggles (read by src/experiments/unified_pipeline.py wrapper)
+            exp.unified_use_hyde = args.unified_hyde
+            exp.unified_hyde_k = args.unified_hyde_k
+            exp.unified_retrieval = args.unified_retrieval
+            exp.unified_use_rerank = args.unified_rerank
             
             exp.run_experiment(num_samples=args.num_samples)
             
