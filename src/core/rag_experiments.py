@@ -56,6 +56,8 @@ from src.experiments.rag_oracle import (
     run_oracle_page as _run_oracle_page
 )
 
+from src.experiments.unified_pipeline import run_unified_pipeline as _run_unified_pipeline
+
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
     """Setup comprehensive logging"""
@@ -116,6 +118,7 @@ class RAGExperiment(
     RERANKING = "reranking"  
     ORACLE_DOC = "oracle_doc"
     ORACLE_PAGE = "oracle_page"
+    UNIFIED = "unified"  # <--- Add this
 
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
@@ -539,6 +542,9 @@ class RAGExperiment(
     def run_oracle_page(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_oracle_page(self, data)
 
+    def run_unified(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_unified_pipeline(self, data)
+
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
         Run the configured experiment
@@ -596,6 +602,8 @@ class RAGExperiment(
             results = self.run_splade(data)
         elif self.experiment_type == self.RERANKING:  
             results = _run_reranking(self, data)
+        elif self.experiment_type == self.UNIFIED:
+            results = self.run_unified(data)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -785,7 +793,7 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page", "unified"],
         default="single",
         help="Experiment type.",
     )
@@ -962,6 +970,31 @@ def main():
     help="Sparse retrieval model to use for hybrid search (default: bm25)."
 )
 
+    # Unified Pipeline Arguments
+    parser.add_argument(
+        "--unified-hyde",
+        action="store_true",
+        help="[Unified] Enable HyDE query expansion."
+    )
+    parser.add_argument(
+        "--unified-hyde-k",
+        type=int,
+        default=1,
+        help="[Unified] Number of HyDE generations (1=Single, >1=Multi)."
+    )
+    parser.add_argument(
+        "--unified-retrieval",
+        type=str,
+        default="dense",
+        choices=["dense", "sparse", "hybrid"],
+        help="[Unified] Retrieval mode."
+    )
+    parser.add_argument(
+        "--unified-rerank",
+        action="store_true",
+        help="[Unified] Enable Cross-Encoder Reranking."
+    )
+    
     args = parser.parse_args()
 
     exp_map = {
@@ -981,6 +1014,7 @@ def main():
         "reranking": RAGExperiment.RERANKING,  
         "oracle_doc": RAGExperiment.ORACLE_DOC,    # <--- NEW
         "oracle_page": RAGExperiment.ORACLE_PAGE,  # <--- NEW
+        "unified": RAGExperiment.UNIFIED,
     }
     
     # Simple error handling for bad keys
@@ -1036,11 +1070,14 @@ def main():
             render_dpi=args.render_dpi,
             vision_encoder=args.vision_encoder,
             patch_size=args.patch_size,
-            pipeline_version=args.pipeline_version
-        )
+            pipeline_version=args.pipeline_version,
+            )
 
         experiment.hybrid_sparse_model = args.sparse_model
-
+        experiment.unified_use_hyde = args.unified_hyde
+        experiment.unified_hyde_k = args.unified_hyde_k
+        experiment.unified_retrieval = args.unified_retrieval
+        experiment.unified_use_rerank = args.unified_rerank
         experiment.run_experiment(num_samples=args.num_samples)
 
 

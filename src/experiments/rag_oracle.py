@@ -30,13 +30,17 @@ def run_oracle_page(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, An
 
 
 def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) -> List[Dict[str, Any]]:
+    """
+    Main execution loop for Oracle experiments (Document or Page level).
+    Handles vector store loading/building per document to ensure isolation.
+    """
     logger.info("\n" + "=" * 80)
     logger.info(f"RUNNING ORACLE EXPERIMENT (CHROMA): {mode.upper()}")
     logger.info("=" * 80)
 
     results = []
     
-    # 1. Group samples by document
+    # 1. Group samples by document to minimize vector store switching
     doc_groups = defaultdict(list)
     for sample in data:
         doc_name = sample.get('doc_name', 'unknown')
@@ -44,15 +48,16 @@ def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) 
 
     logger.info(f"Processing {len(doc_groups)} unique documents")
 
-    for doc_name, samples in doc_groups.items():
-        logger.info(f"\nProcessing Document Context: {doc_name} ({len(samples)} samples)")
+    # Iterate through each document group
+    for i, (doc_name, samples) in enumerate(doc_groups.items()):
+        logger.info(f"\n[{i+1}/{len(doc_groups)}] Processing Document Context: {doc_name} ({len(samples)} samples)")
         
-        # 2. Smart Vector Store Loading (Avoids File Locks)
         vectordb = None
         retriever = None
         
         try:
-            # Generate the expected path and config
+            # --- 2. Smart Vector Store Loading ---
+            # We determine if we can reuse an existing store or need to build one.
             db_name, db_path = get_chroma_db_path(experiment, doc_name)
             config_path = os.path.join(db_path, "config.json")
             
@@ -66,21 +71,21 @@ def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) 
                     
                     current_config = build_index_config(experiment)
                     
-                    # If configs match and directory looks populated, we can load it
+                    # If configs match (chunk size, etc.) and directory looks populated
                     if stored_config == current_config:
-                        # Simple check: does it have more than just the config file?
-                        if len(os.listdir(db_path)) > 1:
+                        if len(os.listdir(db_path)) > 1: # Basic check for content
                             needs_building = False
                 except Exception as e:
                     logger.warning(f"Error checking config for {db_name}, will rebuild: {e}")
 
             if not needs_building:
                 logger.info(f"Loading existing vector store: {db_name}")
+                # We simply load it. The library will handle the rest.
                 retriever, vectordb = build_chroma_store(experiment, docs=doc_name)
             else:
                 logger.info(f"Building vector store for: {db_name}")
                 
-                # Load PDF
+                # Load PDF using the fallback logic (checks local dir then URL)
                 doc_link = samples[0].get('doc_link', '')
                 pdf_docs, pdf_source = load_pdf_with_fallback(
                     doc_name=doc_name,
@@ -92,7 +97,8 @@ def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) 
                     logger.warning(f"No PDF found for {doc_name}. Skipping {len(samples)} samples.")
                     continue
 
-                # Chunk
+                # Create Chunks
+                # We attach doc_name and source metadata here
                 chunks = experiment._chunk_text_langchain(
                     pdf_docs,
                     metadata={'doc_name': doc_name, 'source': 'pdf', 'pdf_source': pdf_source}
@@ -111,10 +117,11 @@ def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) 
                 
         except Exception as e:
             logger.error(f"Failed to initialize vector store for {doc_name}: {e}")
+            # Force cleanup
             gc.collect()
             continue
 
-        # 3. Process Samples
+        # --- 3. Process Samples for this Document ---
         if vectordb:
             for sample in samples:
                 try:
@@ -132,9 +139,9 @@ def _run_oracle_using_chroma(experiment, data: List[Dict[str, Any]], mode: str) 
                 if (len(results) % 10) == 0:
                     logger.info(f"Processed {len(results)} samples...")
         
-        # Explicit cleanup to release file locks for this iteration
-        # We delete the variables and force collection before the next loop iteration
-        # tries to open a new Chroma client.
+        # --- 4. Cleanup ---
+        # Crucial: Delete references and GC to release file locks on the ChromaDB folder
+        # before the next iteration tries to open a different DB (or the same one).
         if vectordb:
             del vectordb
         if retriever:
@@ -154,27 +161,31 @@ def _process_sample_chroma(
 ) -> Dict[str, Any]:
     
     question = sample['question']
-    
-    # --- Step A: Retrieval ---
     k = experiment.top_k
+    
+    # --- Step A: Setup Page Oracle Filter ---
     search_kwargs = {}
+    gold_pages = set()
     
     if mode == 'page':
-        # Extract gold pages from evidence
+        # Extract gold pages from evidence using the specific field names
         gold_pages = _extract_gold_pages(sample.get('evidence', []))
         
         if gold_pages:
             # Construct Chroma Metadata Filter
+            # This forces the vector store to ONLY search chunks from these pages.
             if len(gold_pages) == 1:
                 search_filter = {'page': list(gold_pages)[0]}
             else:
                 search_filter = {'page': {'$in': list(gold_pages)}}
             
             search_kwargs['filter'] = search_filter
+            logger.debug(f"Applied page filter for sample {sample_id}: {search_filter}")
         else:
-            logger.warning(f"Oracle Page requested but no gold page info found in evidence for sample {sample_id}. Falling back to full Doc Oracle.")
+            logger.warning(f"Oracle Page requested but no 'evidence_page_num' found for sample {sample_id}. Falling back to full Doc Oracle.")
 
-    # Perform Retrieval
+    # --- Step B: Retrieval ---
+    # Retrieve chunks (restricted by filter if in page mode)
     docs_and_scores = vectordb.similarity_search_with_score(
         question, 
         k=k,
@@ -191,7 +202,17 @@ def _process_sample_chroma(
             'rank': rank + 1
         })
 
-    # --- Step B: Generation ---
+    # --- Step C: Verification (Optional logging) ---
+    if mode == "page" and gold_pages:
+        got_pages = {c["metadata"].get("page") for c in retrieved_chunks}
+        # Normalize to ints for comparison
+        got_pages_int = {int(p) for p in got_pages if p is not None and str(p).isdigit()}
+        
+        # If we got results, they MUST be from the gold pages.
+        if retrieved_chunks and not got_pages_int.issubset(gold_pages):
+             logger.warning(f"Page-oracle leak detected! Retrieved pages {got_pages_int} not in gold {gold_pages}")
+
+    # --- Step D: Generation ---
     context_text = "\n\n".join([c['text'] for c in retrieved_chunks])
     
     answer, prompt_snapshot = experiment._generate_answer(
@@ -205,7 +226,7 @@ def _process_sample_chroma(
             question, context_text, mode=f"oracle_{mode}"
         )
 
-    # --- Step C: Formatting ---
+    # --- Step E: Result Formatting ---
     gold_segments, gold_evidence_str = experiment._prepare_gold_evidence(sample.get('evidence', ''))
     
     return {
@@ -231,33 +252,51 @@ def _process_sample_chroma(
 
 def _extract_gold_pages(evidence_list) -> set:
     """
-    Extract unique page indices from evidence list.
-    Ensures returns are Integers.
+    Extract unique (0-indexed) page indices from FinanceBench-style evidence.
+    Returns a set[int].
     """
     pages = set()
+    
+    # 1. Handle None
+    if evidence_list is None:
+        return pages
+
+    # 2. Fix: Handle NumPy arrays explicitly to avoid "truth value ambiguous" errors
+    if isinstance(evidence_list, np.ndarray):
+        # Check if empty array
+        if evidence_list.size == 0:
+            return pages
+        # Convert to standard python list for iteration
+        evidence_list = evidence_list.tolist()
+
+    # 3. Handle standard empty lists (now safe)
     if not evidence_list:
         return pages
     
     for ev in evidence_list:
-        found = False
-        # Priority 1: Direct index keys (usually 0-indexed)
-        for key in ['page_ix', 'page_idx']:
+        if not isinstance(ev, dict):
+            continue
+
+        found_page = False
+        
+        # Priority 1: The specific field for FinanceBench gold pages
+        if "evidence_page_num" in ev and ev["evidence_page_num"] is not None:
+            try:
+                pages.add(int(ev["evidence_page_num"]))
+                found_page = True
+            except (ValueError, TypeError):
+                pass
+        
+        if found_page:
+            continue
+
+        # Priority 2: Fallback keys
+        for key in ["page_ix", "page_idx", "page", "page_number"]:
             if key in ev and ev[key] is not None:
                 try:
                     pages.add(int(ev[key]))
-                    found = True
                     break
-                except: pass
-        
-        if found: continue
+                except (ValueError, TypeError):
+                    pass
 
-        # Priority 2: 'page' (often 1-indexed, but usually stored 0-indexed in vector store)
-        # Assuming consistency with PyPDFLoader (0-indexed)
-        for key in ['page', 'page_number']:
-             if key in ev and ev[key] is not None:
-                try:
-                    pages.add(int(ev[key]))
-                    break
-                except: pass
-                
     return pages

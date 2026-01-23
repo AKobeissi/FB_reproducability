@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 """
 Aggregate FinanceBench metrics across all hidden output folders.
+
 What it does
 ------------
 - Recursively searches for JSON/JSONL experiment output files under any folder
   named "outputs" (this is gitignored in this repo). It intentionally does NOT
   scan "results/" to avoid mixing derived artifacts with raw experiment outputs.
 - For each file, computes:
+
   Retrieval (at k=5 by default):
     - Doc: Hit@5, Recall@5
     - Page: Hit@5, Recall@5
     - Retrieved chunks vs gold evidence: max(BLEU-4), max(ROUGE-L F1)
     - Retrieved chunks vs reference answer: max(BLEU-4), max(ROUGE-L F1)
-    - Ranking vs reference answer: MRR@5, NDCG@5 (based on token-overlap relevance)
-    - Ranking vs gold evidence text: MRR@5, NDCG@5 (based on token-overlap relevance)
+    - Ranking vs reference answer: MRR@5, NDCG@5 (graded relevance = token-overlap ratio)
+    - Ranking vs gold evidence text: MRR@5, NDCG@5 (graded relevance = token-overlap ratio)
+
   Generation:
     - BLEU-4, ROUGE-L F1, BERTScore F1
     - For question_type == "metrics-generated": numeric string-match accuracy
+
 Outputs
 -------
 Writes 3 tables (CSV):
@@ -35,11 +39,10 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
-
 
 # Silence extremely verbose per-sample logs from the shared Evaluator.
 # (Users can still enable verbosity via --verbose.)
@@ -169,7 +172,7 @@ def _numeric_match(reference: str, prediction: str, *, atol: float = 0.01, rtol:
         return 0.0
     for r in ref_nums:
         for p in pred_nums:
-            if np.isclose(r, p, atol=atol) or np.isclose(r, p, rtol=rtol):
+            if np.isclose(r, p, atol=atol, rtol=rtol):
                 return 1.0
     return 0.0
 
@@ -183,6 +186,9 @@ def _dcg(rels: Sequence[float]) -> float:
 
 
 def _ndcg(rels: Sequence[float]) -> float:
+    """
+    Proper NDCG@k in [0,1] for graded relevance lists.
+    """
     if not rels:
         return 0.0
     dcg_val = _dcg(rels)
@@ -193,31 +199,59 @@ def _ndcg(rels: Sequence[float]) -> float:
     return float(dcg_val / idcg_val)
 
 
-def _extract_gold_evidence_text(sample: Dict[str, Any]) -> str:
+def _mrr_thresholded(rels: Sequence[float], threshold: float) -> float:
     """
-    Returns a single gold evidence text string to compare retrieved chunks against.
+    Binary relevance MRR@k: first rank whose relevance >= threshold.
+    """
+    for i, rel in enumerate(rels, start=1):
+        if float(rel) >= threshold:
+            return 1.0 / i
+    return 0.0
+
+
+def _mrr_best_overlap(rels: Sequence[float]) -> float:
+    """
+    Graded relevance MRR@k: rank of max-overlap item (no threshold).
+    """
+    if not rels:
+        return 0.0
+    best_rank = int(np.argmax(list(rels))) + 1  # 1-based
+    return 1.0 / best_rank
+
+
+def _extract_gold_evidence_texts(sample: Dict[str, Any]) -> List[str]:
+    """
+    Returns a list of gold evidence texts (one per segment if available).
     """
     segments = sample.get("gold_evidence_segments")
     texts: List[str] = []
+
     if isinstance(segments, list):
         for seg in segments:
             if not isinstance(seg, dict):
                 continue
             t = seg.get("text") or seg.get("evidence_text") or seg.get("evidence_text_full_page")
-            if t:
-                texts.append(str(t))
+            if t and str(t).strip():
+                texts.append(str(t).strip())
     elif isinstance(segments, dict):
         t = segments.get("text") or segments.get("evidence_text") or segments.get("evidence_text_full_page")
-        if t:
-            texts.append(str(t))
+        if t and str(t).strip():
+            texts.append(str(t).strip())
 
     if not texts:
         legacy = sample.get("gold_evidence")
         if isinstance(legacy, str) and legacy.strip():
             texts.append(legacy.strip())
 
-    # Keep a separator that is stable for BLEU/ROUGE comparisons
-    return "\n".join(t.strip() for t in texts if t and str(t).strip())
+    return texts
+
+
+def _extract_gold_evidence_text(sample: Dict[str, Any]) -> str:
+    """
+    Returns a single gold evidence text string (stable join) for BLEU/ROUGE comparisons.
+    """
+    texts = _extract_gold_evidence_texts(sample)
+    return "\n".join(texts)
 
 
 def _extract_gold_doc_pages(sample: Dict[str, Any]) -> Tuple[set, set]:
@@ -246,7 +280,9 @@ def _extract_gold_doc_pages(sample: Dict[str, Any]) -> Tuple[set, set]:
     return gold_docs, gold_pages
 
 
-def _extract_retrieved_doc_pages(retrieved_chunks: Sequence[Dict[str, Any]], k: int) -> Tuple[List[str], List[Tuple[str, str]]]:
+def _extract_retrieved_doc_pages(
+    retrieved_chunks: Sequence[Dict[str, Any]], k: int
+) -> Tuple[List[str], List[Tuple[str, str]]]:
     docs: List[str] = []
     pages: List[Tuple[str, str]] = []
     for chunk in list(retrieved_chunks)[:k]:
@@ -316,7 +352,9 @@ def compute_per_sample_metrics(
         page_recall = float(len(gold_pages & ret_pages_set) / len(gold_pages))
 
     # Retrieval: chunk text similarity vs evidence/reference (take max across retrieved @k)
-    gold_evidence_text = _extract_gold_evidence_text(sample)
+    gold_evidence_texts = _extract_gold_evidence_texts(sample)
+    gold_evidence_text_joined = "\n".join(gold_evidence_texts)
+
     chunk_texts_k: List[str] = []
     for c in list(retrieved)[:k]:
         # Support both schemas:
@@ -334,10 +372,10 @@ def compute_per_sample_metrics(
 
     bleu4_evi: List[float] = []
     rougeL_evi: List[float] = []
-    if gold_evidence_text and chunk_texts_k:
+    if gold_evidence_text_joined and chunk_texts_k:
         for t in chunk_texts_k:
-            bleu4_evi.append(float(evaluator.compute_bleu(t, gold_evidence_text).get("bleu_4", 0.0)))
-            rougeL_evi.append(float(evaluator.compute_rouge(t, gold_evidence_text).get("rouge_l_f1", 0.0)))
+            bleu4_evi.append(float(evaluator.compute_bleu(t, gold_evidence_text_joined).get("bleu_4", 0.0)))
+            rougeL_evi.append(float(evaluator.compute_rouge(t, gold_evidence_text_joined).get("rouge_l_f1", 0.0)))
 
     bleu4_ref: List[float] = []
     rougeL_ref: List[float] = []
@@ -351,44 +389,34 @@ def compute_per_sample_metrics(
     chunk_bleu4_max_vs_reference = max(bleu4_ref) if bleu4_ref else None
     chunk_rougeL_max_vs_reference = max(rougeL_ref) if rougeL_ref else None
 
-    # --- NDCG FIX: Assume 1 perfect match exists in the corpus for IDCG ---
-    ideal_rels = [1.0]
-
     # Retrieval ranking metrics vs reference answer: MRR@k, NDCG@k
     mrr = None
     ndcg = None
     if ref_answer and chunk_texts_k:
         rels = [_token_overlap_ratio(t, ref_answer) for t in chunk_texts_k]
-        
-        # Calculate NDCG using the fixed ideal_rels
-        dcg_val = _dcg(rels)
-        idcg_val = _dcg(ideal_rels)
-        ndcg = float(dcg_val / idcg_val) if idcg_val > 0 else 0.0
 
-        first_rank: Optional[int] = None
-        for i, rel in enumerate(rels, start=1):
-            if rel >= overlap_threshold:
-                first_rank = i
-                break
-        mrr = 1.0 / first_rank if first_rank else 0.0
+        # Proper NDCG in [0,1]
+        ndcg = float(_ndcg(rels))
+
+        # Keep your original thresholded MRR definition
+        mrr = float(_mrr_thresholded(rels, overlap_threshold))
+
+        # If you prefer a graded/always-defined MRR instead, swap to:
+        # mrr = float(_mrr_best_overlap(rels))
 
     # Retrieval ranking metrics vs gold evidence: MRR@k, NDCG@k
     mrr_evidence = None
     ndcg_evidence = None
-    if gold_evidence_text and chunk_texts_k:
-        rels_evi = [_token_overlap_ratio(t, gold_evidence_text) for t in chunk_texts_k]
-        
-        # Calculate NDCG using the fixed ideal_rels
-        dcg_val = _dcg(rels_evi)
-        idcg_val = _dcg(ideal_rels)
-        ndcg_evidence = float(dcg_val / idcg_val) if idcg_val > 0 else 0.0
+    if gold_evidence_texts and chunk_texts_k:
+        # Use max overlap vs ANY evidence segment (more stable than joining for overlap-based ranking)
+        rels_evi = []
+        for t in chunk_texts_k:
+            rels_evi.append(max(_token_overlap_ratio(t, e) for e in gold_evidence_texts))
 
-        first_rank_evi: Optional[int] = None
-        for i, rel in enumerate(rels_evi, start=1):
-            if rel >= overlap_threshold:
-                first_rank_evi = i
-                break
-        mrr_evidence = 1.0 / first_rank_evi if first_rank_evi else 0.0
+        ndcg_evidence = float(_ndcg(rels_evi))
+        mrr_evidence = float(_mrr_thresholded(rels_evi, overlap_threshold))
+        # Or graded version:
+        # mrr_evidence = float(_mrr_best_overlap(rels_evi))
 
     # Generation metrics vs reference answer
     gen_bleu4 = None
@@ -429,6 +457,7 @@ def compute_per_sample_metrics(
         generation_bertscore_f1=gen_bertscore_f1,
         generation_numeric_match=gen_numeric,
     )
+
 
 def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
@@ -569,7 +598,7 @@ def parse_args() -> argparse.Namespace:
         "--overlap-threshold",
         type=float,
         default=0.70,
-        help="Token-overlap threshold used for MRR (binary relevance) vs reference answer.",
+        help="Token-overlap threshold used for thresholded MRR (binary relevance).",
     )
     p.add_argument("--skip-bertscore", action="store_true", help="Skip BERTScore (faster/lighter).")
     p.add_argument(
@@ -590,6 +619,7 @@ def main() -> int:
     args = parse_args()
     if args.verbose:
         logging.getLogger("src.evaluation.evaluator").setLevel(logging.INFO)
+
     root = Path(args.root).resolve()
     dataset_path = (root / args.dataset).resolve() if not Path(args.dataset).is_absolute() else Path(args.dataset)
     out_dir = (root / args.output_dir).resolve() if not Path(args.output_dir).is_absolute() else Path(args.output_dir)
