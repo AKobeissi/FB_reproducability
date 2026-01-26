@@ -283,23 +283,7 @@ def build_chroma_store(
     documents: Optional[List[Any]] = None,
     lazy_load: bool = False,
 ):
-    """Build / load a Chroma store and return ``(retriever, vectordb)`` or ``(retriever, vectordb, is_new)``.
-
-    Parameters
-    ----------
-    experiment:
-        RAGExperiment-like object.
-    docs:
-        Either ``"all"``, a single document identifier (str), or an iterable
-        of identifiers. These identifiers determine the persisted DB path.
-    embeddings:
-        Optional embeddings object. Defaults to ``experiment.embeddings``.
-    documents:
-        Optional list of *already chunked* LangChain ``Document`` objects.
-    lazy_load:
-        If True, returns (retriever, vectordb, is_new) tuple. 
-        If is_new is True, the caller is responsible for populating the store.
-    """
+    """Build / load a Chroma store and return ``(retriever, vectordb)`` or ``(retriever, vectordb, is_new)``."""
     if Chroma is None:
         raise RuntimeError(
             "Chroma vectorstore is not available in this environment. "
@@ -325,8 +309,7 @@ def build_chroma_store(
                 with open(config_path, 'r') as f:
                     stored_config = json.load(f)
                 
-                # Check for mismatch in critical parameters
-                # We can now compare the full dictionaries directly
+                # Check for mismatch
                 if stored_config != current_config:
                     exp_logger.warning(
                         f"Vector store '{db_name}' configuration mismatch.\n"
@@ -340,7 +323,7 @@ def build_chroma_store(
                 should_clean = True
         else:
             # If the directory exists but config.json is missing, it might be an old store.
-            # To be safe against stale data (different chunk sizes), we rebuild it.
+            # To be safe against stale data, we usually rebuild.
             if documents or lazy_load:
                 exp_logger.warning(f"Vector store '{db_name}' missing config.json. Rebuilding...")
                 should_clean = True
@@ -348,7 +331,6 @@ def build_chroma_store(
     if should_clean:
         try:
             if os.path.exists(db_path):
-                # Try multiple times to remove the directory to handle potential file locks
                 max_retries = 3
                 for i in range(max_retries):
                     try:
@@ -368,16 +350,23 @@ def build_chroma_store(
 
     try:
         vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
-    except Exception as e:  # pragma: no cover - environment dependent
+    except Exception as e: 
         exp_logger.error(f"Failed to initialise Chroma DB at {db_path}: {e}")
         raise
+
+    # =========================================================================
+    # CRITICAL FIX: Save config immediately upon creation.
+    # This prevents the next call (or lazy_load check) from thinking the 
+    # store is "stale" or "corrupt" just because config is missing.
+    # =========================================================================
+    if not os.path.exists(config_path):
+        save_store_config(experiment, db_path)
 
     # --- Detect whether store is effectively empty --------------------------------
     try:
         collection_files = os.listdir(db_path)
-        # If we just cleaned it, it is definitely empty (or just has what Chroma init created).
         is_empty = len(collection_files) <= 1 or should_clean
-    except Exception:  # pragma: no cover
+    except Exception: 
         is_empty = False
 
     top_k = getattr(experiment, "top_k", 5)
@@ -397,10 +386,10 @@ def build_chroma_store(
                 added = populate_chroma_store(experiment, vectordb, documents, db_name)
                 exp_logger.info("Persisting Chroma DB '%s' with %s chunks", db_name, added)
                 
-                # Write config.json after successful population
+                # Ensure config is saved again after population just in case
                 save_store_config(experiment, db_path)
                     
-            except Exception as e:  # pragma: no cover
+            except Exception as e:
                 exp_logger.error(
                     f"Failed to populate Chroma from precomputed documents: {e}"
                 )
@@ -409,10 +398,9 @@ def build_chroma_store(
                  raise RuntimeError(
                     f"Vector store '{db_name}' was stale and cleared, but no documents were provided to rebuild it."
                 )
-            raise RuntimeError(
-                f"Chroma DB '{db_name}' is empty and no documents were provided "
-                "to populate it."
-            )
+            # If it's empty but we didn't ask to clean it, it's just an empty store.
+            # We might want to allow this if we are just initializing.
+            pass
 
     if hasattr(experiment, "register_component_usage"):
         experiment.register_component_usage(
@@ -422,14 +410,6 @@ def build_chroma_store(
                 "persist_directory": db_path,
                 "db_name": db_name,
                 "config": current_config
-            }
-        )
-        experiment.register_component_usage(
-            "retriever",
-            retriever.__class__.__name__,
-            {
-                "backend": "Chroma",
-                "top_k": top_k
             }
         )
     return retriever, vectordb

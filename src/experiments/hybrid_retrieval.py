@@ -5,7 +5,6 @@ Supports:
   - Dense: Any embedding model configured in RAGExperiment (e.g., BGE-M3, MPNet).
   - Sparse: BM25 or SPLADE (configurable).
   - Fusion: Weighted Reciprocal Rank Fusion (wRRF).
-  - Auto-Index: Builds vector store on the fly if missing (fixes SLURM scratch issues).
 """
 
 import hashlib
@@ -154,10 +153,14 @@ def _bm25_cache_path(experiment, fingerprint: str) -> str:
     base = _get_chunk_cache_path(experiment, fingerprint)
     cs = getattr(experiment, "chunk_size", None)
     ov = getattr(experiment, "chunk_overlap", None)
+    unit = getattr(experiment, "chunking_unit", "chars") 
+    
     if cs is None and ov is None:
         return base
+        
     stem, ext = os.path.splitext(base)
-    return f"{stem}_cs{cs}_ov{ov}{ext or '.pkl'}"
+    # Append unit to ensure uniqueness
+    return f"{stem}_cs{cs}_ov{ov}_{unit}{ext or '.pkl'}"
 
 def _load_or_build_bm25_chunks(experiment, fingerprint: str):
     cache_path = _bm25_cache_path(experiment, fingerprint)
