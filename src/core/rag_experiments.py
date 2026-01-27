@@ -57,6 +57,8 @@ from src.experiments.rag_oracle import (
 )
 
 from src.experiments.unified_pipeline import run_unified_pipeline as _run_unified_pipeline
+from src.experiments.metadata_reranking import run_metadata_reranking_experiment as _run_metadata_reranking
+from src.experiments.uncertainty import run_uncertainty_experiment, analyze_risk_coverage
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -119,6 +121,8 @@ class RAGExperiment(
     ORACLE_DOC = "oracle_doc"
     ORACLE_PAGE = "oracle_page"
     UNIFIED = "unified"  # <--- Add this
+    META_RERANK = "meta_reranking"
+    UNCERTAINTY = "uncertainty"
 
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
@@ -173,7 +177,14 @@ class RAGExperiment(
                  render_dpi: Optional[int] = None,
                  vision_encoder: Optional[str] = None,
                  patch_size: Optional[int] = None,
-                 pipeline_version: Optional[str] = None):
+                 pipeline_version: Optional[str] = None,
+                 # ARGS FOR UNCERTAINTY:
+                 mc_t: int = 10,
+                 mc_l: int = 30,
+                 mc_alpha: float = 1.0,
+                 k_cand: int = 100,
+                 reranker_model: str = "BAAI/bge-reranker-v2-m3",
+                 **kwargs):
         """
         Initialize RAG Experiment
         """
@@ -207,6 +218,12 @@ class RAGExperiment(
         self.eval_mode = eval_mode
         self.judge_model = judge_model
         
+        self.mc_t = mc_t
+        self.mc_l = mc_l
+        self.mc_alpha = mc_alpha
+        self.k_cand = k_cand
+        self.reranker_model = reranker_model
+
         base_dir = Path(__file__).resolve().parent
         if output_dir is None:
             output_root = base_dir / "outputs"
@@ -285,6 +302,14 @@ class RAGExperiment(
             'chunking_unit': chunking_unit,
         }
         
+        self.experiment_metadata.update({
+            'mc_t': mc_t,
+            'mc_l': mc_l,
+            'mc_alpha': mc_alpha,
+            'k_cand': k_cand,
+            'reranker_model': reranker_model
+        })
+
         if chunking_strategy == 'hierarchical':
             self.experiment_metadata.update({
                 'parent_chunk_size': parent_chunk_size,
@@ -602,8 +627,12 @@ class RAGExperiment(
             results = self.run_splade(data)
         elif self.experiment_type == self.RERANKING:  
             results = _run_reranking(self, data)
+        elif self.experiment_type == self.META_RERANK: # <--- Add this block
+            results = _run_metadata_reranking(self, data)
         elif self.experiment_type == self.UNIFIED:
             results = self.run_unified(data)
+        if self.experiment_type == self.UNCERTAINTY:
+            results = run_uncertainty_experiment(self, data)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -625,6 +654,18 @@ class RAGExperiment(
             self.run_evaluation(output_file)
         elif self.experiment_type == self.HYBRID_SWEEP:
             self.logger.info("Note: Sweep results saved. Run custom evaluation script on the output file.")
+
+        if self.experiment_type == self.UNCERTAINTY:
+             # run_evaluation creates a file named *_scored.json in results_dir
+             source_path = Path(output_file)
+             scored_filename = f"{source_path.stem}_scored{source_path.suffix}"
+             scored_path = Path(self.results_dir) / scored_filename
+             
+             if scored_path.exists():
+                 self.logger.info("Running Risk-Coverage Analysis on scored results...")
+                 analyze_risk_coverage(str(scored_path), self.results_dir)
+             else:
+                 self.logger.warning("Scored results file not found. Skipping immediate Risk-Coverage analysis.")
 
     def _unload_model(self):
         """Unload generator model to free memory."""
@@ -793,7 +834,7 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page", "unified"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page", "unified", "meta_reranking", "uncertainty"],
         default="single",
         help="Experiment type.",
     )
@@ -863,6 +904,16 @@ def main():
             "  - 'mpnet'       : sentence-transformers/all-mpnet-base-v2 (default)"
         ),
     )
+
+    parser.add_argument("--mc-t", type=int, default=10, help="Number of MC dropout passes (T).")
+    
+    parser.add_argument("--mc-l", type=int, default=30, help="Number of top candidates for MC dropout (L_mc).")
+    
+    parser.add_argument("--mc-alpha", type=float, default=1.0, help="Sigmoid scaling factor (alpha).")
+    
+    parser.add_argument("--k-cand", type=int, default=100, help="Number of candidates to retrieve before reranking.")
+    
+    parser.add_argument("--reranker-model", type=str, default="BAAI/bge-reranker-v2-m3", help="Cross-Encoder model ID.")
 
     parser.add_argument(
         "--use-api",
@@ -1009,12 +1060,14 @@ def main():
         "hyde_shared": RAGExperiment.HYDE_SHARED,
         "multi_hyde_shared": RAGExperiment.MULTI_HYDE_SHARED,
         "hybrid": RAGExperiment.HYBRID,
-        "hybrid_sweep": RAGExperiment.HYBRID_SWEEP, # <--- ADDED MAPPING
+        "hybrid_sweep": RAGExperiment.HYBRID_SWEEP,
         "splade": RAGExperiment.SPLADE,
         "reranking": RAGExperiment.RERANKING,  
-        "oracle_doc": RAGExperiment.ORACLE_DOC,    # <--- NEW
-        "oracle_page": RAGExperiment.ORACLE_PAGE,  # <--- NEW
+        "oracle_doc": RAGExperiment.ORACLE_DOC,    
+        "oracle_page": RAGExperiment.ORACLE_PAGE,  
         "unified": RAGExperiment.UNIFIED,
+        "meta_reranking": RAGExperiment.META_RERANK,
+        "uncertainty": RAGExperiment.UNCERTAINTY,
     }
     
     # Simple error handling for bad keys
@@ -1071,6 +1124,11 @@ def main():
             vision_encoder=args.vision_encoder,
             patch_size=args.patch_size,
             pipeline_version=args.pipeline_version,
+            mc_t=args.mc_t,
+            mc_l=args.mc_l,
+            mc_alpha=args.mc_alpha,
+            k_cand=args.k_cand,
+            reranker_model=args.reranker_model,
             )
 
         experiment.hybrid_sparse_model = args.sparse_model

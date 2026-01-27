@@ -1,0 +1,1330 @@
+Working in scratch: /Tmp/kobeissa/5028
+Copying repository content from /u/kobeissa/Documents/thesis/experiments/FB_reproducability to scratch...
+sending incremental file list
+./
+.env
+.gitignore
+EVALUATION.md
+LICENSE
+README.md
+core
+difficulty_distributions.png
+difficulty_regime_summary.csv
+requirements.txt
+runner.py
+analysis/
+analysis/query_difficulty/
+analysis/query_difficulty/ALL__diagnostics.csv
+analysis/query_difficulty/ALL__regime_summary.csv
+analysis/query_difficulty/analysis.py
+analysis/query_difficulty/difficulty_signals.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__bm25_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__diagnostics.json
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__lexical_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__merged_samples.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__regime_summary.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__semantic_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__bm25_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__diagnostics.json
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__lexical_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__merged_samples.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__regime_summary.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__semantic_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__bm25_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__diagnostics.json
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__lexical_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__merged_samples.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__regime_summary.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__semantic_vs_hit.png
+data/
+data/financebench_document_information.jsonl
+data/financebench_open_source.jsonl
+evaluation_results/
+evaluation_results/hybrid_sweep_20260119_184713_evaluated.json
+evaluation_results/hybrid_sweep_20260119_184713_summary.csv
+notebooks/
+notebooks/playground.ipynb
+notebooks/tensor_logic.ipynb
+pdfs/
+pdfs/3M_2015_10K.pdf
+pdfs/3M_2016_10K.pdf
+pdfs/3M_2017_10K.pdf
+pdfs/3M_2018_10K.pdf
+pdfs/3M_2019_10K.pdf
+pdfs/3M_2020_10K.pdf
+pdfs/3M_2021_10K.pdf
+pdfs/3M_2022_10K.pdf
+pdfs/3M_2023Q2_10Q.pdf
+pdfs/ACTIVISIONBLIZZARD_2015_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2016_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2017_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2018_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2019_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2020_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2021_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2022_10K.pdf
+pdfs/ACTIVSIONBLIZZARD_2023Q2_10Q.pdf
+pdfs/ADOBE_2015_10K.pdf
+pdfs/ADOBE_2016_10K.pdf
+pdfs/ADOBE_2017_10K.pdf
+pdfs/ADOBE_2018_10K.pdf
+pdfs/ADOBE_2019_10K.pdf
+pdfs/ADOBE_2020_10K.pdf
+pdfs/ADOBE_2021_10K.pdf
+pdfs/ADOBE_2022Q2_10Q.pdf
+pdfs/ADOBE_2022_10K.pdf
+pdfs/AES_2015_10K.pdf
+pdfs/AES_2016_10K.pdf
+pdfs/AES_2017_10K.pdf
+pdfs/AES_2018_10K.pdf
+pdfs/AES_2019_10K.pdf
+pdfs/AES_2020_10K.pdf
+pdfs/AES_2021_10K.pdf
+pdfs/AES_2022_10K.pdf
+pdfs/AMAZON_2015_10K.pdf
+pdfs/AMAZON_2016_10K.pdf
+pdfs/AMAZON_2017_10K.pdf
+pdfs/AMAZON_2018_10K.pdf
+pdfs/AMAZON_2019_10K.pdf
+pdfs/AMAZON_2020_10K.pdf
+pdfs/AMAZON_2021_10K.pdf
+pdfs/AMAZON_2022_10K.pdf
+pdfs/AMCOR_2019_10K.pdf
+pdfs/AMCOR_2020_10K.pdf
+pdfs/AMCOR_2021_10K.pdf
+pdfs/AMCOR_2022_10K.pdf
+pdfs/AMCOR_2022_8K_2022-04-26.pdf
+pdfs/AMCOR_2022_8K_2022-07-01.pdf
+pdfs/AMCOR_2022_8K_dated-2022-04-26.pdf
+pdfs/AMCOR_2022_8K_dated-2022-07-01.pdf
+pdfs/AMCOR_2023Q2_10Q.pdf
+pdfs/AMCOR_2023Q4_EARNINGS.pdf
+pdfs/AMCOR_2023_10K.pdf
+pdfs/AMD_2015_10K.pdf
+pdfs/AMD_2016_10K.pdf
+pdfs/AMD_2017_10K.pdf
+pdfs/AMD_2018_10K.pdf
+pdfs/AMD_2019_10K.pdf
+pdfs/AMD_2020_10K.pdf
+pdfs/AMD_2021_10K.pdf
+pdfs/AMD_2022_10K.pdf
+pdfs/AMD_2022_annualreport.pdf
+pdfs/AMERICANEXPRESS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2015_10K.pdf
+pdfs/AMERICANWATERWORKS_2016_10K.pdf
+pdfs/AMERICANWATERWORKS_2017_10K.pdf
+pdfs/AMERICANWATERWORKS_2018_10K.pdf
+pdfs/AMERICANWATERWORKS_2019_10K.pdf
+pdfs/AMERICANWATERWORKS_2020_10K.pdf
+pdfs/AMERICANWATERWORKS_2021_10K.pdf
+pdfs/AMERICANWATERWORKS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2023Q2_10Q.pdf
+pdfs/APPLE_2015_10K.pdf
+pdfs/APPLE_2016_10K.pdf
+pdfs/APPLE_2017_10K.pdf
+pdfs/APPLE_2018_10K.pdf
+pdfs/APPLE_2019_10K.pdf
+pdfs/APPLE_2020_10K.pdf
+pdfs/APPLE_2021_10K.pdf
+pdfs/APPLE_2022_10K.pdf
+pdfs/APPLE_2023Q3_10Q.pdf
+pdfs/BESTBUY_2015_10K.pdf
+pdfs/BESTBUY_2016_10K.pdf
+pdfs/BESTBUY_2017_10K.pdf
+pdfs/BESTBUY_2018_10K.pdf
+pdfs/BESTBUY_2019_10K.pdf
+pdfs/BESTBUY_2020_10K.pdf
+pdfs/BESTBUY_2021_10K.pdf
+pdfs/BESTBUY_2022_10K.pdf
+pdfs/BESTBUY_2023Q4_EARNINGS.pdf
+pdfs/BESTBUY_2023_10K.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-12.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-24.pdf
+pdfs/BESTBUY_2024Q2_10Q.pdf
+pdfs/BESTBUY_2024Q2_EARNINGS.pdf
+pdfs/BLOCK_2015_10K.pdf
+pdfs/BLOCK_2016_10K.pdf
+pdfs/BLOCK_2017_10K.pdf
+pdfs/BLOCK_2018_10K.pdf
+pdfs/BLOCK_2019_10K.pdf
+pdfs/BLOCK_2020_10K.pdf
+pdfs/BLOCK_2021_10K.pdf
+pdfs/BLOCK_2022_10K.pdf
+pdfs/BLOCK_2022_8K_dated-2022-01-28.pdf
+pdfs/BOEING_2015_10K.pdf
+pdfs/BOEING_2016_10K.pdf
+pdfs/BOEING_2017_10K.pdf
+pdfs/BOEING_2018_10K.pdf
+pdfs/BOEING_2019_10K.pdf
+pdfs/BOEING_2020_10K.pdf
+pdfs/BOEING_2021_10K.pdf
+pdfs/BOEING_2022_10K.pdf
+pdfs/BOSTONPROPERTIES_2015_10K.pdf
+pdfs/COCACOLA_2015_10K.pdf
+pdfs/COCACOLA_2016_10K.pdf
+pdfs/COCACOLA_2017_10K.pdf
+pdfs/COCACOLA_2018_10K.pdf
+pdfs/COCACOLA_2019_10K.pdf
+pdfs/COCACOLA_2020_10K.pdf
+pdfs/COCACOLA_2021_10K.pdf
+pdfs/COCACOLA_2022_10K.pdf
+pdfs/CORNING_2015_10K.pdf
+pdfs/CORNING_2016_10K.pdf
+pdfs/CORNING_2017_10K.pdf
+pdfs/CORNING_2018_10K.pdf
+pdfs/CORNING_2019_10K.pdf
+pdfs/CORNING_2020_10K.pdf
+pdfs/CORNING_2021_10K.pdf
+pdfs/CORNING_2022_10K.pdf
+pdfs/CORNING_2023Q2_10Q.pdf
+pdfs/COSTCO_2015_10K.pdf
+pdfs/COSTCO_2016_10K.pdf
+pdfs/COSTCO_2017_10K.pdf
+pdfs/COSTCO_2018_10K.pdf
+pdfs/COSTCO_2019_10K.pdf
+pdfs/COSTCO_2020_10K.pdf
+pdfs/COSTCO_2021_10K.pdf
+pdfs/COSTCO_2022_10K.pdf
+pdfs/COSTCO_2023Q1_EARNINGS.pdf
+pdfs/COSTCO_2023Q3_EARNINGS.pdf
+pdfs/COSTCO_2023_8K_dated-2023-01-19.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-09.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-16.pdf
+pdfs/CVSHEALTH_2015_10K.pdf
+pdfs/CVSHEALTH_2016_10K.pdf
+pdfs/CVSHEALTH_2017_10K.pdf
+pdfs/CVSHEALTH_2018_10K.pdf
+pdfs/CVSHEALTH_2019_10K.pdf
+pdfs/CVSHEALTH_2020_10K.pdf
+pdfs/CVSHEALTH_2021_10K.pdf
+pdfs/CVSHEALTH_2022_10K.pdf
+pdfs/EBAY_2015_10K.pdf
+pdfs/EBAY_2016_10K.pdf
+pdfs/EBAY_2017_10K.pdf
+pdfs/EBAY_2018_10K.pdf
+pdfs/EBAY_2019_10K.pdf
+pdfs/EBAY_2020_10K.pdf
+pdfs/EBAY_2021_10K.pdf
+pdfs/EBAY_2022_10K.pdf
+pdfs/EBAY_2023Q1_8K.pdf
+pdfs/EBAY_2023Q1_EARNINGS.pdf
+pdfs/EBAY_2023Q2_10Q.pdf
+pdfs/EBAY_2023Q2_8K.pdf
+pdfs/EBAY_2023Q2_EARNINGS.pdf
+pdfs/FEDEX_2023_10K.pdf
+pdfs/FEDEX_2023_annualreport.pdf
+pdfs/FOOTLOCKER_2022_10K.pdf
+pdfs/FOOTLOCKER_2022_10Q.pdf
+pdfs/FOOTLOCKER_2022_8K_dated-2022-05-20.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2022-08-19.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2023-02-21.pdf
+pdfs/FOOTLOCKER_2023Q3_10Q.pdf
+pdfs/FOOTLOCKER_2023_10K.pdf
+pdfs/FOOTLOCKER_2023_annualreport.pdf
+pdfs/GENERALMILLS_2015_10K.pdf
+pdfs/GENERALMILLS_2016_10K.pdf
+pdfs/GENERALMILLS_2017_10K.pdf
+pdfs/GENERALMILLS_2018_10K.pdf
+pdfs/GENERALMILLS_2019_10K.pdf
+pdfs/GENERALMILLS_2020_10K.pdf
+pdfs/GENERALMILLS_2021_10K.pdf
+pdfs/GENERALMILLS_2022_10K.pdf
+pdfs/GENERALMILLS_2023_10K.pdf
+pdfs/GENERALMILLS_2023_annualreport.pdf
+pdfs/INTEL_2015_10K.pdf
+pdfs/INTEL_2016_10K.pdf
+pdfs/INTEL_2017_10K.pdf
+pdfs/INTEL_2018_10K.pdf
+pdfs/INTEL_2019_10K.pdf
+pdfs/INTEL_2020_10K.pdf
+pdfs/INTEL_2021_10K.pdf
+pdfs/INTEL_2022Q4_EARNINGS.pdf
+pdfs/INTEL_2022_10K.pdf
+pdfs/INTEL_2023Q1_EARNINGS.pdf
+pdfs/INTEL_2023_8K_dated-2022-11-22.pdf
+pdfs/INTEL_2023_8K_dated-2023-02-10.pdf
+pdfs/INTEL_2023_8K_dated-2023-08-16.pdf
+pdfs/JOHNSON_JOHNSON_2015_10K.pdf
+pdfs/JOHNSON_JOHNSON_2016_10K.pdf
+pdfs/JOHNSON_JOHNSON_2017_10K.pdf
+pdfs/JOHNSON_JOHNSON_2018_10K.pdf
+pdfs/JOHNSON_JOHNSON_2019_10K.pdf
+pdfs/JOHNSON_JOHNSON_2020_10K.pdf
+pdfs/JOHNSON_JOHNSON_2021_10K.pdf
+pdfs/JOHNSON_JOHNSON_2022Q4_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2022_10K.pdf
+pdfs/JOHNSON_JOHNSON_2023Q1_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023Q2_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-23.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-30.pdf
+pdfs/JPMORGAN_2021Q1_10Q.pdf
+pdfs/JPMORGAN_2021Q2_10Q.pdf
+pdfs/JPMORGAN_2021Q3_10Q.pdf
+pdfs/JPMORGAN_2021_10K.pdf
+pdfs/JPMORGAN_2022Q1_10Q.pdf
+pdfs/JPMORGAN_2022Q2_10Q.pdf
+pdfs/JPMORGAN_2022Q3_10Q.pdf
+pdfs/JPMORGAN_2022_10K.pdf
+pdfs/JPMORGAN_2023Q1_10Q.pdf
+pdfs/JPMORGAN_2023Q2_10Q.pdf
+pdfs/KRAFTHEINZ_2015_10K.pdf
+pdfs/KRAFTHEINZ_2016_10K.pdf
+pdfs/KRAFTHEINZ_2017_10K.pdf
+pdfs/KRAFTHEINZ_2018_10K.pdf
+pdfs/KRAFTHEINZ_2019_10K.pdf
+pdfs/KRAFTHEINZ_2020_10K.pdf
+pdfs/KRAFTHEINZ_2021_10K.pdf
+pdfs/KRAFTHEINZ_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2015_10K.pdf
+pdfs/LOCKHEEDMARTIN_2016_10K.pdf
+pdfs/LOCKHEEDMARTIN_2017_10K.pdf
+pdfs/LOCKHEEDMARTIN_2018_10K.pdf
+pdfs/LOCKHEEDMARTIN_2019_10K.pdf
+pdfs/LOCKHEEDMARTIN_2020_10K.pdf
+pdfs/LOCKHEEDMARTIN_2021_10K.pdf
+pdfs/LOCKHEEDMARTIN_2022Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2023Q1_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-05-25.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-08-24.pdf
+pdfs/MCDONALDS_2022Q4_EARNINGS.pdf
+pdfs/MCDONALDS_2022_10K.pdf
+pdfs/MCDONALDS_2023Q1_EARNINGS.pdf
+pdfs/MCDONALDS_2023Q2_EARNINGS.pdf
+pdfs/MCDONALDS_8K_dated-2023-01-06.pdf
+pdfs/MCDONALDS_8K_dated-2023-02-13.pdf
+pdfs/MCDONALDS_8K_dated-2023-08-14.pdf
+pdfs/MGMRESORTS_2015_10K.pdf
+pdfs/MGMRESORTS_2016_10K.pdf
+pdfs/MGMRESORTS_2017_10K.pdf
+pdfs/MGMRESORTS_2018_10K.pdf
+pdfs/MGMRESORTS_2019_10K.pdf
+pdfs/MGMRESORTS_2020_10K.pdf
+pdfs/MGMRESORTS_2021_10K.pdf
+pdfs/MGMRESORTS_2022Q4_EARNINGS.pdf
+pdfs/MGMRESORTS_2022_10K.pdf
+pdfs/MGMRESORTS_2023Q2_10Q.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-03-01.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-09-12.pdf
+pdfs/MICROSOFT_2015_10K.pdf
+pdfs/MICROSOFT_2016_10K.pdf
+pdfs/MICROSOFT_2017_10K.pdf
+pdfs/MICROSOFT_2018_10K.pdf
+pdfs/MICROSOFT_2019_10K.pdf
+pdfs/MICROSOFT_2020_10K.pdf
+pdfs/MICROSOFT_2021_10K.pdf
+pdfs/MICROSOFT_2022_10K.pdf
+pdfs/MICROSOFT_2023_10K.pdf
+pdfs/NETFLIX_2015_10K.pdf
+pdfs/NETFLIX_2016_10K.pdf
+pdfs/NETFLIX_2017_10K.pdf
+pdfs/NETFLIX_2018_10K.pdf
+pdfs/NETFLIX_2019_10K.pdf
+pdfs/NETFLIX_2020_10K.pdf
+pdfs/NETFLIX_2021_10K.pdf
+pdfs/NETFLIX_2022_10K.pdf
+pdfs/NETFLIX_2023Q2_10Q.pdf
+pdfs/NIKE_2015_10K.pdf
+pdfs/NIKE_2016_10K.pdf
+pdfs/NIKE_2017_10K.pdf
+pdfs/NIKE_2018_10K.pdf
+pdfs/NIKE_2019_10K.pdf
+pdfs/NIKE_2020_10K.pdf
+pdfs/NIKE_2021_10K.pdf
+pdfs/NIKE_2022_10K.pdf
+pdfs/NIKE_2023_10K.pdf
+pdfs/ORACLE_2015_10K.pdf
+pdfs/ORACLE_2016_10K.pdf
+pdfs/ORACLE_2017_10K.pdf
+pdfs/ORACLE_2018_10K.pdf
+pdfs/ORACLE_2019_10K.pdf
+pdfs/ORACLE_2020_10K.pdf
+pdfs/ORACLE_2021_10K.pdf
+pdfs/ORACLE_2022_10K.pdf
+pdfs/ORACLE_2023_10K.pdf
+pdfs/PAYPAL_2022_10K.pdf
+pdfs/PAYPAL_2023Q2_10Q.pdf
+pdfs/PEPSICO_2015_10K.pdf
+pdfs/PEPSICO_2016_10K.pdf
+pdfs/PEPSICO_2017_10K.pdf
+pdfs/PEPSICO_2018_10K.pdf
+pdfs/PEPSICO_2019_10K.pdf
+pdfs/PEPSICO_2020_10K.pdf
+pdfs/PEPSICO_2021_10K.pdf
+pdfs/PEPSICO_2022Q4_EARNINGS.pdf
+pdfs/PEPSICO_2022_10K.pdf
+pdfs/PEPSICO_2023Q1_EARNINGS.pdf
+pdfs/PEPSICO_2023Q2_EARNINGS.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-05.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-30.pdf
+pdfs/PFIZER_2015_10K.pdf
+pdfs/PFIZER_2016_10K.pdf
+pdfs/PFIZER_2017_10K.pdf
+pdfs/PFIZER_2018_10K.pdf
+pdfs/PFIZER_2019_10K.pdf
+pdfs/PFIZER_2020_10K.pdf
+pdfs/PFIZER_2021_10K.pdf
+pdfs/PFIZER_2022_10K.pdf
+pdfs/PFIZER_2023Q2_EARNINGS.pdf
+pdfs/PG_E_2015_10K.pdf
+pdfs/PG_E_2016_10K.pdf
+pdfs/PG_E_2017_10K.pdf
+pdfs/PG_E_2018_10K.pdf
+pdfs/PG_E_2019_10K.pdf
+pdfs/PG_E_2020_10K.pdf
+pdfs/PG_E_2021_10K.pdf
+pdfs/PG_E_2022_10K.pdf
+pdfs/PG_E_2023Q3_10Q.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-06-01.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-07-27.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-04.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-31.pdf
+pdfs/Pfizer_2023Q2_10Q.pdf
+pdfs/SALESFORCE_2021_8K_dated-2021-07-21.pdf
+pdfs/SALESFORCE_2021_8K_dated-2023-01-04.pdf
+pdfs/SALESFORCE_2023Q3_10Q.pdf
+pdfs/SALESFORCE_2023_10K.pdf
+pdfs/SALESFORCE_2024Q1_EARNINGS.pdf
+pdfs/SALESFORCE_2024Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q4_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023_10K.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-06-07.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-09-18.pdf
+pdfs/ULTABEAUTY_2024Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2024Q2_EARNINGS.pdf
+pdfs/VERIZON_2015_10K.pdf
+pdfs/VERIZON_2016_10K.pdf
+pdfs/VERIZON_2017_10K.pdf
+pdfs/VERIZON_2018_10K.pdf
+pdfs/VERIZON_2019_10K.pdf
+pdfs/VERIZON_2020_10K.pdf
+pdfs/VERIZON_2021_10K.pdf
+pdfs/VERIZON_2022_10K.pdf
+pdfs/WALMART_2015_10K.pdf
+pdfs/WALMART_2016_10K.pdf
+pdfs/WALMART_2017_10K.pdf
+pdfs/WALMART_2018_10K.pdf
+pdfs/WALMART_2019_10K.pdf
+pdfs/WALMART_2020_10K.pdf
+pdfs/WALMART_2021_10K.pdf
+pdfs/WALMART_2022_10K.pdf
+pdfs/WALMART_2023_10K.pdf
+pdfs/WALMART_2023_annualreport.pdf
+pdfs/WALMART_2024Q1_10Q.pdf
+results/
+results/gpt-4o-2024-05-13_openai_direct_oracle.csv
+results/gpt-4o-2024-05-13_sharedStore.csv
+results/gpt-4o-2024-05-13_singleStore.csv
+results/gpt4_oracle_direct.csv
+results/big2small/
+results/big2small/20260112/
+results/big2small/20260112/big2small_20260112_155144_scored.json
+results/big2small/20260112/big2small_20260112_164052_scored.json
+results/big2small/20260112/big2small_20260112_171420_scored.json
+results/big2small/20260112/big2small_20260112_172815_scored.json
+results/big2small/20260112/big2small_20260112_181911_scored.json
+results/bm25/
+results/bm25/20260112/
+results/bm25/20260112/bm25_20260112_192701_scored.json
+results/closed_book/
+results/closed_book/20260106/
+results/closed_book/20260106/closed_book_20260106_161953_scored.json
+results/closed_book/20260106/closed_book_20260106_171608_scored.json
+results/closed_book/20260107/
+results/expanded_shared/
+results/expanded_shared/20260114/
+results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json
+results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json
+results/hybrid/
+results/hybrid/20260115/
+results/hybrid/20260123/
+results/hyde_shared/
+results/hyde_shared/20260114/
+results/metrics_agg/
+results/metrics_agg/table__by_question_reasoning.csv
+results/metrics_agg/table__by_question_type.csv
+results/metrics_agg/table__overall_by_metadata.csv
+results/metrics_agg2/
+results/metrics_agg2/.~lock.table__by_question_reasoning.csv#
+results/metrics_agg2/.~lock.table__by_question_type.csv#
+results/metrics_agg2/.~lock.table__overall_by_metadata.csv#
+results/metrics_agg2/table__by_question_reasoning.csv
+results/metrics_agg2/table__by_question_type.csv
+results/metrics_agg2/table__overall_by_metadata.csv
+results/metrics_agg_page/
+results/metrics_agg_page/table__by_question_reasoning.csv
+results/metrics_agg_page/table__by_question_type.csv
+results/metrics_agg_page/table__overall_by_metadata.csv
+results/metrics_aggregated/
+results/metrics_aggregated/table__by_question_reasoning.csv
+results/metrics_aggregated/table__by_question_type.csv
+results/metrics_aggregated/table__overall_by_metadata.csv
+results/multi_hyde_shared/
+results/multi_hyde_shared/20260114/
+results/open_book/
+results/open_book/20260102/
+results/open_book/20260102/open_book_20260102_165042_scored.json
+results/open_book/20260102/open_book_20260102_173713_scored.json
+results/shared_vector/
+results/shared_vector/20251229/
+results/shared_vector/20251229/shared_vector_20251229_181122_scored.json
+results/shared_vector/20251229/shared_vector_20251229_190013_scored.json
+results/shared_vector/20260107/
+results/shared_vector/20260107/shared_vector_20260107_164341_scored.json
+results/shared_vector/20260113/
+results/single_vector/
+results/single_vector/20251229/
+results/single_vector/20251229/single_vector_20251229_162507_scored.json
+results/single_vector/20251229/single_vector_20251229_171641_scored.json
+results/splade/
+results/splade/20260115/
+results/splade/20260115/splade_20260115_144031_scored.json
+scripts/
+scripts/aggregate_output_metrics.py
+scripts/hybrid_RRF.sh
+scripts/hybrid_ret.sh
+scripts/oracle.sh
+scripts/query.sh
+scripts/rag_embeddings_exp.sh
+scripts/run_rag_experiments.sh
+scripts/uncertainty.sh
+scripts/unified.sh
+src/
+src/__init__.py
+src/analysis/
+src/analysis/query_difficulty_analysis.py
+src/core/
+src/core/__init__.py
+src/core/rag_dependencies.py
+src/core/rag_experiment_mixins.py
+src/core/rag_experiments.py
+src/core/results/
+src/core/results/hybrid/
+src/core/results/hybrid/20260116/
+src/core/results/hybrid/20260116/hybrid_20260116_162648_scored.json
+src/core/results/hybrid/20260123/
+src/core/results/hybrid/20260123/hybrid_20260123_154208_scored.json
+src/core/results/hybrid/20260123/hybrid_20260123_175133_scored.json
+src/core/results/metrics_agg_page_or/
+src/core/results/metrics_agg_page_or/table__by_question_reasoning.csv
+src/core/results/metrics_agg_page_or/table__by_question_type.csv
+src/core/results/metrics_agg_page_or/table__overall_by_metadata.csv
+src/core/results/oracle_doc/
+src/core/results/oracle_doc/20260120/
+src/core/results/oracle_doc/20260120/oracle_doc_20260120_110048_scored.json
+src/core/results/oracle_page/
+src/core/results/oracle_page/20260120/
+src/core/results/oracle_page/20260122/
+src/core/results/oracle_page/20260122/oracle_page_20260122_132654_scored.json
+src/core/results/reranking/
+src/core/results/reranking/20260115/
+src/core/results/reranking/20260115/reranking_20260115_190636_scored.json
+src/core/results/reranking/20260116/
+src/core/results/reranking/20260116/reranking_20260116_133234_scored.json
+src/core/results/shared_vector/
+src/core/results/shared_vector/20260116/
+src/core/results/shared_vector/20260119/
+src/core/results/splade/
+src/core/results/splade/20260115/
+src/core/results/splade/20260116/
+src/core/results/splade/20260116/splade_20260116_174714_scored.json
+src/core/results/splade/20260117/
+src/core/results/splade/20260117/splade_20260117_012611_scored.json
+src/core/results/unified/
+src/core/results/unified/20260122/
+src/core/results/unified/20260122/unified_20260122_201123_scored.json
+src/core/results/unified/20260126/
+src/core/results/unified/20260126/unified_20260126_163823_scored.json
+src/core/results/unified/20260126/unified_20260126_171010_scored.json
+src/core/results/unified/20260126/unified_20260126_174753_scored.json
+src/evaluation/
+src/evaluation/__init__.py
+src/evaluation/eval_sweep.py
+src/evaluation/evaluate_outputs.py
+src/evaluation/evaluator.py
+src/evaluation/generative_evaluator.py
+src/evaluation/posthoc_evaluator.py
+src/evaluation/retrieval_evaluator.py
+src/experiments/
+src/experiments/__init__.py
+src/experiments/hybrid_retrieval.py
+src/experiments/metadata_reranking.py
+src/experiments/query_expansion.py
+src/experiments/rag_closed_book.py
+src/experiments/rag_expanded_shared.py
+src/experiments/rag_hyde_shared.py
+src/experiments/rag_open_book.py
+src/experiments/rag_oracle.py
+src/experiments/rag_shared_vector.py
+src/experiments/rag_single_vector.py
+src/experiments/random_single_store.py
+src/experiments/reranking.py
+src/experiments/splade.py
+src/experiments/uncertainty.py
+src/experiments/unified_pipeline.py
+src/ingestion/
+src/ingestion/__init__.py
+src/ingestion/chunking.py
+src/ingestion/data_loader.py
+src/ingestion/pdf_utils.py
+src/retrieval/
+src/retrieval/__init__.py
+src/retrieval/big2small.py
+src/retrieval/bm25.py
+src/retrieval/vectorstore.py
+src/utils/
+src/utils/metadata_helper.py
+
+sent 829,942,914 bytes  received 10,081 bytes  553,301,996.67 bytes/sec
+total size is 829,701,037  speedup is 1.00
+Activating venv from: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/venv
+========================================================
+Experiment: Uncertainty Quantification (MC-Dropout)
+Settings: T=10, L_mc=30, Alpha=1.0, Model=Qwen
+========================================================
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: UNCERTAINTY
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - Configuration:
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Experiment Type: uncertainty
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Device: cuda
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Embedding Model: bge-m3
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/5028/outputs/uncertainty_experiment/uncertainty/20260126
+2026-01-26 18:12:57,021 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/5028/outputs/results/uncertainty/20260126
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-26 18:12:57,021 - RAGExperiment - INFO - Loading HuggingFace embeddings: BAAI/bge-m3 (Requested: bge-m3)
+2026-01-26 18:12:57,025 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: BAAI/bge-m3
+2026-01-26 18:13:01,161 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-26 18:13:01,236 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-26 18:13:01,237 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-26 18:13:01,237 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 18:13:01,237 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-26 18:13:01,237 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:13:01,237 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-26 18:13:02,635 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-26 18:13:02,636 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-26 18:13:02,637 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-26 18:13:02,645 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-26 18:13:02,646 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-26 18:13:02,647 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:13:02,647 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-26 18:13:02,651 - RAGExperiment - INFO - Processing 150 samples
+2026-01-26 18:13:02,651 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-26 18:13:02,651 - src.experiments.uncertainty - INFO - 
+================================================================================
+2026-01-26 18:13:02,651 - src.experiments.uncertainty - INFO - RUNNING UNCERTAINTY EXPERIMENT (MC-Dropout)
+2026-01-26 18:13:02,651 - src.experiments.uncertainty - INFO - T=10 | L_mc=30 | Alpha=1.0
+2026-01-26 18:13:02,651 - src.experiments.uncertainty - INFO - ================================================================================
+/part/01/Tmp/kobeissa/5028/src/retrieval/vectorstore.py:352: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
+2026-01-26 18:13:03,491 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-26 18:13:04,249 - src.experiments.uncertainty - INFO - Ingesting 84 missing documents into Vector Store...
+
+================================================================================
+Running experiment: uncertainty | model=qwen2.5-7b
+================================================================================
+Warning: Tokenizer load failed for 'bge-m3' (bge-m3 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo either by logging in with `hf auth login` or by passing `token=<your_token>`). Falling back to chars.
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : uncertainty
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=bge-m3, resolved_model=BAAI/bge-m3)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+Ingesting PDFs:   0%|          | 0/84 [00:00<?, ?it/s]2026-01-26 18:13:05,744 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:13:05,744 - RAGExperiment - INFO -   Total chunks: 718
+2026-01-26 18:13:05,744 - RAGExperiment - INFO -   Avg chunk size: 876.70 chars
+2026-01-26 18:13:05,744 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:13:05,744 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:13:05,750 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+Ingesting PDFs:   1%|          | 1/84 [00:13<17:59, 13.00s/it]2026-01-26 18:13:17,960 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:13:17,961 - RAGExperiment - INFO -   Total chunks: 1106
+2026-01-26 18:13:17,961 - RAGExperiment - INFO -   Avg chunk size: 862.85 chars
+2026-01-26 18:13:17,961 - RAGExperiment - INFO -   Min chunk size: 34 chars
+2026-01-26 18:13:17,961 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:13:17,961 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+Ingesting PDFs:   2%|▏         | 2/84 [00:29<20:35, 15.06s/it]2026-01-26 18:13:34,410 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:13:34,410 - RAGExperiment - INFO -   Total chunks: 417
+2026-01-26 18:13:34,410 - RAGExperiment - INFO -   Avg chunk size: 869.69 chars
+2026-01-26 18:13:34,411 - RAGExperiment - INFO -   Min chunk size: 57 chars
+2026-01-26 18:13:34,411 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:13:34,415 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+Ingesting PDFs:   4%|▎         | 3/84 [00:36<15:34, 11.53s/it]2026-01-26 18:13:41,468 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:13:41,468 - RAGExperiment - INFO -   Total chunks: 763
+2026-01-26 18:13:41,468 - RAGExperiment - INFO -   Avg chunk size: 852.89 chars
+2026-01-26 18:13:41,468 - RAGExperiment - INFO -   Min chunk size: 31 chars
+2026-01-26 18:13:41,469 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:13:41,469 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+Ingesting PDFs:   5%|▍         | 4/84 [00:48<15:26, 11.58s/it]2026-01-26 18:13:53,024 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:13:53,024 - RAGExperiment - INFO -   Total chunks: 569
+2026-01-26 18:13:53,025 - RAGExperiment - INFO -   Avg chunk size: 888.54 chars
+2026-01-26 18:13:53,025 - RAGExperiment - INFO -   Min chunk size: 22 chars
+2026-01-26 18:13:53,025 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:13:53,025 - RAGExperiment - INFO -   Median chunk size: 955.00 chars
+Ingesting PDFs:   6%|▌         | 5/84 [00:57<13:59, 10.62s/it]2026-01-26 18:14:01,904 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:01,904 - RAGExperiment - INFO -   Total chunks: 508
+2026-01-26 18:14:01,904 - RAGExperiment - INFO -   Avg chunk size: 873.29 chars
+2026-01-26 18:14:01,904 - RAGExperiment - INFO -   Min chunk size: 79 chars
+2026-01-26 18:14:01,904 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:01,904 - RAGExperiment - INFO -   Median chunk size: 953.00 chars
+Ingesting PDFs:   7%|▋         | 6/84 [01:06<13:08, 10.11s/it]2026-01-26 18:14:11,019 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:11,019 - RAGExperiment - INFO -   Total chunks: 485
+2026-01-26 18:14:11,019 - RAGExperiment - INFO -   Avg chunk size: 882.62 chars
+2026-01-26 18:14:11,019 - RAGExperiment - INFO -   Min chunk size: 79 chars
+2026-01-26 18:14:11,019 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:11,019 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+Ingesting PDFs:   8%|▊         | 7/84 [01:15<12:32,  9.77s/it]2026-01-26 18:14:20,168 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:20,168 - RAGExperiment - INFO -   Total chunks: 455
+2026-01-26 18:14:20,168 - RAGExperiment - INFO -   Avg chunk size: 896.89 chars
+2026-01-26 18:14:20,168 - RAGExperiment - INFO -   Min chunk size: 87 chars
+2026-01-26 18:14:20,168 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:14:20,168 - RAGExperiment - INFO -   Median chunk size: 964.00 chars
+Ingesting PDFs:  10%|▉         | 8/84 [01:23<11:36,  9.17s/it]2026-01-26 18:14:28,363 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:28,363 - RAGExperiment - INFO -   Total chunks: 1079
+2026-01-26 18:14:28,363 - RAGExperiment - INFO -   Avg chunk size: 871.02 chars
+2026-01-26 18:14:28,363 - RAGExperiment - INFO -   Min chunk size: 40 chars
+2026-01-26 18:14:28,363 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:28,363 - RAGExperiment - INFO -   Median chunk size: 953.00 chars
+Ingesting PDFs:  11%|█         | 9/84 [01:42<15:11, 12.16s/it]2026-01-26 18:14:46,641 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:46,641 - RAGExperiment - INFO -   Total chunks: 352
+2026-01-26 18:14:46,641 - RAGExperiment - INFO -   Avg chunk size: 851.64 chars
+2026-01-26 18:14:46,641 - RAGExperiment - INFO -   Min chunk size: 46 chars
+2026-01-26 18:14:46,641 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:46,641 - RAGExperiment - INFO -   Median chunk size: 944.50 chars
+Ingesting PDFs:  12%|█▏        | 10/84 [01:48<12:48, 10.38s/it]2026-01-26 18:14:53,033 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:53,033 - RAGExperiment - INFO -   Total chunks: 333
+2026-01-26 18:14:53,033 - RAGExperiment - INFO -   Avg chunk size: 860.01 chars
+2026-01-26 18:14:53,034 - RAGExperiment - INFO -   Min chunk size: 34 chars
+2026-01-26 18:14:53,034 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:53,034 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+Ingesting PDFs:  13%|█▎        | 11/84 [01:54<11:03,  9.09s/it]2026-01-26 18:14:59,403 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:14:59,403 - RAGExperiment - INFO -   Total chunks: 696
+2026-01-26 18:14:59,403 - RAGExperiment - INFO -   Avg chunk size: 829.36 chars
+2026-01-26 18:14:59,403 - RAGExperiment - INFO -   Min chunk size: 50 chars
+2026-01-26 18:14:59,403 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:14:59,403 - RAGExperiment - INFO -   Median chunk size: 911.00 chars
+Ingesting PDFs:  14%|█▍        | 12/84 [02:06<11:54,  9.93s/it]2026-01-26 18:15:10,926 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:10,926 - RAGExperiment - INFO -   Total chunks: 30
+2026-01-26 18:15:10,926 - RAGExperiment - INFO -   Avg chunk size: 862.57 chars
+2026-01-26 18:15:10,926 - RAGExperiment - INFO -   Min chunk size: 315 chars
+2026-01-26 18:15:10,926 - RAGExperiment - INFO -   Max chunk size: 1022 chars
+2026-01-26 18:15:10,926 - RAGExperiment - INFO -   Median chunk size: 946.00 chars
+Ingesting PDFs:  15%|█▌        | 13/84 [02:07<08:33,  7.23s/it]2026-01-26 18:15:12,250 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:12,250 - RAGExperiment - INFO -   Total chunks: 594
+2026-01-26 18:15:12,250 - RAGExperiment - INFO -   Avg chunk size: 841.18 chars
+2026-01-26 18:15:12,250 - RAGExperiment - INFO -   Min chunk size: 35 chars
+2026-01-26 18:15:12,250 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:15:12,250 - RAGExperiment - INFO -   Median chunk size: 940.00 chars
+Ingesting PDFs:  17%|█▋        | 14/84 [02:17<09:25,  8.08s/it]2026-01-26 18:15:22,045 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:22,045 - RAGExperiment - INFO -   Total chunks: 159
+2026-01-26 18:15:22,045 - RAGExperiment - INFO -   Avg chunk size: 808.30 chars
+2026-01-26 18:15:22,045 - RAGExperiment - INFO -   Min chunk size: 71 chars
+2026-01-26 18:15:22,045 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:15:22,045 - RAGExperiment - INFO -   Median chunk size: 927.00 chars
+Ingesting PDFs:  18%|█▊        | 15/84 [02:20<07:34,  6.59s/it]2026-01-26 18:15:25,119 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:25,119 - RAGExperiment - INFO -   Total chunks: 54
+2026-01-26 18:15:25,119 - RAGExperiment - INFO -   Avg chunk size: 892.93 chars
+2026-01-26 18:15:25,119 - RAGExperiment - INFO -   Min chunk size: 350 chars
+2026-01-26 18:15:25,119 - RAGExperiment - INFO -   Max chunk size: 1021 chars
+2026-01-26 18:15:25,119 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+Ingesting PDFs:  19%|█▉        | 16/84 [02:22<05:42,  5.04s/it]2026-01-26 18:15:27,001 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:27,001 - RAGExperiment - INFO -   Total chunks: 907
+2026-01-26 18:15:27,001 - RAGExperiment - INFO -   Avg chunk size: 860.07 chars
+2026-01-26 18:15:27,001 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-26 18:15:27,001 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:15:27,002 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+Ingesting PDFs:  20%|██        | 17/84 [02:37<09:06,  8.15s/it]2026-01-26 18:15:42,521 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:42,521 - RAGExperiment - INFO -   Total chunks: 487
+2026-01-26 18:15:42,522 - RAGExperiment - INFO -   Avg chunk size: 870.57 chars
+2026-01-26 18:15:42,522 - RAGExperiment - INFO -   Min chunk size: 58 chars
+2026-01-26 18:15:42,522 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:15:42,522 - RAGExperiment - INFO -   Median chunk size: 935.00 chars
+Ingesting PDFs:  21%|██▏       | 18/84 [02:46<09:12,  8.36s/it]2026-01-26 18:15:51,318 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:15:51,318 - RAGExperiment - INFO -   Total chunks: 1002
+2026-01-26 18:15:51,318 - RAGExperiment - INFO -   Avg chunk size: 852.20 chars
+2026-01-26 18:15:51,318 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-26 18:15:51,318 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:15:51,318 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+Ingesting PDFs:  23%|██▎       | 19/84 [03:04<12:05, 11.16s/it]2026-01-26 18:16:08,769 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:16:08,769 - RAGExperiment - INFO -   Total chunks: 730
+2026-01-26 18:16:08,770 - RAGExperiment - INFO -   Avg chunk size: 876.78 chars
+2026-01-26 18:16:08,770 - RAGExperiment - INFO -   Min chunk size: 24 chars
+2026-01-26 18:16:08,770 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:16:08,770 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+Ingesting PDFs:  24%|██▍       | 20/84 [03:16<12:23, 11.62s/it]2026-01-26 18:16:21,482 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:16:21,482 - RAGExperiment - INFO -   Total chunks: 805
+2026-01-26 18:16:21,482 - RAGExperiment - INFO -   Avg chunk size: 860.48 chars
+2026-01-26 18:16:21,482 - RAGExperiment - INFO -   Min chunk size: 66 chars
+2026-01-26 18:16:21,482 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:16:21,482 - RAGExperiment - INFO -   Median chunk size: 929.00 chars
+Ingesting PDFs:  25%|██▌       | 21/84 [03:30<12:57, 12.35s/it]2026-01-26 18:16:35,808 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:16:35,808 - RAGExperiment - INFO -   Total chunks: 1227
+2026-01-26 18:16:35,808 - RAGExperiment - INFO -   Avg chunk size: 859.86 chars
+2026-01-26 18:16:35,808 - RAGExperiment - INFO -   Min chunk size: 42 chars
+2026-01-26 18:16:35,809 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:16:35,809 - RAGExperiment - INFO -   Median chunk size: 943.00 chars
+Ingesting PDFs:  26%|██▌       | 22/84 [03:51<15:26, 14.95s/it]2026-01-26 18:16:56,400 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:16:56,400 - RAGExperiment - INFO -   Total chunks: 417
+2026-01-26 18:16:56,400 - RAGExperiment - INFO -   Avg chunk size: 853.76 chars
+2026-01-26 18:16:56,400 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:16:56,400 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:16:56,400 - RAGExperiment - INFO -   Median chunk size: 935.00 chars
+Ingesting PDFs:  27%|██▋       | 23/84 [04:00<13:10, 12.96s/it]2026-01-26 18:17:04,718 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:04,718 - RAGExperiment - INFO -   Total chunks: 425
+2026-01-26 18:17:04,718 - RAGExperiment - INFO -   Avg chunk size: 858.11 chars
+2026-01-26 18:17:04,718 - RAGExperiment - INFO -   Min chunk size: 35 chars
+2026-01-26 18:17:04,718 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:04,718 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+Ingesting PDFs:  29%|██▊       | 24/84 [04:08<11:24, 11.41s/it]2026-01-26 18:17:12,493 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:12,493 - RAGExperiment - INFO -   Total chunks: 366
+2026-01-26 18:17:12,494 - RAGExperiment - INFO -   Avg chunk size: 870.36 chars
+2026-01-26 18:17:12,494 - RAGExperiment - INFO -   Min chunk size: 33 chars
+2026-01-26 18:17:12,494 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:12,494 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+Ingesting PDFs:  30%|██▉       | 25/84 [04:15<09:56, 10.11s/it]2026-01-26 18:17:19,474 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:19,474 - RAGExperiment - INFO -   Total chunks: 123
+2026-01-26 18:17:19,474 - RAGExperiment - INFO -   Avg chunk size: 880.07 chars
+2026-01-26 18:17:19,474 - RAGExperiment - INFO -   Min chunk size: 68 chars
+2026-01-26 18:17:19,474 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:19,474 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+Ingesting PDFs:  31%|███       | 26/84 [04:18<07:40,  7.94s/it]2026-01-26 18:17:22,507 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:22,508 - RAGExperiment - INFO -   Total chunks: 459
+2026-01-26 18:17:22,508 - RAGExperiment - INFO -   Avg chunk size: 848.19 chars
+2026-01-26 18:17:22,508 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:17:22,508 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:22,508 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+Ingesting PDFs:  32%|███▏      | 27/84 [04:27<08:00,  8.43s/it]2026-01-26 18:17:32,145 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:32,145 - RAGExperiment - INFO -   Total chunks: 645
+2026-01-26 18:17:32,145 - RAGExperiment - INFO -   Avg chunk size: 858.69 chars
+2026-01-26 18:17:32,145 - RAGExperiment - INFO -   Min chunk size: 12 chars
+2026-01-26 18:17:32,145 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:32,145 - RAGExperiment - INFO -   Median chunk size: 947.00 chars
+Ingesting PDFs:  33%|███▎      | 28/84 [04:39<08:58,  9.61s/it]2026-01-26 18:17:44,446 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:44,446 - RAGExperiment - INFO -   Total chunks: 463
+2026-01-26 18:17:44,446 - RAGExperiment - INFO -   Avg chunk size: 843.37 chars
+2026-01-26 18:17:44,446 - RAGExperiment - INFO -   Min chunk size: 73 chars
+2026-01-26 18:17:44,446 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:44,446 - RAGExperiment - INFO -   Median chunk size: 938.00 chars
+Ingesting PDFs:  35%|███▍      | 29/84 [04:48<08:36,  9.39s/it]2026-01-26 18:17:53,443 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:17:53,443 - RAGExperiment - INFO -   Total chunks: 633
+2026-01-26 18:17:53,444 - RAGExperiment - INFO -   Avg chunk size: 838.23 chars
+2026-01-26 18:17:53,444 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:17:53,444 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:17:53,444 - RAGExperiment - INFO -   Median chunk size: 946.00 chars
+Ingesting PDFs:  36%|███▌      | 30/84 [05:00<09:07, 10.14s/it]2026-01-26 18:18:05,746 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:18:05,746 - RAGExperiment - INFO -   Total chunks: 885
+2026-01-26 18:18:05,746 - RAGExperiment - INFO -   Avg chunk size: 854.56 chars
+2026-01-26 18:18:05,747 - RAGExperiment - INFO -   Min chunk size: 38 chars
+2026-01-26 18:18:05,747 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:18:05,747 - RAGExperiment - INFO -   Median chunk size: 931.00 chars
+Ingesting PDFs:  37%|███▋      | 31/84 [05:16<10:30, 11.91s/it]2026-01-26 18:18:22,239 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:18:22,239 - RAGExperiment - INFO -   Total chunks: 835
+2026-01-26 18:18:22,239 - RAGExperiment - INFO -   Avg chunk size: 854.93 chars
+2026-01-26 18:18:22,239 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:18:22,239 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:18:22,239 - RAGExperiment - INFO -   Median chunk size: 930.00 chars
+Ingesting PDFs:  38%|███▊      | 32/84 [05:35<11:59, 13.83s/it]2026-01-26 18:18:40,508 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:18:40,508 - RAGExperiment - INFO -   Total chunks: 816
+2026-01-26 18:18:40,508 - RAGExperiment - INFO -   Avg chunk size: 845.70 chars
+2026-01-26 18:18:40,508 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:18:40,509 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:18:40,509 - RAGExperiment - INFO -   Median chunk size: 919.50 chars
+Ingesting PDFs:  39%|███▉      | 33/84 [05:50<12:04, 14.21s/it]2026-01-26 18:18:54,726 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:18:54,726 - RAGExperiment - INFO -   Total chunks: 533
+2026-01-26 18:18:54,726 - RAGExperiment - INFO -   Avg chunk size: 856.83 chars
+2026-01-26 18:18:54,726 - RAGExperiment - INFO -   Min chunk size: 70 chars
+2026-01-26 18:18:54,726 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:18:54,726 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+Ingesting PDFs:  40%|████      | 34/84 [05:59<10:41, 12.82s/it]2026-01-26 18:19:04,305 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:19:04,305 - RAGExperiment - INFO -   Total chunks: 519
+2026-01-26 18:19:04,305 - RAGExperiment - INFO -   Avg chunk size: 864.08 chars
+2026-01-26 18:19:04,305 - RAGExperiment - INFO -   Min chunk size: 22 chars
+2026-01-26 18:19:04,305 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:19:04,305 - RAGExperiment - INFO -   Median chunk size: 947.00 chars
+Ingesting PDFs:  42%|████▏     | 35/84 [06:08<09:33, 11.70s/it]2026-01-26 18:19:13,440 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:19:13,440 - RAGExperiment - INFO -   Total chunks: 609
+2026-01-26 18:19:13,440 - RAGExperiment - INFO -   Avg chunk size: 847.78 chars
+2026-01-26 18:19:13,440 - RAGExperiment - INFO -   Min chunk size: 27 chars
+2026-01-26 18:19:13,440 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:19:13,440 - RAGExperiment - INFO -   Median chunk size: 948.00 chars
+Ingesting PDFs:  43%|████▎     | 36/84 [06:19<09:08, 11.43s/it]2026-01-26 18:19:24,055 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:19:24,055 - RAGExperiment - INFO -   Total chunks: 269
+2026-01-26 18:19:24,055 - RAGExperiment - INFO -   Avg chunk size: 847.55 chars
+2026-01-26 18:19:24,055 - RAGExperiment - INFO -   Min chunk size: 77 chars
+2026-01-26 18:19:24,055 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:19:24,056 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+Ingesting PDFs:  44%|████▍     | 37/84 [06:25<07:33,  9.65s/it]2026-01-26 18:19:30,081 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:19:30,081 - RAGExperiment - INFO -   Total chunks: 1713
+2026-01-26 18:19:30,081 - RAGExperiment - INFO -   Avg chunk size: 865.15 chars
+2026-01-26 18:19:30,081 - RAGExperiment - INFO -   Min chunk size: 55 chars
+2026-01-26 18:19:30,081 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:19:30,081 - RAGExperiment - INFO -   Median chunk size: 942.00 chars
+Ingesting PDFs:  45%|████▌     | 38/84 [06:56<12:16, 16.02s/it]2026-01-26 18:20:00,828 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:00,828 - RAGExperiment - INFO -   Total chunks: 1004
+2026-01-26 18:20:00,828 - RAGExperiment - INFO -   Avg chunk size: 871.82 chars
+2026-01-26 18:20:00,829 - RAGExperiment - INFO -   Min chunk size: 18 chars
+2026-01-26 18:20:00,829 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:20:00,829 - RAGExperiment - INFO -   Median chunk size: 939.00 chars
+Ingesting PDFs:  46%|████▋     | 39/84 [07:15<12:49, 17.10s/it]2026-01-26 18:20:19,967 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:19,968 - RAGExperiment - INFO -   Total chunks: 103
+2026-01-26 18:20:19,968 - RAGExperiment - INFO -   Avg chunk size: 854.45 chars
+2026-01-26 18:20:19,968 - RAGExperiment - INFO -   Min chunk size: 26 chars
+2026-01-26 18:20:19,968 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:20:19,968 - RAGExperiment - INFO -   Median chunk size: 944.00 chars
+Ingesting PDFs:  48%|████▊     | 40/84 [07:18<09:22, 12.79s/it]2026-01-26 18:20:22,660 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:22,660 - RAGExperiment - INFO -   Total chunks: 10
+2026-01-26 18:20:22,661 - RAGExperiment - INFO -   Avg chunk size: 732.10 chars
+2026-01-26 18:20:22,661 - RAGExperiment - INFO -   Min chunk size: 101 chars
+2026-01-26 18:20:22,661 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:20:22,661 - RAGExperiment - INFO -   Median chunk size: 963.00 chars
+Ingesting PDFs:  49%|████▉     | 41/84 [07:19<06:33,  9.16s/it]2026-01-26 18:20:23,588 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:23,589 - RAGExperiment - INFO -   Total chunks: 543
+2026-01-26 18:20:23,589 - RAGExperiment - INFO -   Avg chunk size: 863.05 chars
+2026-01-26 18:20:23,589 - RAGExperiment - INFO -   Min chunk size: 74 chars
+2026-01-26 18:20:23,589 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:20:23,589 - RAGExperiment - INFO -   Median chunk size: 945.00 chars
+Ingesting PDFs:  50%|█████     | 42/84 [07:29<06:35,  9.42s/it]2026-01-26 18:20:33,710 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:33,710 - RAGExperiment - INFO -   Total chunks: 530
+2026-01-26 18:20:33,710 - RAGExperiment - INFO -   Avg chunk size: 860.88 chars
+2026-01-26 18:20:33,710 - RAGExperiment - INFO -   Min chunk size: 5 chars
+2026-01-26 18:20:33,710 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:20:33,710 - RAGExperiment - INFO -   Median chunk size: 950.00 chars
+Ingesting PDFs:  51%|█████     | 43/84 [07:39<06:43,  9.83s/it]2026-01-26 18:20:44,469 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:44,469 - RAGExperiment - INFO -   Total chunks: 488
+2026-01-26 18:20:44,469 - RAGExperiment - INFO -   Avg chunk size: 871.97 chars
+2026-01-26 18:20:44,469 - RAGExperiment - INFO -   Min chunk size: 115 chars
+2026-01-26 18:20:44,469 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:20:44,469 - RAGExperiment - INFO -   Median chunk size: 946.00 chars
+Ingesting PDFs:  52%|█████▏    | 44/84 [07:49<06:33,  9.85s/it]2026-01-26 18:20:54,752 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:20:54,752 - RAGExperiment - INFO -   Total chunks: 642
+2026-01-26 18:20:54,752 - RAGExperiment - INFO -   Avg chunk size: 836.46 chars
+2026-01-26 18:20:54,752 - RAGExperiment - INFO -   Min chunk size: 6 chars
+2026-01-26 18:20:54,752 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:20:54,752 - RAGExperiment - INFO -   Median chunk size: 930.00 chars
+Ingesting PDFs:  54%|█████▎    | 45/84 [08:03<07:05, 10.90s/it]2026-01-26 18:21:07,514 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:21:07,514 - RAGExperiment - INFO -   Total chunks: 91
+2026-01-26 18:21:07,514 - RAGExperiment - INFO -   Avg chunk size: 907.69 chars
+2026-01-26 18:21:07,514 - RAGExperiment - INFO -   Min chunk size: 170 chars
+2026-01-26 18:21:07,514 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:21:07,514 - RAGExperiment - INFO -   Median chunk size: 999.00 chars
+Ingesting PDFs:  55%|█████▍    | 46/84 [08:05<05:21,  8.46s/it]2026-01-26 18:21:10,389 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:21:10,389 - RAGExperiment - INFO -   Total chunks: 75
+2026-01-26 18:21:10,389 - RAGExperiment - INFO -   Avg chunk size: 804.88 chars
+2026-01-26 18:21:10,389 - RAGExperiment - INFO -   Min chunk size: 107 chars
+2026-01-26 18:21:10,389 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:21:10,389 - RAGExperiment - INFO -   Median chunk size: 933.00 chars
+Ingesting PDFs:  56%|█████▌    | 47/84 [08:08<04:08,  6.71s/it]2026-01-26 18:21:12,866 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:21:12,866 - RAGExperiment - INFO -   Total chunks: 91
+2026-01-26 18:21:12,866 - RAGExperiment - INFO -   Avg chunk size: 878.76 chars
+2026-01-26 18:21:12,866 - RAGExperiment - INFO -   Min chunk size: 187 chars
+2026-01-26 18:21:12,866 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:21:12,867 - RAGExperiment - INFO -   Median chunk size: 1004.00 chars
+Ingesting PDFs:  57%|█████▋    | 48/84 [08:11<03:16,  5.46s/it]2026-01-26 18:21:15,752 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:21:15,752 - RAGExperiment - INFO -   Total chunks: 743
+2026-01-26 18:21:15,752 - RAGExperiment - INFO -   Avg chunk size: 895.92 chars
+2026-01-26 18:21:15,752 - RAGExperiment - INFO -   Min chunk size: 43 chars
+2026-01-26 18:21:15,752 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:21:15,752 - RAGExperiment - INFO -   Median chunk size: 991.00 chars
+Ingesting PDFs:  58%|█████▊    | 49/84 [08:26<04:51,  8.33s/it]2026-01-26 18:21:31,334 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:21:31,334 - RAGExperiment - INFO -   Total chunks: 1874
+2026-01-26 18:21:31,334 - RAGExperiment - INFO -   Avg chunk size: 902.80 chars
+2026-01-26 18:21:31,335 - RAGExperiment - INFO -   Min chunk size: 20 chars
+2026-01-26 18:21:31,335 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:21:31,335 - RAGExperiment - INFO -   Median chunk size: 985.00 chars
+Ingesting PDFs:  60%|█████▉    | 50/84 [09:05<10:02, 17.71s/it]2026-01-26 18:22:10,421 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:22:10,421 - RAGExperiment - INFO -   Total chunks: 802
+2026-01-26 18:22:10,421 - RAGExperiment - INFO -   Avg chunk size: 890.67 chars
+2026-01-26 18:22:10,421 - RAGExperiment - INFO -   Min chunk size: 54 chars
+2026-01-26 18:22:10,421 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:22:10,421 - RAGExperiment - INFO -   Median chunk size: 991.00 chars
+Ingesting PDFs:  61%|██████    | 51/84 [09:21<09:28, 17.22s/it]2026-01-26 18:22:26,556 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:22:26,556 - RAGExperiment - INFO -   Total chunks: 912
+2026-01-26 18:22:26,556 - RAGExperiment - INFO -   Avg chunk size: 893.86 chars
+2026-01-26 18:22:26,556 - RAGExperiment - INFO -   Min chunk size: 54 chars
+2026-01-26 18:22:26,556 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:22:26,556 - RAGExperiment - INFO -   Median chunk size: 992.00 chars
+Ingesting PDFs:  62%|██████▏   | 52/84 [09:41<09:36, 18.01s/it]2026-01-26 18:22:46,222 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:22:46,222 - RAGExperiment - INFO -   Total chunks: 664
+2026-01-26 18:22:46,222 - RAGExperiment - INFO -   Avg chunk size: 857.60 chars
+2026-01-26 18:22:46,222 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:22:46,223 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:22:46,223 - RAGExperiment - INFO -   Median chunk size: 940.50 chars
+Ingesting PDFs:  63%|██████▎   | 53/84 [09:54<08:26, 16.34s/it]2026-01-26 18:22:58,628 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:22:58,628 - RAGExperiment - INFO -   Total chunks: 617
+2026-01-26 18:22:58,628 - RAGExperiment - INFO -   Avg chunk size: 871.01 chars
+2026-01-26 18:22:58,628 - RAGExperiment - INFO -   Min chunk size: 47 chars
+2026-01-26 18:22:58,628 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:22:58,628 - RAGExperiment - INFO -   Median chunk size: 934.00 chars
+Ingesting PDFs:  64%|██████▍   | 54/84 [10:06<07:32, 15.09s/it]2026-01-26 18:23:10,811 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:23:10,811 - RAGExperiment - INFO -   Total chunks: 630
+2026-01-26 18:23:10,812 - RAGExperiment - INFO -   Avg chunk size: 866.92 chars
+2026-01-26 18:23:10,812 - RAGExperiment - INFO -   Min chunk size: 72 chars
+2026-01-26 18:23:10,812 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:23:10,812 - RAGExperiment - INFO -   Median chunk size: 933.00 chars
+Ingesting PDFs:  65%|██████▌   | 55/84 [10:18<06:54, 14.31s/it]2026-01-26 18:23:23,307 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:23:23,307 - RAGExperiment - INFO -   Total chunks: 636
+2026-01-26 18:23:23,307 - RAGExperiment - INFO -   Avg chunk size: 893.83 chars
+2026-01-26 18:23:23,307 - RAGExperiment - INFO -   Min chunk size: 130 chars
+2026-01-26 18:23:23,307 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:23:23,307 - RAGExperiment - INFO -   Median chunk size: 959.00 chars
+Ingesting PDFs:  67%|██████▋   | 56/84 [10:31<06:24, 13.72s/it]2026-01-26 18:23:35,716 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:23:35,716 - RAGExperiment - INFO -   Total chunks: 834
+2026-01-26 18:23:35,716 - RAGExperiment - INFO -   Avg chunk size: 868.18 chars
+2026-01-26 18:23:35,716 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:23:35,716 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:23:35,716 - RAGExperiment - INFO -   Median chunk size: 945.00 chars
+Ingesting PDFs:  68%|██████▊   | 57/84 [10:46<06:21, 14.12s/it]2026-01-26 18:23:50,694 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:23:50,694 - RAGExperiment - INFO -   Total chunks: 704
+2026-01-26 18:23:50,694 - RAGExperiment - INFO -   Avg chunk size: 873.42 chars
+2026-01-26 18:23:50,694 - RAGExperiment - INFO -   Min chunk size: 66 chars
+2026-01-26 18:23:50,694 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:23:50,694 - RAGExperiment - INFO -   Median chunk size: 948.50 chars
+Ingesting PDFs:  69%|██████▉   | 58/84 [10:59<05:57, 13.76s/it]2026-01-26 18:24:03,730 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:03,730 - RAGExperiment - INFO -   Total chunks: 843
+2026-01-26 18:24:03,731 - RAGExperiment - INFO -   Avg chunk size: 860.24 chars
+2026-01-26 18:24:03,731 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-26 18:24:03,731 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:24:03,731 - RAGExperiment - INFO -   Median chunk size: 941.00 chars
+Ingesting PDFs:  70%|███████   | 59/84 [11:17<06:19, 15.19s/it]2026-01-26 18:24:21,928 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:21,929 - RAGExperiment - INFO -   Total chunks: 61
+2026-01-26 18:24:21,929 - RAGExperiment - INFO -   Avg chunk size: 874.46 chars
+2026-01-26 18:24:21,929 - RAGExperiment - INFO -   Min chunk size: 129 chars
+2026-01-26 18:24:21,929 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:24:21,929 - RAGExperiment - INFO -   Median chunk size: 971.00 chars
+Ingesting PDFs:  71%|███████▏  | 60/84 [11:19<04:32, 11.36s/it]2026-01-26 18:24:24,360 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:24,360 - RAGExperiment - INFO -   Total chunks: 213
+2026-01-26 18:24:24,361 - RAGExperiment - INFO -   Avg chunk size: 850.23 chars
+2026-01-26 18:24:24,361 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-26 18:24:24,361 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:24:24,361 - RAGExperiment - INFO -   Median chunk size: 944.00 chars
+Ingesting PDFs:  73%|███████▎  | 61/84 [11:26<03:47,  9.89s/it]2026-01-26 18:24:30,899 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:30,899 - RAGExperiment - INFO -   Total chunks: 490
+2026-01-26 18:24:30,899 - RAGExperiment - INFO -   Avg chunk size: 867.56 chars
+2026-01-26 18:24:30,899 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:24:30,899 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:24:30,899 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+Ingesting PDFs:  74%|███████▍  | 62/84 [11:35<03:33,  9.70s/it]2026-01-26 18:24:40,284 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:40,284 - RAGExperiment - INFO -   Total chunks: 451
+2026-01-26 18:24:40,284 - RAGExperiment - INFO -   Avg chunk size: 850.43 chars
+2026-01-26 18:24:40,284 - RAGExperiment - INFO -   Min chunk size: 25 chars
+2026-01-26 18:24:40,284 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:24:40,285 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+Ingesting PDFs:  75%|███████▌  | 63/84 [11:43<03:14,  9.26s/it]2026-01-26 18:24:48,317 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:48,317 - RAGExperiment - INFO -   Total chunks: 278
+2026-01-26 18:24:48,317 - RAGExperiment - INFO -   Avg chunk size: 855.70 chars
+2026-01-26 18:24:48,317 - RAGExperiment - INFO -   Min chunk size: 30 chars
+2026-01-26 18:24:48,317 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:24:48,317 - RAGExperiment - INFO -   Median chunk size: 935.00 chars
+Ingesting PDFs:  76%|███████▌  | 64/84 [11:50<02:48,  8.44s/it]2026-01-26 18:24:54,861 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:24:54,861 - RAGExperiment - INFO -   Total chunks: 283
+2026-01-26 18:24:54,861 - RAGExperiment - INFO -   Avg chunk size: 853.60 chars
+2026-01-26 18:24:54,861 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-26 18:24:54,861 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:24:54,861 - RAGExperiment - INFO -   Median chunk size: 937.00 chars
+Ingesting PDFs:  77%|███████▋  | 65/84 [11:56<02:28,  7.82s/it]2026-01-26 18:25:01,306 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:01,306 - RAGExperiment - INFO -   Total chunks: 475
+2026-01-26 18:25:01,306 - RAGExperiment - INFO -   Avg chunk size: 863.75 chars
+2026-01-26 18:25:01,306 - RAGExperiment - INFO -   Min chunk size: 53 chars
+2026-01-26 18:25:01,306 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:01,306 - RAGExperiment - INFO -   Median chunk size: 936.00 chars
+Ingesting PDFs:  79%|███████▊  | 66/84 [12:06<02:32,  8.50s/it]2026-01-26 18:25:11,370 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:11,370 - RAGExperiment - INFO -   Total chunks: 446
+2026-01-26 18:25:11,370 - RAGExperiment - INFO -   Avg chunk size: 852.74 chars
+2026-01-26 18:25:11,370 - RAGExperiment - INFO -   Min chunk size: 17 chars
+2026-01-26 18:25:11,370 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:11,370 - RAGExperiment - INFO -   Median chunk size: 932.00 chars
+Ingesting PDFs:  80%|███████▉  | 67/84 [12:17<02:33,  9.04s/it]2026-01-26 18:25:21,663 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:21,663 - RAGExperiment - INFO -   Total chunks: 478
+2026-01-26 18:25:21,663 - RAGExperiment - INFO -   Avg chunk size: 862.27 chars
+2026-01-26 18:25:21,663 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-26 18:25:21,663 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:21,663 - RAGExperiment - INFO -   Median chunk size: 927.00 chars
+Ingesting PDFs:  81%|████████  | 68/84 [12:27<02:30,  9.42s/it]2026-01-26 18:25:32,008 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:32,008 - RAGExperiment - INFO -   Total chunks: 463
+2026-01-26 18:25:32,008 - RAGExperiment - INFO -   Avg chunk size: 873.79 chars
+2026-01-26 18:25:32,008 - RAGExperiment - INFO -   Min chunk size: 19 chars
+2026-01-26 18:25:32,008 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:32,008 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+Ingesting PDFs:  82%|████████▏ | 69/84 [12:37<02:23,  9.54s/it]2026-01-26 18:25:41,925 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:41,925 - RAGExperiment - INFO -   Total chunks: 577
+2026-01-26 18:25:41,925 - RAGExperiment - INFO -   Avg chunk size: 857.60 chars
+2026-01-26 18:25:41,925 - RAGExperiment - INFO -   Min chunk size: 54 chars
+2026-01-26 18:25:41,925 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:41,925 - RAGExperiment - INFO -   Median chunk size: 936.00 chars
+Ingesting PDFs:  83%|████████▎ | 70/84 [12:49<02:24, 10.31s/it]2026-01-26 18:25:54,273 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:25:54,273 - RAGExperiment - INFO -   Total chunks: 1450
+2026-01-26 18:25:54,273 - RAGExperiment - INFO -   Avg chunk size: 829.62 chars
+2026-01-26 18:25:54,273 - RAGExperiment - INFO -   Min chunk size: 55 chars
+2026-01-26 18:25:54,273 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:25:54,273 - RAGExperiment - INFO -   Median chunk size: 944.50 chars
+Ingesting PDFs:  85%|████████▍ | 71/84 [13:14<03:12, 14.80s/it]2026-01-26 18:26:20,191 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:26:20,191 - RAGExperiment - INFO -   Total chunks: 1525
+2026-01-26 18:26:20,192 - RAGExperiment - INFO -   Avg chunk size: 832.66 chars
+2026-01-26 18:26:20,192 - RAGExperiment - INFO -   Min chunk size: 23 chars
+2026-01-26 18:26:20,192 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:26:20,192 - RAGExperiment - INFO -   Median chunk size: 946.00 chars
+Ingesting PDFs:  86%|████████▌ | 72/84 [13:42<03:43, 18.59s/it]2026-01-26 18:26:46,431 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:26:46,431 - RAGExperiment - INFO -   Total chunks: 9
+2026-01-26 18:26:46,431 - RAGExperiment - INFO -   Avg chunk size: 722.89 chars
+2026-01-26 18:26:46,431 - RAGExperiment - INFO -   Min chunk size: 270 chars
+2026-01-26 18:26:46,432 - RAGExperiment - INFO -   Max chunk size: 1020 chars
+2026-01-26 18:26:46,432 - RAGExperiment - INFO -   Median chunk size: 877.00 chars
+Ingesting PDFs:  87%|████████▋ | 73/84 [13:42<02:25, 13.23s/it]2026-01-26 18:26:47,737 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:26:47,738 - RAGExperiment - INFO -   Total chunks: 652
+2026-01-26 18:26:47,738 - RAGExperiment - INFO -   Avg chunk size: 836.34 chars
+2026-01-26 18:26:47,738 - RAGExperiment - INFO -   Min chunk size: 32 chars
+2026-01-26 18:26:47,738 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:26:47,738 - RAGExperiment - INFO -   Median chunk size: 933.00 chars
+Ingesting PDFs:  88%|████████▊ | 74/84 [13:54<02:08, 12.83s/it]2026-01-26 18:26:59,067 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:26:59,067 - RAGExperiment - INFO -   Total chunks: 48
+2026-01-26 18:26:59,067 - RAGExperiment - INFO -   Avg chunk size: 837.71 chars
+2026-01-26 18:26:59,067 - RAGExperiment - INFO -   Min chunk size: 175 chars
+2026-01-26 18:26:59,067 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:26:59,067 - RAGExperiment - INFO -   Median chunk size: 943.50 chars
+Ingesting PDFs:  89%|████████▉ | 75/84 [13:56<01:24,  9.42s/it]2026-01-26 18:27:00,828 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:00,828 - RAGExperiment - INFO -   Total chunks: 814
+2026-01-26 18:27:00,828 - RAGExperiment - INFO -   Avg chunk size: 880.76 chars
+2026-01-26 18:27:00,828 - RAGExperiment - INFO -   Min chunk size: 29 chars
+2026-01-26 18:27:00,828 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:27:00,828 - RAGExperiment - INFO -   Median chunk size: 937.50 chars
+Ingesting PDFs:  90%|█████████ | 76/84 [14:14<01:36, 12.10s/it]2026-01-26 18:27:19,042 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:19,042 - RAGExperiment - INFO -   Total chunks: 322
+2026-01-26 18:27:19,042 - RAGExperiment - INFO -   Avg chunk size: 875.10 chars
+2026-01-26 18:27:19,042 - RAGExperiment - INFO -   Min chunk size: 1 chars
+2026-01-26 18:27:19,042 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:27:19,042 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+Ingesting PDFs:  92%|█████████▏| 77/84 [14:22<01:14, 10.71s/it]2026-01-26 18:27:26,820 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:26,820 - RAGExperiment - INFO -   Total chunks: 385
+2026-01-26 18:27:26,820 - RAGExperiment - INFO -   Avg chunk size: 851.08 chars
+2026-01-26 18:27:26,820 - RAGExperiment - INFO -   Min chunk size: 85 chars
+2026-01-26 18:27:26,820 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:27:26,820 - RAGExperiment - INFO -   Median chunk size: 951.00 chars
+Ingesting PDFs:  93%|█████████▎| 78/84 [14:30<01:00, 10.01s/it]2026-01-26 18:27:34,744 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:34,744 - RAGExperiment - INFO -   Total chunks: 26
+2026-01-26 18:27:34,744 - RAGExperiment - INFO -   Avg chunk size: 853.27 chars
+2026-01-26 18:27:34,744 - RAGExperiment - INFO -   Min chunk size: 335 chars
+2026-01-26 18:27:34,744 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:27:34,744 - RAGExperiment - INFO -   Median chunk size: 969.00 chars
+Ingesting PDFs:  94%|█████████▍| 79/84 [14:31<00:36,  7.32s/it]2026-01-26 18:27:36,123 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:36,124 - RAGExperiment - INFO -   Total chunks: 576
+2026-01-26 18:27:36,124 - RAGExperiment - INFO -   Avg chunk size: 873.23 chars
+2026-01-26 18:27:36,124 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:27:36,124 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:27:36,124 - RAGExperiment - INFO -   Median chunk size: 952.00 chars
+Ingesting PDFs:  95%|█████████▌| 80/84 [14:43<00:34,  8.69s/it]2026-01-26 18:27:48,060 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:48,060 - RAGExperiment - INFO -   Total chunks: 605
+2026-01-26 18:27:48,060 - RAGExperiment - INFO -   Avg chunk size: 883.95 chars
+2026-01-26 18:27:48,060 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:27:48,060 - RAGExperiment - INFO -   Max chunk size: 1023 chars
+2026-01-26 18:27:48,060 - RAGExperiment - INFO -   Median chunk size: 961.00 chars
+Ingesting PDFs:  96%|█████████▋| 81/84 [14:54<00:28,  9.56s/it]2026-01-26 18:27:59,679 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:27:59,679 - RAGExperiment - INFO -   Total chunks: 1160
+2026-01-26 18:27:59,679 - RAGExperiment - INFO -   Avg chunk size: 856.02 chars
+2026-01-26 18:27:59,679 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:27:59,679 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:27:59,679 - RAGExperiment - INFO -   Median chunk size: 942.50 chars
+Ingesting PDFs:  98%|█████████▊| 82/84 [15:16<00:26, 13.24s/it]2026-01-26 18:28:21,310 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:28:21,310 - RAGExperiment - INFO -   Total chunks: 564
+2026-01-26 18:28:21,310 - RAGExperiment - INFO -   Avg chunk size: 820.24 chars
+2026-01-26 18:28:21,310 - RAGExperiment - INFO -   Min chunk size: 37 chars
+2026-01-26 18:28:21,310 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:28:21,310 - RAGExperiment - INFO -   Median chunk size: 909.00 chars
+Ingesting PDFs:  99%|█████████▉| 83/84 [15:29<00:13, 13.17s/it]2026-01-26 18:28:34,347 - RAGExperiment - INFO - 
+Chunking Statistics (LangChain):
+2026-01-26 18:28:34,347 - RAGExperiment - INFO -   Total chunks: 707
+2026-01-26 18:28:34,348 - RAGExperiment - INFO -   Avg chunk size: 867.77 chars
+2026-01-26 18:28:34,348 - RAGExperiment - INFO -   Min chunk size: 2 chars
+2026-01-26 18:28:34,348 - RAGExperiment - INFO -   Max chunk size: 1024 chars
+2026-01-26 18:28:34,348 - RAGExperiment - INFO -   Median chunk size: 944.00 chars
+Ingesting PDFs: 100%|██████████| 84/84 [15:48<00:00, 14.88s/it]Ingesting PDFs: 100%|██████████| 84/84 [15:48<00:00, 11.29s/it]
+2026-01-26 18:28:52,927 - src.experiments.uncertainty - INFO - Loading Reranker: BAAI/bge-reranker-v2-m3
+`torch_dtype` is deprecated! Use `dtype` instead!
+Uncertainty Pipeline:   0%|          | 0/150 [00:00<?, ?it/s]2026-01-26 18:29:19,270 - RAGExperiment - INFO - 
+Initializing LLM: Qwen/Qwen2.5-7B-Instruct
+2026-01-26 18:29:19,270 - RAGExperiment - INFO -   Device: cuda
+2026-01-26 18:29:19,270 - RAGExperiment - INFO -   8-bit: True
+2026-01-26 18:29:19,270 - RAGExperiment - INFO - Loading tokenizer...
+2026-01-26 18:29:20,378 - RAGExperiment - INFO - Loading model (this may take a moment)...
+2026-01-26 18:29:20,378 - RAGExperiment - INFO -   Using 8-bit quantization for memory efficiency
+`torch_dtype` is deprecated! Use `dtype` instead!
+The `load_in_4bit` and `load_in_8bit` arguments are deprecated and will be removed in the future versions. Please, pass a `BitsAndBytesConfig` object in `quantization_config` argument instead.
+2026-01-26 18:29:20,956 - accelerate.utils.modeling - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][A
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:46<02:20, 46.99s/it][A
+Loading checkpoint shards:  50%|█████     | 2/4 [01:26<01:24, 42.45s/it][A
+Loading checkpoint shards:  75%|███████▌  | 3/4 [02:07<00:41, 41.92s/it][A
+Loading checkpoint shards: 100%|██████████| 4/4 [02:43<00:00, 39.58s/it][ALoading checkpoint shards: 100%|██████████| 4/4 [02:43<00:00, 40.89s/it]
+Device set to use cuda:0
+2026-01-26 18:32:05,037 - RAGExperiment - INFO - ✓ LLM initialized successfully
+/part/01/Tmp/kobeissa/5028/src/core/rag_experiments.py:514: LangChainDeprecationWarning: The class `HuggingFacePipeline` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-huggingface package and should be used instead. To use it run `pip install -U `langchain-huggingface` and import as `from `langchain_huggingface import HuggingFacePipeline``.
+  self.langchain_llm = HuggingFacePipeline(pipeline=self.llm_pipeline)
+2026-01-26 18:32:05,038 - RAGExperiment - INFO - ✓ Created LangChain HuggingFacePipeline wrapper for RetrievalQA
+2026-01-26 18:32:30,932 - src.experiments.uncertainty - INFO - 
+[Sample 0] Confidence: Margin=0.0352, MI(Neg)=-0.0171
+Uncertainty Pipeline:   1%|          | 1/150 [03:14<8:01:56, 194.07s/it]2026-01-26 18:32:50,322 - src.experiments.uncertainty - INFO - 
+[Sample 1] Confidence: Margin=0.0415, MI(Neg)=-0.0276
+Uncertainty Pipeline:   1%|▏         | 2/150 [03:33<3:45:14, 91.32s/it] Uncertainty Pipeline:   2%|▏         | 3/150 [03:59<2:30:40, 61.50s/it]Uncertainty Pipeline:   3%|▎         | 4/150 [04:23<1:53:30, 46.65s/it]Uncertainty Pipeline:   3%|▎         | 5/150 [04:49<1:34:29, 39.10s/it]Uncertainty Pipeline:   4%|▍         | 6/150 [05:15<1:23:05, 34.62s/it]Uncertainty Pipeline:   5%|▍         | 7/150 [05:36<1:12:27, 30.40s/it]Uncertainty Pipeline:   5%|▌         | 8/150 [05:50<59:12, 25.02s/it]  Uncertainty Pipeline:   6%|▌         | 9/150 [06:16<59:54, 25.49s/it]Uncertainty Pipeline:   7%|▋         | 10/150 [06:43<1:00:06, 25.76s/it]You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+Uncertainty Pipeline:   7%|▋         | 11/150 [07:09<1:00:19, 26.04s/it]Uncertainty Pipeline:   8%|▊         | 12/150 [07:36<1:00:22, 26.25s/it]Uncertainty Pipeline:   9%|▊         | 13/150 [08:03<1:00:18, 26.41s/it]Uncertainty Pipeline:   9%|▉         | 14/150 [08:29<59:53, 26.42s/it]  Uncertainty Pipeline:  10%|█         | 15/150 [08:55<59:15, 26.33s/it]Uncertainty Pipeline:  11%|█         | 16/150 [09:10<50:47, 22.75s/it]Uncertainty Pipeline:  11%|█▏        | 17/150 [09:36<52:53, 23.86s/it]Uncertainty Pipeline:  12%|█▏        | 18/150 [10:03<54:15, 24.66s/it]Uncertainty Pipeline:  13%|█▎        | 19/150 [10:30<55:18, 25.33s/it]Uncertainty Pipeline:  13%|█▎        | 20/150 [10:57<55:57, 25.83s/it]Uncertainty Pipeline:  14%|█▍        | 21/150 [11:24<56:13, 26.15s/it]Uncertainty Pipeline:  15%|█▍        | 22/150 [11:50<56:00, 26.25s/it]Uncertainty Pipeline:  15%|█▌        | 23/150 [12:04<47:45, 22.56s/it]Uncertainty Pipeline:  16%|█▌        | 24/150 [12:30<49:41, 23.66s/it]Uncertainty Pipeline:  17%|█▋        | 25/150 [12:56<50:47, 24.38s/it]Uncertainty Pipeline:  17%|█▋        | 26/150 [13:12<44:46, 21.66s/it]Uncertainty Pipeline:  18%|█▊        | 27/150 [13:38<47:12, 23.03s/it]Uncertainty Pipeline:  19%|█▊        | 28/150 [14:03<48:03, 23.64s/it]Uncertainty Pipeline:  19%|█▉        | 29/150 [14:21<44:05, 21.86s/it]Uncertainty Pipeline:  20%|██        | 30/150 [14:47<46:28, 23.23s/it]Uncertainty Pipeline:  21%|██        | 31/150 [15:14<48:24, 24.41s/it]Uncertainty Pipeline:  21%|██▏       | 32/150 [15:40<48:56, 24.89s/it]Uncertainty Pipeline:  22%|██▏       | 33/150 [16:07<49:29, 25.38s/it]Uncertainty Pipeline:  23%|██▎       | 34/150 [16:31<48:09, 24.91s/it]Uncertainty Pipeline:  23%|██▎       | 35/150 [16:57<48:23, 25.25s/it]Uncertainty Pipeline:  24%|██▍       | 36/150 [17:15<44:02, 23.18s/it]Uncertainty Pipeline:  25%|██▍       | 37/150 [17:32<40:14, 21.36s/it]Uncertainty Pipeline:  25%|██▌       | 38/150 [17:47<36:20, 19.47s/it]Uncertainty Pipeline:  26%|██▌       | 39/150 [18:11<38:15, 20.68s/it]Uncertainty Pipeline:  27%|██▋       | 40/150 [18:29<36:48, 20.08s/it]Uncertainty Pipeline:  27%|██▋       | 41/150 [18:56<39:59, 22.02s/it]Uncertainty Pipeline:  28%|██▊       | 42/150 [19:22<41:55, 23.29s/it]Uncertainty Pipeline:  29%|██▊       | 43/150 [19:47<42:12, 23.67s/it]Uncertainty Pipeline:  29%|██▉       | 44/150 [19:57<34:39, 19.62s/it]Uncertainty Pipeline:  30%|███       | 45/150 [20:12<32:11, 18.40s/it]Uncertainty Pipeline:  31%|███       | 46/150 [20:26<29:16, 16.89s/it]Uncertainty Pipeline:  31%|███▏      | 47/150 [20:52<33:55, 19.76s/it]Uncertainty Pipeline:  32%|███▏      | 48/150 [21:19<37:00, 21.77s/it]Uncertainty Pipeline:  33%|███▎      | 49/150 [21:46<39:19, 23.36s/it]Uncertainty Pipeline:  33%|███▎      | 50/150 [22:07<37:45, 22.66s/it]Uncertainty Pipeline:  34%|███▍      | 51/150 [22:34<39:27, 23.92s/it]Uncertainty Pipeline:  35%|███▍      | 52/150 [23:00<40:07, 24.56s/it]Uncertainty Pipeline:  35%|███▌      | 53/150 [23:26<40:34, 25.10s/it]Uncertainty Pipeline:  36%|███▌      | 54/150 [23:52<40:44, 25.46s/it]Uncertainty Pipeline:  37%|███▋      | 55/150 [24:05<34:18, 21.67s/it]Uncertainty Pipeline:  37%|███▋      | 56/150 [24:24<32:47, 20.93s/it]Uncertainty Pipeline:  38%|███▊      | 57/150 [24:43<31:30, 20.33s/it]Uncertainty Pipeline:  39%|███▊      | 58/150 [25:10<34:04, 22.22s/it]Uncertainty Pipeline:  39%|███▉      | 59/150 [25:36<35:25, 23.36s/it]Uncertainty Pipeline:  40%|████      | 60/150 [25:48<30:00, 20.01s/it]Uncertainty Pipeline:  41%|████      | 61/150 [26:15<32:33, 21.95s/it]Uncertainty Pipeline:  41%|████▏     | 62/150 [26:29<28:50, 19.67s/it]Uncertainty Pipeline:  42%|████▏     | 63/150 [26:56<31:32, 21.76s/it]Uncertainty Pipeline:  43%|████▎     | 64/150 [27:22<33:11, 23.16s/it]Uncertainty Pipeline:  43%|████▎     | 65/150 [27:47<33:32, 23.68s/it]Uncertainty Pipeline:  44%|████▍     | 66/150 [28:08<31:56, 22.81s/it]Uncertainty Pipeline:  45%|████▍     | 67/150 [28:34<32:52, 23.76s/it]Uncertainty Pipeline:  45%|████▌     | 68/150 [29:01<33:50, 24.77s/it]Uncertainty Pipeline:  46%|████▌     | 69/150 [29:27<34:13, 25.36s/it]Uncertainty Pipeline:  47%|████▋     | 70/150 [29:54<34:17, 25.72s/it]Uncertainty Pipeline:  47%|████▋     | 71/150 [30:21<34:11, 25.97s/it]Uncertainty Pipeline:  48%|████▊     | 72/150 [30:47<33:56, 26.10s/it]Uncertainty Pipeline:  49%|████▊     | 73/150 [31:09<32:03, 24.98s/it]Uncertainty Pipeline:  49%|████▉     | 74/150 [31:36<32:08, 25.37s/it]Uncertainty Pipeline:  50%|█████     | 75/150 [31:45<25:50, 20.67s/it]Uncertainty Pipeline:  51%|█████     | 76/150 [32:12<27:46, 22.52s/it]Uncertainty Pipeline:  51%|█████▏    | 77/150 [32:39<28:54, 23.75s/it]Uncertainty Pipeline:  52%|█████▏    | 78/150 [33:04<29:00, 24.18s/it]Uncertainty Pipeline:  53%|█████▎    | 79/150 [33:20<25:52, 21.87s/it]Uncertainty Pipeline:  53%|█████▎    | 80/150 [33:35<22:51, 19.60s/it]Uncertainty Pipeline:  54%|█████▍    | 81/150 [33:52<21:49, 18.97s/it]Uncertainty Pipeline:  55%|█████▍    | 82/150 [34:20<24:33, 21.67s/it]Uncertainty Pipeline:  55%|█████▌    | 83/150 [34:47<25:54, 23.20s/it]Uncertainty Pipeline:  56%|█████▌    | 84/150 [35:13<26:35, 24.18s/it]Uncertainty Pipeline:  57%|█████▋    | 85/150 [35:41<27:07, 25.04s/it]Uncertainty Pipeline:  57%|█████▋    | 86/150 [36:07<27:19, 25.61s/it]Uncertainty Pipeline:  58%|█████▊    | 87/150 [36:34<27:07, 25.84s/it]Uncertainty Pipeline:  59%|█████▊    | 88/150 [37:01<26:57, 26.09s/it]Uncertainty Pipeline:  59%|█████▉    | 89/150 [37:27<26:39, 26.23s/it]Uncertainty Pipeline:  60%|██████    | 90/150 [37:54<26:19, 26.33s/it]Uncertainty Pipeline:  61%|██████    | 91/150 [38:20<25:46, 26.21s/it]Uncertainty Pipeline:  61%|██████▏   | 92/150 [38:31<21:09, 21.89s/it]Uncertainty Pipeline:  62%|██████▏   | 93/150 [38:46<18:38, 19.62s/it]Uncertainty Pipeline:  63%|██████▎   | 94/150 [39:12<20:14, 21.68s/it]Uncertainty Pipeline:  63%|██████▎   | 95/150 [39:35<20:10, 22.01s/it]Uncertainty Pipeline:  64%|██████▍   | 96/150 [40:01<21:00, 23.34s/it]Uncertainty Pipeline:  65%|██████▍   | 97/150 [40:28<21:20, 24.17s/it]Uncertainty Pipeline:  65%|██████▌   | 98/150 [40:46<19:23, 22.37s/it]Uncertainty Pipeline:  66%|██████▌   | 99/150 [41:12<20:00, 23.55s/it]Uncertainty Pipeline:  67%|██████▋   | 100/150 [41:39<20:31, 24.63s/it]Uncertainty Pipeline:  67%|██████▋   | 101/150 [42:06<20:40, 25.31s/it]Uncertainty Pipeline:  68%|██████▊   | 102/150 [42:19<17:11, 21.49s/it]Uncertainty Pipeline:  69%|██████▊   | 103/150 [42:45<18:02, 23.04s/it]Uncertainty Pipeline:  69%|██████▉   | 104/150 [43:02<16:12, 21.14s/it]Uncertainty Pipeline:  70%|███████   | 105/150 [43:29<17:10, 22.89s/it]Uncertainty Pipeline:  71%|███████   | 106/150 [43:48<15:56, 21.74s/it]Uncertainty Pipeline:  71%|███████▏  | 107/150 [44:02<13:54, 19.40s/it]Uncertainty Pipeline:  72%|███████▏  | 108/150 [44:29<15:05, 21.56s/it]Uncertainty Pipeline:  73%|███████▎  | 109/150 [44:55<15:42, 22.99s/it]Uncertainty Pipeline:  73%|███████▎  | 110/150 [45:16<14:55, 22.38s/it]Uncertainty Pipeline:  74%|███████▍  | 111/150 [45:42<15:18, 23.54s/it]Uncertainty Pipeline:  75%|███████▍  | 112/150 [46:08<15:24, 24.32s/it]Uncertainty Pipeline:  75%|███████▌  | 113/150 [46:35<15:30, 25.14s/it]Uncertainty Pipeline:  76%|███████▌  | 114/150 [46:53<13:40, 22.80s/it]Uncertainty Pipeline:  77%|███████▋  | 115/150 [47:20<14:07, 24.21s/it]Uncertainty Pipeline:  77%|███████▋  | 116/150 [47:43<13:26, 23.72s/it]Uncertainty Pipeline:  78%|███████▊  | 117/150 [48:08<13:20, 24.26s/it]Uncertainty Pipeline:  79%|███████▊  | 118/150 [48:35<13:16, 24.91s/it]Uncertainty Pipeline:  79%|███████▉  | 119/150 [49:01<13:04, 25.32s/it]Uncertainty Pipeline:  80%|████████  | 120/150 [49:27<12:48, 25.61s/it]Uncertainty Pipeline:  81%|████████  | 121/150 [49:53<12:25, 25.72s/it]Uncertainty Pipeline:  81%|████████▏ | 122/150 [50:19<12:00, 25.73s/it]Uncertainty Pipeline:  82%|████████▏ | 123/150 [50:44<11:32, 25.64s/it]Uncertainty Pipeline:  83%|████████▎ | 124/150 [51:10<11:08, 25.72s/it]Uncertainty Pipeline:  83%|████████▎ | 125/150 [51:36<10:45, 25.80s/it]Uncertainty Pipeline:  84%|████████▍ | 126/150 [51:58<09:46, 24.45s/it]Uncertainty Pipeline:  85%|████████▍ | 127/150 [52:14<08:30, 22.19s/it]Uncertainty Pipeline:  85%|████████▌ | 128/150 [52:30<07:23, 20.17s/it]Uncertainty Pipeline:  86%|████████▌ | 129/150 [52:55<07:36, 21.76s/it]Uncertainty Pipeline:  87%|████████▋ | 130/150 [53:13<06:51, 20.57s/it]Uncertainty Pipeline:  87%|████████▋ | 131/150 [53:39<06:59, 22.07s/it]Uncertainty Pipeline:  88%|████████▊ | 132/150 [54:04<06:56, 23.13s/it]Uncertainty Pipeline:  89%|████████▊ | 133/150 [54:30<06:44, 23.78s/it]Uncertainty Pipeline:  89%|████████▉ | 134/150 [54:55<06:26, 24.17s/it]Uncertainty Pipeline:  90%|█████████ | 135/150 [55:16<05:49, 23.29s/it]Uncertainty Pipeline:  91%|█████████ | 136/150 [55:41<05:31, 23.69s/it]Uncertainty Pipeline:  91%|█████████▏| 137/150 [56:04<05:08, 23.75s/it]Uncertainty Pipeline:  92%|█████████▏| 138/150 [56:30<04:50, 24.23s/it]Uncertainty Pipeline:  93%|█████████▎| 139/150 [56:44<03:53, 21.24s/it]Uncertainty Pipeline:  93%|█████████▎| 140/150 [57:01<03:20, 20.01s/it]Uncertainty Pipeline:  94%|█████████▍| 141/150 [57:27<03:15, 21.68s/it]Uncertainty Pipeline:  95%|█████████▍| 142/150 [57:53<03:03, 22.90s/it]Uncertainty Pipeline:  95%|█████████▌| 143/150 [58:18<02:45, 23.60s/it]Uncertainty Pipeline:  96%|█████████▌| 144/150 [58:35<02:09, 21.57s/it]Uncertainty Pipeline:  97%|█████████▋| 145/150 [59:00<01:53, 22.66s/it]Uncertainty Pipeline:  97%|█████████▋| 146/150 [59:25<01:33, 23.45s/it]Uncertainty Pipeline:  98%|█████████▊| 147/150 [59:51<01:12, 24.12s/it]Uncertainty Pipeline:  99%|█████████▊| 148/150 [1:00:18<00:49, 24.96s/it]Uncertainty Pipeline:  99%|█████████▉| 149/150 [1:00:44<00:25, 25.43s/it]Uncertainty Pipeline: 100%|██████████| 150/150 [1:01:10<00:00, 25.66s/it]Uncertainty Pipeline: 100%|██████████| 150/150 [1:01:10<00:00, 24.47s/it]
+2026-01-26 19:30:27,823 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 19:30:27,823 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-26 19:30:27,823 - RAGExperiment - INFO - ================================================================================
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/part/01/Tmp/kobeissa/5028/src/core/rag_experiments.py", line 1143, in <module>
+    main()
+    ~~~~^^
+  File "/part/01/Tmp/kobeissa/5028/src/core/rag_experiments.py", line 1139, in main
+    experiment.run_experiment(num_samples=args.num_samples)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/part/01/Tmp/kobeissa/5028/src/core/rag_experiments.py", line 643, in run_experiment
+    self._compute_aggregate_stats()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/part/01/Tmp/kobeissa/5028/src/core/rag_experiment_mixins.py", line 438, in _compute_aggregate_stats
+    gen_lengths = [r['generation_length'] for r in self.results]
+                   ~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'generation_length'
+Copying results back to: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/outputs
+Done!s

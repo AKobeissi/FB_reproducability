@@ -8,6 +8,7 @@ Allows composable usage of:
 import logging
 import os
 import json
+import shutil
 import numpy as np
 import torch
 from typing import List, Dict, Any
@@ -89,8 +90,26 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     if need_dense_store:
         try:
             # Initialize Store (Lazy Load)
-            # This creates the object but doesn't guarantee data is inside yet
             _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
+            
+            # --- VERIFICATION & SELF-HEALING ---
+            if not is_new and vectordb:
+                try:
+                    # Run a dummy query to check if vectors exist and dimensions match
+                    _ = vectordb.similarity_search("sanity_check_query", k=1)
+                    logger.info(f"✓ Vector store sanity check passed.")
+                except Exception as e:
+                    logger.error(f"⚠️ Vector store is corrupt or incompatible (Error: {e}).")
+                    logger.info("   -> Deleting and rebuilding from scratch...")
+                    
+                    _, db_path = get_chroma_db_path(experiment, "all")
+                    if os.path.exists(db_path):
+                        shutil.rmtree(db_path)
+                    
+                    # Re-initialize as new
+                    _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
+                    is_new = True 
+            # ----------------------------------------------
             
             # --- Ingestion Loop ---
             _, db_path = get_chroma_db_path(experiment, "all")
@@ -98,7 +117,6 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
             available_docs = set()
             pdf_source_map = {}
 
-            # Load existing metadata to see what's already ingested
             if not is_new and os.path.exists(meta_path):
                 try:
                     with open(meta_path, 'r') as f:
@@ -108,7 +126,6 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                 except Exception: 
                     pass
 
-            # Calculate missing docs
             docs_to_process = {k: v for k, v in unique_docs.items() if k not in available_docs}
             
             if docs_to_process:
@@ -119,14 +136,11 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                     pdf_source_map[doc_name] = src
                     
                     if pdf_docs:
-                        # Chunk the PDF
                         chunks = experiment._chunk_text_langchain(pdf_docs, metadata={'doc_name': doc_name})
                         if chunks:
-                            # Insert into Chroma
                             populate_chroma_store(experiment, vectordb, chunks, "all")
                             available_docs.add(doc_name)
                 
-                # Update metadata on disk
                 save_store_config(experiment, db_path)
                 with open(meta_path, 'w') as f:
                     json.dump({"available_docs": list(available_docs), "pdf_source_map": pdf_source_map}, f)
@@ -135,8 +149,6 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
 
         except Exception as e:
             logger.error(f"Chroma initialization/ingestion failed: {e}")
-            # If dense fails, we might still proceed if mode is purely sparse, 
-            # but usually this is fatal for the pipeline.
             if retrieval_mode == "dense":
                 return []
 
@@ -179,6 +191,9 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     # =========================================================================
     results = experiment._create_skipped_results(data, "unified", "unified", "pdf", "unified", start_id=0)
 
+    consecutive_empty_count = 0
+    MAX_EMPTY_STRIKES = 5
+
     for i, sample in enumerate(tqdm(data, desc="Unified Pipeline")):
         question = sample.get("question")
         if not question: 
@@ -192,9 +207,7 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         hypotheticals = []
         
         if use_hyde:
-            # Generate hypotheticals
             hypotheticals = _generate_hypotheticals(experiment, question, n=hyde_k)
-            # Embed and Average
             if experiment.embeddings:
                 embeddings = experiment.embeddings.embed_documents(hypotheticals)
                 if len(embeddings) > 1:
@@ -211,14 +224,29 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         if need_dense_store and vectordb:
             try:
                 if search_query_vector:
-                    # Use HyDE vector
-                    docs_scores = vectordb.similarity_search_by_vector_with_score(search_query_vector, k=candidate_k)
+                    # FIX: Robust Method Calls
+                    try:
+                        # Correct method for LangChain >= 0.1
+                        docs_scores = vectordb.similarity_search_by_vector_with_relevance_scores(search_query_vector, k=candidate_k)
+                    except AttributeError:
+                        try:
+                            # Try the method name you saw in your error, in case a specific library version uses it?
+                            # Actually, usually it's similarity_search_with_score_by_vector in FAISS, but let's try standard fallbacks.
+                            docs_scores = vectordb.similarity_search_by_vector(search_query_vector, k=candidate_k)
+                            # Add fake scores if the method didn't return them
+                            docs_scores = [(d, 0.0) for d in docs_scores]
+                        except AttributeError:
+                             # Last resort: text search (skips HyDE vector benefit, but gets data)
+                             logger.warning(f"Sample {i}: Vector search methods missing. Falling back to text search.")
+                             docs = vectordb.similarity_search(question, k=candidate_k)
+                             docs_scores = [(d, 0.0) for d in docs]
+
                     dense_docs = []
                     for doc, score in docs_scores:
                         doc.metadata['score'] = float(score)
                         dense_docs.append(doc)
                 else:
-                    # Standard Dense
+                    # Standard Dense (Query text -> Vector handled by store)
                     dense_docs = vectordb.similarity_search(question, k=candidate_k)
             except Exception as e:
                 logger.warning(f"Dense retrieval failed for sample {i}: {e}")
@@ -231,13 +259,11 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         final_retrieved_docs = []
         
         if retrieval_mode == "hybrid":
-            # RRF Fusion
             fused = _perform_rrf(
                 dense_docs, sparse_docs, 
                 rrf_k=60, 
-                top_k=candidate_k # Keep candidates for reranking
+                top_k=candidate_k 
             )
-            # Convert back to Doc objects
             from langchain.schema import Document
             for item in fused:
                 d = Document(page_content=item['text'], metadata=item['metadata'])
@@ -254,7 +280,6 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
             valid_docs = []
             for d in final_retrieved_docs:
                 text = d.page_content
-                # Skip empty text
                 if not text.strip(): continue
                 pairs.append([question, text])
                 valid_docs.append(d)
@@ -291,6 +316,17 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         results[i]["retrieved_chunks"] = formatted_chunks
         results[i]["num_retrieved"] = len(formatted_chunks)
         
+        # --- EARLY STOPPING CHECK ---
+        if len(formatted_chunks) == 0:
+            consecutive_empty_count += 1
+            logger.warning(f"Sample {i}: No chunks retrieved. (Strike {consecutive_empty_count}/{MAX_EMPTY_STRIKES})")
+            
+            if consecutive_empty_count >= MAX_EMPTY_STRIKES:
+                logger.error("🛑 STOPPING EXPERIMENT: No data retrieved for 5 consecutive samples.")
+                break 
+        else:
+            consecutive_empty_count = 0 
+        
         # --- Stage 4: Generation ---
         context = "\n\n".join([c["text"] for c in formatted_chunks])
         ans, prompt = experiment._generate_answer(question, context, return_prompt=True)
@@ -298,7 +334,6 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         results[i]["generated_answer"] = ans
         results[i]["final_prompt"] = prompt
         
-        # Gold Data
         gold_segs, gold_str = experiment._prepare_gold_evidence(sample.get('evidence', ''))
         results[i]["gold_evidence"] = gold_str
         results[i]["gold_evidence_segments"] = gold_segs

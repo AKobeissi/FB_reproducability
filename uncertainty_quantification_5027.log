@@ -1,0 +1,739 @@
+Working in scratch: /Tmp/kobeissa/5027
+Copying repository content from /u/kobeissa/Documents/thesis/experiments/FB_reproducability to scratch...
+sending incremental file list
+./
+.env
+.gitignore
+EVALUATION.md
+LICENSE
+README.md
+core
+difficulty_distributions.png
+difficulty_regime_summary.csv
+requirements.txt
+runner.py
+analysis/
+analysis/query_difficulty/
+analysis/query_difficulty/ALL__diagnostics.csv
+analysis/query_difficulty/ALL__regime_summary.csv
+analysis/query_difficulty/analysis.py
+analysis/query_difficulty/difficulty_signals.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__bm25_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__diagnostics.json
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__lexical_vs_hit.png
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__merged_samples.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__regime_summary.csv
+analysis/query_difficulty/expanded_shared_20260114_172936_scored/expanded_shared_20260114_172936_scored__semantic_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__bm25_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__diagnostics.json
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__lexical_vs_hit.png
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__merged_samples.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__regime_summary.csv
+analysis/query_difficulty/hyde_shared_20260114_202108_scored/hyde_shared_20260114_202108_scored__semantic_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__bm25_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__diagnostics.json
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__lexical_vs_hit.png
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__merged_samples.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__regime_summary.csv
+analysis/query_difficulty/shared_vector_20260107_164341_scored/shared_vector_20260107_164341_scored__semantic_vs_hit.png
+data/
+data/financebench_document_information.jsonl
+data/financebench_open_source.jsonl
+evaluation_results/
+evaluation_results/hybrid_sweep_20260119_184713_evaluated.json
+evaluation_results/hybrid_sweep_20260119_184713_summary.csv
+notebooks/
+notebooks/playground.ipynb
+notebooks/tensor_logic.ipynb
+pdfs/
+pdfs/3M_2015_10K.pdf
+pdfs/3M_2016_10K.pdf
+pdfs/3M_2017_10K.pdf
+pdfs/3M_2018_10K.pdf
+pdfs/3M_2019_10K.pdf
+pdfs/3M_2020_10K.pdf
+pdfs/3M_2021_10K.pdf
+pdfs/3M_2022_10K.pdf
+pdfs/3M_2023Q2_10Q.pdf
+pdfs/ACTIVISIONBLIZZARD_2015_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2016_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2017_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2018_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2019_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2020_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2021_10K.pdf
+pdfs/ACTIVISIONBLIZZARD_2022_10K.pdf
+pdfs/ACTIVSIONBLIZZARD_2023Q2_10Q.pdf
+pdfs/ADOBE_2015_10K.pdf
+pdfs/ADOBE_2016_10K.pdf
+pdfs/ADOBE_2017_10K.pdf
+pdfs/ADOBE_2018_10K.pdf
+pdfs/ADOBE_2019_10K.pdf
+pdfs/ADOBE_2020_10K.pdf
+pdfs/ADOBE_2021_10K.pdf
+pdfs/ADOBE_2022Q2_10Q.pdf
+pdfs/ADOBE_2022_10K.pdf
+pdfs/AES_2015_10K.pdf
+pdfs/AES_2016_10K.pdf
+pdfs/AES_2017_10K.pdf
+pdfs/AES_2018_10K.pdf
+pdfs/AES_2019_10K.pdf
+pdfs/AES_2020_10K.pdf
+pdfs/AES_2021_10K.pdf
+pdfs/AES_2022_10K.pdf
+pdfs/AMAZON_2015_10K.pdf
+pdfs/AMAZON_2016_10K.pdf
+pdfs/AMAZON_2017_10K.pdf
+pdfs/AMAZON_2018_10K.pdf
+pdfs/AMAZON_2019_10K.pdf
+pdfs/AMAZON_2020_10K.pdf
+pdfs/AMAZON_2021_10K.pdf
+pdfs/AMAZON_2022_10K.pdf
+pdfs/AMCOR_2019_10K.pdf
+pdfs/AMCOR_2020_10K.pdf
+pdfs/AMCOR_2021_10K.pdf
+pdfs/AMCOR_2022_10K.pdf
+pdfs/AMCOR_2022_8K_2022-04-26.pdf
+pdfs/AMCOR_2022_8K_2022-07-01.pdf
+pdfs/AMCOR_2022_8K_dated-2022-04-26.pdf
+pdfs/AMCOR_2022_8K_dated-2022-07-01.pdf
+pdfs/AMCOR_2023Q2_10Q.pdf
+pdfs/AMCOR_2023Q4_EARNINGS.pdf
+pdfs/AMCOR_2023_10K.pdf
+pdfs/AMD_2015_10K.pdf
+pdfs/AMD_2016_10K.pdf
+pdfs/AMD_2017_10K.pdf
+pdfs/AMD_2018_10K.pdf
+pdfs/AMD_2019_10K.pdf
+pdfs/AMD_2020_10K.pdf
+pdfs/AMD_2021_10K.pdf
+pdfs/AMD_2022_10K.pdf
+pdfs/AMD_2022_annualreport.pdf
+pdfs/AMERICANEXPRESS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2015_10K.pdf
+pdfs/AMERICANWATERWORKS_2016_10K.pdf
+pdfs/AMERICANWATERWORKS_2017_10K.pdf
+pdfs/AMERICANWATERWORKS_2018_10K.pdf
+pdfs/AMERICANWATERWORKS_2019_10K.pdf
+pdfs/AMERICANWATERWORKS_2020_10K.pdf
+pdfs/AMERICANWATERWORKS_2021_10K.pdf
+pdfs/AMERICANWATERWORKS_2022_10K.pdf
+pdfs/AMERICANWATERWORKS_2023Q2_10Q.pdf
+pdfs/APPLE_2015_10K.pdf
+pdfs/APPLE_2016_10K.pdf
+pdfs/APPLE_2017_10K.pdf
+pdfs/APPLE_2018_10K.pdf
+pdfs/APPLE_2019_10K.pdf
+pdfs/APPLE_2020_10K.pdf
+pdfs/APPLE_2021_10K.pdf
+pdfs/APPLE_2022_10K.pdf
+pdfs/APPLE_2023Q3_10Q.pdf
+pdfs/BESTBUY_2015_10K.pdf
+pdfs/BESTBUY_2016_10K.pdf
+pdfs/BESTBUY_2017_10K.pdf
+pdfs/BESTBUY_2018_10K.pdf
+pdfs/BESTBUY_2019_10K.pdf
+pdfs/BESTBUY_2020_10K.pdf
+pdfs/BESTBUY_2021_10K.pdf
+pdfs/BESTBUY_2022_10K.pdf
+pdfs/BESTBUY_2023Q4_EARNINGS.pdf
+pdfs/BESTBUY_2023_10K.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-12.pdf
+pdfs/BESTBUY_2023_8K_dated-2023-04-24.pdf
+pdfs/BESTBUY_2024Q2_10Q.pdf
+pdfs/BESTBUY_2024Q2_EARNINGS.pdf
+pdfs/BLOCK_2015_10K.pdf
+pdfs/BLOCK_2016_10K.pdf
+pdfs/BLOCK_2017_10K.pdf
+pdfs/BLOCK_2018_10K.pdf
+pdfs/BLOCK_2019_10K.pdf
+pdfs/BLOCK_2020_10K.pdf
+pdfs/BLOCK_2021_10K.pdf
+pdfs/BLOCK_2022_10K.pdf
+pdfs/BLOCK_2022_8K_dated-2022-01-28.pdf
+pdfs/BOEING_2015_10K.pdf
+pdfs/BOEING_2016_10K.pdf
+pdfs/BOEING_2017_10K.pdf
+pdfs/BOEING_2018_10K.pdf
+pdfs/BOEING_2019_10K.pdf
+pdfs/BOEING_2020_10K.pdf
+pdfs/BOEING_2021_10K.pdf
+pdfs/BOEING_2022_10K.pdf
+pdfs/BOSTONPROPERTIES_2015_10K.pdf
+pdfs/COCACOLA_2015_10K.pdf
+pdfs/COCACOLA_2016_10K.pdf
+pdfs/COCACOLA_2017_10K.pdf
+pdfs/COCACOLA_2018_10K.pdf
+pdfs/COCACOLA_2019_10K.pdf
+pdfs/COCACOLA_2020_10K.pdf
+pdfs/COCACOLA_2021_10K.pdf
+pdfs/COCACOLA_2022_10K.pdf
+pdfs/CORNING_2015_10K.pdf
+pdfs/CORNING_2016_10K.pdf
+pdfs/CORNING_2017_10K.pdf
+pdfs/CORNING_2018_10K.pdf
+pdfs/CORNING_2019_10K.pdf
+pdfs/CORNING_2020_10K.pdf
+pdfs/CORNING_2021_10K.pdf
+pdfs/CORNING_2022_10K.pdf
+pdfs/CORNING_2023Q2_10Q.pdf
+pdfs/COSTCO_2015_10K.pdf
+pdfs/COSTCO_2016_10K.pdf
+pdfs/COSTCO_2017_10K.pdf
+pdfs/COSTCO_2018_10K.pdf
+pdfs/COSTCO_2019_10K.pdf
+pdfs/COSTCO_2020_10K.pdf
+pdfs/COSTCO_2021_10K.pdf
+pdfs/COSTCO_2022_10K.pdf
+pdfs/COSTCO_2023Q1_EARNINGS.pdf
+pdfs/COSTCO_2023Q3_EARNINGS.pdf
+pdfs/COSTCO_2023_8K_dated-2023-01-19.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-09.pdf
+pdfs/COSTCO_2023_8K_dated-2023-08-16.pdf
+pdfs/CVSHEALTH_2015_10K.pdf
+pdfs/CVSHEALTH_2016_10K.pdf
+pdfs/CVSHEALTH_2017_10K.pdf
+pdfs/CVSHEALTH_2018_10K.pdf
+pdfs/CVSHEALTH_2019_10K.pdf
+pdfs/CVSHEALTH_2020_10K.pdf
+pdfs/CVSHEALTH_2021_10K.pdf
+pdfs/CVSHEALTH_2022_10K.pdf
+pdfs/EBAY_2015_10K.pdf
+pdfs/EBAY_2016_10K.pdf
+pdfs/EBAY_2017_10K.pdf
+pdfs/EBAY_2018_10K.pdf
+pdfs/EBAY_2019_10K.pdf
+pdfs/EBAY_2020_10K.pdf
+pdfs/EBAY_2021_10K.pdf
+pdfs/EBAY_2022_10K.pdf
+pdfs/EBAY_2023Q1_8K.pdf
+pdfs/EBAY_2023Q1_EARNINGS.pdf
+pdfs/EBAY_2023Q2_10Q.pdf
+pdfs/EBAY_2023Q2_8K.pdf
+pdfs/EBAY_2023Q2_EARNINGS.pdf
+pdfs/FEDEX_2023_10K.pdf
+pdfs/FEDEX_2023_annualreport.pdf
+pdfs/FOOTLOCKER_2022_10K.pdf
+pdfs/FOOTLOCKER_2022_10Q.pdf
+pdfs/FOOTLOCKER_2022_8K_dated-2022-05-20.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2022-08-19.pdf
+pdfs/FOOTLOCKER_2022_8K_dated_2023-02-21.pdf
+pdfs/FOOTLOCKER_2023Q3_10Q.pdf
+pdfs/FOOTLOCKER_2023_10K.pdf
+pdfs/FOOTLOCKER_2023_annualreport.pdf
+pdfs/GENERALMILLS_2015_10K.pdf
+pdfs/GENERALMILLS_2016_10K.pdf
+pdfs/GENERALMILLS_2017_10K.pdf
+pdfs/GENERALMILLS_2018_10K.pdf
+pdfs/GENERALMILLS_2019_10K.pdf
+pdfs/GENERALMILLS_2020_10K.pdf
+pdfs/GENERALMILLS_2021_10K.pdf
+pdfs/GENERALMILLS_2022_10K.pdf
+pdfs/GENERALMILLS_2023_10K.pdf
+pdfs/GENERALMILLS_2023_annualreport.pdf
+pdfs/INTEL_2015_10K.pdf
+pdfs/INTEL_2016_10K.pdf
+pdfs/INTEL_2017_10K.pdf
+pdfs/INTEL_2018_10K.pdf
+pdfs/INTEL_2019_10K.pdf
+pdfs/INTEL_2020_10K.pdf
+pdfs/INTEL_2021_10K.pdf
+pdfs/INTEL_2022Q4_EARNINGS.pdf
+pdfs/INTEL_2022_10K.pdf
+pdfs/INTEL_2023Q1_EARNINGS.pdf
+pdfs/INTEL_2023_8K_dated-2022-11-22.pdf
+pdfs/INTEL_2023_8K_dated-2023-02-10.pdf
+pdfs/INTEL_2023_8K_dated-2023-08-16.pdf
+pdfs/JOHNSON_JOHNSON_2015_10K.pdf
+pdfs/JOHNSON_JOHNSON_2016_10K.pdf
+pdfs/JOHNSON_JOHNSON_2017_10K.pdf
+pdfs/JOHNSON_JOHNSON_2018_10K.pdf
+pdfs/JOHNSON_JOHNSON_2019_10K.pdf
+pdfs/JOHNSON_JOHNSON_2020_10K.pdf
+pdfs/JOHNSON_JOHNSON_2021_10K.pdf
+pdfs/JOHNSON_JOHNSON_2022Q4_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2022_10K.pdf
+pdfs/JOHNSON_JOHNSON_2023Q1_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023Q2_EARNINGS.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-23.pdf
+pdfs/JOHNSON_JOHNSON_2023_8K_dated-2023-08-30.pdf
+pdfs/JPMORGAN_2021Q1_10Q.pdf
+pdfs/JPMORGAN_2021Q2_10Q.pdf
+pdfs/JPMORGAN_2021Q3_10Q.pdf
+pdfs/JPMORGAN_2021_10K.pdf
+pdfs/JPMORGAN_2022Q1_10Q.pdf
+pdfs/JPMORGAN_2022Q2_10Q.pdf
+pdfs/JPMORGAN_2022Q3_10Q.pdf
+pdfs/JPMORGAN_2022_10K.pdf
+pdfs/JPMORGAN_2023Q1_10Q.pdf
+pdfs/JPMORGAN_2023Q2_10Q.pdf
+pdfs/KRAFTHEINZ_2015_10K.pdf
+pdfs/KRAFTHEINZ_2016_10K.pdf
+pdfs/KRAFTHEINZ_2017_10K.pdf
+pdfs/KRAFTHEINZ_2018_10K.pdf
+pdfs/KRAFTHEINZ_2019_10K.pdf
+pdfs/KRAFTHEINZ_2020_10K.pdf
+pdfs/KRAFTHEINZ_2021_10K.pdf
+pdfs/KRAFTHEINZ_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2015_10K.pdf
+pdfs/LOCKHEEDMARTIN_2016_10K.pdf
+pdfs/LOCKHEEDMARTIN_2017_10K.pdf
+pdfs/LOCKHEEDMARTIN_2018_10K.pdf
+pdfs/LOCKHEEDMARTIN_2019_10K.pdf
+pdfs/LOCKHEEDMARTIN_2020_10K.pdf
+pdfs/LOCKHEEDMARTIN_2021_10K.pdf
+pdfs/LOCKHEEDMARTIN_2022Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2022_10K.pdf
+pdfs/LOCKHEEDMARTIN_2023Q1_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023Q2_10Q.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-05-25.pdf
+pdfs/LOCKHEEDMARTIN_2023_8K_dated-2023-08-24.pdf
+pdfs/MCDONALDS_2022Q4_EARNINGS.pdf
+pdfs/MCDONALDS_2022_10K.pdf
+pdfs/MCDONALDS_2023Q1_EARNINGS.pdf
+pdfs/MCDONALDS_2023Q2_EARNINGS.pdf
+pdfs/MCDONALDS_8K_dated-2023-01-06.pdf
+pdfs/MCDONALDS_8K_dated-2023-02-13.pdf
+pdfs/MCDONALDS_8K_dated-2023-08-14.pdf
+pdfs/MGMRESORTS_2015_10K.pdf
+pdfs/MGMRESORTS_2016_10K.pdf
+pdfs/MGMRESORTS_2017_10K.pdf
+pdfs/MGMRESORTS_2018_10K.pdf
+pdfs/MGMRESORTS_2019_10K.pdf
+pdfs/MGMRESORTS_2020_10K.pdf
+pdfs/MGMRESORTS_2021_10K.pdf
+pdfs/MGMRESORTS_2022Q4_EARNINGS.pdf
+pdfs/MGMRESORTS_2022_10K.pdf
+pdfs/MGMRESORTS_2023Q2_10Q.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-03-01.pdf
+pdfs/MGMRESORTS_2023_8K_dated-2023-09-12.pdf
+pdfs/MICROSOFT_2015_10K.pdf
+pdfs/MICROSOFT_2016_10K.pdf
+pdfs/MICROSOFT_2017_10K.pdf
+pdfs/MICROSOFT_2018_10K.pdf
+pdfs/MICROSOFT_2019_10K.pdf
+pdfs/MICROSOFT_2020_10K.pdf
+pdfs/MICROSOFT_2021_10K.pdf
+pdfs/MICROSOFT_2022_10K.pdf
+pdfs/MICROSOFT_2023_10K.pdf
+pdfs/NETFLIX_2015_10K.pdf
+pdfs/NETFLIX_2016_10K.pdf
+pdfs/NETFLIX_2017_10K.pdf
+pdfs/NETFLIX_2018_10K.pdf
+pdfs/NETFLIX_2019_10K.pdf
+pdfs/NETFLIX_2020_10K.pdf
+pdfs/NETFLIX_2021_10K.pdf
+pdfs/NETFLIX_2022_10K.pdf
+pdfs/NETFLIX_2023Q2_10Q.pdf
+pdfs/NIKE_2015_10K.pdf
+pdfs/NIKE_2016_10K.pdf
+pdfs/NIKE_2017_10K.pdf
+pdfs/NIKE_2018_10K.pdf
+pdfs/NIKE_2019_10K.pdf
+pdfs/NIKE_2020_10K.pdf
+pdfs/NIKE_2021_10K.pdf
+pdfs/NIKE_2022_10K.pdf
+pdfs/NIKE_2023_10K.pdf
+pdfs/ORACLE_2015_10K.pdf
+pdfs/ORACLE_2016_10K.pdf
+pdfs/ORACLE_2017_10K.pdf
+pdfs/ORACLE_2018_10K.pdf
+pdfs/ORACLE_2019_10K.pdf
+pdfs/ORACLE_2020_10K.pdf
+pdfs/ORACLE_2021_10K.pdf
+pdfs/ORACLE_2022_10K.pdf
+pdfs/ORACLE_2023_10K.pdf
+pdfs/PAYPAL_2022_10K.pdf
+pdfs/PAYPAL_2023Q2_10Q.pdf
+pdfs/PEPSICO_2015_10K.pdf
+pdfs/PEPSICO_2016_10K.pdf
+pdfs/PEPSICO_2017_10K.pdf
+pdfs/PEPSICO_2018_10K.pdf
+pdfs/PEPSICO_2019_10K.pdf
+pdfs/PEPSICO_2020_10K.pdf
+pdfs/PEPSICO_2021_10K.pdf
+pdfs/PEPSICO_2022Q4_EARNINGS.pdf
+pdfs/PEPSICO_2022_10K.pdf
+pdfs/PEPSICO_2023Q1_EARNINGS.pdf
+pdfs/PEPSICO_2023Q2_EARNINGS.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-05.pdf
+pdfs/PEPSICO_2023_8K_dated-2023-05-30.pdf
+pdfs/PFIZER_2015_10K.pdf
+pdfs/PFIZER_2016_10K.pdf
+pdfs/PFIZER_2017_10K.pdf
+pdfs/PFIZER_2018_10K.pdf
+pdfs/PFIZER_2019_10K.pdf
+pdfs/PFIZER_2020_10K.pdf
+pdfs/PFIZER_2021_10K.pdf
+pdfs/PFIZER_2022_10K.pdf
+pdfs/PFIZER_2023Q2_EARNINGS.pdf
+pdfs/PG_E_2015_10K.pdf
+pdfs/PG_E_2016_10K.pdf
+pdfs/PG_E_2017_10K.pdf
+pdfs/PG_E_2018_10K.pdf
+pdfs/PG_E_2019_10K.pdf
+pdfs/PG_E_2020_10K.pdf
+pdfs/PG_E_2021_10K.pdf
+pdfs/PG_E_2022_10K.pdf
+pdfs/PG_E_2023Q3_10Q.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-06-01.pdf
+pdfs/PG_E_2023_EARNINGS-dated-2023-07-27.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-04.pdf
+pdfs/PG_E_2023_EARNINGS_dated-2023-05-31.pdf
+pdfs/Pfizer_2023Q2_10Q.pdf
+pdfs/SALESFORCE_2021_8K_dated-2021-07-21.pdf
+pdfs/SALESFORCE_2021_8K_dated-2023-01-04.pdf
+pdfs/SALESFORCE_2023Q3_10Q.pdf
+pdfs/SALESFORCE_2023_10K.pdf
+pdfs/SALESFORCE_2024Q1_EARNINGS.pdf
+pdfs/SALESFORCE_2024Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q2_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023Q4_EARNINGS.pdf
+pdfs/ULTABEAUTY_2023_10K.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-06-07.pdf
+pdfs/ULTABEAUTY_2023_8K_dated-2023-09-18.pdf
+pdfs/ULTABEAUTY_2024Q1_EARNINGS.pdf
+pdfs/ULTABEAUTY_2024Q2_EARNINGS.pdf
+pdfs/VERIZON_2015_10K.pdf
+pdfs/VERIZON_2016_10K.pdf
+pdfs/VERIZON_2017_10K.pdf
+pdfs/VERIZON_2018_10K.pdf
+pdfs/VERIZON_2019_10K.pdf
+pdfs/VERIZON_2020_10K.pdf
+pdfs/VERIZON_2021_10K.pdf
+pdfs/VERIZON_2022_10K.pdf
+pdfs/WALMART_2015_10K.pdf
+pdfs/WALMART_2016_10K.pdf
+pdfs/WALMART_2017_10K.pdf
+pdfs/WALMART_2018_10K.pdf
+pdfs/WALMART_2019_10K.pdf
+pdfs/WALMART_2020_10K.pdf
+pdfs/WALMART_2021_10K.pdf
+pdfs/WALMART_2022_10K.pdf
+pdfs/WALMART_2023_10K.pdf
+pdfs/WALMART_2023_annualreport.pdf
+pdfs/WALMART_2024Q1_10Q.pdf
+results/
+results/gpt-4o-2024-05-13_openai_direct_oracle.csv
+results/gpt-4o-2024-05-13_sharedStore.csv
+results/gpt-4o-2024-05-13_singleStore.csv
+results/gpt4_oracle_direct.csv
+results/big2small/
+results/big2small/20260112/
+results/big2small/20260112/big2small_20260112_155144_scored.json
+results/big2small/20260112/big2small_20260112_164052_scored.json
+results/big2small/20260112/big2small_20260112_171420_scored.json
+results/big2small/20260112/big2small_20260112_172815_scored.json
+results/big2small/20260112/big2small_20260112_181911_scored.json
+results/bm25/
+results/bm25/20260112/
+results/bm25/20260112/bm25_20260112_192701_scored.json
+results/closed_book/
+results/closed_book/20260106/
+results/closed_book/20260106/closed_book_20260106_161953_scored.json
+results/closed_book/20260106/closed_book_20260106_171608_scored.json
+results/closed_book/20260107/
+results/expanded_shared/
+results/expanded_shared/20260114/
+results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json
+results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json
+results/hybrid/
+results/hybrid/20260115/
+results/hybrid/20260123/
+results/hyde_shared/
+results/hyde_shared/20260114/
+results/metrics_agg/
+results/metrics_agg/table__by_question_reasoning.csv
+results/metrics_agg/table__by_question_type.csv
+results/metrics_agg/table__overall_by_metadata.csv
+results/metrics_agg2/
+results/metrics_agg2/.~lock.table__by_question_reasoning.csv#
+results/metrics_agg2/.~lock.table__by_question_type.csv#
+results/metrics_agg2/.~lock.table__overall_by_metadata.csv#
+results/metrics_agg2/table__by_question_reasoning.csv
+results/metrics_agg2/table__by_question_type.csv
+results/metrics_agg2/table__overall_by_metadata.csv
+results/metrics_agg_page/
+results/metrics_agg_page/table__by_question_reasoning.csv
+results/metrics_agg_page/table__by_question_type.csv
+results/metrics_agg_page/table__overall_by_metadata.csv
+results/metrics_aggregated/
+results/metrics_aggregated/table__by_question_reasoning.csv
+results/metrics_aggregated/table__by_question_type.csv
+results/metrics_aggregated/table__overall_by_metadata.csv
+results/multi_hyde_shared/
+results/multi_hyde_shared/20260114/
+results/open_book/
+results/open_book/20260102/
+results/open_book/20260102/open_book_20260102_165042_scored.json
+results/open_book/20260102/open_book_20260102_173713_scored.json
+results/shared_vector/
+results/shared_vector/20251229/
+results/shared_vector/20251229/shared_vector_20251229_181122_scored.json
+results/shared_vector/20251229/shared_vector_20251229_190013_scored.json
+results/shared_vector/20260107/
+results/shared_vector/20260107/shared_vector_20260107_164341_scored.json
+results/shared_vector/20260113/
+results/single_vector/
+results/single_vector/20251229/
+results/single_vector/20251229/single_vector_20251229_162507_scored.json
+results/single_vector/20251229/single_vector_20251229_171641_scored.json
+results/splade/
+results/splade/20260115/
+results/splade/20260115/splade_20260115_144031_scored.json
+scripts/
+scripts/aggregate_output_metrics.py
+scripts/hybrid_RRF.sh
+scripts/hybrid_ret.sh
+scripts/oracle.sh
+scripts/query.sh
+scripts/rag_embeddings_exp.sh
+scripts/run_rag_experiments.sh
+scripts/uncertainty.sh
+scripts/unified.sh
+src/
+src/__init__.py
+src/analysis/
+src/analysis/query_difficulty_analysis.py
+src/core/
+src/core/__init__.py
+src/core/rag_dependencies.py
+src/core/rag_experiment_mixins.py
+src/core/rag_experiments.py
+src/core/results/
+src/core/results/hybrid/
+src/core/results/hybrid/20260116/
+src/core/results/hybrid/20260116/hybrid_20260116_162648_scored.json
+src/core/results/hybrid/20260123/
+src/core/results/hybrid/20260123/hybrid_20260123_154208_scored.json
+src/core/results/hybrid/20260123/hybrid_20260123_175133_scored.json
+src/core/results/metrics_agg_page_or/
+src/core/results/metrics_agg_page_or/table__by_question_reasoning.csv
+src/core/results/metrics_agg_page_or/table__by_question_type.csv
+src/core/results/metrics_agg_page_or/table__overall_by_metadata.csv
+src/core/results/oracle_doc/
+src/core/results/oracle_doc/20260120/
+src/core/results/oracle_doc/20260120/oracle_doc_20260120_110048_scored.json
+src/core/results/oracle_page/
+src/core/results/oracle_page/20260120/
+src/core/results/oracle_page/20260122/
+src/core/results/oracle_page/20260122/oracle_page_20260122_132654_scored.json
+src/core/results/reranking/
+src/core/results/reranking/20260115/
+src/core/results/reranking/20260115/reranking_20260115_190636_scored.json
+src/core/results/reranking/20260116/
+src/core/results/reranking/20260116/reranking_20260116_133234_scored.json
+src/core/results/shared_vector/
+src/core/results/shared_vector/20260116/
+src/core/results/shared_vector/20260119/
+src/core/results/splade/
+src/core/results/splade/20260115/
+src/core/results/splade/20260116/
+src/core/results/splade/20260116/splade_20260116_174714_scored.json
+src/core/results/splade/20260117/
+src/core/results/splade/20260117/splade_20260117_012611_scored.json
+src/core/results/unified/
+src/core/results/unified/20260122/
+src/core/results/unified/20260122/unified_20260122_201123_scored.json
+src/core/results/unified/20260126/
+src/core/results/unified/20260126/unified_20260126_163823_scored.json
+src/core/results/unified/20260126/unified_20260126_171010_scored.json
+src/core/results/unified/20260126/unified_20260126_174753_scored.json
+src/evaluation/
+src/evaluation/__init__.py
+src/evaluation/eval_sweep.py
+src/evaluation/evaluate_outputs.py
+src/evaluation/evaluator.py
+src/evaluation/generative_evaluator.py
+src/evaluation/posthoc_evaluator.py
+src/evaluation/retrieval_evaluator.py
+src/experiments/
+src/experiments/__init__.py
+src/experiments/hybrid_retrieval.py
+src/experiments/metadata_reranking.py
+src/experiments/query_expansion.py
+src/experiments/rag_closed_book.py
+src/experiments/rag_expanded_shared.py
+src/experiments/rag_hyde_shared.py
+src/experiments/rag_open_book.py
+src/experiments/rag_oracle.py
+src/experiments/rag_shared_vector.py
+src/experiments/rag_single_vector.py
+src/experiments/random_single_store.py
+src/experiments/reranking.py
+src/experiments/splade.py
+src/experiments/uncertainty.py
+src/experiments/unified_pipeline.py
+src/ingestion/
+src/ingestion/__init__.py
+src/ingestion/chunking.py
+src/ingestion/data_loader.py
+src/ingestion/pdf_utils.py
+src/retrieval/
+src/retrieval/__init__.py
+src/retrieval/big2small.py
+src/retrieval/bm25.py
+src/retrieval/vectorstore.py
+src/utils/
+src/utils/metadata_helper.py
+
+sent 829,942,817 bytes  received 10,081 bytes  331,981,159.20 bytes/sec
+total size is 829,700,937  speedup is 1.00
+Activating venv from: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/venv
+========================================================
+Experiment: Uncertainty Quantification (MC-Dropout)
+Settings: T=10, L_mc=30, Alpha=1.0, Model=Qwen
+========================================================
+<frozen runpy>:128: RuntimeWarning: 'src.core.rag_experiments' found in sys.modules after import of package 'src.core', but prior to execution of 'src.core.rag_experiments'; this may result in unpredictable behaviour
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - INITIALIZING RAG EXPERIMENT: UNCERTAINTY
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - Configuration:
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Experiment Type: uncertainty
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   LLM Model: Qwen/Qwen2.5-7B-Instruct
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Device: cuda
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   8-bit Loading: True
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Chunking Strategy: recursive
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Chunking Unit: tokens
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Chunk Size: 1024
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Chunk Overlap: 128
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Top-K Retrieval: 5
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Embedding Model: bge-m3
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Use All PDFs: False
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Output Dir: /part/01/Tmp/kobeissa/5027/outputs/uncertainty_experiment/uncertainty/20260126
+2026-01-26 18:07:38,424 - RAGExperiment - INFO -   Results Dir: /part/01/Tmp/kobeissa/5027/outputs/results/uncertainty/20260126
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - 
+Initializing LangChain components...
+2026-01-26 18:07:38,424 - RAGExperiment - INFO - Loading HuggingFace embeddings: BAAI/bge-m3 (Requested: bge-m3)
+2026-01-26 18:07:38,429 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: BAAI/bge-m3
+2026-01-26 18:07:42,322 - RAGExperiment - INFO - ✓ Embeddings loaded (HuggingFaceEmbeddings)
+2026-01-26 18:07:42,403 - RAGExperiment - INFO - ✓ Splitter initialized: RecursiveCharacterTextSplitter
+2026-01-26 18:07:42,403 - RAGExperiment - INFO - ✓ Text splitter initialized (strategy=recursive, unit=tokens, size=1024)
+2026-01-26 18:07:42,403 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 18:07:42,403 - RAGExperiment - INFO - STARTING EXPERIMENT
+2026-01-26 18:07:42,403 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:42,403 - src.ingestion.data_loader - INFO - Loading PatronusAI/financebench, split: train
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - Loaded 150 examples
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - DATASET STATISTICS
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - Total examples: 150
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - Columns: ['financebench_id', 'company', 'doc_name', 'question_type', 'question_reasoning', 'domain_question_num', 'question', 'answer', 'justification', 'dataset_subset_label', 'evidence', 'gics_sector', 'doc_type', 'doc_period', 'doc_link']
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ✓ Column 'question'
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ✓ Column 'answer'
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ✓ Column 'evidence'
+2026-01-26 18:07:43,422 - src.ingestion.data_loader - INFO - ✓ Column 'doc_name'
+2026-01-26 18:07:43,423 - src.ingestion.data_loader - INFO - 
+Question lengths:
+2026-01-26 18:07:43,423 - src.ingestion.data_loader - INFO -   Mean: 161.1
+2026-01-26 18:07:43,423 - src.ingestion.data_loader - INFO -   Min: 44
+2026-01-26 18:07:43,423 - src.ingestion.data_loader - INFO -   Max: 592
+2026-01-26 18:07:43,423 - src.ingestion.data_loader - INFO -   Median: 137.5
+2026-01-26 18:07:43,424 - src.ingestion.data_loader - INFO - 
+Answer lengths:
+2026-01-26 18:07:43,424 - src.ingestion.data_loader - INFO -   Mean: 78.2
+2026-01-26 18:07:43,424 - src.ingestion.data_loader - INFO -   Min: 1
+2026-01-26 18:07:43,424 - src.ingestion.data_loader - INFO -   Max: 609
+2026-01-26 18:07:43,424 - src.ingestion.data_loader - INFO -   Median: 50.5
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO - 
+Evidence lengths:
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO -   Mean: 5515.0
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO -   Min: 1552
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO -   Max: 25154
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO -   Median: 4729.0
+2026-01-26 18:07:43,431 - src.ingestion.data_loader - INFO - 
+Missing values:
+2026-01-26 18:07:43,432 - src.ingestion.data_loader - INFO -   question_reasoning: 50 (33.3%)
+2026-01-26 18:07:43,432 - src.ingestion.data_loader - INFO -   domain_question_num: 100 (66.7%)
+2026-01-26 18:07:43,432 - src.ingestion.data_loader - INFO -   justification: 50 (33.3%)
+2026-01-26 18:07:43,433 - src.ingestion.data_loader - INFO - ================================================================================
+2026-01-26 18:07:43,433 - src.ingestion.data_loader - INFO - Retrieved batch of 150 examples
+2026-01-26 18:07:43,437 - RAGExperiment - INFO - Processing 150 samples
+2026-01-26 18:07:43,437 - RAGExperiment - INFO - [Progress] initialized | 0/150 samples processed
+2026-01-26 18:07:43,437 - src.experiments.uncertainty - INFO - 
+================================================================================
+2026-01-26 18:07:43,437 - src.experiments.uncertainty - INFO - RUNNING UNCERTAINTY EXPERIMENT (MC-Dropout)
+2026-01-26 18:07:43,437 - src.experiments.uncertainty - INFO - T=10 | L_mc=30 | Alpha=1.0
+2026-01-26 18:07:43,437 - src.experiments.uncertainty - INFO - ================================================================================
+/part/01/Tmp/kobeissa/5027/src/retrieval/vectorstore.py:352: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vectordb = Chroma(persist_directory=db_path, embedding_function=embeddings)
+2026-01-26 18:07:44,524 - chromadb.telemetry.product.posthog - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2026-01-26 18:07:45,191 - src.experiments.uncertainty - ERROR - Failed to initialize vector store object.
+2026-01-26 18:07:45,191 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 18:07:45,191 - RAGExperiment - INFO - AGGREGATE STATISTICS
+2026-01-26 18:07:45,191 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:45,191 - RAGExperiment - WARNING - No results to aggregate
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - 
+Results saved to: /part/01/Tmp/kobeissa/5027/outputs/uncertainty_experiment/uncertainty/20260126/uncertainty_20260126_180745.json
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - EXPERIMENT COMPLETE
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - 
+================================================================================
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - STARTING AUTOMATED EVALUATION
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - ================================================================================
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Input file: /part/01/Tmp/kobeissa/5027/outputs/uncertainty_experiment/uncertainty/20260126/uncertainty_20260126_180745.json
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Results dir: /part/01/Tmp/kobeissa/5027/outputs/results/uncertainty/20260126
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Eval Type: both
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Running Retrieval Evaluation...
+2026-01-26 18:07:45,192 - absl - INFO - Using default tokenizer.
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Retrieval Evaluation Complete.
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - MRR: 0.0000
+2026-01-26 18:07:45,192 - RAGExperiment - INFO - Running Generative Evaluation...
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2026-01-26 18:07:45,969 - src.evaluation.generative_evaluator - INFO - BERTScore initialized.
+2026-01-26 18:07:45,969 - absl - INFO - Using default tokenizer.
+2026-01-26 18:07:45,969 - RAGExperiment - INFO - Generative Evaluation Complete.
+2026-01-26 18:07:45,969 - RAGExperiment - INFO - Evaluation results saved to: /part/01/Tmp/kobeissa/5027/outputs/results/uncertainty/20260126/uncertainty_20260126_180745_scored.json
+2026-01-26 18:07:45,976 - RAGExperiment - INFO - Running Risk-Coverage Analysis on scored results...
+2026-01-26 18:07:45,976 - src.experiments.uncertainty - INFO - Analyzing Risk-Coverage for: /part/01/Tmp/kobeissa/5027/outputs/results/uncertainty/20260126/uncertainty_20260126_180745_scored.json
+2026-01-26 18:07:45,978 - src.experiments.uncertainty - WARNING - No data found for analysis.
+
+================================================================================
+Running experiment: uncertainty | model=qwen2.5-7b
+================================================================================
+Warning: Tokenizer load failed for 'bge-m3' (bge-m3 is not a local folder and is not a valid model identifier listed on 'https://huggingface.co/models'
+If this is a private repository, make sure to pass a token having permission to this repo either by logging in with `hf auth login` or by passing `token=<your_token>`). Falling back to chars.
+
+================================================================================
+Experiment Component Summary [initial]
+================================================================================
+Experiment Type : uncertainty
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=bge-m3, resolved_model=BAAI/bge-m3)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+[Progress] initialized | 0/150 samples processed
+
+================================================================================
+Experiment Component Summary [final]
+================================================================================
+Experiment Type : uncertainty
+LLM Generator   : pending (Qwen/Qwen2.5-7B-Instruct)
+Chunker         : RecursiveCharacterTextSplitter (package=langchain_text_splitters.character, strategy=recursive, unit=tokens, chunk_size=1024, chunk_overlap=128)
+Embeddings      : HuggingFaceEmbeddings (package=langchain_huggingface.embeddings.huggingface, model_name=bge-m3, resolved_model=BAAI/bge-m3)
+Vector Store    : pending
+Retriever       : pending
+Top-K           : 5
+Chunking Params : size=1024, overlap=128
+Generation Mode : Local HF weights
+================================================================================
+
+Copying results back to: /u/kobeissa/Documents/thesis/experiments/FB_reproducability/outputs
+Done!s
