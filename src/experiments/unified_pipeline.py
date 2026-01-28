@@ -224,22 +224,23 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         if need_dense_store and vectordb:
             try:
                 if search_query_vector:
-                    # FIX: Robust Method Calls
-                    try:
-                        # Correct method for LangChain >= 0.1
+                    # FIX: Robust Method Calls to avoid AttributeError
+                    docs_scores = []
+                    
+                    # 1. Try modern LangChain method (returns docs + scores)
+                    if hasattr(vectordb, "similarity_search_by_vector_with_relevance_scores"):
                         docs_scores = vectordb.similarity_search_by_vector_with_relevance_scores(search_query_vector, k=candidate_k)
-                    except AttributeError:
-                        try:
-                            # Try the method name you saw in your error, in case a specific library version uses it?
-                            # Actually, usually it's similarity_search_with_score_by_vector in FAISS, but let's try standard fallbacks.
-                            docs_scores = vectordb.similarity_search_by_vector(search_query_vector, k=candidate_k)
-                            # Add fake scores if the method didn't return them
-                            docs_scores = [(d, 0.0) for d in docs_scores]
-                        except AttributeError:
-                             # Last resort: text search (skips HyDE vector benefit, but gets data)
-                             logger.warning(f"Sample {i}: Vector search methods missing. Falling back to text search.")
-                             docs = vectordb.similarity_search(question, k=candidate_k)
-                             docs_scores = [(d, 0.0) for d in docs]
+                    
+                    # 2. Try standard method (returns docs only) and fake the scores
+                    elif hasattr(vectordb, "similarity_search_by_vector"):
+                        docs = vectordb.similarity_search_by_vector(search_query_vector, k=candidate_k)
+                        docs_scores = [(d, 0.0) for d in docs]
+                        
+                    # 3. Fallback: If HyDE vector exists but vector search is missing on object
+                    else:
+                        logger.warning(f"Sample {i}: Vector search method missing on store. Falling back to text search.")
+                        docs = vectordb.similarity_search(question, k=candidate_k)
+                        docs_scores = [(d, 0.0) for d in docs]
 
                     dense_docs = []
                     for doc, score in docs_scores:
@@ -247,7 +248,18 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                         dense_docs.append(doc)
                 else:
                     # Standard Dense (Query text -> Vector handled by store)
-                    dense_docs = vectordb.similarity_search(question, k=candidate_k)
+                    # Try to get scores if possible
+                    if hasattr(vectordb, "similarity_search_with_score"):
+                        docs_scores = vectordb.similarity_search_with_score(question, k=candidate_k)
+                        dense_docs = []
+                        for doc, score in docs_scores:
+                            doc.metadata['score'] = float(score)
+                            dense_docs.append(doc)
+                    else:
+                        dense_docs = vectordb.similarity_search(question, k=candidate_k)
+                        for d in dense_docs:
+                            d.metadata['score'] = 0.0
+                            
             except Exception as e:
                 logger.warning(f"Dense retrieval failed for sample {i}: {e}")
 

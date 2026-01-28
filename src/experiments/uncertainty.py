@@ -238,11 +238,18 @@ def run_uncertainty_experiment(experiment, data: List[Dict[str, Any]]) -> List[D
             results.append({
                 'sample_id': i,
                 'doc_name': doc_name,
+                'doc_link': sample.get('doc_link', ''),
                 'question': query,
+                'question_type': sample.get('question_type', ''),
                 'generated_answer': "I cannot answer this question as no relevant documents were retrieved.",
+                'generation_length': len("I cannot answer this question as no relevant documents were retrieved."),
+                'context_length': 0,
                 'confidence_margin': 0.0,
                 'confidence_mi': 0.0,
-                'retrieved_chunks': []
+                'confidence_sigma': 0.0,
+                'retrieved_chunks': [],
+                'gold_evidence': '',
+                'gold_evidence_segments': []
             })
             continue
 
@@ -312,10 +319,16 @@ def run_uncertainty_experiment(experiment, data: List[Dict[str, Any]]) -> List[D
         result_entry = {
             'sample_id': i,
             'doc_name': doc_name,
+            'doc_link': sample.get('doc_link', ''),
             'question': query,
+            'question_type': sample.get('question_type', ''),
+            'question_reasoning': sample.get('question_reasoning', ''),
             'reference_answer': sample.get('answer', ''),
             'gold_evidence': gold_str,
+            'gold_evidence_segments': gold_segs,  # <--- FIXED: Now included for evaluation
             'generated_answer': ans,
+            'generation_length': len(ans),
+            'context_length': len(context_text),
             'confidence_margin': margin_conf,
             'confidence_mi': conf_mi,
             'confidence_sigma': conf_sigma,

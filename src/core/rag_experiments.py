@@ -60,6 +60,8 @@ from src.experiments.unified_pipeline import run_unified_pipeline as _run_unifie
 from src.experiments.metadata_reranking import run_metadata_reranking_experiment as _run_metadata_reranking
 from src.experiments.uncertainty import run_uncertainty_experiment, analyze_risk_coverage
 
+from src.experiments.page_then_chunk import run_page_then_chunk
+
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
     """Setup comprehensive logging"""
@@ -123,7 +125,8 @@ class RAGExperiment(
     UNIFIED = "unified"  # <--- Add this
     META_RERANK = "meta_reranking"
     UNCERTAINTY = "uncertainty"
-
+    PAGE_THEN_CHUNK = "page_then_chunk"
+    LEARNED_PAGE_THEN_CHUNK = "learned_page_then_chunk"
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -633,6 +636,13 @@ class RAGExperiment(
             results = self.run_unified(data)
         if self.experiment_type == self.UNCERTAINTY:
             results = run_uncertainty_experiment(self, data)
+        elif self.experiment_type == self.PAGE_THEN_CHUNK:
+            results = run_page_then_chunk(self, data, learned_model_path=None)
+        elif self.experiment_type == self.LEARNED_PAGE_THEN_CHUNK:
+            model_path = "models/finetuned_page_scorer"
+            if not os.path.exists(model_path):
+                raise RuntimeError(f"Trained model not found at {model_path}. Run src/training/train_page_scorer.py first.")
+            results = run_page_then_chunk(self, data, learned_model_path=model_path)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
@@ -834,7 +844,9 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared", "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc", "oracle_page", "unified", "meta_reranking", "uncertainty"],
+        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared",
+         "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc",
+          "oracle_page", "unified", "meta_reranking", "uncertainty","page_baseline", "page_learned"],
         default="single",
         help="Experiment type.",
     )
@@ -1068,6 +1080,8 @@ def main():
         "unified": RAGExperiment.UNIFIED,
         "meta_reranking": RAGExperiment.META_RERANK,
         "uncertainty": RAGExperiment.UNCERTAINTY,
+        "page_baseline": RAGExperiment.PAGE_THEN_CHUNK,
+        "page_learned": RAGExperiment.LEARNED_PAGE_THEN_CHUNK,
     }
     
     # Simple error handling for bad keys
