@@ -10,6 +10,8 @@ vectorstores/
 vector_stores1/
 pdfs/
 pdfs/
+logs/
+models/
 results/
 outputs/
 .env
