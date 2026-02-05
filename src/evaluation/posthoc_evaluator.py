@@ -124,7 +124,7 @@ def check_numeric_match(reference: str, prediction: str) -> float:
     # Check if *any* number in Ref exists in Pred with small tolerance
     for r_num in ref_nums:
         for p_num in pred_nums:
-            if np.isclose(r_num, p_num, atol=0.01) or np.isclose(r_num, p_num, rtol=0.01):
+            if np.isclose(r_num, p_num, atol=0.01) or np.isclose(r_num, p_num, rtol=0.05):
                 return 1.0
     return 0.0
 

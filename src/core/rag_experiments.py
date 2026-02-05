@@ -60,7 +60,7 @@ from src.experiments.unified_pipeline import run_unified_pipeline as _run_unifie
 from src.experiments.metadata_reranking import run_metadata_reranking_experiment as _run_metadata_reranking
 from src.experiments.uncertainty import run_uncertainty_experiment, analyze_risk_coverage
 
-from src.experiments.page_then_chunk import run_page_then_chunk
+from src.experiments.page_retrieval import run_page_then_chunk
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -488,14 +488,24 @@ class RAGExperiment(
             self.llm_tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name)
             
             self.logger.info("Loading model (this may take a moment)...")
-            model_kwargs = {
-                "torch_dtype": torch.float16 if self.device == "cuda" else torch.float32,
-                "device_map": "auto" if self.device == "cuda" else None,
-            }
-
+            
+            model_kwargs = {}
+            
             if self.load_in_8bit and self.device == "cuda":
-                model_kwargs["load_in_8bit"] = True
+                # Use BitsAndBytesConfig for 8-bit quantization
+                from transformers import BitsAndBytesConfig
+                
+                quantization_config = BitsAndBytesConfig(
+                    load_in_8bit=True,
+                    bnb_4bit_compute_dtype=torch.float16
+                )
+                model_kwargs["quantization_config"] = quantization_config
+                model_kwargs["device_map"] = "auto"
                 self.logger.info("  Using 8-bit quantization for memory efficiency")
+            else:
+                # No quantization - use float16 on CUDA or float32 on CPU
+                model_kwargs["torch_dtype"] = torch.float16 if self.device == "cuda" else torch.float32
+                model_kwargs["device_map"] = "auto" if self.device == "cuda" else None
             
             self.llm_model = AutoModelForCausalLM.from_pretrained(
                 self.llm_model_name,
@@ -634,7 +644,7 @@ class RAGExperiment(
             results = _run_metadata_reranking(self, data)
         elif self.experiment_type == self.UNIFIED:
             results = self.run_unified(data)
-        if self.experiment_type == self.UNCERTAINTY:
+        elif self.experiment_type == self.UNCERTAINTY:
             results = run_uncertainty_experiment(self, data)
         elif self.experiment_type == self.PAGE_THEN_CHUNK:
             results = run_page_then_chunk(self, data, learned_model_path=None)

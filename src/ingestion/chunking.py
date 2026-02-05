@@ -15,12 +15,23 @@ def get_splitters(experiment):
     # --- 1. Token-based Chunking ---
     if unit == "tokens":
         try:
-            # FIX (Rec #4): Prioritize explicit tokenizer -> embedding model -> LLM
-            # Embedding models (e.g. bge-m3) are safer defaults for tokenization than API model names.
+            # FIX: Use resolved embedding model name from embeddings object, not the alias
             explicit_tokenizer = getattr(experiment, "chunk_tokenizer_name", None)
-            embedding_model = getattr(experiment, "embedding_model", None)
             
-            target_model = explicit_tokenizer or embedding_model or experiment.llm_model_name
+            # Get resolved model name from embeddings if available
+            if hasattr(experiment, 'embeddings') and experiment.embeddings:
+                if hasattr(experiment.embeddings, 'model_name'):
+                    resolved_embedding_model = experiment.embeddings.model_name
+                elif hasattr(experiment.embeddings, 'model'):
+                    resolved_embedding_model = getattr(experiment.embeddings.model, 'name_or_path', None)
+                else:
+                    resolved_embedding_model = None
+            else:
+                resolved_embedding_model = None
+            
+            # Fallback chain: explicit tokenizer > resolved embedding model > embedding alias > LLM
+            embedding_model = getattr(experiment, "embedding_model", None)
+            target_model = explicit_tokenizer or resolved_embedding_model or embedding_model or experiment.llm_model_name
             
             # Filter out non-HF strings (simple heuristic)
             if target_model and any(x in target_model.lower() for x in ["openai", "gpt-", "claude"]):

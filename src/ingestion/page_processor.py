@@ -50,27 +50,58 @@ def make_page_digest(text: str, max_chars: int = 6000) -> str:
 
 def extract_pages_from_pdf(pdf_path: Path, doc_name: str) -> List[Dict[str, Any]]:
     """
-    Extracts pages from a PDF file.
+    Extracts pages from a PDF file using PyMuPDFLoader for consistency.
     Returns a list of dicts with:
       - text: Raw text
       - digest: Processed text
-      - page: Page number (0-indexed)
+      - page: Page number (0-indexed, matching PyMuPDFLoader)
       - doc_name: Document name
     """
     try:
-        doc = fitz.open(pdf_path)
+        # Use PyMuPDFLoader from langchain for consistency with ground truth
+        try:
+            from langchain_community.document_loaders import PyMuPDFLoader
+        except:
+            try:
+                from langchain.document_loaders import PyMuPDFLoader
+            except:
+                # Fallback to fitz if langchain not available
+                logger.warning("PyMuPDFLoader not available, using fitz directly")
+                doc = fitz.open(pdf_path)
+                pages = []
+                for i in range(len(doc)):
+                    text = doc.load_page(i).get_text("text")
+                    digest = make_page_digest(text)
+                    pages.append({
+                        "text": text,
+                        "digest": digest,
+                        "page": i,  # 0-indexed
+                        "doc_name": doc_name,
+                        "source": str(pdf_path)
+                    })
+                return pages
+        
+        # Use PyMuPDFLoader which provides consistent page numbering
+        loader = PyMuPDFLoader(str(pdf_path))
+        langchain_docs = loader.load()
+        
         pages = []
-        for i in range(len(doc)):
-            text = doc.load_page(i).get_text("text")
+        for doc in langchain_docs:
+            text = doc.page_content
             digest = make_page_digest(text)
+            # PyMuPDFLoader stores page number in metadata['page'] (0-indexed)
+            page_num = doc.metadata.get('page', 0)
             pages.append({
                 "text": text,
                 "digest": digest,
-                "page": i, # 0-indexed
+                "page": page_num,  # 0-indexed from PyMuPDFLoader
                 "doc_name": doc_name,
                 "source": str(pdf_path)
             })
+        
+        logger.debug(f"Extracted {len(pages)} pages from {pdf_path} using PyMuPDFLoader (0-indexed)")
         return pages
+        
     except Exception as e:
         logger.error(f"Failed to extract pages from {pdf_path}: {e}")
         return []
