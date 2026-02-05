@@ -16,6 +16,7 @@ chromadb
 faiss-cpu
 requests
 PyPDF2
+PyMuPDF
 openai>=1.0.0
 sacrebleu
 rouge-score
@@ -25,8 +26,12 @@ tqdm
 scikit-learn
 matplotlib
 seaborn
-ragas>=0.3.9
+# ragas>=0.3.9
 llama-index-core>=0.14.0
-
+rank_bm25
+sentence-transformers
+fitz
+frontend
+rank_bm25
 # Note: Some packages (faiss, bitsandbytes, torch) have CPU/GPU variants
 # and additional system requirements. Adjust accordingly.

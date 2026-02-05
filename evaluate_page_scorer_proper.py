@@ -198,7 +198,7 @@ def run_cross_validation(
                 "results": learned_result["results"][:3]  # Save first 3 for debugging
             }, f, indent=2)
         
-        logger.info(f\"Split {split_idx} results saved to: {split_output_dir}\")
+        logger.info(f"Split {split_idx} results saved to: {split_output_dir}")
         
         cv_results.append({
             "split": split_idx,
