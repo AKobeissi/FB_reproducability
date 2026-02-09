@@ -76,54 +76,6 @@ def _canonical_doc_key(doc_name: str) -> str:
     return key
 
 
-def _find_pdf_file(doc_key: str, pdf_dir: Path) -> Optional[Path]:
-    """Find PDF file with flexible matching (handles case and underscore variations).
-    
-    Args:
-        doc_key: Document key (e.g., '3m_2022_10k' or '3M_2022_10K')
-        pdf_dir: Directory containing PDFs
-        
-    Returns:
-        Path to PDF file if found, None otherwise
-    """
-    # Normalize the search key
-    search_key = doc_key.lower().replace("_", "").replace("-", "")
-    
-    # Try direct match first
-    direct_path = pdf_dir / f"{doc_key}.pdf"
-    if direct_path.exists():
-        return direct_path
-    
-    # Try uppercase version
-    upper_path = pdf_dir / f"{doc_key.upper()}.pdf"
-    if upper_path.exists():
-        return upper_path
-    
-    # Try with underscores preserved but uppercase
-    upper_underscore = pdf_dir / f"{doc_key.replace('_', '_').upper()}.pdf"
-    if upper_underscore.exists():
-        return upper_underscore
-    
-    # Fuzzy search: normalize all PDFs and compare
-    for pdf_file in pdf_dir.glob("*.pdf"):
-        pdf_normalized = pdf_file.stem.lower().replace("_", "").replace("-", "")
-        if pdf_normalized == search_key:
-            return pdf_file
-    
-    # Try recursive search as last resort
-    pattern = f"**/{doc_key}.pdf"
-    matches = list(pdf_dir.glob(pattern))
-    if matches:
-        return matches[0]
-    
-    # Case-insensitive recursive search
-    for pdf_file in pdf_dir.glob("**/*.pdf"):
-        if pdf_file.stem.lower() == doc_key.lower():
-            return pdf_file
-    
-    return None
-
-
 def _collect_unique_doc_keys(data: List[Dict[str, Any]]) -> Set[str]:
     """Extract unique document names from dataset."""
     doc_keys = set()
@@ -135,41 +87,16 @@ def _collect_unique_doc_keys(data: List[Dict[str, Any]]) -> Set[str]:
 
 
 def _load_page_text(pdf_path: str, page_idx: int) -> str:
-    """Load raw text for a specific page from PDF using PyMuPDFLoader for consistency.
-    
-    Args:
-        pdf_path: Path to PDF file
-        page_idx: 0-indexed page number (matching PyMuPDFLoader convention)
-    """
+    """Load raw text for a specific page from PDF."""
     try:
-        # Try to use PyMuPDFLoader for consistency
-        try:
-            from langchain_community.document_loaders import PyMuPDFLoader
-        except:
-            try:
-                from langchain.document_loaders import PyMuPDFLoader
-            except:
-                PyMuPDFLoader = None
-        
-        if PyMuPDFLoader:
-            # Use PyMuPDFLoader which ensures 0-indexed pages
-            loader = PyMuPDFLoader(pdf_path)
-            docs = loader.load()
-            if page_idx < 0 or page_idx >= len(docs):
-                logger.warning(f"Page {page_idx} out of range in {pdf_path} (has {len(docs)} pages)")
-                return ""
-            # PyMuPDFLoader docs are ordered by page (0-indexed)
-            return docs[page_idx].page_content
-        else:
-            # Fallback to fitz
-            doc = fitz.open(pdf_path)
-            if page_idx < 0 or page_idx >= len(doc):
-                logger.warning(f"Page {page_idx} out of range in {pdf_path}")
-                return ""
-            page = doc[page_idx]
-            text = page.get_text("text")
-            doc.close()
-            return text
+        doc = fitz.open(pdf_path)
+        if page_idx < 0 or page_idx >= len(doc):
+            logger.warning(f"Page {page_idx} out of range in {pdf_path}")
+            return ""
+        page = doc[page_idx]
+        text = page.get_text("text")
+        doc.close()
+        return text
     except Exception as e:
         logger.error(f"Error loading page {page_idx} from {pdf_path}: {e}")
         return ""
@@ -241,24 +168,36 @@ def run_page_then_chunk(
 
     # Force a fresh store name to avoid reusing older broken indexes
     db_name = f"pages_v12_text_{collection_suffix}"
+    
+    # Build path directly instead of going through build_chroma_store 
+    # to avoid the hash suffix issue
+    vector_store_dir = getattr(experiment, "vector_store_dir", "vector_stores")
+    db_path = os.path.join(vector_store_dir, "chroma", db_name)
+    os.makedirs(db_path, exist_ok=True)
+    
+    logger.info(f"Using Chroma store at: {db_path}")
 
-    # Connect to Chroma
+    # Connect directly to Chroma
     try:
-        _, page_vectordb, is_empty_flag = build_chroma_store(
-            experiment, db_name, embeddings=page_embeddings, lazy_load=True
+        from langchain.vectorstores import Chroma
+        page_vectordb = Chroma(
+            persist_directory=db_path,
+            embedding_function=page_embeddings,
+            collection_name=db_name
         )
-    except ValueError:
-        _, page_vectordb = build_chroma_store(
-            experiment, db_name, embeddings=page_embeddings, lazy_load=True
-        )
-        is_empty_flag = False
+        logger.info(f"Connected to Chroma collection: {db_name}")
+    except Exception as e:
+        logger.error(f"Failed to connect to Chroma: {e}")
+        raise
 
     try:
         actual_count = page_vectordb._collection.count()
-    except Exception:
+        logger.info(f"Vectorstore currently contains {actual_count} pages")
+    except Exception as e:
+        logger.warning(f"Could not get collection count: {e}")
         actual_count = 0
 
-    should_populate = is_empty_flag or actual_count == 0
+    should_populate = actual_count == 0
 
     # ------------------------------------------------
     # Build list of PDFs to index
@@ -284,12 +223,15 @@ def run_page_then_chunk(
             else:
                 logger.info(f"Indexing {len(unique_doc_keys)} relevant PDFs under {pdf_dir}")
                 for doc_key in sorted(unique_doc_keys):
-                    pdf_path = _find_pdf_file(doc_key, pdf_dir)
-                    if pdf_path:
+                    pdf_path = pdf_dir / f"{doc_key}.pdf"
+                    if pdf_path.exists():
                         target_pdfs.append(pdf_path)
-                        logger.debug(f"Found PDF: {doc_key} -> {pdf_path.name}")
                     else:
-                        logger.warning(f"PDF missing for doc_key: {doc_key}")
+                        found = list(pdf_dir.glob(f"**/{doc_key}.pdf"))
+                        if found:
+                            target_pdfs.append(found[0])
+                        else:
+                            logger.warning(f"PDF missing for doc_key: {doc_key}")
 
             if not target_pdfs:
                 logger.error(f"CRITICAL: No PDFs found in {pdf_dir}. Cannot build page index.")
@@ -324,7 +266,15 @@ def run_page_then_chunk(
                     )
 
                 if page_docs:
-                    populate_chroma_store(experiment, page_vectordb, page_docs, db_name)
+                    logger.info(f"Adding {len(page_docs)} pages to vectorstore...")
+                    
+                    # Add documents in batches to avoid memory issues
+                    batch_size = 1000
+                    for i in range(0, len(page_docs), batch_size):
+                        batch = page_docs[i:i+batch_size]
+                        page_vectordb.add_documents(batch)
+                        logger.info(f"  Added batch {i//batch_size + 1}/{(len(page_docs) + batch_size - 1)//batch_size}")
+                    
                     logger.info(f"✓ Populated page store with {len(page_docs)} pages.")
                     
                     # Verify the store was populated
@@ -356,19 +306,21 @@ def run_page_then_chunk(
     )
 
     # =========================================================================
-    # PART 3: Ensure LLM is loaded for generation
-    # =========================================================================
-    logger.info("Ensuring LLM is loaded for answer generation...")
-    experiment.ensure_langchain_llm()
-    logger.info(f"✓ LLM ready: {experiment.llm_model_name}")
-
-    # =========================================================================
-    # PART 4: Inference loop
+    # PART 3: Inference loop
     # =========================================================================
     page_k = int(getattr(experiment, "page_k", 5))
     chunk_k = int(getattr(experiment, "top_k", 5))
 
     logger.info(f"Starting Inference: Retrieve {page_k} Pages -> Chunk -> Rank Top {chunk_k}")
+    
+    # Verify vectorstore state before inference
+    try:
+        store_count = page_vectordb._collection.count()
+        logger.info(f"Vectorstore contains {store_count} pages before inference")
+        if store_count == 0:
+            logger.error("CRITICAL: Vectorstore is EMPTY! No pages to retrieve.")
+    except Exception as e:
+        logger.warning(f"Could not verify vectorstore count: {e}")
     
     # Create results skeleton matching unified pipeline format
     results = experiment._create_skipped_results(
@@ -392,60 +344,6 @@ def run_page_then_chunk(
         results[i]["reference_answer"] = sample.get("answer", "")
         results[i]["question_type"] = sample.get("question_type", "")
         results[i]["question_reasoning"] = sample.get("question_reasoning", "")
-        
-        # Parse gold evidence from the sample (handle pandas/numpy array-like objects)
-        gold_evidence_segments = []
-        evidence_data = sample.get("evidence")
-        
-        # Safe check for array-like objects (avoid "truth value of array is ambiguous" error)
-        has_evidence = False
-        if evidence_data is not None:
-            try:
-                # For arrays/Series, check length
-                if hasattr(evidence_data, '__len__'):
-                    has_evidence = len(evidence_data) > 0
-                else:
-                    has_evidence = bool(evidence_data)
-            except (ValueError, TypeError):
-                # Fallback: try to convert to list
-                try:
-                    evidence_data = list(evidence_data)
-                    has_evidence = len(evidence_data) > 0
-                except:
-                    has_evidence = False
-        
-        if has_evidence:
-            # Convert to list if array-like
-            if not isinstance(evidence_data, list):
-                try:
-                    evidence_data = list(evidence_data)
-                except:
-                    evidence_data = [evidence_data]
-            
-            # FinanceBench evidence is a list of dicts with structure:
-            # [{"doc_name": str, "evidence_text": str, "evidence_page_num": int}]
-            # NOTE: Ground truth pages are 0-indexed (matching PyMuPDFLoader)
-            for ev in evidence_data:
-                if isinstance(ev, dict):
-                    # Get page from correct field name: evidence_page_num
-                    page_val = ev.get("evidence_page_num") or ev.get("page")
-                    if page_val is not None:
-                        # Ensure it's 0-indexed (PyMuPDFLoader standard)
-                        page_str = str(page_val).strip()
-                    else:
-                        page_str = ""
-                    
-                    gold_evidence_segments.append({
-                        "doc_name": _canonical_doc_key(ev.get("doc_name", "")),
-                        "text": ev.get("evidence_text", ""),
-                        "page": page_str
-                    })
-        
-        results[i]["gold_evidence_segments"] = gold_evidence_segments
-        
-        # Debug first few samples
-        if i < 3:
-            logger.info(f"Sample {i} gold evidence: {gold_evidence_segments}")
 
         # --- Step A: Retrieve Pages ---
         retrieved_pages = []
@@ -453,17 +351,24 @@ def run_page_then_chunk(
             # Try with scores first
             if hasattr(page_vectordb, "similarity_search_with_score"):
                 retrieved_pages = [d for d, _ in page_vectordb.similarity_search_with_score(query, k=page_k)]
-                logger.debug(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search_with_score")
+                logger.info(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search_with_score")
             elif hasattr(page_vectordb, "similarity_search_with_relevance_scores"):
                 retrieved_pages = [d for d, _ in page_vectordb.similarity_search_with_relevance_scores(query, k=page_k)]
-                logger.debug(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search_with_relevance_scores")
+                logger.info(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search_with_relevance_scores")
             else:
                 retrieved_pages = page_vectordb.similarity_search(query, k=page_k)
-                logger.debug(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search")
+                logger.info(f"Sample {i}: Retrieved {len(retrieved_pages)} pages with similarity_search")
+            
+            # Log first retrieved page for debugging
+            if retrieved_pages:
+                first_page = retrieved_pages[0]
+                logger.info(f"Sample {i}: First page metadata: {first_page.metadata}")
+            else:
+                logger.warning(f"Sample {i}: ZERO pages retrieved for query: '{query[:100]}...'")
         except Exception as e:
-            logger.warning(f"Page retrieval failed for sample {i}: {e}")
+            logger.error(f"Sample {i}: Page retrieval failed: {e}")
             import traceback
-            logger.debug(traceback.format_exc())
+            logger.error(traceback.format_exc())
             retrieved_pages = []
 
         # --- Step B: Load page text and chunk ---
@@ -476,6 +381,21 @@ def run_page_then_chunk(
             pdf_path = pdoc.metadata.get("pdf_path", "")
 
             retrieved_pages_debug.append(f"{doc_key}_p{page_idx}")
+
+            # If pdf_path is empty or doesn't exist, try to reconstruct it
+            if not pdf_path or not Path(pdf_path).exists():
+                # Try to find the PDF in the PDF directory
+                pdf_path_reconstructed = pdf_dir / f"{doc_key}.pdf"
+                if not pdf_path_reconstructed.exists():
+                    # Try searching recursively
+                    found = list(pdf_dir.glob(f"**/{doc_key}.pdf"))
+                    if found:
+                        pdf_path_reconstructed = found[0]
+                    else:
+                        logger.warning(f"Sample {i}: Could not find PDF for {doc_key}, tried {pdf_path_reconstructed}")
+                        continue
+                pdf_path = str(pdf_path_reconstructed)
+                logger.debug(f"Sample {i}: Reconstructed pdf_path: {pdf_path}")
 
             raw_text = _load_page_text(pdf_path, page_idx)
             if not raw_text or not raw_text.strip():
@@ -500,13 +420,6 @@ def run_page_then_chunk(
                 )
         
         logger.info(f"Sample {i}: Generated {len(generated_chunks)} total chunks from {len(retrieved_pages)} pages")
-        
-        # Debug chunk metadata for first sample
-        if i < 3 and generated_chunks:
-            logger.info(f"Sample {i} chunk metadata (first 3):")
-            for idx, chunk in enumerate(generated_chunks[:3]):
-                meta = chunk.get("metadata", {})
-                logger.info(f"  Chunk {idx}: doc={meta.get('doc_name')}, page={meta.get('page')} (type={type(meta.get('page'))})")
 
         # --- Step C: Embed and Score Chunks ---
         final_chunks_list: List[Dict[str, Any]] = []
@@ -549,26 +462,7 @@ def run_page_then_chunk(
             prompt = _local_format_prompt(query, context_str)
             
             try:
-                # Use the LangChain LLM wrapper or pipeline
-                if experiment.use_api and experiment.api_client:
-                    # API generation
-                    response = experiment.api_client.chat.completions.create(
-                        model=experiment.llm_model_name,
-                        messages=[{"role": "user", "content": prompt}],
-                        max_tokens=experiment.max_new_tokens,
-                        temperature=0.7
-                    )
-                    generated_answer = response.choices[0].message.content
-                elif experiment.llm_pipeline:
-                    # HuggingFace pipeline
-                    output = experiment.llm_pipeline(prompt)
-                    generated_answer = output[0]["generated_text"]
-                elif experiment.langchain_llm:
-                    # LangChain wrapper
-                    generated_answer = experiment.langchain_llm.invoke(prompt)
-                else:
-                    raise RuntimeError("No LLM available for generation")
-                    
+                generated_answer = experiment.llm_model.invoke(prompt)
                 results[i]["generated_answer"] = generated_answer
                 results[i]["generation_length"] = len(generated_answer)
                 results[i]["model_answer"] = generated_answer  # Legacy field

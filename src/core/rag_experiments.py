@@ -60,7 +60,7 @@ from src.experiments.unified_pipeline import run_unified_pipeline as _run_unifie
 from src.experiments.metadata_reranking import run_metadata_reranking_experiment as _run_metadata_reranking
 from src.experiments.uncertainty import run_uncertainty_experiment, analyze_risk_coverage
 
-from src.experiments.page_retrieval import run_page_then_chunk
+from src.experiments.simple_page_chunk import run_simple_page_chunk
 
 # Set up logging
 def setup_logging(experiment_name: str, log_dir: Optional[str] = None):
@@ -647,12 +647,20 @@ class RAGExperiment(
         elif self.experiment_type == self.UNCERTAINTY:
             results = run_uncertainty_experiment(self, data)
         elif self.experiment_type == self.PAGE_THEN_CHUNK:
-            results = run_page_then_chunk(self, data, learned_model_path=None)
+            # Simple page-then-chunk: retrieve 20 pages, chunk them, retrieve top 5 chunks
+            page_k = getattr(self, "page_k", 20)
+            chunk_k = getattr(self, "top_k", 5)
+            results = run_simple_page_chunk(self, data, top_m_pages=page_k, top_k_chunks=chunk_k)
         elif self.experiment_type == self.LEARNED_PAGE_THEN_CHUNK:
+            # TODO: Implement learned page scorer version with simple_page_chunk
             model_path = "models/finetuned_page_scorer"
             if not os.path.exists(model_path):
                 raise RuntimeError(f"Trained model not found at {model_path}. Run src/training/train_page_scorer.py first.")
-            results = run_page_then_chunk(self, data, learned_model_path=model_path)
+            # For now, use simple version with warning
+            self.logger.warning("LEARNED_PAGE_THEN_CHUNK not yet integrated with simple_page_chunk. Using baseline.")
+            page_k = getattr(self, "page_k", 20)
+            chunk_k = getattr(self, "top_k", 5)
+            results = run_simple_page_chunk(self, data, top_m_pages=page_k, top_k_chunks=chunk_k)
         else:
             raise ValueError(f"Unknown experiment type: {self.experiment_type}")
         
