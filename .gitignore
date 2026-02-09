@@ -17,6 +17,8 @@ outputs/
 .env
 *.sqlite3
 *.bin
+*.csv
+*.log
 *.pickle
 __pycache__/
 .ipynb_checkpoints/
