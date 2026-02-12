@@ -81,30 +81,30 @@ echo "=========================================="
 #     echo "✗ Experiment 1 (MPNet) failed"
 # fi
 
-# # Experiment 2: BGE-M3
-# echo ""
-# echo "==================== EXPERIMENT 2: BGE-M3 ===================="
-# echo "Model: BAAI/bge-m3"
-# echo "Chunk size: 1024 tokens, Overlap: 128 tokens"
-# echo "=============================================================="
+# Experiment 2: BGE-M3
+echo ""
+echo "==================== EXPERIMENT 1: BGE-M3 P=20 ===================="
+echo "Model: BAAI/bge-m3"
+echo "Chunk size: 1024 tokens, Overlap: 128 tokens"
+echo "=============================================================="
 
-# python train_k_fold.py \
-#     --n-folds 5 \
-#     --epochs 15 \
-#     --batch-size 16 \
-#     --lr 2e-5 \
-#     --page-k 5 \
-#     --chunk-k 5 \
-#     --base-model "BAAI/bge-m3" \
-#     --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3" \
-#     --pdf-dir "pdfs" \
-#     --seed 42
+python train_k_fold2.py \
+    --n-folds 5 \
+    --epochs 15 \
+    --batch-size 16 \
+    --lr 2e-5 \
+    --page-k 20 \
+    --chunk-k 5 \
+    --base-model "BAAI/bge-m3" \
+    --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3_p20" \
+    --pdf-dir "pdfs" \
+    --seed 42
 
-# if [ $? -eq 0 ]; then
-#     echo "✓ Experiment 2 (BGE-M3) completed successfully"
-# else
-#     echo "✗ Experiment 2 (BGE-M3) failed"
-# fi
+if [ $? -eq 0 ]; then
+    echo "✓ Experiment 1 (BGE-M3) completed successfully"
+else
+    echo "✗ Experiment 1 (BGE-M3) failed"
+fi
 
 # # Experiment 3: MPNet + HyDE (single)
 # echo ""
@@ -165,13 +165,13 @@ echo "=========================================="
 
 # Experiment 1: BGE-M3 + HyDE (single)
 echo ""
-echo "==================== EXPERIMENT 1: BGE-M3 + HyDE ===================="
+echo "==================== EXPERIMENT 2: BGE-M3 + P=5 ===================="
 echo "Model: BAAI/bge-m3"
 echo "Chunk size: 1024 tokens, Overlap: 128 tokens"
 echo "HyDE: Single generation with Qwen 2.5 7B"
 echo "====================================================================="
 
-python train_k_fold.py \
+python train_k_fold2.py \
     --n-folds 5 \
     --epochs 15 \
     --batch-size 16 \
@@ -179,45 +179,41 @@ python train_k_fold.py \
     --page-k 5 \
     --chunk-k 5 \
     --base-model "BAAI/bge-m3" \
-    --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3_hyde" \
+    --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3_p5_base_embed" \
     --pdf-dir "pdfs" \
     --seed 42 \
-    --use-hyde \
-    --hyde-num-generations 1
+ 
 
 if [ $? -eq 0 ]; then
-    echo "✓ Experiment 1 (BGE-M3 + HyDE) completed successfully"
+    echo "✓ Experiment 2 (BGE-M3 + HyDE) completed successfully"
 else
-    echo "✗ Experiment 1 (BGE-M3 + HyDE) failed"
+    echo "✗ Experiment 2 (BGE-M3 + HyDE) failed"
 fi
 
 # Experiment 2: BGE-M3 + Multi-HyDE (k=4)
 echo ""
-echo "==================== EXPERIMENT 2: BGE-M3 + Multi-HyDE ===================="
+echo "==================== EXPERIMENT 3: BGE-M3 + P=10 ===================="
 echo "Model: BAAI/bge-m3"
 echo "Chunk size: 1024 tokens, Overlap: 128 tokens"
 echo "Multi-HyDE: 4 generations with Qwen 2.5 7B, mean aggregation"
 echo "==========================================================================="
 
-python train_k_fold.py \
+python train_k_fold2.py \
     --n-folds 5 \
     --epochs 15 \
     --batch-size 16 \
     --lr 2e-5 \
-    --page-k 5 \
+    --page-k 10 \
     --chunk-k 5 \
     --base-model "BAAI/bge-m3" \
-    --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3_multihyde" \
+    --output-dir "$SCRATCH_OUT/kfold_page_scorer_bge_m3_p10" \
     --pdf-dir "pdfs" \
-    --seed 42 \
-    --use-hyde \
-    --hyde-num-generations 4 \
-    --hyde-aggregate mean
+    --seed 42 
 
 if [ $? -eq 0 ]; then
-    echo "✓ Experiment 2 (BGE-M3 + Multi-HyDE) completed successfully"
+    echo "✓ Experiment 3 (BGE-M3 + Multi-HyDE) completed successfully"
 else
-    echo "✗ Experiment 2 (BGE-M3 + Multi-HyDE) failed"
+    echo "✗ Experiment 3 (BGE-M3 + Multi-HyDE) failed"
 fi
 
 # --- 5. SAVE RESULTS ---

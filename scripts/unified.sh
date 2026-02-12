@@ -66,39 +66,39 @@ python -m src.core.rag_experiments qwen \
   --unified-rerank \
   --output-dir "$SCRATCH_OUT/unified_hybrid_rerank"
 
-echo "========================================================"
-echo "Experiment 2: Multi-HyDE + Dense (BGE-M3) + Reranker"
-echo "========================================================"
-python -m src.core.rag_experiments both \
-  -e unified \
-  --chunking-unit tokens \
-  --chunk-size 1024 \
-  --chunk-overlap 128 \
-  --pdf-dir pdfs \
-  --embedding-model bge-m3 \
-  --unified-hyde \
-  --unified-hyde-k 4 \
-  --unified-retrieval hybrid \
-  --unified-rerank \
-  --output-dir "$SCRATCH_OUT/unified_dense_rerank"
-
-echo "========================================================"
-echo "Experiment 3: Multi-HyDE + Sparse (BM25) + Reranker"
-echo "========================================================"
+#echo "========================================================"
+#echo "Experiment 2: Multi-HyDE + Dense (BGE-M3) + Reranker"
+#echo "========================================================"
+#python -m src.core.rag_experiments both \
+#  -e unified \
+#  --chunking-unit tokens \
+#  --chunk-size 1024 \
+#  --chunk-overlap 128 \
+#  --pdf-dir pdfs \
+#  --embedding-model bge-m3 \
+#  --unified-hyde \
+#  --unified-hyde-k 4 \
+#  --unified-retrieval hybrid \
+#  --unified-rerank \
+#  --output-dir "$SCRATCH_OUT/unified_dense_rerank"
+#
+#echo "========================================================"
+#echo "Experiment 3: Multi-HyDE + Sparse (BM25) + Reranker"
+#echo "========================================================"
 # Note: In 'sparse' mode, HyDE generates hypotheticals (overhead)
 # but BM25 is strictly lexical on the query. 
 # This serves as a baseline to see if dense components are necessary.
-python -m src.core.rag_experiments both \
-  -e unified \
-  --chunking-unit tokens \
-  --chunk-size 1024 \
-  --chunk-overlap 128 \
-  --pdf-dir pdfs \
-  --unified-hyde \
-  --unified-hyde-k 4 \
-  --unified-retrieval sparse \
-  --unified-rerank \
-  --output-dir "$SCRATCH_OUT/unified_sparse_rerank"
+#python -m src.core.rag_experiments both \
+#  -e unified \
+#  --chunking-unit tokens \
+#  --chunk-size 1024 \
+#  --chunk-overlap 128 \
+#  --pdf-dir pdfs \
+#  --unified-hyde \
+#  --unified-hyde-k 4 \
+#  --unified-retrieval sparse \
+#  --unified-rerank \
+#  --output-dir "$SCRATCH_OUT/unified_sparse_rerank"
 
 # --- 5. SAVE RESULTS ---
 # Copy results back to the original submission directory

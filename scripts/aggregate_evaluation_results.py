@@ -1,526 +1,483 @@
 #!/usr/bin/env python3
 """
-Aggregate evaluation metrics from all experiment result files.
+Aggregate evaluation metrics from FB_reproducability result files.
 
-Creates 4 CSV files:
-1. Overall experiment results (one line per experiment)
-2. Results grouped by doc_type
-3. Results grouped by question_type  
-4. Results grouped by question_reasoning
+Scans:
+- final_results.json (kfold experiments)
+- outputs/results/unified/**/*.json
+
+Outputs 4 CSVs:
+1) overall
+2) by doc_type
+3) by question_type
+4) by question_reasoning
 """
 
+import argparse
+import csv
 import json
 import logging
-import argparse
 import re
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Set
+import sys
 from collections import defaultdict
 from datetime import datetime
-import csv
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
+
 import numpy as np
-
-# Import evaluation libraries
-try:
-    from rouge_score import rouge_scorer
-    ROUGE_AVAILABLE = True
-except ImportError:
-    ROUGE_AVAILABLE = False
-    logger.warning("rouge_score not available, ROUGE metrics will be 0")
-
-try:
-    from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
-    import nltk
-    BLEU_AVAILABLE = True
-except ImportError:
-    BLEU_AVAILABLE = False
-    logger.warning("nltk not available, BLEU metrics will be 0")
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
+SCRIPT_ROOT = Path(__file__).resolve().parents[1]
+EVAL_DIR = SCRIPT_ROOT / "src" / "evaluation"
+if str(EVAL_DIR) not in sys.path:
+    sys.path.insert(0, str(EVAL_DIR))
+
+try:
+    from evaluator import Evaluator
+except Exception as exc:  # pragma: no cover
+    Evaluator = None
+    logger.warning("Failed to import Evaluator: %s", exc)
+
+
+MAX_CONTEXT_CHUNKS = 5
+
+
+def normalize_doc_name(doc_name: str) -> str:
+    if not doc_name:
+        return ""
+    name = doc_name.lower()
+    name = re.sub(r"\.pdf$", "", name)
+    name = re.sub(r"[^a-z0-9]", "", name)
+    return name
+
 
 def extract_doc_type_from_name(doc_name: str) -> str:
-    """Extract document type from doc_name using regex."""
     if not doc_name:
-        return 'unknown'
-    
+        return "unknown"
     doc_lower = doc_name.lower()
-    
-    # Check for specific patterns
-    if '10-k' in doc_lower or '10k' in doc_lower:
-        return '10-K'
-    elif '10-q' in doc_lower or '10q' in doc_lower:
-        return '10-Q'
-    elif '8-k' in doc_lower or '8k' in doc_lower:
-        return '8-K'
-    elif 'earnings' in doc_lower or 'earning' in doc_lower:
-        return 'earnings'
-    else:
-        return 'other'
-
-
-def compute_bleu_score(reference: str, hypothesis: str) -> float:
-    """Compute BLEU score between reference and hypothesis."""
-    if not BLEU_AVAILABLE or not reference or not hypothesis:
-        return 0.0
-    
-    try:
-        ref_tokens = reference.lower().split()
-        hyp_tokens = hypothesis.lower().split()
-        
-        if not hyp_tokens:
-            return 0.0
-        
-        smoothing = SmoothingFunction().method1
-        score = sentence_bleu([ref_tokens], hyp_tokens, smoothing_function=smoothing)
-        return score
-    except:
-        return 0.0
-
-
-def compute_rouge_scores(reference: str, hypothesis: str) -> Dict[str, float]:
-    """Compute ROUGE scores between reference and hypothesis."""
-    if not ROUGE_AVAILABLE or not reference or not hypothesis:
-        return {'rouge1': 0.0, 'rouge2': 0.0, 'rougeL': 0.0}
-    
-    try:
-        scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
-        scores = scorer.score(reference, hypothesis)
-        return {
-            'rouge1': scores['rouge1'].fmeasure,
-            'rouge2': scores['rouge2'].fmeasure,
-            'rougeL': scores['rougeL'].fmeasure
-        }
-    except:
-        return {'rouge1': 0.0, 'rouge2': 0.0, 'rougeL': 0.0}
-
-
-def extract_numbers(text: str) -> Set[str]:
-    """Extract all numbers from text for numeric comparison."""
-    if not text:
-        return set()
-    
-    # Find all numbers including decimals, percentages, with commas
-    pattern = r'\$?\d+(?:,\d{3})*(?:\.\d+)?%?'
-    numbers = re.findall(pattern, text)
-    # Normalize: remove $ and commas
-    normalized = {n.replace('$', '').replace(',', '') for n in numbers}
-    return normalized
+    if "10-k" in doc_lower or "10k" in doc_lower:
+        return "10-K"
+    if "10-q" in doc_lower or "10q" in doc_lower:
+        return "10-Q"
+    if "8-k" in doc_lower or "8k" in doc_lower:
+        return "8-K"
+    if "earnings" in doc_lower or "earning" in doc_lower:
+        return "earnings"
+    return "other"
 
 
 def compute_numeric_match(reference: str, hypothesis: str) -> bool:
-    """Check if any numbers in reference appear in hypothesis."""
     if not reference or not hypothesis:
         return False
-    
-    ref_numbers = extract_numbers(reference)
-    hyp_numbers = extract_numbers(hypothesis)
-    
-    if not ref_numbers:
-        return False
-    
-    # Check if any reference number appears in hypothesis
-    return len(ref_numbers & hyp_numbers) > 0
+    pattern = r"\$?\d+(?:,\d{3})*(?:\.\d+)?%?"
+    ref_numbers = {n.replace("$", "").replace(",", "") for n in re.findall(pattern, reference)}
+    hyp_numbers = {n.replace("$", "").replace(",", "") for n in re.findall(pattern, hypothesis)}
+    return bool(ref_numbers & hyp_numbers)
 
 
-def compute_recall(retrieved_items: List[str], evidence_items: List[str], k: int) -> bool:
-    """Compute recall@k for retrieved vs evidence items."""
-    if not evidence_items or not retrieved_items:
-        return False
-    
-    retrieved_k = set(retrieved_items[:k])
-    evidence_set = set(evidence_items)
-    
-    # Check if any evidence item is in top k retrieved
-    return len(retrieved_k & evidence_set) > 0
+def extract_gold_segments(sample: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    gold_segments: List[Dict[str, Any]] = []
+    gold_text_fallback: Optional[str] = None
+
+    raw_gold = (
+        sample.get("gold_evidence_segments")
+        or sample.get("gold_evidence")
+        or sample.get("evidence")
+        or sample.get("gold_segments")
+        or []
+    )
+
+    if isinstance(raw_gold, list):
+        for seg in raw_gold:
+            if not isinstance(seg, dict):
+                continue
+            raw = seg.get("raw") if isinstance(seg.get("raw"), dict) else {}
+            doc_name = (
+                seg.get("doc_name")
+                or raw.get("doc_name")
+                or seg.get("document")
+                or seg.get("doc")
+            )
+            page_num = seg.get("page") if seg.get("page") is not None else seg.get("page_number")
+            if page_num is None:
+                page_num = seg.get("evidence_page_num")
+            if page_num is None:
+                page_num = raw.get("evidence_page_num")
+
+            gold_segments.append(
+                {
+                    "text": seg.get("text", "") or raw.get("evidence_text") or "",
+                    "doc_name": normalize_doc_name(doc_name),
+                    "page": page_num,
+                }
+            )
+    elif isinstance(raw_gold, str):
+        gold_text_fallback = raw_gold
+
+    return gold_segments, gold_text_fallback
 
 
-def extract_retrieved_docs(result: Dict[str, Any]) -> List[str]:
-    """Extract document names from retrieved chunks."""
-    docs = []
-    
-    # Check retrieved_chunks
-    if 'retrieved_chunks' in result and result['retrieved_chunks']:
-        for chunk in result['retrieved_chunks']:
-            if isinstance(chunk, dict):
-                doc_name = chunk.get('doc_name') or chunk.get('metadata', {}).get('doc_name')
-                if doc_name:
-                    docs.append(doc_name)
-    
-    # Check retrieved_documents
-    if 'retrieved_documents' in result and result['retrieved_documents']:
-        for doc in result['retrieved_documents']:
-            if isinstance(doc, dict):
-                doc_name = doc.get('doc_name') or doc.get('metadata', {}).get('doc_name')
-                if doc_name:
-                    docs.append(doc_name)
-            elif isinstance(doc, str):
-                docs.append(doc)
-    
-    return docs
+def extract_retrieved_chunks(sample: Dict[str, Any]) -> List[Dict[str, Any]]:
+    retrieved_chunks: List[Dict[str, Any]] = []
+
+    if isinstance(sample.get("retrieved_chunks"), list):
+        for chunk in sample.get("retrieved_chunks", []):
+            if not isinstance(chunk, dict):
+                continue
+            metadata = chunk.get("metadata", {}) if isinstance(chunk.get("metadata"), dict) else {}
+            doc_name = chunk.get("doc_name") or metadata.get("doc_name")
+            page = chunk.get("page") if chunk.get("page") is not None else metadata.get("page")
+            if page is None:
+                page = chunk.get("page_number") if chunk.get("page_number") is not None else metadata.get("page_number")
+            retrieved_chunks.append(
+                {
+                    "text": chunk.get("text", "") or "",
+                    "metadata": {
+                        "doc_name": normalize_doc_name(doc_name),
+                        "page": page,
+                    },
+                }
+            )
+    elif isinstance(sample.get("retrieved_pages"), list):
+        for page in sample.get("retrieved_pages", []):
+            if not isinstance(page, dict):
+                continue
+            doc_name = page.get("doc_name") or page.get("metadata", {}).get("doc_name")
+            page_num = page.get("page") if page.get("page") is not None else page.get("page_number")
+            retrieved_chunks.append(
+                {
+                    "text": "",
+                    "metadata": {
+                        "doc_name": normalize_doc_name(doc_name),
+                        "page": page_num,
+                    },
+                }
+            )
+
+    return retrieved_chunks
 
 
-def extract_retrieved_pages(result: Dict[str, Any]) -> List[str]:
-    """Extract page identifiers from retrieved chunks."""
-    pages = []
-    
-    # Check retrieved_chunks
-    if 'retrieved_chunks' in result and result['retrieved_chunks']:
-        for chunk in result['retrieved_chunks']:
-            if isinstance(chunk, dict):
-                doc_name = chunk.get('doc_name') or chunk.get('metadata', {}).get('doc_name')
-                page_num = chunk.get('page_number') or chunk.get('metadata', {}).get('page_number')
-                
-                if doc_name and page_num is not None:
-                    pages.append(f"{doc_name}_{page_num}")
-    
-    # Check retrieved_pages
-    if 'retrieved_pages' in result and result['retrieved_pages']:
-        for page in result['retrieved_pages']:
-            if isinstance(page, dict):
-                doc_name = page.get('doc_name') or page.get('metadata', {}).get('doc_name')
-                page_num = page.get('page_number') or page.get('metadata', {}).get('page_number')
-                
-                if doc_name and page_num is not None:
-                    pages.append(f"{doc_name}_{page_num}")
-    
-    return pages
+def compute_doc_page_recall(
+    retrieved_chunks: List[Dict[str, Any]],
+    gold_segments: List[Dict[str, Any]],
+    k: int,
+) -> Tuple[float, float]:
+    gold_docs = {seg.get("doc_name") for seg in gold_segments if seg.get("doc_name")}
+    gold_pages = {
+        (seg.get("doc_name"), seg.get("page"))
+        for seg in gold_segments
+        if seg.get("doc_name") and seg.get("page") is not None
+    }
 
+    ordered_docs: List[str] = []
+    ordered_pages: List[Tuple[str, Any]] = []
+    for chunk in retrieved_chunks:
+        meta = chunk.get("metadata", {}) if isinstance(chunk.get("metadata"), dict) else {}
+        doc_name = meta.get("doc_name")
+        page_num = meta.get("page")
+        if doc_name and doc_name not in ordered_docs:
+            ordered_docs.append(doc_name)
+        if doc_name and page_num is not None:
+            page_key = (doc_name, page_num)
+            if page_key not in ordered_pages:
+                ordered_pages.append(page_key)
 
-def extract_evidence_docs(result: Dict[str, Any]) -> List[str]:
-    """Extract evidence document names."""
-    docs = []
-    
-    # Check evidence_docs
-    if 'evidence_docs' in result:
-        evidence = result['evidence_docs']
-        if isinstance(evidence, list):
-            docs.extend([str(d) for d in evidence if d])
-        elif evidence:
-            docs.append(str(evidence))
-    
-    # Check doc_name as evidence
-    if 'doc_name' in result and result['doc_name']:
-        doc_name = result['doc_name']
-        if doc_name not in docs:
-            docs.append(doc_name)
-    
-    return docs
+    if gold_docs:
+        doc_val = len(set(ordered_docs[:k]) & gold_docs) / len(gold_docs)
+    else:
+        doc_val = 0.0
 
+    if gold_pages:
+        page_val = len(set(ordered_pages[:k]) & gold_pages) / len(gold_pages)
+    else:
+        page_val = 0.0
 
-def extract_evidence_pages(result: Dict[str, Any]) -> List[str]:
-    """Extract evidence page identifiers."""
-    pages = []
-    
-    doc_name = result.get('doc_name', '')
-    
-    # Check evidence_pages
-    if 'evidence_pages' in result:
-        evidence = result['evidence_pages']
-        if isinstance(evidence, list):
-            for page_num in evidence:
-                if page_num is not None and doc_name:
-                    pages.append(f"{doc_name}_{page_num}")
-        elif evidence is not None and doc_name:
-            pages.append(f"{doc_name}_{evidence}")
-    
-    return pages
+    return float(doc_val), float(page_val)
 
 
 def compute_metrics_from_results(results: List[Dict[str, Any]]) -> Dict[str, float]:
-    """Compute aggregated metrics from pre-computed result fields."""
     metrics = {
-        'total_samples': 0,
-        # Retrieval metrics
-        'doc_recall_1': 0.0,
-        'doc_recall_3': 0.0,
-        'doc_recall_5': 0.0,
-        'page_recall_1': 0.0,
-        'page_recall_3': 0.0,
-        'page_recall_5': 0.0,
-        'retrieval_samples': 0,
-        # Generation metrics
-        'gen_bleu': 0.0,
-        'gen_rouge1': 0.0,
-        'gen_rouge2': 0.0,
-        'gen_rougeL': 0.0,
-        'numeric_correct': 0,
-        'numeric_total': 0,
-        'generation_samples': 0,
+        "total_samples": 0,
+        # retrieval
+        "doc_recall_1": 0.0,
+        "doc_recall_3": 0.0,
+        "doc_recall_5": 0.0,
+        "page_recall_1": 0.0,
+        "page_recall_3": 0.0,
+        "page_recall_5": 0.0,
+        "retrieval_samples": 0,
+        # context metrics
+        "ctx_bleu": 0.0,
+        "ctx_rouge1": 0.0,
+        "ctx_rouge2": 0.0,
+        "ctx_rougeL": 0.0,
+        "context_samples": 0,
+        # generation
+        "gen_bleu": 0.0,
+        "gen_rouge1": 0.0,
+        "gen_rouge2": 0.0,
+        "gen_rougeL": 0.0,
+        "numeric_correct": 0,
+        "numeric_total": 0,
+        "generation_samples": 0,
     }
-    
+
     if not results:
         return metrics
-    
-    metrics['total_samples'] = len(results)
-    
-    # Collect retrieval metrics
-    doc_recall_1 = []
-    doc_recall_3 = []
-    doc_recall_5 = []
-    page_recall_1 = []
-    page_recall_3 = []
-    page_recall_5 = []
-    
-    # Collect generation metrics
-    bleu_scores = []
-    rouge1_scores = []
-    rouge2_scores = []
-    rougeL_scores = []
-    
+
+    if Evaluator is None:
+        logger.warning("Evaluator unavailable; returning zeroed metrics")
+        return metrics
+
+    evaluator = Evaluator(use_bertscore=False, use_llm_judge=False, use_ragas=False)
+    metrics["total_samples"] = len(results)
+
+    doc_r1: List[float] = []
+    doc_r3: List[float] = []
+    doc_r5: List[float] = []
+    page_r1: List[float] = []
+    page_r3: List[float] = []
+    page_r5: List[float] = []
+
+    ctx_bleu: List[float] = []
+    ctx_r1: List[float] = []
+    ctx_r2: List[float] = []
+    ctx_rl: List[float] = []
+
+    gen_bleu: List[float] = []
+    gen_r1: List[float] = []
+    gen_r2: List[float] = []
+    gen_rl: List[float] = []
+
     numeric_correct = 0
     numeric_total = 0
-    
-    for r in results:
-        # === RETRIEVAL METRICS (from retrieval_metrics field) ===
-        if 'retrieval_metrics' in r and r['retrieval_metrics']:
-            rm = r['retrieval_metrics']
-            
-            # Doc recall - these are already float values (0.0 to 1.0), not binary
-            if 'doc_recall@1' in rm and rm['doc_recall@1'] is not None:
-                doc_recall_1.append(float(rm['doc_recall@1']))
-            if 'doc_recall@3' in rm and rm['doc_recall@3'] is not None:
-                doc_recall_3.append(float(rm['doc_recall@3']))
-            if 'doc_recall@5' in rm and rm['doc_recall@5'] is not None:
-                doc_recall_5.append(float(rm['doc_recall@5']))
-            
-            # Page recall - these are already float values (0.0 to 1.0), not binary
-            if 'page_recall@1' in rm and rm['page_recall@1'] is not None:
-                page_recall_1.append(float(rm['page_recall@1']))
-            if 'page_recall@3' in rm and rm['page_recall@3'] is not None:
-                page_recall_3.append(float(rm['page_recall@3']))
-            if 'page_recall@5' in rm and rm['page_recall@5'] is not None:
-                page_recall_5.append(float(rm['page_recall@5']))
-        
-        # Fallback: check top-level fields (convert to 0/1 only for binary fields like doc_recall_1)
-        if not doc_recall_1 and 'doc_recall_1' in r and r['doc_recall_1'] is not None:
-            # Top-level fields might be boolean or float, handle both
-            val = r['doc_recall_1']
-            doc_recall_1.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        if not doc_recall_3 and 'doc_recall_3' in r and r['doc_recall_3'] is not None:
-            val = r['doc_recall_3']
-            doc_recall_3.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        if not doc_recall_5 and 'doc_recall_5' in r and r['doc_recall_5'] is not None:
-            val = r['doc_recall_5']
-            doc_recall_5.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        
-        if not page_recall_1 and 'page_recall_1' in r and r['page_recall_1'] is not None:
-            val = r['page_recall_1']
-            page_recall_1.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        if not page_recall_3 and 'page_recall_3' in r and r['page_recall_3'] is not None:
-            val = r['page_recall_3']
-            page_recall_3.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        if not page_recall_5 and 'page_recall_5' in r and r['page_recall_5'] is not None:
-            val = r['page_recall_5']
-            page_recall_5.append(float(val) if isinstance(val, (int, float)) else (1.0 if val else 0.0))
-        
-        # === GENERATION METRICS (from generative_metrics field) ===
-        if 'generative_metrics' in r and r['generative_metrics']:
-            gm = r['generative_metrics']
-            
-            if 'bleu_score' in gm and gm['bleu_score'] is not None:
-                bleu_scores.append(gm['bleu_score'])
-            
-            if 'rouge_scores' in gm and gm['rouge_scores']:
-                rs = gm['rouge_scores']
-                if 'rouge1' in rs and rs['rouge1'] is not None:
-                    rouge1_scores.append(rs['rouge1'])
-                if 'rouge2' in rs and rs['rouge2'] is not None:
-                    rouge2_scores.append(rs['rouge2'])
-                if 'rougeL' in rs and rs['rougeL'] is not None:
-                    rougeL_scores.append(rs['rougeL'])
-            
-            if 'numeric_match' in gm:
-                q_type = r.get('question_type', '').lower()
-                if q_type == 'metrics-generated':
-                    numeric_total += 1
-                    if gm['numeric_match']:
-                        numeric_correct += 1
-        
-        # Fallback: check top-level fields
-        if not bleu_scores and 'bleu_score' in r and r['bleu_score'] is not None:
-            bleu_scores.append(r['bleu_score'])
-        
-        if not rouge1_scores and 'rouge_scores' in r and r['rouge_scores']:
-            rs = r['rouge_scores']
-            if 'rouge1' in rs and rs['rouge1'] is not None:
-                rouge1_scores.append(rs['rouge1'])
-            if 'rouge2' in rs and rs['rouge2'] is not None:
-                rouge2_scores.append(rs['rouge2'])
-            if 'rougeL' in rs and rs['rougeL'] is not None:
-                rougeL_scores.append(rs['rougeL'])
-        
-        if not numeric_total and 'numeric_match' in r:
-            q_type = r.get('question_type', '').lower()
-            if q_type == 'metrics-generated':
+
+    for sample in results:
+        retrieved_chunks = extract_retrieved_chunks(sample)
+        gold_segments, gold_text_fallback = extract_gold_segments(sample)
+
+        if retrieved_chunks and gold_segments:
+            d1, p1 = compute_doc_page_recall(retrieved_chunks, gold_segments, 1)
+            d3, p3 = compute_doc_page_recall(retrieved_chunks, gold_segments, 3)
+            d5, p5 = compute_doc_page_recall(retrieved_chunks, gold_segments, 5)
+            doc_r1.append(d1)
+            doc_r3.append(d3)
+            doc_r5.append(d5)
+            page_r1.append(p1)
+            page_r3.append(p3)
+            page_r5.append(p5)
+
+        # context metrics (max over chunks)
+        gold_text = "\n\n".join([seg.get("text", "") for seg in gold_segments if seg.get("text")])
+        if not gold_text and gold_text_fallback:
+            gold_text = gold_text_fallback
+        if gold_text and retrieved_chunks:
+            max_bleu = 0.0
+            max_r1 = 0.0
+            max_r2 = 0.0
+            max_rl = 0.0
+            for chunk in retrieved_chunks[:MAX_CONTEXT_CHUNKS]:
+                chunk_text = chunk.get("text", "") or ""
+                if not chunk_text:
+                    continue
+                bleu = evaluator.compute_bleu(prediction=chunk_text, reference=gold_text)
+                rouge = evaluator.compute_rouge(prediction=chunk_text, reference=gold_text)
+                if isinstance(bleu, dict) and bleu.get("bleu_4") is not None:
+                    max_bleu = max(max_bleu, float(bleu["bleu_4"]))
+                if isinstance(rouge, dict):
+                    if rouge.get("rouge_1_f1") is not None:
+                        max_r1 = max(max_r1, float(rouge["rouge_1_f1"]))
+                    if rouge.get("rouge_2_f1") is not None:
+                        max_r2 = max(max_r2, float(rouge["rouge_2_f1"]))
+                    if rouge.get("rouge_l_f1") is not None:
+                        max_rl = max(max_rl, float(rouge["rouge_l_f1"]))
+            ctx_bleu.append(max_bleu)
+            ctx_r1.append(max_r1)
+            ctx_r2.append(max_r2)
+            ctx_rl.append(max_rl)
+
+        # generation metrics
+        pred = None
+        pred_source = None
+        for key in ["generated_answer", "prediction", "model_answer", "response", "output"]:
+            if sample.get(key):
+                pred = sample.get(key)
+                pred_source = key
+                break
+        if pred is None and sample.get("answer"):
+            pred = sample.get("answer")
+            pred_source = "answer"
+
+        ref = sample.get("reference_answer") or sample.get("reference") or sample.get("ground_truth") or sample.get("gold_answer")
+        if not ref and pred_source != "answer":
+            ref = sample.get("answer")
+
+        if pred and ref:
+            bleu = evaluator.compute_bleu(prediction=pred, reference=ref)
+            rouge = evaluator.compute_rouge(prediction=pred, reference=ref)
+
+            if isinstance(bleu, dict) and bleu.get("bleu_4") is not None:
+                gen_bleu.append(float(bleu["bleu_4"]))
+
+            if isinstance(rouge, dict):
+                if rouge.get("rouge_1_f1") is not None:
+                    gen_r1.append(float(rouge["rouge_1_f1"]))
+                if rouge.get("rouge_2_f1") is not None:
+                    gen_r2.append(float(rouge["rouge_2_f1"]))
+                if rouge.get("rouge_l_f1") is not None:
+                    gen_rl.append(float(rouge["rouge_l_f1"]))
+
+            q_type = (sample.get("question_type") or "").lower()
+            if q_type == "metrics-generated":
                 numeric_total += 1
-                if r['numeric_match']:
+                if compute_numeric_match(ref, pred):
                     numeric_correct += 1
-    
-    # Compute averages
-    if doc_recall_1:
-        metrics['doc_recall_1'] = np.mean(doc_recall_1)
-        metrics['retrieval_samples'] = len(doc_recall_1)
-    
-    if doc_recall_3:
-        metrics['doc_recall_3'] = np.mean(doc_recall_3)
-    
-    if doc_recall_5:
-        metrics['doc_recall_5'] = np.mean(doc_recall_5)
-    
-    if page_recall_1:
-        metrics['page_recall_1'] = np.mean(page_recall_1)
-    
-    if page_recall_3:
-        metrics['page_recall_3'] = np.mean(page_recall_3)
-    
-    if page_recall_5:
-        metrics['page_recall_5'] = np.mean(page_recall_5)
-    
-    if bleu_scores:
-        metrics['gen_bleu'] = np.mean(bleu_scores)
-        metrics['generation_samples'] = len(bleu_scores)
-    
-    if rouge1_scores:
-        metrics['gen_rouge1'] = np.mean(rouge1_scores)
-    
-    if rouge2_scores:
-        metrics['gen_rouge2'] = np.mean(rouge2_scores)
-    
-    if rougeL_scores:
-        metrics['gen_rougeL'] = np.mean(rougeL_scores)
-    
-    metrics['numeric_correct'] = numeric_correct
-    metrics['numeric_total'] = numeric_total
-    
+
+    if doc_r1:
+        metrics["doc_recall_1"] = float(np.mean(doc_r1))
+        metrics["retrieval_samples"] = len(doc_r1)
+    if doc_r3:
+        metrics["doc_recall_3"] = float(np.mean(doc_r3))
+    if doc_r5:
+        metrics["doc_recall_5"] = float(np.mean(doc_r5))
+    if page_r1:
+        metrics["page_recall_1"] = float(np.mean(page_r1))
+    if page_r3:
+        metrics["page_recall_3"] = float(np.mean(page_r3))
+    if page_r5:
+        metrics["page_recall_5"] = float(np.mean(page_r5))
+
+    if ctx_bleu:
+        metrics["ctx_bleu"] = float(np.mean(ctx_bleu))
+        metrics["context_samples"] = len(ctx_bleu)
+    if ctx_r1:
+        metrics["ctx_rouge1"] = float(np.mean(ctx_r1))
+    if ctx_r2:
+        metrics["ctx_rouge2"] = float(np.mean(ctx_r2))
+    if ctx_rl:
+        metrics["ctx_rougeL"] = float(np.mean(ctx_rl))
+
+    if gen_bleu:
+        metrics["gen_bleu"] = float(np.mean(gen_bleu))
+        metrics["generation_samples"] = len(gen_bleu)
+    if gen_r1:
+        metrics["gen_rouge1"] = float(np.mean(gen_r1))
+    if gen_r2:
+        metrics["gen_rouge2"] = float(np.mean(gen_r2))
+    if gen_rl:
+        metrics["gen_rougeL"] = float(np.mean(gen_rl))
+
+    metrics["numeric_correct"] = numeric_correct
+    metrics["numeric_total"] = numeric_total
+
     return metrics
 
 
-def extract_experiment_metadata(file_path: Path, data: Dict, results: List[Dict]) -> Dict[str, Any]:
-    """Extract metadata from the top-level 'metadata' field in the JSON."""
+def extract_experiment_metadata(file_path: Path, data: Dict[str, Any]) -> Dict[str, Any]:
     metadata = {
-        'file_path': str(file_path),
-        'file_name': file_path.name,
-        'experiment_name': '',
-        'date': '',
-        'retrieval_method': '',
-        'model_name': '',
-        'embedding_model': '',
-        'reranker_model': '',
+        "file_path": str(file_path),
+        "file_name": file_path.name,
+        "experiment_name": "",
+        "subfolder": "",
+        "timestamp": "",
+        "date": "",
+        "retrieval_method": "",
+        "model_name": "",
+        "embedding_model": "",
+        "reranker_model": "",
     }
-    
-    # Extract date from filename (format: YYYYMMDD_HHMMSS)
-    date_match = re.search(r'(\d{8})_(\d{6})', file_path.name)
-    if date_match:
-        date_str = date_match.group(1)
-        time_str = date_match.group(2)
+
+    # Extract timestamp from parent directory name (for final_results.json in timestamped folders)
+    parent_dir = file_path.parent.name
+    timestamp_match = re.search(r"(\d{8})_(\d{6})", parent_dir)
+    if timestamp_match:
+        date_str = timestamp_match.group(1)
+        time_str = timestamp_match.group(2)
+        metadata["timestamp"] = f"{date_str}_{time_str}"
         try:
             dt = datetime.strptime(f"{date_str}_{time_str}", "%Y%m%d_%H%M%S")
-            metadata['date'] = dt.strftime("%Y-%m-%d %H:%M:%S")
-        except:
-            metadata['date'] = date_str
-    elif date_match := re.search(r'(\d{8})', file_path.name):
-        metadata['date'] = date_match.group(1)
-    
-    # Extract experiment name from path or filename
-    parts = file_path.parts
-    if 'results' in parts:
-        idx = parts.index('results')
-        if idx + 1 < len(parts):
-            metadata['experiment_name'] = parts[idx + 1]
-    elif 'outputs' in parts:
-        # Use filename without extension and timestamp
-        name = file_path.stem
-        # Remove timestamp
-        name = re.sub(r'_\d{8}_\d{6}', '', name)
-        name = re.sub(r'_scored$', '', name)
-        metadata['experiment_name'] = name
-    
-    # Extract from top-level 'metadata' field (priority)
-    if isinstance(data, dict) and 'metadata' in data:
-        meta = data['metadata']
-        
-        if 'experiment_type' in meta:
-            metadata['retrieval_method'] = meta['experiment_type'].upper()
-        
-        if 'llm_model' in meta:
-            metadata['model_name'] = meta['llm_model']
-        
-        if 'embedding_model' in meta:
-            metadata['embedding_model'] = meta['embedding_model']
-        
-        if 'reranker_model' in meta:
-            metadata['reranker_model'] = meta['reranker_model']
-        
-        if 'timestamp' in meta and not metadata['date']:
+            metadata["date"] = dt.strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            metadata["date"] = date_str
+    else:
+        # Try to extract from filename (for unified results)
+        date_match = re.search(r"(\d{8})_(\d{6})", file_path.name)
+        if date_match:
+            date_str = date_match.group(1)
+            time_str = date_match.group(2)
+            metadata["timestamp"] = f"{date_str}_{time_str}"
             try:
-                ts = meta['timestamp']
-                if isinstance(ts, str):
-                    dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
-                    metadata['date'] = dt.strftime("%Y-%m-%d %H:%M:%S")
-            except:
-                pass
-    
-    # Fallback: extract from filename if still empty
-    if not metadata['retrieval_method']:
+                dt = datetime.strptime(f"{date_str}_{time_str}", "%Y%m%d_%H%M%S")
+                metadata["date"] = dt.strftime("%Y-%m-%d %H:%M:%S")
+            except Exception:
+                metadata["date"] = date_str
+        elif date_match := re.search(r"(\d{8})", file_path.name):
+            metadata["date"] = date_match.group(1)
+            metadata["timestamp"] = date_match.group(1)
+
+    parts = file_path.parts
+    if "results" in parts:
+        idx = parts.index("results")
+        if idx + 1 < len(parts):
+            # For results/subfolder/timestamp/final_results.json
+            subfolder = parts[idx + 1]
+            metadata["subfolder"] = subfolder
+            metadata["experiment_name"] = subfolder
+            # If there's a timestamp directory, append it
+            if idx + 2 < len(parts) and re.match(r"\d{8}_\d{6}", parts[idx + 2]):
+                metadata["experiment_name"] = f"{subfolder}/{parts[idx + 2]}"
+    elif "outputs" in parts:
+        name = file_path.stem
+        name = re.sub(r"_\d{8}_\d{6}", "", name)
+        name = re.sub(r"_scored$", "", name)
+        metadata["experiment_name"] = name
+        metadata["subfolder"] = "unified"
+
+    if isinstance(data, dict) and "metadata" in data:
+        meta = data["metadata"]
+        if "experiment_type" in meta:
+            metadata["retrieval_method"] = str(meta["experiment_type"]).upper()
+        if "llm_model" in meta:
+            metadata["model_name"] = meta["llm_model"]
+        if "embedding_model" in meta:
+            metadata["embedding_model"] = meta["embedding_model"]
+        if "reranker_model" in meta:
+            metadata["reranker_model"] = meta["reranker_model"]
+
+    if not metadata["retrieval_method"]:
         filename_lower = file_path.name.lower()
-        if 'bm25' in filename_lower:
-            metadata['retrieval_method'] = 'BM25'
-        elif 'hybrid' in filename_lower:
-            metadata['retrieval_method'] = 'Hybrid'
-        elif 'dense' in filename_lower:
-            metadata['retrieval_method'] = 'Dense'
-        elif 'splade' in filename_lower:
-            metadata['retrieval_method'] = 'SPLADE'
-        elif 'page_then_chunk' in filename_lower or 'page_chunk' in filename_lower:
-            metadata['retrieval_method'] = 'Page-Then-Chunk'
-        elif 'learned_page' in filename_lower:
-            metadata['retrieval_method'] = 'Learned-Page'
-        elif 'multi_hyde' in filename_lower:
-            metadata['retrieval_method'] = 'Multi-HyDE'
-    
-    # Fallback: check config field
-    if isinstance(data, dict) and 'config' in data:
-        config = data['config']
-        if 'retrieval_method' in config and not metadata['retrieval_method']:
-            metadata['retrieval_method'] = config.get('retrieval_method', '')
-        if 'model_name' in config and not metadata['model_name']:
-            metadata['model_name'] = config.get('model_name', '')
-        if 'embedding_model' in config and not metadata['embedding_model']:
-            metadata['embedding_model'] = config.get('embedding_model', '')
-    
+        if "bm25" in filename_lower:
+            metadata["retrieval_method"] = "BM25"
+        elif "hybrid" in filename_lower:
+            metadata["retrieval_method"] = "Hybrid"
+        elif "dense" in filename_lower:
+            metadata["retrieval_method"] = "Dense"
+        elif "splade" in filename_lower:
+            metadata["retrieval_method"] = "SPLADE"
+        elif "page_then_chunk" in filename_lower or "page_chunk" in filename_lower:
+            metadata["retrieval_method"] = "Page-Then-Chunk"
+        elif "learned_page" in filename_lower:
+            metadata["retrieval_method"] = "Learned-Page"
+
     return metadata
 
 
-def load_result_file(file_path: Path) -> Optional[tuple[Dict[str, Any], List[Dict[str, Any]]]]:
-    """Load a result file and return metadata and results list."""
-    # Skip non-result files
-    skip_patterns = [
-        'config.json', 'modules.json', 'tokenizer.json', 
-        'tokenizer_config.json', 'sentence_bert_config.json',
-        'config_sentence_transformers.json', 'training_metrics.json',
-        'special_tokens_map.json', 'vocab.json', 'merges.txt'
-    ]
-    
-    if file_path.name in skip_patterns:
-        return None
-    
+def load_result_file(file_path: Path) -> Optional[Tuple[Dict[str, Any], List[Dict[str, Any]]]]:
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             data = json.load(f)
-    except Exception as e:
-        logger.debug(f"Failed to load {file_path}: {e}")
+    except Exception as exc:
+        logger.debug("Failed to load %s: %s", file_path, exc)
         return None
-    
-    # Extract results list
+
     if isinstance(data, dict):
-        if 'results' in data:
-            results = data['results']
-        elif 'samples' in data:
-            results = data['samples']
+        if "results" in data:
+            results = data["results"]
+        elif "samples" in data:
+            results = data["samples"]
         else:
-            # Might be a dict where each key is a result
             if all(isinstance(v, dict) for v in data.values()):
                 results = list(data.values())
             else:
@@ -529,255 +486,230 @@ def load_result_file(file_path: Path) -> Optional[tuple[Dict[str, Any], List[Dic
         results = data
     else:
         return None
-    
-    # Ensure results is a list
+
     if not isinstance(results, list):
-        results = list(results) if hasattr(results, '__iter__') else []
-    
-    # Filter: need at least 10 samples and must have 'question' field
-    if len(results) < 10:
+        results = list(results) if hasattr(results, "__iter__") else []
+
+    if len(results) < 5:
         return None
-    
-    # Check if samples have 'question' field
+
     sample_to_check = results[:min(5, len(results))]
-    if not any('question' in r for r in sample_to_check if isinstance(r, dict)):
+    if not any(isinstance(r, dict) and ("question" in r or "query" in r) for r in sample_to_check):
         return None
-    
-    # Extract metadata (pass results too)
-    metadata = extract_experiment_metadata(file_path, data, results)
-    
+
+    metadata = extract_experiment_metadata(file_path, data)
     return metadata, results
 
 
-def aggregate_overall_results(result_dirs: List[Path]) -> List[Dict[str, Any]]:
-    """Aggregate overall results from all experiment files."""
+def collect_result_files(root_dir: Path) -> List[Path]:
+    files: Set[Path] = set()
+    for file_path in root_dir.rglob("all_predictions.json"):
+        files.add(file_path)
+
+    unified_dir = root_dir / "outputs" / "results" / "unified"
+    if unified_dir.exists():
+        for file_path in unified_dir.rglob("*.json"):
+            files.add(file_path)
+
+    return sorted(files)
+
+
+def aggregate_overall_results(files: List[Path]) -> List[Dict[str, Any]]:
     all_experiments = []
-    
-    for results_dir in result_dirs:
-        if not results_dir.exists():
-            logger.warning(f"Directory not found: {results_dir}")
+    for file_path in files:
+        print(f"Processing: {file_path}")
+        loaded = load_result_file(file_path)
+        if loaded is None:
+            print(f"  Skipped (not a results file): {file_path}")
             continue
-        
-        logger.info(f"Processing {results_dir}...")
-        
-        # Find all JSON files
-        json_files = list(results_dir.rglob("*.json"))
-        logger.info(f"Found {len(json_files)} JSON files")
-        
-        for file_path in json_files:
-            result = load_result_file(file_path)
-            if result is None:
-                continue
-            
-            metadata, results = result
-            
-            # Compute metrics
-            metrics = compute_metrics_from_results(results)
-            
-            # Combine metadata and metrics
-            experiment = {**metadata, **metrics}
-            all_experiments.append(experiment)
-            
-            logger.info(f"  ✓ {file_path.name}: {metrics['total_samples']} samples")
-    
+        metadata, results = loaded
+        print(f"  Samples: {len(results)}")
+        metrics = compute_metrics_from_results(results)
+        all_experiments.append({**metadata, **metrics})
+        logger.info("  ✓ %s: %s samples", file_path.name, metrics["total_samples"])
     return all_experiments
 
 
-def aggregate_by_group(result_dirs: List[Path], group_by: str) -> List[Dict[str, Any]]:
-    """
-    Aggregate results grouped by doc_type, question_type, or question_reasoning.
-    
-    Args:
-        result_dirs: List of directories to process
-        group_by: 'doc_type', 'question_type', or 'question_reasoning'
-    """
-    # First collect all results by experiment and group
-    experiment_groups = defaultdict(lambda: defaultdict(list))
-    
-    for results_dir in result_dirs:
-        if not results_dir.exists():
+def aggregate_by_group(files: List[Path], group_by: str) -> List[Dict[str, Any]]:
+    experiment_groups: Dict[str, Dict[str, List[Dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+
+    for file_path in files:
+        print(f"Grouping by {group_by}: {file_path}")
+        loaded = load_result_file(file_path)
+        if loaded is None:
+            print(f"  Skipped (not a results file): {file_path}")
             continue
-        
-        json_files = list(results_dir.rglob("*.json"))
-        
-        for file_path in json_files:
-            result = load_result_file(file_path)
-            if result is None:
-                continue
-            
-            metadata, results = result
-            experiment_name = f"{metadata['experiment_name']}_{metadata['date']}"
-            
-            # Group results by the specified field
-            for r in results:
-                if group_by == 'doc_type':
-                    # Use doc_type field or extract from doc_name
-                    group_value = r.get('doc_type', '')
-                    if not group_value:
-                        doc_name = r.get('doc_name', '')
-                        group_value = extract_doc_type_from_name(doc_name)
-                elif group_by in ['question_type', 'question_reasoning']:
-                    group_value = r.get(group_by, 'unknown')
-                else:
-                    group_value = 'unknown'
-                
-                experiment_groups[experiment_name][group_value].append(r)
-    
-    # Now compute metrics for each experiment-group combination
-    aggregated_results = []
-    
+        metadata, results = loaded
+        experiment_name = f"{metadata['experiment_name']}_{metadata['date']}"
+
+        for r in results:
+            if group_by == "doc_type":
+                group_value = r.get("doc_type", "")
+                if not group_value:
+                    group_value = extract_doc_type_from_name(r.get("doc_name", ""))
+            elif group_by in ["question_type", "question_reasoning"]:
+                group_value = r.get(group_by, "unknown")
+            else:
+                group_value = "unknown"
+
+            experiment_groups[experiment_name][group_value].append(r)
+
+    aggregated = []
     for experiment_name, groups in experiment_groups.items():
         for group_value, group_results in groups.items():
             if not group_results:
                 continue
-            
             metrics = compute_metrics_from_results(group_results)
-            
-            result = {
-                'experiment_name': experiment_name,
-                'group_by': group_by,
-                'group_value': group_value,
-                **metrics
-            }
-            aggregated_results.append(result)
-    
-    return aggregated_results
+            aggregated.append(
+                {
+                    "experiment_name": experiment_name,
+                    "group_by": group_by,
+                    "group_value": group_value,
+                    **metrics,
+                }
+            )
+
+    return aggregated
 
 
-def write_overall_csv(experiments: List[Dict[str, Any]], output_path: Path):
-    """Write overall experiment results to CSV."""
+def write_overall_csv(experiments: List[Dict[str, Any]], output_path: Path) -> None:
     if not experiments:
         logger.warning("No experiments to write")
         return
-    
+
     fieldnames = [
-        'experiment_name', 'date', 'file_name', 'retrieval_method', 'model_name', 'embedding_model', 'reranker_model',
-        'total_samples',
-        # Retrieval metrics
-        'retrieval_samples',
-        'doc_recall_1', 'doc_recall_3', 'doc_recall_5',
-        'page_recall_1', 'page_recall_3', 'page_recall_5',
-        # Generation metrics
-        'generation_samples',
-        'gen_bleu', 'gen_rouge1', 'gen_rouge2', 'gen_rougeL',
-        'numeric_correct', 'numeric_total',
-        'file_path'
+        "experiment_name",
+        "subfolder",
+        "timestamp",
+        "date",
+        "file_name",
+        "retrieval_method",
+        "model_name",
+        "embedding_model",
+        "reranker_model",
+        "total_samples",
+        "retrieval_samples",
+        "doc_recall_1",
+        "doc_recall_3",
+        "doc_recall_5",
+        "page_recall_1",
+        "page_recall_3",
+        "page_recall_5",
+        "context_samples",
+        "ctx_bleu",
+        "ctx_rouge1",
+        "ctx_rouge2",
+        "ctx_rougeL",
+        "generation_samples",
+        "gen_bleu",
+        "gen_rouge1",
+        "gen_rouge2",
+        "gen_rougeL",
+        "numeric_correct",
+        "numeric_total",
+        "file_path",
     ]
-    
-    with open(output_path, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
+
+    with open(output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(experiments)
-    
-    logger.info(f"✓ Wrote {len(experiments)} experiments to {output_path}")
+
+    logger.info("✓ Wrote %s experiments to %s", len(experiments), output_path)
 
 
-def write_grouped_csv(results: List[Dict[str, Any]], output_path: Path):
-    """Write grouped results to CSV."""
+def write_grouped_csv(results: List[Dict[str, Any]], output_path: Path) -> None:
     if not results:
         logger.warning("No results to write")
         return
-    
+
     fieldnames = [
-        'experiment_name', 'group_by', 'group_value',
-        'total_samples',
-        # Retrieval metrics
-        'retrieval_samples',
-        'doc_recall_1', 'doc_recall_3', 'doc_recall_5',
-        'page_recall_1', 'page_recall_3', 'page_recall_5',
-        # Generation metrics
-        'generation_samples',
-        'gen_bleu', 'gen_rouge1', 'gen_rouge2', 'gen_rougeL',
-        'numeric_correct', 'numeric_total',
+        "experiment_name",
+        "group_by",
+        "group_value",
+        "total_samples",
+        "retrieval_samples",
+        "doc_recall_1",
+        "doc_recall_3",
+        "doc_recall_5",
+        "page_recall_1",
+        "page_recall_3",
+        "page_recall_5",
+        "context_samples",
+        "ctx_bleu",
+        "ctx_rouge1",
+        "ctx_rouge2",
+        "ctx_rougeL",
+        "generation_samples",
+        "gen_bleu",
+        "gen_rouge1",
+        "gen_rouge2",
+        "gen_rougeL",
+        "numeric_correct",
+        "numeric_total",
     ]
-    
-    with open(output_path, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
+
+    with open(output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(results)
-    
-    logger.info(f"✓ Wrote {len(results)} grouped results to {output_path}")
+
+    logger.info("✓ Wrote %s grouped rows to %s", len(results), output_path)
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Aggregate evaluation metrics from all experiment result files"
-    )
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Aggregate evaluation metrics for FB_reproducability")
     parser.add_argument(
-        '--results-dirs',
+        "--output-dir",
         type=Path,
-        nargs='+',
-        default=[Path('outputs'), Path('results'), Path('evaluation_results')],
-        help='Directories containing result files'
+        default=SCRIPT_ROOT / "aggregated_results",
+        help="Directory to write output CSV files",
     )
     parser.add_argument(
-        '--output-dir',
-        type=Path,
-        default=Path('aggregated_results'),
-        help='Directory to write output CSV files'
-    )
-    parser.add_argument(
-        '--prefix',
+        "--prefix",
         type=str,
-        default='',
-        help='Prefix for output filenames'
+        default="",
+        help="Prefix for output filenames",
     )
-    
     args = parser.parse_args()
-    
-    # Create output directory
+
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Generate timestamp for output files
+
+    files = collect_result_files(SCRIPT_ROOT)
+    print(f"Found {len(files)} files to process")
+    logger.info("Found %s JSON files", len(files))
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     prefix = f"{args.prefix}_" if args.prefix else ""
-    
-    logger.info("=" * 80)
-    logger.info("AGGREGATING OVERALL RESULTS")
-    logger.info("=" * 80)
-    
-    # 1. Overall results
-    overall_experiments = aggregate_overall_results(args.results_dirs)
+
+    overall = aggregate_overall_results(files)
+    print("Writing overall CSV...")
     overall_path = args.output_dir / f"{prefix}overall_results_{timestamp}.csv"
-    write_overall_csv(overall_experiments, overall_path)
-    
-    logger.info("\n" + "=" * 80)
-    logger.info("AGGREGATING BY DOC_TYPE")
-    logger.info("=" * 80)
-    
-    # 2. Group by doc_type
-    doc_type_results = aggregate_by_group(args.results_dirs, 'doc_type')
+    write_overall_csv(overall, overall_path)
+
+    doc_type = aggregate_by_group(files, "doc_type")
+    print("Writing by_doc_type CSV...")
     doc_type_path = args.output_dir / f"{prefix}by_doc_type_{timestamp}.csv"
-    write_grouped_csv(doc_type_results, doc_type_path)
-    
-    logger.info("\n" + "=" * 80)
-    logger.info("AGGREGATING BY QUESTION_TYPE")
-    logger.info("=" * 80)
-    
-    # 3. Group by question_type
-    question_type_results = aggregate_by_group(args.results_dirs, 'question_type')
+    write_grouped_csv(doc_type, doc_type_path)
+
+    question_type = aggregate_by_group(files, "question_type")
+    print("Writing by_question_type CSV...")
     question_type_path = args.output_dir / f"{prefix}by_question_type_{timestamp}.csv"
-    write_grouped_csv(question_type_results, question_type_path)
-    
-    logger.info("\n" + "=" * 80)
-    logger.info("AGGREGATING BY QUESTION_REASONING")
-    logger.info("=" * 80)
-    
-    # 4. Group by question_reasoning
-    reasoning_results = aggregate_by_group(args.results_dirs, 'question_reasoning')
+    write_grouped_csv(question_type, question_type_path)
+
+    reasoning = aggregate_by_group(files, "question_reasoning")
+    print("Writing by_question_reasoning CSV...")
     reasoning_path = args.output_dir / f"{prefix}by_question_reasoning_{timestamp}.csv"
-    write_grouped_csv(reasoning_results, reasoning_path)
-    
-    logger.info("\n" + "=" * 80)
-    logger.info("SUMMARY")
-    logger.info("=" * 80)
-    logger.info(f"Overall experiments: {len(overall_experiments)}")
-    logger.info(f"Doc type groups: {len(doc_type_results)}")
-    logger.info(f"Question type groups: {len(question_type_results)}")
-    logger.info(f"Question reasoning groups: {len(reasoning_results)}")
-    logger.info(f"\nOutput files written to: {args.output_dir}")
-    logger.info("=" * 80)
+    write_grouped_csv(reasoning, reasoning_path)
+
+    logger.info(
+        "Summary: %s overall, %s doc_type, %s question_type, %s question_reasoning",
+        len(overall),
+        len(doc_type),
+        len(question_type),
+        len(reasoning),
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

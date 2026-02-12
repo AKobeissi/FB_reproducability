@@ -80,12 +80,13 @@ def generate_answer(question: str, context: str, tokenizer, model, max_new_token
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
+            do_sample=True,
             temperature=0.1,
-            do_sample=False,
+        #    top_p=0.9,    # optional
+        #    top_k=50,     # optional
             pad_token_id=tokenizer.pad_token_id,
-            eos_token_id=tokenizer.eos_token_id,
         )
-    
+
     # Decode only the generated part
     generated_text = tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
     return generated_text.strip()
@@ -111,7 +112,7 @@ def check_numeric_match(reference: str, prediction: str) -> float:
     
     for r_num in ref_nums:
         for p_num in pred_nums:
-            if np.isclose(r_num, p_num, atol=0.05, rtol=0.05):
+            if np.isclose(r_num, p_num, atol=0.03, rtol=0.03):
                 return 1.0
     return 0.0
 
@@ -155,6 +156,45 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
     with open(input_file, 'r') as f:
         predictions = json.load(f)
     
+    data = predictions  # rename for clarity
+    
+    wrapper = None
+
+    if isinstance(data, dict) and "results" in data and isinstance(data["results"], list):
+        predictions = data["results"]
+        wrapper = {k: v for k, v in data.items() if k != "results"}
+    elif isinstance(data, list):
+        predictions = data
+    else:
+        raise ValueError(
+            f"Unexpected JSON format. Top-level type: {type(data)}, keys: {list(data.keys()) if isinstance(data, dict) else None}"
+        )
+
+    logger.info(f"Loaded {len(predictions)} samples from {input_file}")
+
+    # Case 1, file contains {"predictions": [...], ...}
+    #if isinstance(data, dict) and "predictions" in data and isinstance(data["predictions"], list):
+    #    predictions = data["predictions"]
+
+    # Case 2, file contains a dict of id -> pred
+    #elif isinstance(data, dict):
+        # take values and keep only dict entries
+    #    predictions = [v for v in data.values() if isinstance(v, dict)]
+
+    # Case 3, expected format already
+    #elif isinstance(data, list):
+    #    predictions = data
+
+    #else:
+    #    raise ValueError(f"Unsupported JSON top level type {type(data)}")
+
+    # quick sanity check
+    #if len(predictions) == 0 or not isinstance(predictions[0], dict):
+    #    raise ValueError(
+    #        "Input predictions must be a non empty list of dict objects. "
+    #        f"Got first element type {type(predictions[0]) if predictions else None}"
+    #    )
+
     logger.info(f"Loaded {len(predictions)} predictions")
     
     # Load model
@@ -166,13 +206,33 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
     
     for i, pred in enumerate(tqdm(predictions, desc="Regenerating answers")):
         # Extract context from retrieved chunks
-        chunks = pred.get('retrieved_chunks', [])
-        context_text = "\n\n".join([chunk['text'] for chunk in chunks])
+        #chunks = pred.get('retrieved_chunks', [])
+        chunks = pred.get("retrieved_chunks", []) or []
+        #context_text = "\n\n".join([chunk['text'] for chunk in chunks])
         
-        question = pred.get('question', '')
-        reference_answer = pred.get('answer', '')
-        old_model_answer = pred.get('model_answer', '')
+        #question = pred.get('question', '')
+        #reference_answer = pred.get('answer', '')
+        #old_model_answer = pred.get('model_answer', '')
         
+        context_parts = []
+        
+        for c in chunks:
+            if isinstance(c, dict):
+                context_parts.append(str(c.get("text", "")))
+            else:
+                context_parts.append(str(c))
+        context_text = "\n\n".join([t for t in context_parts if t])
+
+        question = pred.get("question", "")
+
+        # handle both keys depending on the file source
+        reference_answer = pred.get("answer", pred.get("reference_answer", ""))
+
+        # handle old answer keys across formats
+        old_model_answer = pred.get("model_answer", pred.get("new_generated_answer", ""))
+
+
+
         # Generate new answer
         try:
             generated_answer = generate_answer(question, context_text, tokenizer, model)
@@ -181,7 +241,13 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
             generated_answer = ""
         
         # Compute metrics
-        numeric_match = check_numeric_match(reference_answer, generated_answer)
+        question_type = pred.get('question_type', '')
+        
+        # Only compute numeric match for metrics-generated questions
+        numeric_match = None
+        if question_type == 'metrics-generated':
+            numeric_match = check_numeric_match(reference_answer, generated_answer)
+        
         bleu_score = compute_bleu(reference_answer, generated_answer)
         rouge_scores = compute_rouge(reference_answer, generated_answer)
         
@@ -190,13 +256,14 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
             'financebench_id': pred.get('financebench_id'),
             'company': pred.get('company'),
             'doc_name': pred.get('doc_name'),
+            'question_type': question_type,
             'question': question,
             'reference_answer': reference_answer,
             'old_model_answer': old_model_answer,
             'new_generated_answer': generated_answer,
             'retrieved_chunks': chunks,
             'metrics': {
-                'numeric_match': numeric_match,
+                'numeric_match': numeric_match,  # Will be None for non-metrics questions
                 'bleu': bleu_score,
                 'rouge1': rouge_scores['rouge1'],
                 'rouge2': rouge_scores['rouge2'],
@@ -210,14 +277,20 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
             logger.info(f"Processed {i + 1}/{len(predictions)} samples")
     
     # Compute aggregate metrics
-    all_numeric = [r['metrics']['numeric_match'] for r in results]
+    # Only compute numeric match for metrics-generated questions
+    numeric_matches = [r['metrics']['numeric_match'] for r in results if r['metrics']['numeric_match'] is not None]
+    numeric_correct = sum(numeric_matches)
+    numeric_total = len(numeric_matches)
+    
     all_bleu = [r['metrics']['bleu'] for r in results]
     all_rouge1 = [r['metrics']['rouge1'] for r in results]
     all_rouge2 = [r['metrics']['rouge2'] for r in results]
     all_rougeL = [r['metrics']['rougeL'] for r in results]
     
     aggregate_metrics = {
-        'numeric_match': np.mean(all_numeric),
+        'numeric_correct': int(numeric_correct),
+        'numeric_total': int(numeric_total),
+        'numeric_accuracy': float(numeric_correct / numeric_total) if numeric_total > 0 else 0.0,
         'bleu': np.mean(all_bleu),
         'rouge1': np.mean(all_rouge1),
         'rouge2': np.mean(all_rouge2),
@@ -236,13 +309,19 @@ def regenerate_predictions(input_file: str, output_file: str, model_name: str = 
     }
     
     logger.info(f"Saving results to {output_file}")
-    with open(output_file, 'w') as f:
-        json.dump(output_data, f, indent=2)
-    
+    #with open(output_file, 'w') as f:
+    #    json.dump(output_data, f, indent=2)
+    out_data = {"results": predictions, **wrapper} if wrapper is not None else predictions
+
+    with open(output_file, "w") as f:
+        json.dump(out_data, f, indent=2)
+
     # Print aggregate metrics
     logger.info("\n" + "="*80)
     logger.info("AGGREGATE METRICS:")
-    logger.info(f"  Numeric Match: {aggregate_metrics['numeric_match']:.4f}")
+    logger.info(f"  Numeric Match (metrics-generated only):")
+    logger.info(f"    Correct: {aggregate_metrics['numeric_correct']}/{aggregate_metrics['numeric_total']}")
+    logger.info(f"    Accuracy: {aggregate_metrics['numeric_accuracy']:.4f}")
     logger.info(f"  BLEU:          {aggregate_metrics['bleu']:.4f}")
     logger.info(f"  ROUGE-1:       {aggregate_metrics['rouge1']:.4f}")
     logger.info(f"  ROUGE-2:       {aggregate_metrics['rouge2']:.4f}")

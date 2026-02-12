@@ -51,54 +51,46 @@ mkdir -p "$SCRATCH_OUT"
 # - Chunking: 1024 tokens (Standard baseline)
 
 echo "========================================================"
-echo "Experiment 1: Multi-HyDE + Hybrid (Dense+Sparse) + Reranker"
+echo "Experiment 1: Oracel Document"
 echo "========================================================"
 python -m src.core.rag_experiments qwen \
-  -e unified \
+  -e oracle_doc \
   --chunking-unit tokens \
   --chunk-size 1024 \
   --chunk-overlap 128 \
   --pdf-dir pdfs \
-  --embedding-model bge-m3 \
-  --unified-hyde \
-  --unified-hyde-k 4 \
-  --unified-retrieval dense \
-  --unified-rerank \
-  --output-dir "$SCRATCH_OUT/unified_hybrid_rerank"
+  --embedding-model BAAI/bge-m3 \
+  --output-dir "$SCRATCH_OUT/oracle_doc"
 
 echo "========================================================"
 echo "Experiment 2: Multi-HyDE + Dense (BGE-M3) + Reranker"
 echo "========================================================"
-python -m src.core.rag_experiments both \
-  -e unified \
+python -m src.core.rag_experiments qwen \
+  -e oracle_page \
   --chunking-unit tokens \
   --chunk-size 1024 \
   --chunk-overlap 128 \
   --pdf-dir pdfs \
-  --embedding-model bge-m3 \
-  --unified-hyde \
-  --unified-hyde-k 4 \
-  --unified-retrieval hybrid \
-  --unified-rerank \
-  --output-dir "$SCRATCH_OUT/unified_dense_rerank"
+  --embedding-model BAAI/bge-m3 \
+  --output-dir "$SCRATCH_OUT/oracle_page"
 
-echo "========================================================"
-echo "Experiment 3: Multi-HyDE + Sparse (BM25) + Reranker"
-echo "========================================================"
-# Note: In 'sparse' mode, HyDE generates hypotheticals (overhead)
-# but BM25 is strictly lexical on the query. 
-# This serves as a baseline to see if dense components are necessary.
-python -m src.core.rag_experiments both \
-  -e unified \
-  --chunking-unit tokens \
-  --chunk-size 1024 \
-  --chunk-overlap 128 \
-  --pdf-dir pdfs \
-  --unified-hyde \
-  --unified-hyde-k 4 \
-  --unified-retrieval sparse \
-  --unified-rerank \
-  --output-dir "$SCRATCH_OUT/unified_sparse_rerank"
+# echo "========================================================"
+# echo "Experiment 3: Multi-HyDE + Sparse (BM25) + Reranker"
+# echo "========================================================"
+# # Note: In 'sparse' mode, HyDE generates hypotheticals (overhead)
+# # but BM25 is strictly lexical on the query. 
+# # This serves as a baseline to see if dense components are necessary.
+# python -m src.core.rag_experiments both \
+#   -e unified \
+#   --chunking-unit tokens \
+#   --chunk-size 1024 \
+#   --chunk-overlap 128 \
+#   --pdf-dir pdfs \
+#   --unified-hyde \
+#   --unified-hyde-k 4 \
+#   --unified-retrieval sparse \
+#   --unified-rerank \
+#   --output-dir "$SCRATCH_OUT/unified_sparse_rerank"
 
 # --- 5. SAVE RESULTS ---
 # Copy results back to the original submission directory
