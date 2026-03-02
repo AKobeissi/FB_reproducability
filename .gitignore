@@ -23,3 +23,8 @@ outputs/
 __pycache__/
 .ipynb_checkpoints/
 GITIGNORE
+# generated artifacts
+analysis/**/embeddings/
+*.npy
+*.npz
+EOF

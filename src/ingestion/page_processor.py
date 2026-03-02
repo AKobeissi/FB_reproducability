@@ -3,7 +3,10 @@ src/ingestion/page_processor.py
 Utilities for extracting pages and creating digests for page-level retrieval.
 """
 import re
-import fitz  # PyMuPDF
+try:
+    import pymupdf
+except Exception:  # pragma: no cover - best-effort fallback
+    pymupdf = None
 from pathlib import Path
 from typing import List, Tuple, Dict, Any
 import logging
@@ -61,13 +64,20 @@ def extract_pages_from_pdf(pdf_path: Path, doc_name: str) -> List[Dict[str, Any]
         # Use PyMuPDFLoader from langchain for consistency with ground truth
         try:
             from langchain_community.document_loaders import PyMuPDFLoader
-        except:
+        except Exception as exc1:
             try:
                 from langchain.document_loaders import PyMuPDFLoader
-            except:
-                # Fallback to fitz if langchain not available
-                logger.warning("PyMuPDFLoader not available, using fitz directly")
-                doc = fitz.open(pdf_path)
+            except Exception as exc2:
+                # Fallback to pymupdf if langchain not available
+                logger.warning(
+                    "PyMuPDFLoader not available (langchain_community error: %s; langchain error: %s). "
+                    "Using pymupdf directly.",
+                    exc1,
+                    exc2,
+                )
+                if pymupdf is None or not hasattr(pymupdf, "open"):
+                    raise RuntimeError("pymupdf not available for fallback")
+                doc = pymupdf.open(pdf_path)
                 pages = []
                 for i in range(len(doc)):
                     text = doc.load_page(i).get_text("text")

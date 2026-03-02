@@ -171,8 +171,8 @@ class MetricsCalculator:
             except Exception:
                 pass
 
-        # Numeric Match
-        if "metrics" in q_type.lower() or "generated" in q_type.lower():
+        # Numeric Match - only for metrics-generated questions
+        if q_type.lower() == "metrics-generated":
             metrics["numeric_match"] = check_numeric_match(reference, prediction)
         
         return metrics

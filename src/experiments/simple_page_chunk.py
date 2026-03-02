@@ -24,16 +24,53 @@ from langchain.schema import Document
 logger = logging.getLogger(__name__)
 
 
-def extract_all_pages_from_pdfs(pdf_dir: Path) -> List[Dict[str, Any]]:
+def _normalize_doc_name(doc_name: str) -> str:
+    """Normalize document name for consistent comparison."""
+    if not doc_name:
+        return ""
+    name = str(doc_name).lower().strip()
+    if name.endswith(".pdf"):
+        name = name[:-4]
+    return name
+
+
+def _collect_unique_docs(data: List[Dict[str, Any]]) -> set:
+    """Extract unique document names from dataset."""
+    doc_names = set()
+    for sample in data:
+        doc_name = sample.get('doc_name') or sample.get('document')
+        if doc_name:
+            doc_names.add(_normalize_doc_name(doc_name))
+    return doc_names
+
+
+def extract_all_pages_from_pdfs(pdf_dir: Path, target_docs: Optional[set] = None) -> List[Dict[str, Any]]:
     """
-    Extract all pages from all PDFs in directory.
-    Returns list of dicts with: {text, doc_name, page (0-indexed), pdf_path}
+    Extract all pages from PDFs in directory.
+    
+    Args:
+        pdf_dir: Directory containing PDFs
+        target_docs: Optional set of normalized doc names to index (None = index all)
+    
+    Returns:
+        List of dicts with: {text, doc_name, page (0-indexed), pdf_path}
     """
     logger.info(f"Extracting pages from PDFs in: {pdf_dir}")
     
     all_pages = []
-    pdf_files = list(pdf_dir.glob("**/*.pdf"))
-    logger.info(f"Found {len(pdf_files)} PDF files")
+    all_pdf_files = list(pdf_dir.glob("**/*.pdf"))
+    
+    # Filter to only target documents if specified
+    if target_docs:
+        pdf_files = []
+        for pdf_path in all_pdf_files:
+            doc_name = _normalize_doc_name(pdf_path.stem)
+            if doc_name in target_docs:
+                pdf_files.append(pdf_path)
+        logger.info(f"Filtered to {len(pdf_files)} PDFs matching dataset (out of {len(all_pdf_files)} total)")
+    else:
+        pdf_files = all_pdf_files
+        logger.info(f"Found {len(pdf_files)} PDF files (indexing all)")
     
     for pdf_path in pdf_files:
         doc_name = pdf_path.stem
@@ -206,6 +243,14 @@ def run_simple_page_chunk(experiment, data: List[Dict[str, Any]],
     logger.info(f"Strategy: Retrieve {top_m_pages} Pages → Chunk → Retrieve {top_k_chunks} Chunks")
     logger.info("=" * 80)
     
+    # Collect unique documents from dataset
+    target_docs = _collect_unique_docs(data)
+    logger.info(f"\nDataset references {len(target_docs)} unique documents")
+    if len(target_docs) <= 10:
+        logger.info(f"  Documents: {sorted(target_docs)}")
+    else:
+        logger.info(f"  Sample documents: {list(sorted(target_docs))[:5]}...")
+    
     # Get PDF directory
     pdf_dir = Path(getattr(experiment, "pdf_local_dir", None) or 
                    getattr(experiment, "pdf_dir", None) or "pdfs")
@@ -213,9 +258,9 @@ def run_simple_page_chunk(experiment, data: List[Dict[str, Any]],
     if not pdf_dir.exists():
         raise FileNotFoundError(f"PDF directory not found: {pdf_dir}")
     
-    # Step 1: Extract all pages from PDFs
+    # Step 1: Extract all pages from PDFs (filtered to dataset docs)
     logger.info("\n[Step 1/6] Extracting pages from PDFs...")
-    all_pages = extract_all_pages_from_pdfs(pdf_dir)
+    all_pages = extract_all_pages_from_pdfs(pdf_dir, target_docs=target_docs)
     
     if not all_pages:
         raise ValueError("No pages extracted from PDFs!")

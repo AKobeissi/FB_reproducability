@@ -363,11 +363,32 @@ def build_chroma_store(
         save_store_config(experiment, db_path)
 
     # --- Detect whether store is effectively empty --------------------------------
+    #try:
+    #    collection_files = os.listdir(db_path)
+    #    is_empty = len(collection_files) <= 1 or should_clean
+    #except Exception: 
+    #    is_empty = False
+
+    #top_k = getattr(experiment, "top_k", 5)
+    #retriever = vectordb.as_retriever(search_kwargs={"k": top_k})
+
+    #if lazy_load:
+    #    return retriever, vectordb, is_empty
+
+
+
     try:
-        collection_files = os.listdir(db_path)
-        is_empty = len(collection_files) <= 1 or should_clean
-    except Exception: 
-        is_empty = False
+        # Check actual document count in the collection
+        collection_count = vectordb._collection.count()
+        is_empty = collection_count == 0 or should_clean
+        exp_logger.debug(f"Vector store '{db_name}' contains {collection_count} documents (is_empty={is_empty})")
+    except Exception as e:
+        exp_logger.warning(f"Could not check collection count for '{db_name}': {e}. Falling back to file count.")
+        try:
+            collection_files = os.listdir(db_path)
+            is_empty = len(collection_files) <= 1 or should_clean
+        except Exception: 
+            is_empty = False
 
     top_k = getattr(experiment, "top_k", 5)
     retriever = vectordb.as_retriever(search_kwargs={"k": top_k})

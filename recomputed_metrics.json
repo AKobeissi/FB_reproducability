@@ -1,0 +1,2280 @@
+{
+  "total_files": 91,
+  "results": [
+    {
+      "metadata": {
+        "filename": "learned_page_then_chunk_20260129_172619_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/learned_page_then_chunk/20260129/learned_page_then_chunk_20260129_172619_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.012959887793715425,
+        "context_rougeL@1": 0.08810499229251723,
+        "coverage_bleu@1": 0.012024076906157774,
+        "coverage_rougeL@1": 0.08602706694139246,
+        "context_bleu@3": 0.019359171018882144,
+        "context_rougeL@3": 0.10693203866303733,
+        "coverage_bleu@3": 0.018159036295522856,
+        "coverage_rougeL@3": 0.10467239936214343,
+        "context_bleu@5": 0.021485169902406898,
+        "context_rougeL@5": 0.11148939649591975,
+        "coverage_bleu@5": 0.020129858773852365,
+        "coverage_rougeL@5": 0.10938920695521072,
+        "context_bleu@10": 0.021485169902406898,
+        "context_rougeL@10": 0.11148939649591975,
+        "coverage_bleu@10": 0.020129858773852365,
+        "coverage_rougeL@10": 0.10938920695521072
+      }
+    },
+    {
+      "metadata": {
+        "filename": "baseline_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_3/baseline_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.08092539226134152,
+        "context_rougeL@1": 0.23875394429652044,
+        "coverage_bleu@1": 0.07554214663689374,
+        "coverage_rougeL@1": 0.19627865865261676,
+        "context_bleu@3": 0.11319740587329176,
+        "context_rougeL@3": 0.28057812704844026,
+        "coverage_bleu@3": 0.1018825207021564,
+        "coverage_rougeL@3": 0.23249979759868725,
+        "context_bleu@5": 0.26552769649707647,
+        "context_rougeL@5": 0.4520500697748831,
+        "coverage_bleu@5": 0.25421281132594115,
+        "coverage_rougeL@5": 0.4122364502077886,
+        "context_bleu@10": 0.2834812732313985,
+        "context_rougeL@10": 0.46377511609908556,
+        "coverage_bleu@10": 0.2678340301016345,
+        "coverage_rougeL@10": 0.4180989733698898
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_page_then_chunk_20260202_132405_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/learned_page_then_chunk/20260202/learned_page_then_chunk_20260202_132405_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.36494052436937635,
+        "context_rougeL@1": 0.4609837344494962,
+        "coverage_bleu@1": 0.32445184623849277,
+        "coverage_rougeL@1": 0.41956228199804196,
+        "context_bleu@3": 0.44921030664845774,
+        "context_rougeL@3": 0.5575347492673514,
+        "coverage_bleu@3": 0.41820579780498734,
+        "coverage_rougeL@3": 0.5246220754328901,
+        "context_bleu@5": 0.48269950676590667,
+        "context_rougeL@5": 0.5915152933551562,
+        "coverage_bleu@5": 0.4661220285065851,
+        "coverage_rougeL@5": 0.5751508400652101,
+        "context_bleu@10": 0.48269950676590667,
+        "context_rougeL@10": 0.5915152933551562,
+        "coverage_bleu@10": 0.4661220285065851,
+        "coverage_rougeL@10": 0.5751508400652101
+      }
+    },
+    {
+      "metadata": {
+        "filename": "uncertainty_20260127_155301_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/uncertainty/20260127/uncertainty_20260127_155301_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.13916751539864883,
+        "context_rougeL@1": 0.21994604334368012,
+        "coverage_bleu@1": 0.1221812102132059,
+        "coverage_rougeL@1": 0.2002388308041037,
+        "context_bleu@3": 0.24199927443532,
+        "context_rougeL@3": 0.33373724574016883,
+        "coverage_bleu@3": 0.2125837039920266,
+        "coverage_rougeL@3": 0.3011584793916376,
+        "context_bleu@5": 0.29807935824447207,
+        "context_rougeL@5": 0.39114926916434556,
+        "coverage_bleu@5": 0.26171167774972803,
+        "coverage_rougeL@5": 0.3544153352184004,
+        "context_bleu@10": 0.29807935824447207,
+        "context_rougeL@10": 0.39114926916434556,
+        "coverage_bleu@10": 0.26171167774972803,
+        "coverage_rougeL@10": 0.3544153352184004
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20251124_164341_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/scored/shared_vector_20251124_164341_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1097781800196359,
+        "context_rougeL@1": 0.2248122125916863,
+        "coverage_bleu@1": 0.10413752890939179,
+        "coverage_rougeL@1": 0.21424876535714893,
+        "context_bleu@3": 0.15860498929603203,
+        "context_rougeL@3": 0.2937555982072978,
+        "coverage_bleu@3": 0.15126240434839497,
+        "coverage_rougeL@3": 0.2802002606963284,
+        "context_bleu@5": 0.18953485016342686,
+        "context_rougeL@5": 0.335117205042277,
+        "coverage_bleu@5": 0.17965928544820672,
+        "coverage_rougeL@5": 0.32069348476861664,
+        "context_bleu@10": 0.18953485016342686,
+        "context_rougeL@10": 0.335117205042277,
+        "coverage_bleu@10": 0.17965928544820672,
+        "coverage_rougeL@10": 0.32069348476861664
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_182502_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_182502_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.02379988651294039,
+        "context_rougeL@1": 0.11816198187837022,
+        "coverage_bleu@1": 0.021561842229409156,
+        "coverage_rougeL@1": 0.11379343178579779,
+        "context_bleu@3": 0.045916586121237196,
+        "context_rougeL@3": 0.16628483331420027,
+        "coverage_bleu@3": 0.04284930479236913,
+        "coverage_rougeL@3": 0.16029393483492194,
+        "context_bleu@5": 0.05947718418686172,
+        "context_rougeL@5": 0.1864563884323411,
+        "coverage_bleu@5": 0.05637403354391894,
+        "coverage_rougeL@5": 0.17984811959030647,
+        "context_bleu@10": 0.05947718418686172,
+        "context_rougeL@10": 0.1864563884323411,
+        "coverage_bleu@10": 0.05637403354391894,
+        "coverage_rougeL@10": 0.17984811959030647
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_154208_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/hybrid/20260123/hybrid_20260123_154208_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03388063661172789,
+        "context_rougeL@1": 0.09705576817560667,
+        "coverage_bleu@1": 0.03335136875110073,
+        "coverage_rougeL@1": 0.09517764281976128,
+        "context_bleu@3": 0.050483625691575676,
+        "context_rougeL@3": 0.12189050761820203,
+        "coverage_bleu@3": 0.04987343842547467,
+        "coverage_rougeL@3": 0.11997052633550859,
+        "context_bleu@5": 0.05824584221789384,
+        "context_rougeL@5": 0.13109502777209256,
+        "coverage_bleu@5": 0.05701914045418262,
+        "coverage_rougeL@5": 0.1289303928952097,
+        "context_bleu@10": 0.05824584221789384,
+        "context_rougeL@10": 0.13109502777209256,
+        "coverage_bleu@10": 0.05701914045418262,
+        "coverage_rougeL@10": 0.1289303928952097
+      }
+    },
+    {
+      "metadata": {
+        "filename": "baseline_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_1/baseline_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.07379043646998783,
+        "context_rougeL@1": 0.11051883159388894,
+        "coverage_bleu@1": 0.04211595607992718,
+        "coverage_rougeL@1": 0.09846449603906175,
+        "context_bleu@3": 0.21987989670611433,
+        "context_rougeL@3": 0.2862233996303744,
+        "coverage_bleu@3": 0.18924732117935536,
+        "coverage_rougeL@3": 0.2521191188431965,
+        "context_bleu@5": 0.24371724144137286,
+        "context_rougeL@5": 0.3529446761120445,
+        "coverage_bleu@5": 0.2011659935469846,
+        "coverage_rougeL@5": 0.2896315003744598,
+        "context_bleu@10": 0.24371724144137286,
+        "context_rougeL@10": 0.39096765703458014,
+        "coverage_bleu@10": 0.2011659935469846,
+        "coverage_rougeL@10": 0.32765448129699537
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hyde_shared_20260114_202108_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hyde_shared/20260114/hyde_shared_20260114_202108_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1626918915571465,
+        "context_rougeL@1": 0.25740786478686134,
+        "coverage_bleu@1": 0.14533464326946158,
+        "coverage_rougeL@1": 0.23699430694255563,
+        "context_bleu@3": 0.26905063752260394,
+        "context_rougeL@3": 0.3673149067820432,
+        "coverage_bleu@3": 0.24154080427785735,
+        "coverage_rougeL@3": 0.33697534138114366,
+        "context_bleu@5": 0.3140262075701718,
+        "context_rougeL@5": 0.412882654113535,
+        "coverage_bleu@5": 0.2830608896925169,
+        "coverage_rougeL@5": 0.3820211413781017,
+        "context_bleu@10": 0.3140262075701718,
+        "context_rougeL@10": 0.412882654113535,
+        "coverage_bleu@10": 0.2830608896925169,
+        "coverage_rougeL@10": 0.3820211413781017
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260204_172553_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/src/core/results/shared_vector/20260204/shared_vector_20260204_172553_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.15637565294575756,
+        "context_rougeL@1": 0.24113394213062284,
+        "coverage_bleu@1": 0.14414750777952196,
+        "coverage_rougeL@1": 0.22491718134756103,
+        "context_bleu@3": 0.23304757123281425,
+        "context_rougeL@3": 0.32117762320456567,
+        "coverage_bleu@3": 0.20994781752142655,
+        "coverage_rougeL@3": 0.29449302081852435,
+        "context_bleu@5": 0.2895736439755189,
+        "context_rougeL@5": 0.3795790614922966,
+        "coverage_bleu@5": 0.2612000619171376,
+        "coverage_rougeL@5": 0.3484949021151398,
+        "context_bleu@10": 0.2895736439755189,
+        "context_rougeL@10": 0.3795790614922966,
+        "coverage_bleu@10": 0.2612000619171376,
+        "coverage_rougeL@10": 0.3484949021151398
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260116_174714_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/splade/20260116/splade_20260116_174714_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.08945566445127755,
+        "context_rougeL@1": 0.21195987486160822,
+        "coverage_bleu@1": 0.08266537713038404,
+        "coverage_rougeL@1": 0.197933691382017,
+        "context_bleu@3": 0.13185151956380112,
+        "context_rougeL@3": 0.2725336061920761,
+        "coverage_bleu@3": 0.11944191994549155,
+        "coverage_rougeL@3": 0.2510885398224816,
+        "context_bleu@5": 0.15447205326353927,
+        "context_rougeL@5": 0.30316102203588163,
+        "coverage_bleu@5": 0.14191852309619468,
+        "coverage_rougeL@5": 0.2802048419884532,
+        "context_bleu@10": 0.15447205326353927,
+        "context_rougeL@10": 0.30316102203588163,
+        "coverage_bleu@10": 0.14191852309619468,
+        "coverage_rougeL@10": 0.2802048419884532
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_page_then_chunk_20260130_175417_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/learned_page_then_chunk/20260130/learned_page_then_chunk_20260130_175417_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.01239676132961474,
+        "context_rougeL@1": 0.08425227752675413,
+        "coverage_bleu@1": 0.01090070479823458,
+        "coverage_rougeL@1": 0.08158189187136662,
+        "context_bleu@3": 0.018635589198501147,
+        "context_rougeL@3": 0.10342538179353099,
+        "coverage_bleu@3": 0.016902049298922518,
+        "coverage_rougeL@3": 0.1007657666763548,
+        "context_bleu@5": 0.02122548129342872,
+        "context_rougeL@5": 0.1100890098589656,
+        "coverage_bleu@5": 0.01922917110156407,
+        "coverage_rougeL@5": 0.10705447199895796,
+        "context_bleu@10": 0.02122548129342872,
+        "context_rougeL@10": 0.1100890098589656,
+        "coverage_bleu@10": 0.01922917110156407,
+        "coverage_rougeL@10": 0.10705447199895796
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260205_131018_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/outputs/results/hybrid/20260205/hybrid_20260205_131018_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03575217071584746,
+        "context_rougeL@1": 0.09954657586073926,
+        "coverage_bleu@1": 0.035256481459667297,
+        "coverage_rougeL@1": 0.09746094192306946,
+        "context_bleu@3": 0.058019225121098535,
+        "context_rougeL@3": 0.13046925945052343,
+        "coverage_bleu@3": 0.057141913216909423,
+        "coverage_rougeL@3": 0.12799674165295205,
+        "context_bleu@5": 0.06842484440776896,
+        "context_rougeL@5": 0.14350754687062958,
+        "coverage_bleu@5": 0.06470153783052257,
+        "coverage_rougeL@5": 0.1380191872046792,
+        "context_bleu@10": 0.06842484440776896,
+        "context_rougeL@10": 0.14350754687062958,
+        "coverage_bleu@10": 0.06470153783052257,
+        "coverage_rougeL@10": 0.1380191872046792
+      }
+    },
+    {
+      "metadata": {
+        "filename": "big2small_20260112_181911_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/big2small/20260112/big2small_20260112_181911_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.07355989739247912,
+        "context_rougeL@1": 0.1565190103515273,
+        "coverage_bleu@1": 0.06530461042142917,
+        "coverage_rougeL@1": 0.1448904536242535,
+        "context_bleu@3": 0.1108586221102774,
+        "context_rougeL@3": 0.2031554555261633,
+        "coverage_bleu@3": 0.09924057804211096,
+        "coverage_rougeL@3": 0.18845602587821286,
+        "context_bleu@5": 0.1288139204606956,
+        "context_rougeL@5": 0.2270394956865975,
+        "coverage_bleu@5": 0.11582828655136972,
+        "coverage_rougeL@5": 0.21063167701545532,
+        "context_bleu@10": 0.1288139204606956,
+        "context_rougeL@10": 0.2270394956865975,
+        "coverage_bleu@10": 0.11582828655136972,
+        "coverage_rougeL@10": 0.21063167701545532
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260123_020318_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260122/unified_20260123_020318_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0511090232504133,
+        "context_rougeL@1": 0.11752209642959378,
+        "coverage_bleu@1": 0.04877317679537189,
+        "coverage_rougeL@1": 0.11341736052826273,
+        "context_bleu@3": 0.06150869210734128,
+        "context_rougeL@3": 0.1321992828538543,
+        "coverage_bleu@3": 0.05831990452967703,
+        "coverage_rougeL@3": 0.12713684032771966,
+        "context_bleu@5": 0.07145636296550165,
+        "context_rougeL@5": 0.14531149236232235,
+        "coverage_bleu@5": 0.06808334900743473,
+        "coverage_rougeL@5": 0.1401799171175064,
+        "context_bleu@10": 0.07145636296550165,
+        "context_rougeL@10": 0.14531149236232235,
+        "coverage_bleu@10": 0.06808334900743473,
+        "coverage_rougeL@10": 0.1401799171175064
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_1/learned_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.07379043646998783,
+        "context_rougeL@1": 0.11051883159388894,
+        "coverage_bleu@1": 0.04211595607992718,
+        "coverage_rougeL@1": 0.09846449603906175,
+        "context_bleu@3": 0.21719550122062234,
+        "context_rougeL@3": 0.28748492964365757,
+        "coverage_bleu@3": 0.18656292569386335,
+        "coverage_rougeL@3": 0.25338064885647965,
+        "context_bleu@5": 0.24103284595588084,
+        "context_rougeL@5": 0.3529446761120445,
+        "coverage_bleu@5": 0.1984815980614926,
+        "coverage_rougeL@5": 0.28669870332401565,
+        "context_bleu@10": 0.4319472717640683,
+        "context_rougeL@10": 0.5360012668819959,
+        "coverage_bleu@10": 0.3404346503541442,
+        "coverage_rougeL@10": 0.4878769806076866
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_171219_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_171219_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.10179665901034246,
+        "context_rougeL@1": 0.21508859025889085,
+        "coverage_bleu@1": 0.09638757442830653,
+        "coverage_rougeL@1": 0.20537644915228506,
+        "context_bleu@3": 0.14972387121900824,
+        "context_rougeL@3": 0.27919583475703724,
+        "coverage_bleu@3": 0.14149215552367558,
+        "coverage_rougeL@3": 0.26564574343621816,
+        "context_bleu@5": 0.1683042894000451,
+        "context_rougeL@5": 0.304527644883496,
+        "coverage_bleu@5": 0.15909805739834057,
+        "coverage_rougeL@5": 0.2926182736465089,
+        "context_bleu@10": 0.1683042894000451,
+        "context_rougeL@10": 0.304527644883496,
+        "coverage_bleu@10": 0.15909805739834057,
+        "coverage_rougeL@10": 0.2926182736465089
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_175133_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/hybrid/20260123/hybrid_20260123_175133_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03388063661172789,
+        "context_rougeL@1": 0.09705576817560667,
+        "coverage_bleu@1": 0.03335136875110073,
+        "coverage_rougeL@1": 0.09517764281976128,
+        "context_bleu@3": 0.050483625691575676,
+        "context_rougeL@3": 0.12189050761820203,
+        "coverage_bleu@3": 0.04987343842547467,
+        "coverage_rougeL@3": 0.11997052633550859,
+        "context_bleu@5": 0.05824584221789384,
+        "context_rougeL@5": 0.13109502777209256,
+        "coverage_bleu@5": 0.05701914045418262,
+        "coverage_rougeL@5": 0.1289303928952097,
+        "context_bleu@10": 0.05824584221789384,
+        "context_rougeL@10": 0.13109502777209256,
+        "coverage_bleu@10": 0.05701914045418262,
+        "coverage_rougeL@10": 0.1289303928952097
+      }
+    },
+    {
+      "metadata": {
+        "filename": "page_then_chunk_20260128_163927_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/page_then_chunk/20260128/page_then_chunk_20260128_163927_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "big2small_20260112_155144_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/big2small/20260112/big2small_20260112_155144_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20251229_181122_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/shared_vector/20251229/shared_vector_20251229_181122_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1043026960863836,
+        "context_rougeL@1": 0.22087476713507181,
+        "coverage_bleu@1": 0.09888535954014724,
+        "coverage_rougeL@1": 0.2111003488439666,
+        "context_bleu@3": 0.15133494423327823,
+        "context_rougeL@3": 0.28363593353192923,
+        "coverage_bleu@3": 0.14310420306393007,
+        "coverage_rougeL@3": 0.2701454047785762,
+        "context_bleu@5": 0.16476938557018525,
+        "context_rougeL@5": 0.3033196300572268,
+        "coverage_bleu@5": 0.15557065797070438,
+        "coverage_rougeL@5": 0.291392829043247,
+        "context_bleu@10": 0.16476938557018525,
+        "context_rougeL@10": 0.3033196300572268,
+        "coverage_bleu@10": 0.15557065797070438,
+        "coverage_rougeL@10": 0.291392829043247
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_page_then_chunk_20260129_154323_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/learned_page_then_chunk/20260129/learned_page_then_chunk_20260129_154323_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.007929057645965375,
+        "context_rougeL@1": 0.06689390385405648,
+        "coverage_bleu@1": 0.0070672214652545825,
+        "coverage_rougeL@1": 0.0645805456295298,
+        "context_bleu@3": 0.011692054091870012,
+        "context_rougeL@3": 0.08495314335408033,
+        "coverage_bleu@3": 0.010366247389845429,
+        "coverage_rougeL@3": 0.08183576776220274,
+        "context_bleu@5": 0.01286335100104437,
+        "context_rougeL@5": 0.09204344374735707,
+        "coverage_bleu@5": 0.011477938755261983,
+        "coverage_rougeL@5": 0.08874512630367588,
+        "context_bleu@10": 0.01286335100104437,
+        "context_rougeL@10": 0.09204344374735707,
+        "coverage_bleu@10": 0.011477938755261983,
+        "coverage_rougeL@10": 0.08874512630367588
+      }
+    },
+    {
+      "metadata": {
+        "filename": "oracle_page_20260122_132654_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/oracle_page/20260122/oracle_page_20260122_132654_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.3675371124722273,
+        "context_rougeL@1": 0.5451064568277832,
+        "coverage_bleu@1": 0.3380948727798162,
+        "coverage_rougeL@1": 0.5005821955503158,
+        "context_bleu@3": 0.48245984566111,
+        "context_rougeL@3": 0.6425323231680504,
+        "coverage_bleu@3": 0.45027873822593845,
+        "coverage_rougeL@3": 0.6173570010509749,
+        "context_bleu@5": 0.49105899712545154,
+        "context_rougeL@5": 0.6496721870282818,
+        "coverage_bleu@5": 0.45888327029117887,
+        "coverage_rougeL@5": 0.6258805942830764,
+        "context_bleu@10": 0.49105899712545154,
+        "context_rougeL@10": 0.6496721870282818,
+        "coverage_bleu@10": 0.45888327029117887,
+        "coverage_rougeL@10": 0.6258805942830764
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_150047_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_150047_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.06213753993086912,
+        "context_rougeL@1": 0.17933261481385243,
+        "coverage_bleu@1": 0.05556219754290164,
+        "coverage_rougeL@1": 0.16889609981277004,
+        "context_bleu@3": 0.0961617900082662,
+        "context_rougeL@3": 0.2375808107559566,
+        "coverage_bleu@3": 0.08663189960848346,
+        "coverage_rougeL@3": 0.22347411798743347,
+        "context_bleu@5": 0.11228347882211001,
+        "context_rougeL@5": 0.2678340771967303,
+        "coverage_bleu@5": 0.10026832313588951,
+        "coverage_rougeL@5": 0.25192615635439797,
+        "context_bleu@10": 0.11228347882211001,
+        "context_rougeL@10": 0.2678340771967303,
+        "coverage_bleu@10": 0.10026832313588951,
+        "coverage_rougeL@10": 0.25192615635439797
+      }
+    },
+    {
+      "metadata": {
+        "filename": "big2small_20260112_164052_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/big2small/20260112/big2small_20260112_164052_scored.json"
+      },
+      "num_samples": 5,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "open_book_20251119_122942_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/scored/open_book_20251119_122942_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "open_book_20260102_165042_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/open_book/20260102/open_book_20260102_165042_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260109_172521_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260109/shared_vector_20260109_172521_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.12288125695165157,
+        "context_rougeL@1": 0.21299052482572164,
+        "coverage_bleu@1": 0.11077295934103515,
+        "coverage_rougeL@1": 0.19861896543094246,
+        "context_bleu@3": 0.20297692171014664,
+        "context_rougeL@3": 0.29523881213281844,
+        "coverage_bleu@3": 0.18057174782469987,
+        "coverage_rougeL@3": 0.2693671860893502,
+        "context_bleu@5": 0.2601599444311566,
+        "context_rougeL@5": 0.3574552353659979,
+        "coverage_bleu@5": 0.23575725811029546,
+        "coverage_rougeL@5": 0.3305555703456494,
+        "context_bleu@10": 0.2601599444311566,
+        "context_rougeL@10": 0.3574552353659979,
+        "coverage_bleu@10": 0.23575725811029546,
+        "coverage_rougeL@10": 0.3305555703456494
+      }
+    },
+    {
+      "metadata": {
+        "filename": "page_then_chunk_20260129_113424_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/page_then_chunk/20260129/page_then_chunk_20260129_113424_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.13103941236322808,
+        "context_rougeL@1": 0.2202819271707195,
+        "coverage_bleu@1": 0.11786342553864798,
+        "coverage_rougeL@1": 0.20422735929113373,
+        "context_bleu@3": 0.22541432853419147,
+        "context_rougeL@3": 0.32206554298247075,
+        "coverage_bleu@3": 0.1963740264391107,
+        "coverage_rougeL@3": 0.2889058959805062,
+        "context_bleu@5": 0.2717941845625161,
+        "context_rougeL@5": 0.369002381843201,
+        "coverage_bleu@5": 0.24590708166287897,
+        "coverage_rougeL@5": 0.3413487928965834,
+        "context_bleu@10": 0.2717941845625161,
+        "context_rougeL@10": 0.369002381843201,
+        "coverage_bleu@10": 0.24590708166287897,
+        "coverage_rougeL@10": 0.3413487928965834
+      }
+    },
+    {
+      "metadata": {
+        "filename": "uncertainty_20260127_135840_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/uncertainty/20260127/uncertainty_20260127_135840_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260115_144031_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/splade/20260115/splade_20260115_144031_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.036771775580282655,
+        "context_rougeL@1": 0.15117987703039765,
+        "coverage_bleu@1": 0.03489967249791909,
+        "coverage_rougeL@1": 0.1473341387239456,
+        "context_bleu@3": 0.058365534267780045,
+        "context_rougeL@3": 0.20008827247822886,
+        "coverage_bleu@3": 0.054173209305505975,
+        "coverage_rougeL@3": 0.19119028786860354,
+        "context_bleu@5": 0.06928688999914981,
+        "context_rougeL@5": 0.22115296615389904,
+        "coverage_bleu@5": 0.06405817492790522,
+        "coverage_rougeL@5": 0.21107499135271512,
+        "context_bleu@10": 0.06928688999914981,
+        "context_rougeL@10": 0.22115296615389904,
+        "coverage_bleu@10": 0.06405817492790522,
+        "coverage_rougeL@10": 0.21107499135271512
+      }
+    },
+    {
+      "metadata": {
+        "filename": "oracle_page_20260120_001750_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/oracle_page/20260119/oracle_page_20260120_001750_scored.json"
+      },
+      "num_samples": 115,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1968505429906518,
+        "context_rougeL@1": 0.31270301883615287,
+        "coverage_bleu@1": 0.1968505429906518,
+        "coverage_rougeL@1": 0.31270301883615287,
+        "context_bleu@3": 0.2604831277479478,
+        "context_rougeL@3": 0.4003149515901587,
+        "coverage_bleu@3": 0.2604831277479478,
+        "coverage_rougeL@3": 0.4003149515901587,
+        "context_bleu@5": 0.29110110026229735,
+        "context_rougeL@5": 0.4509863140403698,
+        "coverage_bleu@5": 0.29110110026229735,
+        "coverage_rougeL@5": 0.4509863140403698,
+        "context_bleu@10": 0.29110110026229735,
+        "context_rougeL@10": 0.4509863140403698,
+        "coverage_bleu@10": 0.29110110026229735,
+        "coverage_rougeL@10": 0.4509863140403698
+      }
+    },
+    {
+      "metadata": {
+        "filename": "multi_hyde_shared_20260115_032833_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/multi_hyde_shared/20260115/multi_hyde_shared_20260115_032833_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.11907945827062745,
+        "context_rougeL@1": 0.2414153021049394,
+        "coverage_bleu@1": 0.10529061117587268,
+        "coverage_rougeL@1": 0.2228722705928079,
+        "context_bleu@3": 0.20665604930382708,
+        "context_rougeL@3": 0.336715292698184,
+        "coverage_bleu@3": 0.18349385959763936,
+        "coverage_rougeL@3": 0.31017128544539696,
+        "context_bleu@5": 0.24302040427731608,
+        "context_rougeL@5": 0.3795011056026507,
+        "coverage_bleu@5": 0.21898736217305545,
+        "coverage_rougeL@5": 0.35623093734482286,
+        "context_bleu@10": 0.24302040427731608,
+        "context_rougeL@10": 0.3795011056026507,
+        "coverage_bleu@10": 0.21898736217305545,
+        "coverage_rougeL@10": 0.35623093734482286
+      }
+    },
+    {
+      "metadata": {
+        "filename": "single_vector_20251229_171641_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/single_vector/20251229/single_vector_20251229_171641_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1812780131266199,
+        "context_rougeL@1": 0.30311282541114987,
+        "coverage_bleu@1": 0.17133393908573125,
+        "coverage_rougeL@1": 0.2863253989375592,
+        "context_bleu@3": 0.26189145175213435,
+        "context_rougeL@3": 0.40487629220526145,
+        "coverage_bleu@3": 0.24217125501326298,
+        "coverage_rougeL@3": 0.38200043633589015,
+        "context_bleu@5": 0.29270881543011457,
+        "context_rougeL@5": 0.4532901591370601,
+        "coverage_bleu@5": 0.2708307314620102,
+        "coverage_rougeL@5": 0.4289884073907545,
+        "context_bleu@10": 0.29270881543011457,
+        "context_rougeL@10": 0.4532901591370601,
+        "coverage_bleu@10": 0.2708307314620102,
+        "coverage_rougeL@10": 0.4289884073907545
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260116_162648_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/hybrid/20260116/hybrid_20260116_162648_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.051274879413690126,
+        "context_rougeL@1": 0.14712908420851448,
+        "coverage_bleu@1": 0.05070626077763433,
+        "coverage_rougeL@1": 0.14489089487237242,
+        "context_bleu@3": 0.10961445906463739,
+        "context_rougeL@3": 0.23294938919902747,
+        "coverage_bleu@3": 0.10276152013504883,
+        "coverage_rougeL@3": 0.22252242325276322,
+        "context_bleu@5": 0.14736759374418254,
+        "context_rougeL@5": 0.28002948344051354,
+        "coverage_bleu@5": 0.138548440647315,
+        "coverage_rougeL@5": 0.2665650090541755,
+        "context_bleu@10": 0.14736759374418254,
+        "context_rougeL@10": 0.28002948344051354,
+        "coverage_bleu@10": 0.138548440647315,
+        "coverage_rougeL@10": 0.2665650090541755
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hyde_shared_20260115_004016_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hyde_shared/20260114/hyde_shared_20260115_004016_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.10552519332894042,
+        "context_rougeL@1": 0.22425235534912355,
+        "coverage_bleu@1": 0.09215280537016496,
+        "coverage_rougeL@1": 0.2053090246346802,
+        "context_bleu@3": 0.20245952059719002,
+        "context_rougeL@3": 0.3351821840494865,
+        "coverage_bleu@3": 0.17952055651613827,
+        "coverage_rougeL@3": 0.30751779347490465,
+        "context_bleu@5": 0.23944247974685828,
+        "context_rougeL@5": 0.3783068649076429,
+        "coverage_bleu@5": 0.2146870248232535,
+        "coverage_rougeL@5": 0.35236397833829186,
+        "context_bleu@10": 0.23944247974685828,
+        "context_rougeL@10": 0.3783068649076429,
+        "coverage_bleu@10": 0.2146870248232535,
+        "coverage_rougeL@10": 0.35236397833829186
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260117_035924_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260117/splade_20260117_035924_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.07043537238898163,
+        "context_rougeL@1": 0.18130280405186106,
+        "coverage_bleu@1": 0.06612278557936378,
+        "coverage_rougeL@1": 0.1709767090690459,
+        "context_bleu@3": 0.12353564860147129,
+        "context_rougeL@3": 0.24867324902392218,
+        "coverage_bleu@3": 0.11443107125514487,
+        "coverage_rougeL@3": 0.23247880804634719,
+        "context_bleu@5": 0.15102572084312635,
+        "context_rougeL@5": 0.2898210282318431,
+        "coverage_bleu@5": 0.13796100332436845,
+        "coverage_rougeL@5": 0.2673075057067595,
+        "context_bleu@10": 0.15102572084312635,
+        "context_rougeL@10": 0.2898210282318431,
+        "coverage_bleu@10": 0.13796100332436845,
+        "coverage_rougeL@10": 0.2673075057067595
+      }
+    },
+    {
+      "metadata": {
+        "filename": "baseline_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_2/baseline_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.13711035635167543,
+        "context_rougeL@1": 0.37529855528329,
+        "coverage_bleu@1": 0.1187317033076445,
+        "coverage_rougeL@1": 0.29574724932520063,
+        "context_bleu@3": 0.3335070214188181,
+        "context_rougeL@3": 0.5239680122875856,
+        "coverage_bleu@3": 0.21884178870599746,
+        "coverage_rougeL@3": 0.41244232411313253,
+        "context_bleu@5": 0.3335070214188181,
+        "context_rougeL@5": 0.5239680122875856,
+        "coverage_bleu@5": 0.21884178870599746,
+        "coverage_rougeL@5": 0.42070703399579107,
+        "context_bleu@10": 0.3514605981531402,
+        "context_rougeL@10": 0.5356930586117881,
+        "coverage_bleu@10": 0.24443490489365835,
+        "coverage_rougeL@10": 0.435183374603693
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260122_201123_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/unified/20260122/unified_20260122_201123_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260128_211826_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260128/unified_20260128_211826_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.04202885267300628,
+        "context_rougeL@1": 0.13548041611524106,
+        "coverage_bleu@1": 0.040752824455156204,
+        "coverage_rougeL@1": 0.13247437064488152,
+        "context_bleu@3": 0.05304607773208805,
+        "context_rougeL@3": 0.15813279201298736,
+        "coverage_bleu@3": 0.051190162389205145,
+        "coverage_rougeL@3": 0.15419419534836062,
+        "context_bleu@5": 0.06275690533474869,
+        "context_rougeL@5": 0.1697961527342054,
+        "coverage_bleu@5": 0.06088818774504687,
+        "coverage_rougeL@5": 0.16603684008727373,
+        "context_bleu@10": 0.06275690533474869,
+        "context_rougeL@10": 0.1697961527342054,
+        "coverage_bleu@10": 0.06088818774504687,
+        "coverage_rougeL@10": 0.16603684008727373
+      }
+    },
+    {
+      "metadata": {
+        "filename": "big2small_20260112_172815_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/big2small/20260112/big2small_20260112_172815_scored.json"
+      },
+      "num_samples": 5,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.06735046131547116,
+        "context_rougeL@1": 0.14017207189572864,
+        "coverage_bleu@1": 0.06138045583698069,
+        "coverage_rougeL@1": 0.13297374302687065,
+        "context_bleu@3": 0.07113476399155373,
+        "context_rougeL@3": 0.15414087390879982,
+        "coverage_bleu@3": 0.06516475851306325,
+        "coverage_rougeL@3": 0.1469425450399418,
+        "context_bleu@5": 0.07854279453070988,
+        "context_rougeL@5": 0.17048672817242902,
+        "coverage_bleu@5": 0.07258526807276314,
+        "coverage_rougeL@5": 0.163554675681322,
+        "context_bleu@10": 0.07854279453070988,
+        "context_rougeL@10": 0.17048672817242902,
+        "coverage_bleu@10": 0.07258526807276314,
+        "coverage_rougeL@10": 0.163554675681322
+      }
+    },
+    {
+      "metadata": {
+        "filename": "closed_book_20260106_161953_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/closed_book/20260106/closed_book_20260106_161953_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260117_024439_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260117/splade_20260117_024439_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.12329228537681082,
+        "context_rougeL@1": 0.2220548513941378,
+        "coverage_bleu@1": 0.10717756667489278,
+        "coverage_rougeL@1": 0.19986430210631637,
+        "context_bleu@3": 0.1703552759996714,
+        "context_rougeL@3": 0.27219058740953067,
+        "coverage_bleu@3": 0.1511906936709005,
+        "coverage_rougeL@3": 0.24694691037110877,
+        "context_bleu@5": 0.2019110144747789,
+        "context_rougeL@5": 0.30902799997474234,
+        "coverage_bleu@5": 0.17960290859240802,
+        "coverage_rougeL@5": 0.28029957244044645,
+        "context_bleu@10": 0.2019110144747789,
+        "context_rougeL@10": 0.30902799997474234,
+        "coverage_bleu@10": 0.17960290859240802,
+        "coverage_rougeL@10": 0.28029957244044645
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_134732_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_134732_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.11013471689485833,
+        "context_rougeL@1": 0.2149868036449228,
+        "coverage_bleu@1": 0.10217435466341872,
+        "coverage_rougeL@1": 0.20379659706576025,
+        "context_bleu@3": 0.1820038241245937,
+        "context_rougeL@3": 0.3020097180339664,
+        "coverage_bleu@3": 0.16464729240579543,
+        "coverage_rougeL@3": 0.27654109075680905,
+        "context_bleu@5": 0.24094977173862756,
+        "context_rougeL@5": 0.3651179839087566,
+        "coverage_bleu@5": 0.2174617623131734,
+        "coverage_rougeL@5": 0.33704318663205585,
+        "context_bleu@10": 0.24094977173862756,
+        "context_rougeL@10": 0.3651179839087566,
+        "coverage_bleu@10": 0.2174617623131734,
+        "coverage_rougeL@10": 0.33704318663205585
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260116_131711_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260116/splade_20260116_131711_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260128_151422_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260128/unified_20260128_151422_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.15231458888318467,
+        "context_rougeL@1": 0.28125766754264847,
+        "coverage_bleu@1": 0.13697997081590135,
+        "coverage_rougeL@1": 0.25891700481719426,
+        "context_bleu@3": 0.23066404406836402,
+        "context_rougeL@3": 0.38233172532504806,
+        "coverage_bleu@3": 0.20594804228611766,
+        "coverage_rougeL@3": 0.35355531319277267,
+        "context_bleu@5": 0.27998594113671016,
+        "context_rougeL@5": 0.4359131299830858,
+        "coverage_bleu@5": 0.24824755331063622,
+        "coverage_rougeL@5": 0.4041563019619311,
+        "context_bleu@10": 0.27998594113671016,
+        "context_rougeL@10": 0.4359131299830858,
+        "coverage_bleu@10": 0.24824755331063622,
+        "coverage_rougeL@10": 0.4041563019619311
+      }
+    },
+    {
+      "metadata": {
+        "filename": "bm25_20260112_192701_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/bm25/20260112/bm25_20260112_192701_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.015681217020883497,
+        "context_rougeL@1": 0.10017650841658461,
+        "coverage_bleu@1": 0.015216891982772169,
+        "coverage_rougeL@1": 0.09797238828193852,
+        "context_bleu@3": 0.024789171013238943,
+        "context_rougeL@3": 0.12429061004648316,
+        "coverage_bleu@3": 0.023973179055325068,
+        "coverage_rougeL@3": 0.12168553364981878,
+        "context_bleu@5": 0.02812414515901475,
+        "context_rougeL@5": 0.13508990411963837,
+        "coverage_bleu@5": 0.02719573222915977,
+        "coverage_rougeL@5": 0.13224147556833052,
+        "context_bleu@10": 0.02812414515901475,
+        "context_rougeL@10": 0.13508990411963837,
+        "coverage_bleu@10": 0.02719573222915977,
+        "coverage_rougeL@10": 0.13224147556833052
+      }
+    },
+    {
+      "metadata": {
+        "filename": "baseline_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_0/baseline_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.016894587596096366,
+        "context_rougeL@1": 0.10774232259255619,
+        "coverage_bleu@1": 0.015748108221296662,
+        "coverage_rougeL@1": 0.10233583187684009,
+        "context_bleu@3": 0.0443223701332247,
+        "context_rougeL@3": 0.15644334768187748,
+        "coverage_bleu@3": 0.03945203387990816,
+        "coverage_rougeL@3": 0.15069551218289093,
+        "context_bleu@5": 0.04470149767637794,
+        "context_rougeL@5": 0.15775942576917734,
+        "coverage_bleu@5": 0.0398311614230614,
+        "coverage_rougeL@5": 0.15201159027019076,
+        "context_bleu@10": 0.04470149767637794,
+        "context_rougeL@10": 0.15775942576917734,
+        "coverage_bleu@10": 0.0398311614230614,
+        "coverage_rougeL@10": 0.15201159027019076
+      }
+    },
+    {
+      "metadata": {
+        "filename": "page_then_chunk_20260129_133149_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/page_then_chunk/20260129/page_then_chunk_20260129_133149_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.153473526367296,
+        "context_rougeL@1": 0.24261500547382392,
+        "coverage_bleu@1": 0.14195141622752777,
+        "coverage_rougeL@1": 0.22686830407489567,
+        "context_bleu@3": 0.23537213313425706,
+        "context_rougeL@3": 0.3290361706180322,
+        "coverage_bleu@3": 0.211963596912543,
+        "coverage_rougeL@3": 0.3024679038469243,
+        "context_bleu@5": 0.2877671749368343,
+        "context_rougeL@5": 0.37850967015256615,
+        "coverage_bleu@5": 0.262482495294036,
+        "coverage_rougeL@5": 0.35193714424404926,
+        "context_bleu@10": 0.2877671749368343,
+        "context_rougeL@10": 0.37850967015256615,
+        "coverage_bleu@10": 0.262482495294036,
+        "coverage_rougeL@10": 0.35193714424404926
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260123_045208_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260123/unified_20260123_045208_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0511090232504133,
+        "context_rougeL@1": 0.11752209642959378,
+        "coverage_bleu@1": 0.04877317679537189,
+        "coverage_rougeL@1": 0.11341736052826273,
+        "context_bleu@3": 0.06150869210734128,
+        "context_rougeL@3": 0.1321992828538543,
+        "coverage_bleu@3": 0.05831990452967703,
+        "coverage_rougeL@3": 0.12713684032771966,
+        "context_bleu@5": 0.07145636296550165,
+        "context_rougeL@5": 0.14531149236232235,
+        "coverage_bleu@5": 0.06808334900743473,
+        "coverage_rougeL@5": 0.1401799171175064,
+        "context_bleu@10": 0.07145636296550165,
+        "context_rougeL@10": 0.14531149236232235,
+        "coverage_bleu@10": 0.06808334900743473,
+        "coverage_rougeL@10": 0.1401799171175064
+      }
+    },
+    {
+      "metadata": {
+        "filename": "open_book_20260102_173713_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/open_book/20260102/open_book_20260102_173713_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260116_140839_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260116/splade_20260116_140839_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260109_144259_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260109/shared_vector_20260109_144259_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0308748664536317,
+        "context_rougeL@1": 0.12557789894523863,
+        "coverage_bleu@1": 0.02893990662989016,
+        "coverage_rougeL@1": 0.12151410089860593,
+        "context_bleu@3": 0.05842929768553769,
+        "context_rougeL@3": 0.17763092973609707,
+        "coverage_bleu@3": 0.05592416141899584,
+        "coverage_rougeL@3": 0.1723033272143784,
+        "context_bleu@5": 0.06996014754568915,
+        "context_rougeL@5": 0.20005489794276513,
+        "coverage_bleu@5": 0.06702517015092323,
+        "coverage_rougeL@5": 0.1938466374962194,
+        "context_bleu@10": 0.06996014754568915,
+        "context_rougeL@10": 0.20005489794276513,
+        "coverage_bleu@10": 0.06702517015092323,
+        "coverage_rougeL@10": 0.1938466374962194
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_185309_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hybrid/20260123/hybrid_20260123_185309_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03388063661172789,
+        "context_rougeL@1": 0.09705576817560667,
+        "coverage_bleu@1": 0.03335136875110073,
+        "coverage_rougeL@1": 0.09517764281976128,
+        "context_bleu@3": 0.050483625691575676,
+        "context_rougeL@3": 0.12189050761820203,
+        "coverage_bleu@3": 0.04987343842547467,
+        "coverage_rougeL@3": 0.11997052633550859,
+        "context_bleu@5": 0.05824584221789384,
+        "context_rougeL@5": 0.13109502777209256,
+        "coverage_bleu@5": 0.05701914045418262,
+        "coverage_rougeL@5": 0.1289303928952097,
+        "context_bleu@10": 0.05824584221789384,
+        "context_rougeL@10": 0.13109502777209256,
+        "coverage_bleu@10": 0.05701914045418262,
+        "coverage_rougeL@10": 0.1289303928952097
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_203849_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hybrid/20260123/hybrid_20260123_203849_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.12329228537681082,
+        "context_rougeL@1": 0.2220548513941378,
+        "coverage_bleu@1": 0.10717756667489278,
+        "coverage_rougeL@1": 0.19986430210631637,
+        "context_bleu@3": 0.17050317717862473,
+        "context_rougeL@3": 0.2726514239781517,
+        "coverage_bleu@3": 0.1513385948498538,
+        "coverage_rougeL@3": 0.24740774693972975,
+        "context_bleu@5": 0.2019110144747789,
+        "context_rougeL@5": 0.3092183538101901,
+        "coverage_bleu@5": 0.17960290859240802,
+        "coverage_rougeL@5": 0.28048992627589425,
+        "context_bleu@10": 0.2019110144747789,
+        "context_rougeL@10": 0.3092183538101901,
+        "coverage_bleu@10": 0.17960290859240802,
+        "coverage_rougeL@10": 0.28048992627589425
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20251124_171511_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/scored/shared_vector_20251124_171511_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1097781800196359,
+        "context_rougeL@1": 0.2248122125916863,
+        "coverage_bleu@1": 0.10413752890939179,
+        "coverage_rougeL@1": 0.21424876535714893,
+        "context_bleu@3": 0.15860498929603203,
+        "context_rougeL@3": 0.2937555982072978,
+        "coverage_bleu@3": 0.15126240434839497,
+        "coverage_rougeL@3": 0.2802002606963284,
+        "context_bleu@5": 0.18953485016342686,
+        "context_rougeL@5": 0.335117205042277,
+        "coverage_bleu@5": 0.17965928544820672,
+        "coverage_rougeL@5": 0.32069348476861664,
+        "context_bleu@10": 0.18953485016342686,
+        "context_rougeL@10": 0.335117205042277,
+        "coverage_bleu@10": 0.17965928544820672,
+        "coverage_rougeL@10": 0.32069348476861664
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_3/learned_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.07810952289285154,
+        "context_rougeL@1": 0.23412298393115363,
+        "coverage_bleu@1": 0.07272627726840376,
+        "coverage_rougeL@1": 0.19164769828724995,
+        "context_bleu@3": 0.23224015455862937,
+        "context_rougeL@3": 0.43788204740585696,
+        "coverage_bleu@3": 0.16051791184564723,
+        "coverage_rougeL@3": 0.3137701577025694,
+        "context_bleu@5": 0.3483458828100862,
+        "context_rougeL@5": 0.5195534624106054,
+        "coverage_bleu@5": 0.2185707759713756,
+        "coverage_rougeL@5": 0.3915517275847235,
+        "context_bleu@10": 0.34891788752477004,
+        "context_rougeL@10": 0.5195534624106054,
+        "coverage_bleu@10": 0.23276399946175289,
+        "coverage_rougeL@10": 0.39741425074682474
+      }
+    },
+    {
+      "metadata": {
+        "filename": "expanded_shared_20260114_172936_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/expanded_shared/20260114/expanded_shared_20260114_172936_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.033296410271339776,
+        "context_rougeL@1": 0.14942314057857795,
+        "coverage_bleu@1": 0.029471163582650554,
+        "coverage_rougeL@1": 0.1423192323605116,
+        "context_bleu@3": 0.0793872026982012,
+        "context_rougeL@3": 0.22718938582193046,
+        "coverage_bleu@3": 0.07325727241445201,
+        "coverage_rougeL@3": 0.2155592075201849,
+        "context_bleu@5": 0.10304189987662939,
+        "context_rougeL@5": 0.2640081801348003,
+        "coverage_bleu@5": 0.09469249684662236,
+        "coverage_rougeL@5": 0.25067444002715156,
+        "context_bleu@10": 0.10304189987662939,
+        "context_rougeL@10": 0.2640081801348003,
+        "coverage_bleu@10": 0.09469249684662236,
+        "coverage_rougeL@10": 0.25067444002715156
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_215555_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hybrid/20260123/hybrid_20260123_215555_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03388063661172789,
+        "context_rougeL@1": 0.09705576817560667,
+        "coverage_bleu@1": 0.03335136875110073,
+        "coverage_rougeL@1": 0.09517764281976128,
+        "context_bleu@3": 0.050483625691575676,
+        "context_rougeL@3": 0.12189050761820203,
+        "coverage_bleu@3": 0.04987343842547467,
+        "coverage_rougeL@3": 0.11997052633550859,
+        "context_bleu@5": 0.05824584221789384,
+        "context_rougeL@5": 0.13109502777209256,
+        "coverage_bleu@5": 0.05701914045418262,
+        "coverage_rougeL@5": 0.1289303928952097,
+        "context_bleu@10": 0.05824584221789384,
+        "context_rougeL@10": 0.13109502777209256,
+        "coverage_bleu@10": 0.05701914045418262,
+        "coverage_rougeL@10": 0.1289303928952097
+      }
+    },
+    {
+      "metadata": {
+        "filename": "expanded_shared_20260114_162107_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/expanded_shared/20260114/expanded_shared_20260114_162107_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.039302030543868834,
+        "context_rougeL@1": 0.15923038093665512,
+        "coverage_bleu@1": 0.035494609545912346,
+        "coverage_rougeL@1": 0.15119104714232612,
+        "context_bleu@3": 0.07489367253625985,
+        "context_rougeL@3": 0.22697225992444384,
+        "coverage_bleu@3": 0.06871401119002236,
+        "coverage_rougeL@3": 0.2149400854331798,
+        "context_bleu@5": 0.09802418637041364,
+        "context_rougeL@5": 0.25835564075887457,
+        "coverage_bleu@5": 0.09019786842328437,
+        "coverage_rougeL@5": 0.24487174944168297,
+        "context_bleu@10": 0.09802418637041364,
+        "context_rougeL@10": 0.25835564075887457,
+        "coverage_bleu@10": 0.09019786842328437,
+        "coverage_rougeL@10": 0.24487174944168297
+      }
+    },
+    {
+      "metadata": {
+        "filename": "single_vector_20251124_184220_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/scored/single_vector_20251124_184220_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1812780131266199,
+        "context_rougeL@1": 0.30311282541114987,
+        "coverage_bleu@1": 0.17133393908573125,
+        "coverage_rougeL@1": 0.2863253989375592,
+        "context_bleu@3": 0.26189145175213435,
+        "context_rougeL@3": 0.40487629220526145,
+        "coverage_bleu@3": 0.24217125501326298,
+        "coverage_rougeL@3": 0.38200043633589015,
+        "context_bleu@5": 0.29270881543011457,
+        "context_rougeL@5": 0.4532901591370601,
+        "coverage_bleu@5": 0.2708307314620102,
+        "coverage_rougeL@5": 0.4289884073907545,
+        "context_bleu@10": 0.29270881543011457,
+        "context_rougeL@10": 0.4532901591370601,
+        "coverage_bleu@10": 0.2708307314620102,
+        "coverage_rougeL@10": 0.4289884073907545
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260128_181526_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260128/unified_20260128_181526_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.15342674279953358,
+        "context_rougeL@1": 0.27883987884577743,
+        "coverage_bleu@1": 0.14057192278760677,
+        "coverage_rougeL@1": 0.2605557387269854,
+        "context_bleu@3": 0.23140436878643703,
+        "context_rougeL@3": 0.3766194812038098,
+        "coverage_bleu@3": 0.20696128151378446,
+        "coverage_rougeL@3": 0.3506250081824058,
+        "context_bleu@5": 0.2799008545084107,
+        "context_rougeL@5": 0.43034836190011855,
+        "coverage_bleu@5": 0.24945385231375175,
+        "coverage_rougeL@5": 0.4047472438707598,
+        "context_bleu@10": 0.2799008545084107,
+        "context_rougeL@10": 0.43034836190011855,
+        "coverage_bleu@10": 0.24945385231375175,
+        "coverage_rougeL@10": 0.4047472438707598
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260126_163823_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/unified/20260126/unified_20260126_163823_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20251229_190013_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/shared_vector/20251229/shared_vector_20251229_190013_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1043026960863836,
+        "context_rougeL@1": 0.22087476713507181,
+        "coverage_bleu@1": 0.09888535954014724,
+        "coverage_rougeL@1": 0.2111003488439666,
+        "context_bleu@3": 0.15133494423327823,
+        "context_rougeL@3": 0.28363593353192923,
+        "coverage_bleu@3": 0.14310420306393007,
+        "coverage_rougeL@3": 0.2701454047785762,
+        "context_bleu@5": 0.16476938557018525,
+        "context_rougeL@5": 0.3033196300572268,
+        "coverage_bleu@5": 0.15557065797070438,
+        "coverage_rougeL@5": 0.291392829043247,
+        "context_bleu@10": 0.16476938557018525,
+        "context_rougeL@10": 0.3033196300572268,
+        "coverage_bleu@10": 0.15557065797070438,
+        "coverage_rougeL@10": 0.291392829043247
+      }
+    },
+    {
+      "metadata": {
+        "filename": "reranking_20260116_133234_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/reranking/20260116/reranking_20260116_133234_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.14816143022891406,
+        "context_rougeL@1": 0.27014519393916514,
+        "coverage_bleu@1": 0.1381710846592757,
+        "coverage_rougeL@1": 0.2543244284653719,
+        "context_bleu@3": 0.20994364042851782,
+        "context_rougeL@3": 0.34943067158098373,
+        "coverage_bleu@3": 0.19454881880644578,
+        "coverage_rougeL@3": 0.3303396894628388,
+        "context_bleu@5": 0.23323905684084778,
+        "context_rougeL@5": 0.37676737823311807,
+        "coverage_bleu@5": 0.21436412104960936,
+        "coverage_rougeL@5": 0.3561916036058401,
+        "context_bleu@10": 0.23323905684084778,
+        "context_rougeL@10": 0.37676737823311807,
+        "coverage_bleu@10": 0.21436412104960936,
+        "coverage_rougeL@10": 0.3561916036058401
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260109_153752_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260109/shared_vector_20260109_153752_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.059205260472349815,
+        "context_rougeL@1": 0.17912101674027653,
+        "coverage_bleu@1": 0.05264407757669149,
+        "coverage_rougeL@1": 0.16882455323680556,
+        "context_bleu@3": 0.09332936968457459,
+        "context_rougeL@3": 0.23705347257142828,
+        "coverage_bleu@3": 0.08383773618661712,
+        "coverage_rougeL@3": 0.22332501264768084,
+        "context_bleu@5": 0.10673423574638607,
+        "context_rougeL@5": 0.264171480602235,
+        "coverage_bleu@5": 0.09466242590452739,
+        "coverage_rougeL@5": 0.24821296437774146,
+        "context_bleu@10": 0.10673423574638607,
+        "context_rougeL@10": 0.264171480602235,
+        "coverage_bleu@10": 0.09466242590452739,
+        "coverage_rougeL@10": 0.24821296437774146
+      }
+    },
+    {
+      "metadata": {
+        "filename": "hybrid_20260123_231407_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/hybrid/20260123/hybrid_20260123_231407_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.12329228537681082,
+        "context_rougeL@1": 0.2220548513941378,
+        "coverage_bleu@1": 0.10717756667489278,
+        "coverage_rougeL@1": 0.19986430210631637,
+        "context_bleu@3": 0.17050317717862473,
+        "context_rougeL@3": 0.2726514239781517,
+        "coverage_bleu@3": 0.1513385948498538,
+        "coverage_rougeL@3": 0.24740774693972975,
+        "context_bleu@5": 0.2019110144747789,
+        "context_rougeL@5": 0.3092183538101901,
+        "coverage_bleu@5": 0.17960290859240802,
+        "coverage_rougeL@5": 0.28048992627589425,
+        "context_bleu@10": 0.2019110144747789,
+        "context_rougeL@10": 0.3092183538101901,
+        "coverage_bleu@10": 0.17960290859240802,
+        "coverage_rougeL@10": 0.28048992627589425
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_2/learned_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.13711035635167543,
+        "context_rougeL@1": 0.37529855528329,
+        "coverage_bleu@1": 0.1187317033076445,
+        "coverage_rougeL@1": 0.29574724932520063,
+        "context_bleu@3": 0.46766264602771773,
+        "context_rougeL@3": 0.7059523362073934,
+        "coverage_bleu@3": 0.29259005577305025,
+        "coverage_rougeL@3": 0.5183930877794058,
+        "context_bleu@5": 0.5837683742791745,
+        "context_rougeL@5": 0.7876237512121418,
+        "coverage_bleu@5": 0.3506429198987786,
+        "coverage_rougeL@5": 0.59617465766156,
+        "context_bleu@10": 0.5837683742791745,
+        "context_rougeL@10": 0.7876237512121418,
+        "coverage_bleu@10": 0.3762360360864396,
+        "coverage_rougeL@10": 0.6106509982694618
+      }
+    },
+    {
+      "metadata": {
+        "filename": "oracle_doc_20260119_233731_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/oracle_doc/20260119/oracle_doc_20260119_233731_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1812780131266199,
+        "context_rougeL@1": 0.30311282541114987,
+        "coverage_bleu@1": 0.17133393908573125,
+        "coverage_rougeL@1": 0.2863253989375592,
+        "context_bleu@3": 0.26189145175213435,
+        "context_rougeL@3": 0.40487629220526145,
+        "coverage_bleu@3": 0.24217125501326298,
+        "coverage_rougeL@3": 0.38200043633589015,
+        "context_bleu@5": 0.29270881543011457,
+        "context_rougeL@5": 0.4532901591370601,
+        "coverage_bleu@5": 0.2708307314620102,
+        "coverage_rougeL@5": 0.4289884073907545,
+        "context_bleu@10": 0.29270881543011457,
+        "context_rougeL@10": 0.4532901591370601,
+        "coverage_bleu@10": 0.2708307314620102,
+        "coverage_rougeL@10": 0.4289884073907545
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_page_then_chunk_20260129_134340_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/learned_page_then_chunk/20260129/learned_page_then_chunk_20260129_134340_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_160132_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_160132_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1252347853573135,
+        "context_rougeL@1": 0.21458405872324662,
+        "coverage_bleu@1": 0.11174604793517967,
+        "coverage_rougeL@1": 0.1988338544911147,
+        "context_bleu@3": 0.1970495744319408,
+        "context_rougeL@3": 0.2955337344985935,
+        "coverage_bleu@3": 0.17205930196311184,
+        "coverage_rougeL@3": 0.26543820041990185,
+        "context_bleu@5": 0.259367559301169,
+        "context_rougeL@5": 0.3586749654144028,
+        "coverage_bleu@5": 0.23340346569298978,
+        "coverage_rougeL@5": 0.3296608442082638,
+        "context_bleu@10": 0.259367559301169,
+        "context_rougeL@10": 0.3586749654144028,
+        "coverage_bleu@10": 0.23340346569298978,
+        "coverage_rougeL@10": 0.3296608442082638
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260115_170506_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260115/splade_20260115_170506_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260122_232332_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/unified/20260122/unified_20260122_232332_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "multi_hyde_shared_20260114_231312_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/multi_hyde_shared/20260114/multi_hyde_shared_20260114_231312_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.19594731410725574,
+        "context_rougeL@1": 0.2884392491997344,
+        "coverage_bleu@1": 0.17137918234513402,
+        "coverage_rougeL@1": 0.26198923199503404,
+        "context_bleu@3": 0.2894347449414078,
+        "context_rougeL@3": 0.38819524348755124,
+        "coverage_bleu@3": 0.2567278098484528,
+        "coverage_rougeL@3": 0.35091656480245004,
+        "context_bleu@5": 0.33707996512489896,
+        "context_rougeL@5": 0.4346519378220446,
+        "coverage_bleu@5": 0.3073534601212285,
+        "coverage_rougeL@5": 0.4062853237464886,
+        "context_bleu@10": 0.33707996512489896,
+        "context_rougeL@10": 0.4346519378220446,
+        "coverage_bleu@10": 0.3073534601212285,
+        "coverage_rougeL@10": 0.4062853237464886
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260109_163209_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260109/shared_vector_20260109_163209_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.08749053075623432,
+        "context_rougeL@1": 0.19911952025183544,
+        "coverage_bleu@1": 0.0795687670376587,
+        "coverage_rougeL@1": 0.1875714793506553,
+        "context_bleu@3": 0.15325549201182742,
+        "context_rougeL@3": 0.27846352679447167,
+        "coverage_bleu@3": 0.14212481610995908,
+        "coverage_rougeL@3": 0.26107007280359146,
+        "context_bleu@5": 0.21138345318363527,
+        "context_rougeL@5": 0.3436512716300822,
+        "coverage_bleu@5": 0.19707941455196923,
+        "coverage_rougeL@5": 0.32296784841110526,
+        "context_bleu@10": 0.21138345318363527,
+        "context_rougeL@10": 0.3436512716300822,
+        "coverage_bleu@10": 0.19707941455196923,
+        "coverage_rougeL@10": 0.32296784841110526
+      }
+    },
+    {
+      "metadata": {
+        "filename": "baseline_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_4/baseline_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.031183333585201662,
+        "context_rougeL@1": 0.085045250451881,
+        "coverage_bleu@1": 0.031183333585201662,
+        "coverage_rougeL@1": 0.085045250451881,
+        "context_bleu@3": 0.08255590120052533,
+        "context_rougeL@3": 0.15835559545867314,
+        "coverage_bleu@3": 0.08255590120052533,
+        "coverage_rougeL@3": 0.15835559545867314,
+        "context_bleu@5": 0.08255590120052533,
+        "context_rougeL@5": 0.15835559545867314,
+        "coverage_bleu@5": 0.08255590120052533,
+        "coverage_rougeL@5": 0.15835559545867314,
+        "context_bleu@10": 0.40036142713771855,
+        "context_rougeL@10": 0.5035996612083569,
+        "coverage_bleu@10": 0.40036142713771855,
+        "coverage_rougeL@10": 0.5035996612083569
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260117_012611_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/splade/20260117/splade_20260117_012611_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.08945566445127755,
+        "context_rougeL@1": 0.21195987486160822,
+        "coverage_bleu@1": 0.08266537713038404,
+        "coverage_rougeL@1": 0.197933691382017,
+        "context_bleu@3": 0.13185151956380112,
+        "context_rougeL@3": 0.2725336061920761,
+        "coverage_bleu@3": 0.11944191994549155,
+        "coverage_rougeL@3": 0.2510885398224816,
+        "context_bleu@5": 0.15447205326353927,
+        "context_rougeL@5": 0.30316102203588163,
+        "coverage_bleu@5": 0.14191852309619468,
+        "coverage_rougeL@5": 0.2802048419884532,
+        "context_bleu@10": 0.15447205326353927,
+        "context_rougeL@10": 0.30316102203588163,
+        "coverage_bleu@10": 0.14191852309619468,
+        "coverage_rougeL@10": 0.2802048419884532
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260126_171010_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/unified/20260126/unified_20260126_171010_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260108_125730_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260108/shared_vector_20260108_125730_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.11013471689485833,
+        "context_rougeL@1": 0.2149868036449228,
+        "coverage_bleu@1": 0.10217435466341872,
+        "coverage_rougeL@1": 0.20379659706576025,
+        "context_bleu@3": 0.1820038241245937,
+        "context_rougeL@3": 0.3020097180339664,
+        "coverage_bleu@3": 0.16464729240579543,
+        "coverage_rougeL@3": 0.27654109075680905,
+        "context_bleu@5": 0.24094977173862756,
+        "context_rougeL@5": 0.3651179839087566,
+        "coverage_bleu@5": 0.2174617623131734,
+        "coverage_rougeL@5": 0.33704318663205585,
+        "context_bleu@10": 0.24094977173862756,
+        "context_rougeL@10": 0.3651179839087566,
+        "coverage_bleu@10": 0.2174617623131734,
+        "coverage_rougeL@10": 0.33704318663205585
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260113_143355_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/shared_vector/20260113/shared_vector_20260113_143355_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0983082480775515,
+        "context_rougeL@1": 0.21142689879369675,
+        "coverage_bleu@1": 0.0915517739663879,
+        "coverage_rougeL@1": 0.19923732277477002,
+        "context_bleu@3": 0.15578526001027004,
+        "context_rougeL@3": 0.2749246481778362,
+        "coverage_bleu@3": 0.14704840261073224,
+        "coverage_rougeL@3": 0.26041896667161185,
+        "context_bleu@5": 0.18159631065244464,
+        "context_rougeL@5": 0.3076325563321759,
+        "coverage_bleu@5": 0.16993446220065633,
+        "coverage_rougeL@5": 0.29010674188757973,
+        "context_bleu@10": 0.18159631065244464,
+        "context_rougeL@10": 0.3076325563321759,
+        "coverage_bleu@10": 0.16993446220065633,
+        "coverage_rougeL@10": 0.29010674188757973
+      }
+    },
+    {
+      "metadata": {
+        "filename": "splade_20260115_181155_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/splade/20260115/splade_20260115_181155_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_4/learned_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.031183333585201662,
+        "context_rougeL@1": 0.085045250451881,
+        "coverage_bleu@1": 0.031183333585201662,
+        "coverage_rougeL@1": 0.085045250451881,
+        "context_bleu@3": 0.03133218707547872,
+        "context_rougeL@3": 0.09034715633197521,
+        "coverage_bleu@3": 0.03133218707547872,
+        "coverage_rougeL@3": 0.09034715633197521,
+        "context_bleu@5": 0.2935137091224114,
+        "context_rougeL@5": 0.3725150051237008,
+        "coverage_bleu@5": 0.2935137091224114,
+        "coverage_rougeL@5": 0.3725150051237008,
+        "context_bleu@10": 0.2947225419955238,
+        "context_rougeL@10": 0.3725150051237008,
+        "coverage_bleu@10": 0.2947225419955238,
+        "coverage_rougeL@10": 0.3725150051237008
+      }
+    },
+    {
+      "metadata": {
+        "filename": "reranking_20260115_190636_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/reranking/20260115/reranking_20260115_190636_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.14816143022891406,
+        "context_rougeL@1": 0.27014519393916514,
+        "coverage_bleu@1": 0.1381710846592757,
+        "coverage_rougeL@1": 0.2543244284653719,
+        "context_bleu@3": 0.21384302529008853,
+        "context_rougeL@3": 0.35394826277459485,
+        "coverage_bleu@3": 0.1985814768923994,
+        "coverage_rougeL@3": 0.3350853712713366,
+        "context_bleu@5": 0.23322283087194112,
+        "context_rougeL@5": 0.37676737823311807,
+        "coverage_bleu@5": 0.21435299043479575,
+        "coverage_rougeL@5": 0.3561916036058401,
+        "context_bleu@10": 0.23322283087194112,
+        "context_rougeL@10": 0.37676737823311807,
+        "coverage_bleu@10": 0.21435299043479575,
+        "coverage_rougeL@10": 0.3561916036058401
+      }
+    },
+    {
+      "metadata": {
+        "filename": "multivec_page_then_chunk_20260129_175659_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/multivec_page_then_chunk/20260129/multivec_page_then_chunk_20260129_175659_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.03649851356390012,
+        "context_rougeL@1": 0.11408504415375945,
+        "coverage_bleu@1": 0.030102634742268895,
+        "coverage_rougeL@1": 0.10527106188978033,
+        "context_bleu@3": 0.0758497799394697,
+        "context_rougeL@3": 0.17365144154635098,
+        "coverage_bleu@3": 0.0605542678070195,
+        "coverage_rougeL@3": 0.1543889020231761,
+        "context_bleu@5": 0.08870121709995554,
+        "context_rougeL@5": 0.1927911649924863,
+        "coverage_bleu@5": 0.07059383848389499,
+        "coverage_rougeL@5": 0.17014000638842255,
+        "context_bleu@10": 0.08870121709995554,
+        "context_rougeL@10": 0.1927911649924863,
+        "coverage_bleu@10": 0.07059383848389499,
+        "coverage_rougeL@10": 0.17014000638842255
+      }
+    },
+    {
+      "metadata": {
+        "filename": "single_vector_20251229_162507_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/single_vector/20251229/single_vector_20251229_162507_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.1812780131266199,
+        "context_rougeL@1": 0.30311282541114987,
+        "coverage_bleu@1": 0.17133393908573125,
+        "coverage_rougeL@1": 0.2863253989375592,
+        "context_bleu@3": 0.26189145175213435,
+        "context_rougeL@3": 0.40487629220526145,
+        "coverage_bleu@3": 0.24217125501326298,
+        "coverage_rougeL@3": 0.38200043633589015,
+        "context_bleu@5": 0.29270881543011457,
+        "context_rougeL@5": 0.4532901591370601,
+        "coverage_bleu@5": 0.2708307314620102,
+        "coverage_rougeL@5": 0.4289884073907545,
+        "context_bleu@10": 0.29270881543011457,
+        "context_rougeL@10": 0.4532901591370601,
+        "coverage_bleu@10": 0.2708307314620102,
+        "coverage_rougeL@10": 0.4289884073907545
+      }
+    },
+    {
+      "metadata": {
+        "filename": "big2small_20260112_171420_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/big2small/20260112/big2small_20260112_171420_scored.json"
+      },
+      "num_samples": 5,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.06735046131547116,
+        "context_rougeL@1": 0.14017207189572864,
+        "coverage_bleu@1": 0.06138045583698069,
+        "coverage_rougeL@1": 0.13297374302687065,
+        "context_bleu@3": 0.07113476399155373,
+        "context_rougeL@3": 0.15414087390879982,
+        "coverage_bleu@3": 0.06516475851306325,
+        "coverage_rougeL@3": 0.1469425450399418,
+        "context_bleu@5": 0.07854279453070988,
+        "context_rougeL@5": 0.17048672817242902,
+        "coverage_bleu@5": 0.07258526807276314,
+        "coverage_rougeL@5": 0.163554675681322,
+        "context_bleu@10": 0.07854279453070988,
+        "context_rougeL@10": 0.17048672817242902,
+        "coverage_bleu@10": 0.07258526807276314,
+        "coverage_rougeL@10": 0.163554675681322
+      }
+    },
+    {
+      "metadata": {
+        "filename": "multivec_page_then_chunk_20260129_145019_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/outputs/results/multivec_page_then_chunk/20260129/multivec_page_then_chunk_20260129_145019_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.059999591552656606,
+        "context_rougeL@1": 0.1404562873078733,
+        "coverage_bleu@1": 0.048313242298977085,
+        "coverage_rougeL@1": 0.12757785006783126,
+        "context_bleu@3": 0.09553579928571604,
+        "context_rougeL@3": 0.1934187251523442,
+        "coverage_bleu@3": 0.08025001922557981,
+        "coverage_rougeL@3": 0.17541243653092567,
+        "context_bleu@5": 0.11475049250414851,
+        "context_rougeL@5": 0.22060533807202437,
+        "coverage_bleu@5": 0.09454968310955622,
+        "coverage_rougeL@5": 0.19642455940441872,
+        "context_bleu@10": 0.11475049250414851,
+        "context_rougeL@10": 0.22060533807202437,
+        "coverage_bleu@10": 0.09454968310955622,
+        "coverage_rougeL@10": 0.19642455940441872
+      }
+    },
+    {
+      "metadata": {
+        "filename": "closed_book_20260106_171608_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/closed_book/20260106/closed_book_20260106_171608_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "unified_20260126_174753_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/src/core/results/unified/20260126/unified_20260126_174753_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.0,
+        "context_bleu@3": 0.0,
+        "context_bleu@5": 0.0,
+        "context_bleu@10": 0.0,
+        "context_rougeL@1": 0.0,
+        "context_rougeL@3": 0.0,
+        "context_rougeL@5": 0.0,
+        "context_rougeL@10": 0.0,
+        "coverage_bleu@1": 0.0,
+        "coverage_bleu@3": 0.0,
+        "coverage_bleu@5": 0.0,
+        "coverage_bleu@10": 0.0,
+        "coverage_rougeL@1": 0.0,
+        "coverage_rougeL@3": 0.0,
+        "coverage_rougeL@5": 0.0,
+        "coverage_rougeL@10": 0.0
+      }
+    },
+    {
+      "metadata": {
+        "filename": "shared_vector_20260107_164341_scored.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/backup/results/shared_vector/20260107/shared_vector_20260107_164341_scored.json"
+      },
+      "num_samples": 150,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.11013471689485833,
+        "context_rougeL@1": 0.2149868036449228,
+        "coverage_bleu@1": 0.10217435466341872,
+        "coverage_rougeL@1": 0.20379659706576025,
+        "context_bleu@3": 0.1820038241245937,
+        "context_rougeL@3": 0.3020097180339664,
+        "coverage_bleu@3": 0.16464729240579543,
+        "coverage_rougeL@3": 0.27654109075680905,
+        "context_bleu@5": 0.24094977173862756,
+        "context_rougeL@5": 0.3651179839087566,
+        "coverage_bleu@5": 0.2174617623131734,
+        "coverage_rougeL@5": 0.33704318663205585,
+        "context_bleu@10": 0.24094977173862756,
+        "context_rougeL@10": 0.3651179839087566,
+        "coverage_bleu@10": 0.2174617623131734,
+        "coverage_rougeL@10": 0.33704318663205585
+      }
+    },
+    {
+      "metadata": {
+        "filename": "learned_results.json",
+        "filepath": "/u/kobeissa/Documents/thesis/experiments/FB_reproducability/results/proper_evaluation/cross_validation/split_0/learned_results.json"
+      },
+      "num_samples": 3,
+      "retrieval_metrics": {
+        "context_bleu@1": 0.16336167215811961,
+        "context_rougeL@1": 0.20249777215533604,
+        "coverage_bleu@1": 0.1622151927833199,
+        "coverage_rougeL@1": 0.19709128143961993,
+        "context_bleu@3": 0.41746545266084006,
+        "context_rougeL@3": 0.46013646873061526,
+        "coverage_bleu@3": 0.27758108553974575,
+        "coverage_rougeL@3": 0.3121126771581934,
+        "context_bleu@5": 0.4202460548519922,
+        "context_rougeL@5": 0.4766027036982379,
+        "coverage_bleu@5": 0.28036168773089787,
+        "coverage_rougeL@5": 0.32857891212581597,
+        "context_bleu@10": 0.4271500149093415,
+        "context_rougeL@10": 0.5113069102986759,
+        "coverage_bleu@10": 0.2879999781120148,
+        "coverage_rougeL@10": 0.3687001665325118
+      }
+    }
+  ]
+}

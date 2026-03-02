@@ -69,6 +69,27 @@ class RetrievalEvaluator:
         
         return overlap >= threshold
 
+    def _extract_numbers(self, text: str) -> List[float]:
+        if not text:
+            return []
+        clean_text = re.sub(r"[,$]", "", str(text))
+        matches = re.findall(r"-?\d*\.?\d+", clean_text)
+        try:
+            return [float(m) for m in matches]
+        except ValueError:
+            return []
+
+    def _numeric_match(self, reference: str, prediction: str) -> float:
+        ref_nums = self._extract_numbers(reference)
+        pred_nums = self._extract_numbers(prediction)
+        if not ref_nums or not pred_nums:
+            return 0.0
+        for r_num in ref_nums:
+            for p_num in pred_nums:
+                if np.isclose(r_num, p_num, atol=0.03, rtol=0.03):
+                    return 1.0
+        return 0.0
+
     def _compute_bleu(self, prediction: str, reference: str) -> float:
         """Compute BLEU-4 score using sacrebleu."""
         try:
@@ -98,7 +119,8 @@ class RetrievalEvaluator:
             "ref_answer_hit": {k: [] for k in k_values}, # Matches reference answer
             "mrr": [],
             "context_bleu": {k: [] for k in k_values},
-            "context_rougeL": {k: [] for k in k_values}
+            "context_rougeL": {k: [] for k in k_values},
+            "numeric_match": [],
         }
 
         for sample in samples:
@@ -115,6 +137,13 @@ class RetrievalEvaluator:
                     gold_segments = []
 
             reference_answer = sample.get("reference_answer", "")
+            question_type = str(sample.get("question_type") or "").strip().lower()
+            predicted_answer = sample.get("generated_answer") or sample.get("predicted_answer") or ""
+
+            if question_type == "metrics-generated" and reference_answer:
+                metrics["numeric_match"].append(
+                    self._numeric_match(reference_answer, predicted_answer)
+                )
 
             # If no gold evidence, we can't evaluate retrieval (except maybe ref answer inclusion)
             if not gold_segments and not reference_answer:
@@ -293,11 +322,11 @@ class RetrievalEvaluator:
 
         aggregated = {}
         for metric_name, k_dict in metrics.items():
-            if metric_name == "mrr":
-                aggregated["mrr"] = np.mean(k_dict) if k_dict else 0.0
-            else:
-                for k, values in k_dict.items():
-                    aggregated[f"{metric_name}@{k}"] = np.mean(values) if values else 0.0
+            if isinstance(k_dict, list):
+                aggregated[metric_name] = np.mean(k_dict) if k_dict else 0.0
+                continue
+            for k, values in k_dict.items():
+                aggregated[f"{metric_name}@{k}"] = np.mean(values) if values else 0.0
         
         return aggregated
 

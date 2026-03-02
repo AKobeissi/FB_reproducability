@@ -1,0 +1,43 @@
+================================================================================
+GEOMETRIC ANALYSIS REPORT
+================================================================================
+
+1. LOCAL INTRINSIC DIMENSIONALITY (LID) STATISTICS
+----------------------------------------
+Mean LID:          19.28
+Std deviation:     6.45
+Min LID:           7.48
+Max LID:           44.51
+Median LID:        18.27
+
+Interpretation:
+  Low LID (~10-20):  Neighbors in low-dimensional subspace → easy retrieval
+  High LID (~100+):  Neighbors spread across many dimensions → hard retrieval
+
+2. CORRELATION WITH RETRIEVAL METRICS
+----------------------------------------
+page_rec@5               : r = +nan, p = nan
+page_rec@10              : r = +nan, p = nan
+context_bleu@5           : r = -0.183, p = 0.0248
+context_rougeL@5         : r = -0.173, p = 0.0342
+answer_bleu              : r = +nan, p = nan
+answer_rougeL            : r = +nan, p = nan
+
+3. PERFORMANCE BY LID QUARTILE
+----------------------------------------
+
+PageRec@5 by LID Quartile:
+               mean  std  count
+curv_quartile                  
+Q1 (low)        0.0  0.0     38
+Q2              0.0  0.0     37
+Q3              0.0  0.0     37
+Q4 (high)       0.0  0.0     38
+
+4. LID BY QUESTION TYPE
+----------------------------------------
+                        mean       std  count
+question_type                                
+domain-relevant    21.045547  6.088898     50
+metrics-generated  17.542741  7.299220     50
+novel-generated    19.242020  5.471275     50

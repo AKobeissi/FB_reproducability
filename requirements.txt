@@ -16,7 +16,6 @@ chromadb
 faiss-cpu
 requests
 PyPDF2
-PyMuPDF
 openai>=1.0.0
 sacrebleu
 rouge-score
@@ -30,8 +29,8 @@ seaborn
 llama-index-core>=0.14.0
 rank_bm25
 sentence-transformers
-fitz
-frontend
+PyMuPDF
 rank_bm25
+peft
 # Note: Some packages (faiss, bitsandbytes, torch) have CPU/GPU variants
 # and additional system requirements. Adjust accordingly.

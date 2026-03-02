@@ -1,0 +1,2338 @@
+========================================================================
+Aggregating Evaluation Results
+========================================================================
+
+Collecting from FB_reproducability...
+  ✓ outputs
+  ✓ results
+  ✓ evaluation_results
+  ✓ src/core/results
+Collecting from backup...
+  ✓ outputs
+  ✓ results
+  ✓ src/core/results
+
+Found 7 result directories
+
+WARNING: rouge_score not available, ROUGE metrics will be 0
+WARNING: nltk not available, BLEU metrics will be 0
+INFO: ================================================================================
+INFO: AGGREGATING OVERALL RESULTS
+INFO: ================================================================================
+INFO: Found 161 JSON files
+WARNING: SacreBLEU not available. Install with: pip install sacrebleu
+WARNING: rouge-score not available. Install with: pip install rouge-score
+INFO: Evaluator initialized - BLEU: False, ROUGE: False, BERTScore: False, LLM Judge: False, RAGAS: False
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+INFO:   ✓ bm25_20260205_144128.json: 150 samples
+WARNING: SacreBLEU not available. Install with: pip install sacrebleu
+WARNING: rouge-score not available. Install with: pip install rouge-score
+INFO: Evaluator initialized - BLEU: False, ROUGE: False, BERTScore: False, LLM Judge: False, RAGAS: False
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation
+slurmstepd: error: *** JOB 5173 ON abaque01 CANCELLED AT 2026-02-09T01:06:43 ***
+WARNING: SacreBLEU not available, using fallback BLEU
+WARNING: rouge-score package not available, falling back to custom implementation

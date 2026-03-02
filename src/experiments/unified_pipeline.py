@@ -15,6 +15,7 @@ from typing import List, Dict, Any
 from tqdm import tqdm
 from sentence_transformers import CrossEncoder
 from pathlib import Path
+from src.retrieval.ot_reranker import OTReranker
 
 # Import helpers
 from src.experiments.rag_hyde_shared import _generate_hypotheticals
@@ -54,6 +55,13 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     hyde_k = getattr(experiment, "unified_hyde_k", 1)
     retrieval_mode = getattr(experiment, "unified_retrieval", "dense") # dense, sparse, hybrid
     use_rerank = getattr(experiment, "unified_use_rerank", False)
+    reranker_style = getattr(experiment, "unified_reranker_style", "cross_encoder")
+    ot_model = getattr(experiment, "unified_ot_model", experiment.embedding_model)
+    ot_query_sentences = getattr(experiment, "unified_ot_query_sentences", 8)
+    ot_doc_sentences = getattr(experiment, "unified_ot_doc_sentences", 24)
+    ot_reg = getattr(experiment, "unified_ot_reg", 0.05)
+    ot_iters = getattr(experiment, "unified_ot_iters", 40)
+    ot_prune_k = getattr(experiment, "unified_ot_prune_k", 20)
     
     # Heuristic: If reranking, fetch more candidates
     candidate_k = experiment.top_k * 4 if use_rerank else experiment.top_k
@@ -62,6 +70,8 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     logger.info(f"  [1] HyDE Enabled: {use_hyde} (Generations: {hyde_k})")
     logger.info(f"  [2] Retrieval Mode: {retrieval_mode.upper()} (Candidates: {candidate_k})")
     logger.info(f"  [3] Reranking Enabled: {use_rerank}")
+    if use_rerank:
+        logger.info(f"  [4] Reranker Style: {reranker_style}")
 
     # =========================================================================
     # PART 1: INGESTION & VECTOR STORE SETUP
@@ -171,17 +181,31 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     # PART 3: RERANKER SETUP
     # =========================================================================
     reranker = None
+    ce_reranker = None
+    ot_reranker = None
     if use_rerank:
-        model_id = "BAAI/bge-reranker-v2-m3"
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Initializing Reranker ({model_id}) on {device}...")
         try:
-            reranker = CrossEncoder(
-                model_id, 
-                model_kwargs={"torch_dtype": torch.float16 if device=="cuda" else torch.float32},
-                device=device,
-                trust_remote_code=True
-            )
+            if reranker_style in ["ot", "ot_then_cross_encoder"]:
+                logger.info(f"Initializing OT Reranker ({ot_model}) on {device}...")
+                ot_reranker = OTReranker(
+                    model_name=ot_model,
+                    device=device,
+                    query_max_sentences=ot_query_sentences,
+                    doc_max_sentences=ot_doc_sentences,
+                    sinkhorn_reg=ot_reg,
+                    sinkhorn_iters=ot_iters,
+                )
+            if reranker_style in ["cross_encoder", "ot_then_cross_encoder"]:
+                model_id = "BAAI/bge-reranker-v2-m3"
+                logger.info(f"Initializing Reranker ({model_id}) on {device}...")
+                ce_reranker = CrossEncoder(
+                    model_id,
+                    model_kwargs={"torch_dtype": torch.float16 if device=="cuda" else torch.float32},
+                    device=device,
+                    trust_remote_code=True
+                )
+            reranker = ot_reranker or ce_reranker
         except Exception as e:
             logger.warning(f"Failed to load reranker: {e}. Continuing without reranking.")
             use_rerank = False
@@ -298,15 +322,41 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
             
             if pairs:
                 try:
-                    scores = reranker.predict(pairs, batch_size=8, show_progress_bar=False)
-                    scored = []
-                    for d, s in zip(valid_docs, scores):
-                        d.metadata['rerank_score'] = float(s)
-                        scored.append(d)
+                    if reranker_style == "ot":
+                        doc_texts = [doc.page_content for doc in valid_docs]
+                        scores = ot_reranker.score(question, doc_texts)
+                    elif reranker_style == "ot_then_cross_encoder":
+                        doc_texts = [doc.page_content for doc in valid_docs]
+                        ot_scores = ot_reranker.score(question, doc_texts)
+                        ot_ranked = sorted(
+                            zip(valid_docs, ot_scores),
+                            key=lambda x: x[1],
+                            reverse=True,
+                        )
+                        prune_k = min(max(1, ot_prune_k), len(ot_ranked))
+                        pruned_docs = [doc for doc, _ in ot_ranked[:prune_k]]
+                        pruned_pairs = [[question, doc.page_content] for doc in pruned_docs]
+                        ce_scores = ce_reranker.predict(pruned_pairs, batch_size=8, show_progress_bar=False)
+                        scored = []
+                        for d, s in zip(pruned_docs, ce_scores):
+                            d.metadata['ot_score'] = float(next(score for doc, score in ot_ranked if doc is d))
+                            d.metadata['rerank_score'] = float(s)
+                            scored.append(d)
+                        scored.sort(key=lambda x: x.metadata['rerank_score'], reverse=True)
+                        final_retrieved_docs = scored[:experiment.top_k]
+                        scores = None
+                    else:
+                        scores = ce_reranker.predict(pairs, batch_size=8, show_progress_bar=False)
+
+                    if scores is not None:
+                        scored = []
+                        for d, s in zip(valid_docs, scores):
+                            d.metadata['rerank_score'] = float(s)
+                            scored.append(d)
                     
-                    # Sort by new score
-                    scored.sort(key=lambda x: x.metadata['rerank_score'], reverse=True)
-                    final_retrieved_docs = scored[:experiment.top_k]
+                        # Sort by new score
+                        scored.sort(key=lambda x: x.metadata['rerank_score'], reverse=True)
+                        final_retrieved_docs = scored[:experiment.top_k]
                 except Exception as e:
                     logger.warning(f"Reranking failed sample {i}: {e}")
                     final_retrieved_docs = final_retrieved_docs[:experiment.top_k]

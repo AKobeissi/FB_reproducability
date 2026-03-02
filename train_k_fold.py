@@ -53,13 +53,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# HyDE imports (after logger is defined)
-try:
-    from src.ingestion.hyde import generate_hypothetical_documents
-except ImportError:
-    generate_hypothetical_documents = None
-    logger.warning("HyDE module not available. HyDE features will be disabled.")
-
 sns.set_style("whitegrid")
 plt.rcParams['figure.dpi'] = 150
 
@@ -97,23 +90,18 @@ class KFoldConfig:
 
     # Output settings
     output_dir: str = "results/kfold_page_scorer"
-    save_models: bool = True  # Whether to save each fold's model
+    save_models: bool = False  # Whether to save each fold's model
+    save_production_model: bool = False  # Whether to save the final full model
 
     # Inference settings
-    embedding_model: str = "sentence-transformers/all-mpnet-base-v2"
-    chunk_size: int = 1024  # in tokens
-    chunk_overlap: int = 128  # in tokens
+    embedding_model: str = "BAAI/bge-m3"
+    chunk_size: int = 1024
+    chunk_overlap: int = 128
 
     # LLM generation settings
     llm_model: str = "Qwen/Qwen2.5-7B-Instruct"
     max_new_tokens: int = 256
     temperature: float = 0.2
-    
-    # HyDE settings (for inference query reformulation)
-    use_hyde: bool = False  # Enable HyDE query reformulation at inference
-    hyde_model: str = "Qwen/Qwen2.5-7B-Instruct"  # Model for HyDE generation
-    hyde_num_generations: int = 1  # 1 for HyDE, >1 for Multi-HyDE
-    hyde_aggregate: str = "mean"  # How to aggregate Multi-HyDE: 'mean' or 'max'
 
 
 # =============================================================================
@@ -452,11 +440,25 @@ def train_fold_model(
     if best_model_state is not None:
         model.load_state_dict(best_model_state)
 
-    # Save model if requested
+    # Save only model weights (not full model) to save space
     if config.save_models:
-        model_path = output_dir / f"fold_{fold_idx}" / "model"
-        model.save(str(model_path))
-        logger.info(f"Saved model to {model_path}")
+        fold_dir = output_dir / f"fold_{fold_idx}"
+        fold_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save only the state dict (tiny ~10-50MB vs 2.2GB full model)
+        weights_path = fold_dir / "model_weights.pt"
+        torch.save(model.state_dict(), weights_path)
+        
+        # Save config for reloading
+        config_path = fold_dir / "model_config.json"
+        with open(config_path, 'w') as f:
+            json.dump({
+                "base_model": config.embedding_model,
+                "max_seq_length": model.max_seq_length if hasattr(model, 'max_seq_length') else 512,
+            }, f, indent=2)
+        
+        logger.info(f"Saved model weights to {weights_path} (config: {config_path})")
+        logger.info(f"To reload: model = SentenceTransformer('{config.embedding_model}'); model.load_state_dict(torch.load('{weights_path}'))")
 
     metrics.training_time_seconds = time.time() - start_time
     logger.info(f"Fold {fold_idx + 1} training complete in {metrics.training_time_seconds:.1f}s")
@@ -492,12 +494,9 @@ def run_page_then_chunk_inference(
     """Run page-then-chunk inference on samples."""
     results = []
 
-    # Use token-based chunking instead of character-based
-    tokenizer = AutoTokenizer.from_pretrained(config.base_model_name)
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=config.chunk_size,
-        chunk_overlap=config.chunk_overlap,
-        length_function=lambda text: len(tokenizer.encode(text, add_special_tokens=False))
+        chunk_overlap=config.chunk_overlap
     )
 
     # Build global page index across all documents
@@ -511,58 +510,10 @@ def run_page_then_chunk_inference(
     # Precompute page embeddings once
     all_page_embeddings = model.encode(all_page_texts, convert_to_tensor=True)
 
-    # Build ONE global chunk index with ALL chunks from ALL documents
-    logger.info("Building global chunk index (one-time setup)...")
-    all_chunk_texts: List[str] = []
-    all_chunk_metas: List[Dict[str, Any]] = []
-    
-    for doc_name, pages in pages_by_doc.items():
-        for page in pages:
-            page_chunks = text_splitter.split_text(page.page_text)
-            for chunk_text in page_chunks:
-                cleaned = " ".join(chunk_text.split())
-                if not cleaned:
-                    continue
-                all_chunk_texts.append(cleaned)
-                all_chunk_metas.append({
-                    "doc_name": doc_name,
-                    "page": page.page_num
-                })
-    
-    # Create global chunk vectorstore ONCE
-    embeddings = _SentenceTransformerEmbeddings(chunk_embeddings_model)
-    global_chunk_db = Chroma.from_texts(
-        texts=all_chunk_texts,
-        embedding=embeddings,
-        metadatas=all_chunk_metas,
-        collection_name="global_chunks"
-    )
-    logger.info(f"Global chunk index built: {len(all_chunk_texts)} chunks from {len(pages_by_doc)} documents")
-
-    # Pre-generate HyDE reformulations if enabled
-    hyde_queries = {}
-    if config.use_hyde and generate_hypothetical_documents:
-        logger.info(f"Pre-generating HyDE reformulations (k={config.hyde_num_generations})...")
-        for sample in tqdm(samples, desc="HyDE generation"):
-            question = sample['question']
-            try:
-                hyp_docs = generate_hypothetical_documents(
-                    query=question,
-                    model_name=config.hyde_model,
-                    num_generations=config.hyde_num_generations
-                )
-                hyde_queries[question] = hyp_docs
-            except Exception as e:
-                logger.warning(f"HyDE generation failed for query: {e}")
-                hyde_queries[question] = [question]  # Fallback to original
-        logger.info(f"Generated HyDE reformulations for {len(hyde_queries)} queries")
-    elif config.use_hyde:
-        logger.warning("HyDE enabled but generation module not available. Using original queries.")
-
     # Lazy-load Qwen for generation
     llm_pipeline = None
     try:
-        gen_tokenizer = AutoTokenizer.from_pretrained(config.llm_model)
+        tokenizer = AutoTokenizer.from_pretrained(config.llm_model)
         llm = AutoModelForCausalLM.from_pretrained(
             config.llm_model,
             device_map="auto",
@@ -571,7 +522,7 @@ def run_page_then_chunk_inference(
         llm_pipeline = pipeline(
             "text-generation",
             model=llm,
-            tokenizer=gen_tokenizer
+            tokenizer=tokenizer
         )
         logger.info(f"Loaded LLM: {config.llm_model}")
     except Exception as e:
@@ -585,37 +536,15 @@ def run_page_then_chunk_inference(
             **sample,
             "retrieved_chunks": [],
             "retrieved_pages": [],
-            "model_answer": "Generation skipped",
-            "hyde_used": config.use_hyde
+            "model_answer": "Generation skipped"
         }
 
         if not all_pages:
             results.append(result)
             continue
 
-        # Step 1: Apply HyDE if enabled (use pre-generated reformulations)
-        if config.use_hyde and question in hyde_queries:
-            hyp_docs = hyde_queries[question]
-            
-            if config.hyde_num_generations == 1:
-                # Single HyDE: use the one reformulated query
-                query_for_retrieval = hyp_docs[0]
-            else:
-                # Multi-HyDE: encode all hypotheticals and aggregate
-                hyp_embeddings = model.encode(hyp_docs, convert_to_tensor=True)
-                if config.hyde_aggregate == "mean":
-                    query_embedding = torch.mean(hyp_embeddings, dim=0)
-                else:  # max
-                    query_embedding = torch.max(hyp_embeddings, dim=0)[0]
-                query_for_retrieval = None  # Already have embedding
-        else:
-            query_for_retrieval = question
-            query_embedding = None
-
-        # Step 2: Retrieve top-P pages across ALL documents
-        if query_embedding is None:
-            query_embedding = model.encode(query_for_retrieval, convert_to_tensor=True)
-            
+        # Step 1: Retrieve top-P pages across ALL documents
+        query_embedding = model.encode(question, convert_to_tensor=True)
         scores = torch.nn.functional.cosine_similarity(
             query_embedding.unsqueeze(0), all_page_embeddings
         )
@@ -624,46 +553,64 @@ def run_page_then_chunk_inference(
         retrieved_pages_meta = [all_page_meta[idx] for idx in top_page_indices]
         result["retrieved_pages"] = [f"{doc}_p{page}" for doc, page in retrieved_pages_meta]
 
-        # Step 3: Filter global chunk index to only include chunks from top-P pages
-        # Build metadata filter: chunks must match one of the retrieved (doc_name, page) pairs
-        retrieved_chunks = []
-        
-        # Chroma metadata filtering: retrieve from chunks that match any of the top pages
-        # We'll do this by querying with an OR filter on (doc_name, page) combinations
-        # Since Chroma's filtering can be complex, we'll retrieve more chunks and filter in-memory
-        
-        # Get candidate chunks (retrieve more than k, then filter by page metadata)
-        candidate_k = config.chunk_k * 10  # Retrieve extra to ensure we have enough after filtering
-        
-        try:
-            if hasattr(global_chunk_db, "similarity_search_with_relevance_scores"):
-                hits = global_chunk_db.similarity_search_with_relevance_scores(question, k=candidate_k)
-                candidates = [(doc.page_content, doc.metadata, score) for doc, score in hits]
-            elif hasattr(global_chunk_db, "similarity_search_with_score"):
-                hits = global_chunk_db.similarity_search_with_score(question, k=candidate_k)
-                candidates = [(doc.page_content, doc.metadata, score) for doc, score in hits]
-            else:
-                hits = global_chunk_db.similarity_search(question, k=candidate_k)
-                candidates = [(doc.page_content, doc.metadata, 0.0) for doc in hits]
-            
-            # Filter to only chunks from retrieved pages
-            retrieved_page_set = set(retrieved_pages_meta)
-            for text, metadata, score in candidates:
-                chunk_doc = metadata.get("doc_name")
-                chunk_page = metadata.get("page")
-                if (chunk_doc, chunk_page) in retrieved_page_set:
+        # Step 2: Chunk the top-M pages, index with Chroma, then retrieve top-K chunks
+        chunk_texts: List[str] = []
+        chunk_metas: List[Dict[str, Any]] = []
+
+        for doc_key, page_idx in retrieved_pages_meta:
+            page = pages_by_doc.get(doc_key, [])
+            if not page or page_idx >= len(page):
+                continue
+            page = page[page_idx]
+            page_chunks = text_splitter.split_text(page.page_text)
+            for chunk_text in page_chunks:
+                cleaned = " ".join(chunk_text.split())
+                if not cleaned:
+                    continue
+                chunk_texts.append(cleaned)
+                chunk_metas.append({
+                    "doc_name": doc_key,
+                    "page": page_idx
+                })
+
+        if chunk_texts:
+            embeddings = _SentenceTransformerEmbeddings(chunk_embeddings_model)
+            chunk_db = Chroma.from_texts(
+                texts=chunk_texts,
+                embedding=embeddings,
+                metadatas=chunk_metas,
+                collection_name=f"chunks_{doc_name}"
+            )
+
+            retrieved_chunks = []
+            if hasattr(chunk_db, "similarity_search_with_relevance_scores"):
+                hits = chunk_db.similarity_search_with_relevance_scores(question, k=config.chunk_k)
+                for doc, score in hits:
                     retrieved_chunks.append({
-                        "text": text,
-                        "metadata": metadata,
+                        "text": doc.page_content,
+                        "metadata": doc.metadata,
                         "score": float(score)
                     })
-                    if len(retrieved_chunks) >= config.chunk_k:
-                        break
-        
-        except Exception as e:
-            logger.warning(f"Chunk retrieval failed for question: {e}")
-        
-        result["retrieved_chunks"] = retrieved_chunks
+            elif hasattr(chunk_db, "similarity_search_with_score"):
+                hits = chunk_db.similarity_search_with_score(question, k=config.chunk_k)
+                for doc, score in hits:
+                    retrieved_chunks.append({
+                        "text": doc.page_content,
+                        "metadata": doc.metadata,
+                        "score": float(score)
+                    })
+            else:
+                hits = chunk_db.similarity_search(question, k=config.chunk_k)
+                for doc in hits:
+                    retrieved_chunks.append({
+                        "text": doc.page_content,
+                        "metadata": doc.metadata,
+                        "score": 0.0
+                    })
+
+            result["retrieved_chunks"] = retrieved_chunks
+        else:
+            result["retrieved_chunks"] = []
 
         # Add gold evidence for evaluation
         evidence_list = sample.get('evidence', [])
@@ -1126,8 +1073,9 @@ def train_final_production_model(config: KFoldConfig, output_dir: Optional[str] 
         output_dir=output_dir
     )
 
-    # Save final model
-    model.save(str(output_dir / "final_model"))
+    # Save final model (optional, can be large)
+    if config.save_production_model:
+        model.save(str(output_dir / "final_model"))
 
     # Save training info
     with open(output_dir / "training_info.json", 'w') as f:
@@ -1140,7 +1088,10 @@ def train_final_production_model(config: KFoldConfig, output_dir: Optional[str] 
             "training_time_seconds": metrics.training_time_seconds
         }, f, indent=2)
 
-    logger.info(f"\nProduction model saved to: {output_dir / 'final_model'}")
+    if config.save_production_model:
+        logger.info(f"\nProduction model saved to: {output_dir / 'final_model'}")
+    else:
+        logger.info("\nProduction model save skipped (save_production_model=False)")
     return model
 
 
@@ -1157,18 +1108,12 @@ if __name__ == "__main__":
     parser.add_argument("--batch-size", type=int, default=16, help="Batch size")
     parser.add_argument("--lr", type=float, default=2e-5, help="Learning rate")
     parser.add_argument("--page-k", type=int, default=5, help="Top P pages to retrieve")
-    parser.add_argument("--chunk-k", type=int, default=5, help="Top K chunks to retrieve")
-    parser.add_argument("--base-model", type=str, default="sentence-transformers/all-mpnet-base-v2", help="Base embedding model")
+    parser.add_argument("--save-models", action="store_true", help="Save per-fold model weights")
+    parser.add_argument("--save-production-model", action="store_true", help="Save full production model")
     parser.add_argument("--output-dir", type=str, default="results/kfold_page_scorer", help="Output directory")
     parser.add_argument("--pdf-dir", type=str, default="pdfs", help="PDF directory")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     parser.add_argument("--production", action="store_true", help="Also train production model on all data")
-    
-    # HyDE arguments
-    parser.add_argument("--use-hyde", action="store_true", help="Enable HyDE query reformulation at inference")
-    parser.add_argument("--hyde-model", type=str, default="Qwen/Qwen2.5-7B-Instruct", help="Model for HyDE generation")
-    parser.add_argument("--hyde-num-generations", type=int, default=1, help="Number of HyDE generations (1=HyDE, >1=Multi-HyDE)")
-    parser.add_argument("--hyde-aggregate", type=str, default="mean", choices=["mean", "max"], help="Multi-HyDE aggregation method")
 
     args = parser.parse_args()
 
@@ -1178,15 +1123,11 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         learning_rate=args.lr,
         page_k=args.page_k,
-        chunk_k=args.chunk_k,
-        base_model_name=args.base_model,
+        save_models=args.save_models,
+        save_production_model=args.save_production_model,
         output_dir=args.output_dir,
         pdf_dir=args.pdf_dir,
-        random_seed=args.seed,
-        use_hyde=args.use_hyde,
-        hyde_model=args.hyde_model,
-        hyde_num_generations=args.hyde_num_generations,
-        hyde_aggregate=args.hyde_aggregate
+        random_seed=args.seed
     )
 
     # Run k-fold CV

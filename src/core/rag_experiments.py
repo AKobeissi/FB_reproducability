@@ -51,6 +51,7 @@ from src.experiments.hybrid_retrieval import (
 )
 from src.experiments.splade import run_splade as _run_splade
 from src.experiments.reranking import run_reranking as _run_reranking  
+from src.experiments.slot_coverage_reranking import run_slot_coverage_reranking as _run_slot_coverage_reranking
 from src.experiments.rag_oracle import (
     run_oracle_document as _run_oracle_document,
     run_oracle_page as _run_oracle_page
@@ -120,6 +121,7 @@ class RAGExperiment(
     HYBRID_SWEEP = "hybrid_sweep" # <--- ADDED
     SPLADE = "splade"
     RERANKING = "reranking"  
+    SLOT_COVERAGE = "slot_coverage"
     ORACLE_DOC = "oracle_doc"
     ORACLE_PAGE = "oracle_page"
     UNIFIED = "unified"  # <--- Add this
@@ -187,6 +189,11 @@ class RAGExperiment(
                  mc_alpha: float = 1.0,
                  k_cand: int = 100,
                  reranker_model: str = "BAAI/bge-reranker-v2-m3",
+                 reranker_style: str = "cross_encoder",
+                 late_interaction_model: str = "colbert-ir/colbertv2.0",
+                 reranker_batch_size: int = 8,
+                 late_interaction_query_max_len: int = 64,
+                 late_interaction_doc_max_len: int = 256,
                  **kwargs):
         """
         Initialize RAG Experiment
@@ -200,6 +207,12 @@ class RAGExperiment(
         self.top_k = top_k
         self.embedding_model = embedding_model
         self.use_all_pdfs = use_all_pdfs
+        self.reranker_model = reranker_model
+        self.reranker_style = reranker_style
+        self.late_interaction_model = late_interaction_model
+        self.reranker_batch_size = reranker_batch_size
+        self.late_interaction_query_max_len = late_interaction_query_max_len
+        self.late_interaction_doc_max_len = late_interaction_doc_max_len
         
         # Advanced chunking params
         self.chunking_strategy = chunking_strategy
@@ -225,7 +238,6 @@ class RAGExperiment(
         self.mc_l = mc_l
         self.mc_alpha = mc_alpha
         self.k_cand = k_cand
-        self.reranker_model = reranker_model
 
         base_dir = Path(__file__).resolve().parent
         if output_dir is None:
@@ -310,7 +322,12 @@ class RAGExperiment(
             'mc_l': mc_l,
             'mc_alpha': mc_alpha,
             'k_cand': k_cand,
-            'reranker_model': reranker_model
+            'reranker_model': reranker_model,
+            'reranker_style': reranker_style,
+            'late_interaction_model': late_interaction_model,
+            'reranker_batch_size': reranker_batch_size,
+            'late_interaction_query_max_len': late_interaction_query_max_len,
+            'late_interaction_doc_max_len': late_interaction_doc_max_len
         })
 
         if chunking_strategy == 'hierarchical':
@@ -640,6 +657,8 @@ class RAGExperiment(
             results = self.run_splade(data)
         elif self.experiment_type == self.RERANKING:  
             results = _run_reranking(self, data)
+        elif self.experiment_type == self.SLOT_COVERAGE:
+            results = _run_slot_coverage_reranking(self, data)
         elif self.experiment_type == self.META_RERANK: # <--- Add this block
             results = _run_metadata_reranking(self, data)
         elif self.experiment_type == self.UNIFIED:
@@ -862,9 +881,9 @@ def main():
         "-e",
         "--experiment",
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
-        choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared",
-         "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking","oracle_doc",
-          "oracle_page", "unified", "meta_reranking", "uncertainty","page_baseline", "page_learned"],
+                choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared",
+                 "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking", "slot_coverage",
+                    "oracle_doc", "oracle_page", "unified", "meta_reranking", "uncertainty", "page_baseline", "page_learned"],
         default="single",
         help="Experiment type.",
     )
@@ -901,6 +920,21 @@ def main():
         type=str,
         default=default_output_dir,
         help="Directory where JSON result files will be saved (defaults to outputs).",
+    )
+
+    parser.add_argument(
+        "--eval-type",
+        type=str,
+        default="both",
+        choices=["retrieval", "generative", "both", "none"],
+        help="Evaluation type: retrieval, generative, both, or none.",
+    )
+    parser.add_argument(
+        "--eval-mode",
+        type=str,
+        default="static",
+        choices=["static", "semantic"],
+        help="Evaluation mode for generation (static metrics or semantic LLM judge).",
     )
 
     parser.add_argument(
@@ -944,6 +978,37 @@ def main():
     parser.add_argument("--k-cand", type=int, default=100, help="Number of candidates to retrieve before reranking.")
     
     parser.add_argument("--reranker-model", type=str, default="BAAI/bge-reranker-v2-m3", help="Cross-Encoder model ID.")
+    parser.add_argument(
+        "--reranker-style",
+        type=str,
+        default="cross_encoder",
+        choices=["cross_encoder", "late_interaction"],
+        help="Reranker style to use after initial retrieval.",
+    )
+    parser.add_argument(
+        "--late-interaction-model",
+        type=str,
+        default="colbert-ir/colbertv2.0",
+        help="Late-interaction (ColBERT-style) model ID.",
+    )
+    parser.add_argument(
+        "--reranker-batch-size",
+        type=int,
+        default=8,
+        help="Batch size for reranker scoring.",
+    )
+    parser.add_argument(
+        "--late-interaction-query-max-len",
+        type=int,
+        default=64,
+        help="Max query length for late-interaction reranker.",
+    )
+    parser.add_argument(
+        "--late-interaction-doc-max-len",
+        type=int,
+        default=256,
+        help="Max document length for late-interaction reranker.",
+    )
 
     parser.add_argument(
         "--use-api",
@@ -1075,6 +1140,49 @@ def main():
         action="store_true",
         help="[Unified] Enable Cross-Encoder Reranking."
     )
+    parser.add_argument(
+        "--unified-reranker-style",
+        type=str,
+        default="cross_encoder",
+        choices=["cross_encoder", "ot", "ot_then_cross_encoder"],
+        help="[Unified] Reranker style."
+    )
+    parser.add_argument(
+        "--unified-ot-model",
+        type=str,
+        default="BAAI/bge-m3",
+        help="[Unified] Embedding model for OT reranker."
+    )
+    parser.add_argument(
+        "--unified-ot-query-sentences",
+        type=int,
+        default=8,
+        help="[Unified] Max query sentences for OT reranker."
+    )
+    parser.add_argument(
+        "--unified-ot-doc-sentences",
+        type=int,
+        default=24,
+        help="[Unified] Max document sentences for OT reranker."
+    )
+    parser.add_argument(
+        "--unified-ot-reg",
+        type=float,
+        default=0.05,
+        help="[Unified] Sinkhorn regularization for OT reranker."
+    )
+    parser.add_argument(
+        "--unified-ot-iters",
+        type=int,
+        default=40,
+        help="[Unified] Sinkhorn iterations for OT reranker."
+    )
+    parser.add_argument(
+        "--unified-ot-prune-k",
+        type=int,
+        default=20,
+        help="[Unified] Keep top-K after OT before CE in ot_then_cross_encoder mode."
+    )
     
     args = parser.parse_args()
 
@@ -1093,6 +1201,7 @@ def main():
         "hybrid_sweep": RAGExperiment.HYBRID_SWEEP,
         "splade": RAGExperiment.SPLADE,
         "reranking": RAGExperiment.RERANKING,  
+        "slot_coverage": RAGExperiment.SLOT_COVERAGE,
         "oracle_doc": RAGExperiment.ORACLE_DOC,    
         "oracle_page": RAGExperiment.ORACLE_PAGE,  
         "unified": RAGExperiment.UNIFIED,
@@ -1143,6 +1252,8 @@ def main():
             api_base_url=args.api_base_url,
             api_key_env=args.api_key_env,
             use_all_pdfs=args.use_all_pdfs,
+            eval_type=None if args.eval_type == "none" else args.eval_type,
+            eval_mode=args.eval_mode,
             
             # New Params
             chunking_strategy=args.chunking_strategy,
@@ -1161,6 +1272,11 @@ def main():
             mc_alpha=args.mc_alpha,
             k_cand=args.k_cand,
             reranker_model=args.reranker_model,
+            reranker_style=args.reranker_style,
+            late_interaction_model=args.late_interaction_model,
+            reranker_batch_size=args.reranker_batch_size,
+            late_interaction_query_max_len=args.late_interaction_query_max_len,
+            late_interaction_doc_max_len=args.late_interaction_doc_max_len,
             )
 
         experiment.hybrid_sparse_model = args.sparse_model
@@ -1168,6 +1284,13 @@ def main():
         experiment.unified_hyde_k = args.unified_hyde_k
         experiment.unified_retrieval = args.unified_retrieval
         experiment.unified_use_rerank = args.unified_rerank
+        experiment.unified_reranker_style = args.unified_reranker_style
+        experiment.unified_ot_model = args.unified_ot_model
+        experiment.unified_ot_query_sentences = args.unified_ot_query_sentences
+        experiment.unified_ot_doc_sentences = args.unified_ot_doc_sentences
+        experiment.unified_ot_reg = args.unified_ot_reg
+        experiment.unified_ot_iters = args.unified_ot_iters
+        experiment.unified_ot_prune_k = args.unified_ot_prune_k
         experiment.run_experiment(num_samples=args.num_samples)
 
 
