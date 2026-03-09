@@ -2,6 +2,8 @@ import hashlib
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer
 
+from src.ingestion.advanced_chunking import FixedWindowSplitter, SentenceChunker, SemanticChunker
+
 def get_splitters(experiment):
     """
     Factory function to return the appropriate splitters based on experiment config.
@@ -12,7 +14,45 @@ def get_splitters(experiment):
     child_splitter = None
     parent_splitter = None
 
-    # --- 1. Token-based Chunking ---
+    # --- 1. Fixed Window Chunking (Char or Token) ---
+    if strategy == "fixed":
+        tokenizer_name = getattr(experiment, "chunk_tokenizer_name", None)
+        parent_splitter = FixedWindowSplitter(
+            chunk_size=experiment.chunk_size,
+            chunk_overlap=experiment.chunk_overlap,
+            unit=unit,
+            tokenizer_name=tokenizer_name,
+        )
+        return parent_splitter, None
+
+    # --- 2. Sentence Chunking ---
+    if strategy == "sentence":
+        sentence_size = getattr(experiment, "sentence_chunk_size", None) or experiment.chunk_size
+        sentence_overlap = getattr(experiment, "sentence_overlap", None) or experiment.chunk_overlap
+        max_chars = getattr(experiment, "sentence_max_chars", None)
+        parent_splitter = SentenceChunker(
+            sentence_chunk_size=sentence_size,
+            sentence_overlap=sentence_overlap,
+            max_chars=max_chars,
+        )
+        return parent_splitter, None
+
+    # --- 3. Semantic Chunking ---
+    if strategy == "semantic":
+        embedder = None
+        if hasattr(experiment, "embeddings") and experiment.embeddings is not None:
+            if hasattr(experiment.embeddings, "embed_documents"):
+                embedder = experiment.embeddings.embed_documents
+        parent_splitter = SemanticChunker(
+            embedder=embedder,
+            similarity_threshold=getattr(experiment, "semantic_similarity_threshold", 0.6),
+            min_sentences=getattr(experiment, "semantic_min_sentences", 1),
+            max_sentences=getattr(experiment, "semantic_max_sentences", 12),
+            max_chars=getattr(experiment, "semantic_max_chunk_chars", None),
+        )
+        return parent_splitter, None
+
+    # --- 4. Token-based Chunking ---
     if unit == "tokens":
         try:
             # FIX: Use resolved embedding model name from embeddings object, not the alias
@@ -50,6 +90,17 @@ def get_splitters(experiment):
         except Exception as e:
             print(f"Warning: Tokenizer load failed for '{target_model}' ({e}). Falling back to chars.")
             unit = "chars" # Fallback below
+
+    # --- 5. Late Chunking (fallback for non-late consumers) ---
+    if strategy == "late":
+        tokenizer_name = getattr(experiment, "chunk_tokenizer_name", None)
+        parent_splitter = FixedWindowSplitter(
+            chunk_size=experiment.chunk_size,
+            chunk_overlap=experiment.chunk_overlap,
+            unit="tokens",
+            tokenizer_name=tokenizer_name,
+        )
+        return parent_splitter, None
 
     # --- 2. Hierarchical Chunking ---
     if strategy == "hierarchical":

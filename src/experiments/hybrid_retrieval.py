@@ -154,13 +154,14 @@ def _bm25_cache_path(experiment, fingerprint: str) -> str:
     cs = getattr(experiment, "chunk_size", None)
     ov = getattr(experiment, "chunk_overlap", None)
     unit = getattr(experiment, "chunking_unit", "chars") 
+    strategy = getattr(experiment, "chunking_strategy", "recursive")
     
     if cs is None and ov is None:
         return base
         
     stem, ext = os.path.splitext(base)
     # Append unit to ensure uniqueness
-    return f"{stem}_cs{cs}_ov{ov}_{unit}{ext or '.pkl'}"
+    return f"{stem}_cs{cs}_ov{ov}_{unit}_{strategy}{ext or '.pkl'}"
 
 def _load_or_build_bm25_chunks(experiment, fingerprint: str):
     cache_path = _bm25_cache_path(experiment, fingerprint)

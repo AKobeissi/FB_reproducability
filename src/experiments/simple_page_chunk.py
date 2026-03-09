@@ -15,7 +15,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 import re
 
-import fitz  # PyMuPDF
+try:
+    import fitz  # PyMuPDF
+    if not hasattr(fitz, "open"):
+        raise ImportError("fitz missing open")
+except Exception:  # pragma: no cover
+    import pymupdf as fitz
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter

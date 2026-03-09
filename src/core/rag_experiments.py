@@ -56,10 +56,12 @@ from src.experiments.rag_oracle import (
     run_oracle_document as _run_oracle_document,
     run_oracle_page as _run_oracle_page
 )
+from src.experiments.colpali_page_retrieval import run_colpali_page_retrieval as _run_colpali_page_retrieval
 
 from src.experiments.unified_pipeline import run_unified_pipeline as _run_unified_pipeline
 from src.experiments.metadata_reranking import run_metadata_reranking_experiment as _run_metadata_reranking
 from src.experiments.uncertainty import run_uncertainty_experiment, analyze_risk_coverage
+from src.experiments.colpali_reranker import run_colpali_reranker as _run_colpali_reranker
 
 from src.experiments.simple_page_chunk import run_simple_page_chunk
 
@@ -129,6 +131,9 @@ class RAGExperiment(
     UNCERTAINTY = "uncertainty"
     PAGE_THEN_CHUNK = "page_then_chunk"
     LEARNED_PAGE_THEN_CHUNK = "learned_page_then_chunk"
+    COLPALI_PAGE = "colpali_page"
+    COLPALI_RERANK = "colpali_rerank"
+
     # Available LLMs
     LLAMA_3_2_3B = "meta-llama/Llama-3.2-3B-Instruct"
     QWEN_2_5_7B = "Qwen/Qwen2.5-7B-Instruct"
@@ -178,11 +183,30 @@ class RAGExperiment(
                  parent_chunk_overlap: Optional[int] = None,
                  child_chunk_size: Optional[int] = None,
                  child_chunk_overlap: Optional[int] = None,
+                 sentence_chunk_size: Optional[int] = None,
+                 sentence_overlap: Optional[int] = None,
+                 sentence_max_chars: Optional[int] = None,
+                 semantic_similarity_threshold: float = 0.6,
+                 semantic_min_sentences: int = 1,
+                 semantic_max_sentences: int = 12,
+                 semantic_max_chunk_chars: Optional[int] = None,
+                 chunk_tokenizer_name: Optional[str] = None,
                  partition_model: str = "chipper",
                  render_dpi: Optional[int] = None,
                  vision_encoder: Optional[str] = None,
                  patch_size: Optional[int] = None,
                  pipeline_version: Optional[str] = None,
+                 late_model: Optional[str] = None,
+                 late_max_tokens: int = 2048,
+                 late_window_stride: int = 128,
+                 late_pooling: str = "mean",
+                 use_faiss_chunking: bool = False,
+                 colpali_model: Optional[str] = None,
+                 colpali_base_model: Optional[str] = None,
+                 colpali_dpi: int = 150,
+                 colpali_top_m: int = 20,
+                 colpali_alpha: float = 0.35,
+                 max_context_chars: int = 16000,
                  # ARGS FOR UNCERTAINTY:
                  mc_t: int = 10,
                  mc_l: int = 30,
@@ -221,6 +245,14 @@ class RAGExperiment(
         self.parent_chunk_overlap = parent_chunk_overlap
         self.child_chunk_size = child_chunk_size
         self.child_chunk_overlap = child_chunk_overlap
+        self.sentence_chunk_size = sentence_chunk_size
+        self.sentence_overlap = sentence_overlap
+        self.sentence_max_chars = sentence_max_chars
+        self.semantic_similarity_threshold = semantic_similarity_threshold
+        self.semantic_min_sentences = semantic_min_sentences
+        self.semantic_max_sentences = semantic_max_sentences
+        self.semantic_max_chunk_chars = semantic_max_chunk_chars
+        self.chunk_tokenizer_name = chunk_tokenizer_name
         
         # Chipper / Vision params
         self.partition_model = partition_model
@@ -228,6 +260,16 @@ class RAGExperiment(
         self.vision_encoder = vision_encoder
         self.patch_size = patch_size
         self.pipeline_version = pipeline_version
+        self.late_model = late_model
+        self.late_max_tokens = late_max_tokens
+        self.late_window_stride = late_window_stride
+        self.late_pooling = late_pooling
+        self.use_faiss_chunking = use_faiss_chunking
+        self.colpali_model = colpali_model
+        self.colpali_base_model = colpali_base_model
+        self.colpali_dpi = colpali_dpi
+        self.colpali_top_m = colpali_top_m
+        self.colpali_alpha = colpali_alpha
         
         # Evaluation config
         self.eval_type = eval_type
@@ -286,7 +328,7 @@ class RAGExperiment(
         self.text_splitter = None
         self.vector_stores = {}
         self.langchain_llm = None
-        self.max_context_chars = 12000
+        self.max_context_chars = max_context_chars
         self.max_new_tokens = max_new_tokens
         self.generation_batch_size = 8
 
@@ -315,6 +357,22 @@ class RAGExperiment(
             'judge_model': judge_model,
             'chunking_strategy': chunking_strategy,
             'chunking_unit': chunking_unit,
+            'sentence_chunk_size': sentence_chunk_size,
+            'sentence_overlap': sentence_overlap,
+            'sentence_max_chars': sentence_max_chars,
+            'semantic_similarity_threshold': semantic_similarity_threshold,
+            'semantic_min_sentences': semantic_min_sentences,
+            'semantic_max_sentences': semantic_max_sentences,
+            'semantic_max_chunk_chars': semantic_max_chunk_chars,
+            'chunk_tokenizer_name': chunk_tokenizer_name,
+            'late_model': late_model,
+            'late_max_tokens': late_max_tokens,
+            'late_window_stride': late_window_stride,
+            'late_pooling': late_pooling,
+            'use_faiss_chunking': use_faiss_chunking,
+            'colpali_model': colpali_model,
+            'colpali_base_model': colpali_base_model,
+            'colpali_dpi': colpali_dpi,
         }
         
         self.experiment_metadata.update({
@@ -383,8 +441,12 @@ class RAGExperiment(
     def _initialize_components(self):
         """Initialize LangChain components"""
         self.logger.info("\nInitializing LangChain components...")
-        
-        if self.experiment_type not in [self.BM25, self.SPLADE]: 
+
+        needs_embeddings = self.experiment_type not in [self.BM25, self.SPLADE]
+        if self.chunking_strategy in {"semantic"}:
+            needs_embeddings = True
+
+        if needs_embeddings: 
             self.embeddings = self._build_embeddings()
             self.register_component_usage(
                 "embeddings",
@@ -600,6 +662,9 @@ class RAGExperiment(
     def run_unified(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return _run_unified_pipeline(self, data)
 
+    def run_colpali_page(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return _run_colpali_page_retrieval(self, data)
+
     def run_experiment(self, num_samples: int = None, sample_indices: List[int] = None):
         """
         Run the configured experiment
@@ -650,6 +715,8 @@ class RAGExperiment(
             results = _run_multi_hyde_shared(self, data)
         elif self.experiment_type == self.HYBRID:
             results = self.run_hybrid_search(data)
+        elif self.experiment_type == self.COLPALI_RERANK:
+            results = _run_colpali_reranker(self, data)
         elif self.experiment_type == self.HYBRID_SWEEP: # <--- ADDED SWEEP CALL
             # Note: Sweep returns a dictionary of results, not a list.
             results = _run_hybrid_sweep(self, data)
@@ -663,6 +730,8 @@ class RAGExperiment(
             results = _run_metadata_reranking(self, data)
         elif self.experiment_type == self.UNIFIED:
             results = self.run_unified(data)
+        elif self.experiment_type == self.COLPALI_PAGE:
+            results = self.run_colpali_page(data)
         elif self.experiment_type == self.UNCERTAINTY:
             results = run_uncertainty_experiment(self, data)
         elif self.experiment_type == self.PAGE_THEN_CHUNK:
@@ -883,7 +952,7 @@ def main():
         # --- MODIFIED CHOICES: Added hybrid_sweep ---
                 choices=["closed", "single", "random_single", "shared", "open", "big2small", "bm25", "expanded_shared",
                  "hyde_shared", "multi_hyde_shared", "hybrid", "hybrid_sweep", "splade", "reranking", "slot_coverage",
-                    "oracle_doc", "oracle_page", "unified", "meta_reranking", "uncertainty", "page_baseline", "page_learned"],
+                    "oracle_doc", "oracle_page", "unified", "colpali_page", "meta_reranking", "uncertainty", "page_baseline", "page_learned", "colpali_rerank"],
         default="single",
         help="Experiment type.",
     )
@@ -1043,8 +1112,8 @@ def main():
         "--chunking-strategy",
         type=str,
         default="recursive",
-        choices=["recursive", "hierarchical", "chipper"],
-        help="Chunking strategy: recursive (default), hierarchical, or chipper."
+        choices=["recursive", "hierarchical", "chipper", "fixed", "sentence", "semantic", "late"],
+        help="Chunking strategy: recursive (default), fixed, sentence, semantic, hierarchical, chipper, or late."
     )
     parser.add_argument(
         "--chunking-unit",
@@ -1052,6 +1121,12 @@ def main():
         default="chars",
         choices=["chars", "tokens"],
         help="Unit for chunking: chars (default) or tokens."
+    )
+    parser.add_argument(
+        "--chunk-tokenizer-name",
+        type=str,
+        default=None,
+        help="Optional tokenizer name for token-based chunking (overrides embedding model)."
     )
     parser.add_argument(
         "--parent-chunk-size",
@@ -1076,6 +1151,54 @@ def main():
         type=int,
         default=None,
         help="Child chunk overlap for hierarchical chunking."
+    )
+    parser.add_argument(
+        "--sentence-chunk-size",
+        type=int,
+        default=None,
+        help="Sentence chunk size (number of sentences per chunk)."
+    )
+    parser.add_argument(
+        "--sentence-overlap",
+        type=int,
+        default=None,
+        help="Sentence overlap (number of sentences to overlap)."
+    )
+    parser.add_argument(
+        "--sentence-max-chars",
+        type=int,
+        default=None,
+        help="Maximum characters per sentence chunk (optional safety cap)."
+    )
+    parser.add_argument(
+        "--max-new-tokens",
+        type=int,
+        default=256,
+        help="Maximum new tokens for generation (default 256).",
+    )
+    parser.add_argument(
+        "--semantic-similarity-threshold",
+        type=float,
+        default=0.6,
+        help="Cosine similarity threshold for semantic chunking splits."
+    )
+    parser.add_argument(
+        "--semantic-min-sentences",
+        type=int,
+        default=1,
+        help="Minimum sentences per semantic chunk."
+    )
+    parser.add_argument(
+        "--semantic-max-sentences",
+        type=int,
+        default=12,
+        help="Maximum sentences per semantic chunk."
+    )
+    parser.add_argument(
+        "--semantic-max-chunk-chars",
+        type=int,
+        default=None,
+        help="Maximum characters per semantic chunk."
     )
     parser.add_argument(
         "--partition-model",
@@ -1106,6 +1229,54 @@ def main():
         type=str,
         default=None,
         help="Pipeline version string for cache busting."
+    )
+    parser.add_argument(
+        "--late-model",
+        type=str,
+        default=None,
+        help="Model ID for late chunking embeddings (defaults to embedding model)."
+    )
+    parser.add_argument(
+        "--late-max-tokens",
+        type=int,
+        default=2048,
+        help="Maximum tokens per late chunking window."
+    )
+    parser.add_argument(
+        "--late-window-stride",
+        type=int,
+        default=128,
+        help="Token overlap between late chunking windows."
+    )
+    parser.add_argument(
+        "--late-pooling",
+        type=str,
+        default="mean",
+        help="Pooling strategy for late chunking (currently only 'mean')."
+    )
+    parser.add_argument(
+        "--use-faiss-chunking",
+        action="store_true",
+        help="Use FAISS vector stores for chunking experiments (instead of Chroma)."
+    )
+
+    parser.add_argument(
+        "--colpali-model",
+        type=str,
+        default="vidore/colpali-v1.2",
+        help="ColPali adapter model ID (e.g. vidore/colpali-v1.2).",
+    )
+    parser.add_argument(
+        "--colpali-base-model",
+        type=str,
+        default="vidore/colpaligemma-3b-mix-448-base",
+        help="ColPali base model ID (PaliGemma backbone).",
+    )
+    parser.add_argument(
+        "--colpali-dpi",
+        type=int,
+        default=150,
+        help="Render DPI for PDF page images used by ColPali.",
     )
    
     parser.add_argument(
@@ -1183,7 +1354,26 @@ def main():
         default=20,
         help="[Unified] Keep top-K after OT before CE in ot_then_cross_encoder mode."
     )
-    
+    parser.add_argument(
+    "--colpali-top-m",
+    type=int,
+    default=20,
+    help="Number of BGE-M3 candidate pages fed to ColPali reranker (default 20).",
+    )
+    parser.add_argument(
+        "--colpali-alpha",
+        type=float,
+        default=0.35,
+        help="Fusion weight: 0=pure ColPali, 1=pure BGE-M3 (default 0.35).",
+    )
+    parser.add_argument(
+        "--max-context-chars",
+        type=int,
+        default=16000,
+        help="Max characters in LLM context window (default 16000).",
+    )
+
+
     args = parser.parse_args()
 
     exp_map = {
@@ -1205,10 +1395,12 @@ def main():
         "oracle_doc": RAGExperiment.ORACLE_DOC,    
         "oracle_page": RAGExperiment.ORACLE_PAGE,  
         "unified": RAGExperiment.UNIFIED,
+        "colpali_page": RAGExperiment.COLPALI_PAGE,
         "meta_reranking": RAGExperiment.META_RERANK,
         "uncertainty": RAGExperiment.UNCERTAINTY,
         "page_baseline": RAGExperiment.PAGE_THEN_CHUNK,
         "page_learned": RAGExperiment.LEARNED_PAGE_THEN_CHUNK,
+        "colpali_rerank": RAGExperiment.COLPALI_RERANK,
     }
     
     # Simple error handling for bad keys
@@ -1262,11 +1454,30 @@ def main():
             parent_chunk_overlap=args.parent_chunk_overlap,
             child_chunk_size=args.child_chunk_size,
             child_chunk_overlap=args.child_chunk_overlap,
+            sentence_chunk_size=args.sentence_chunk_size,
+            sentence_overlap=args.sentence_overlap,
+            sentence_max_chars=args.sentence_max_chars,
+            semantic_similarity_threshold=args.semantic_similarity_threshold,
+            semantic_min_sentences=args.semantic_min_sentences,
+            semantic_max_sentences=args.semantic_max_sentences,
+            semantic_max_chunk_chars=args.semantic_max_chunk_chars,
+            chunk_tokenizer_name=args.chunk_tokenizer_name,
             partition_model=args.partition_model,
             render_dpi=args.render_dpi,
             vision_encoder=args.vision_encoder,
             patch_size=args.patch_size,
             pipeline_version=args.pipeline_version,
+            late_model=args.late_model,
+            late_max_tokens=args.late_max_tokens,
+            late_window_stride=args.late_window_stride,
+            late_pooling=args.late_pooling,
+            use_faiss_chunking=args.use_faiss_chunking,
+            colpali_model=args.colpali_model,
+            colpali_base_model=args.colpali_base_model,
+            colpali_dpi=args.colpali_dpi,
+            colpali_top_m=args.colpali_top_m,
+            colpali_alpha=args.colpali_alpha,
+            max_context_chars=args.max_context_chars,
             mc_t=args.mc_t,
             mc_l=args.mc_l,
             mc_alpha=args.mc_alpha,
@@ -1291,6 +1502,7 @@ def main():
         experiment.unified_ot_reg = args.unified_ot_reg
         experiment.unified_ot_iters = args.unified_ot_iters
         experiment.unified_ot_prune_k = args.unified_ot_prune_k
+        
         experiment.run_experiment(num_samples=args.num_samples)
 
 

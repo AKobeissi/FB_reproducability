@@ -35,6 +35,7 @@ def build_index_config(experiment) -> Dict[str, Any]:
         "chunking_unit": getattr(experiment, "chunking_unit", "chars"),
         "chunk_size": getattr(experiment, "chunk_size", None),
         "chunk_overlap": getattr(experiment, "chunk_overlap", None),
+        "chunk_tokenizer_name": getattr(experiment, "chunk_tokenizer_name", None),
     }
 
     if strategy == "hierarchical":
@@ -53,6 +54,26 @@ def build_index_config(experiment) -> Dict[str, Any]:
             "vision_encoder": getattr(experiment, "vision_encoder", None),
             "patch_size": getattr(experiment, "patch_size", None),
             "pipeline_version": getattr(experiment, "pipeline_version", None),
+        })
+    elif strategy == "sentence":
+        config.update({
+            "sentence_chunk_size": getattr(experiment, "sentence_chunk_size", None),
+            "sentence_overlap": getattr(experiment, "sentence_overlap", None),
+            "sentence_max_chars": getattr(experiment, "sentence_max_chars", None),
+        })
+    elif strategy == "semantic":
+        config.update({
+            "semantic_similarity_threshold": getattr(experiment, "semantic_similarity_threshold", None),
+            "semantic_min_sentences": getattr(experiment, "semantic_min_sentences", None),
+            "semantic_max_sentences": getattr(experiment, "semantic_max_sentences", None),
+            "semantic_max_chunk_chars": getattr(experiment, "semantic_max_chunk_chars", None),
+        })
+    elif strategy == "late":
+        config.update({
+            "late_model": getattr(experiment, "late_model", None),
+            "late_max_tokens": getattr(experiment, "late_max_tokens", None),
+            "late_window_stride": getattr(experiment, "late_window_stride", None),
+            "late_pooling": getattr(experiment, "late_pooling", None),
         })
         
     return config

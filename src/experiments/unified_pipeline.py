@@ -16,6 +16,7 @@ from tqdm import tqdm
 from sentence_transformers import CrossEncoder
 from pathlib import Path
 from src.retrieval.ot_reranker import OTReranker
+from src.retrieval.late_chunking import load_late_index_for_scope
 
 # Import helpers
 from src.experiments.rag_hyde_shared import _generate_hypotheticals
@@ -30,6 +31,7 @@ from src.retrieval.bm25 import _compute_corpus_fingerprint
 from src.core.rag_dependencies import BM25Retriever
 from src.retrieval.vectorstore import (
     build_chroma_store, 
+    create_faiss_store,
     populate_chroma_store, 
     save_store_config, 
     get_chroma_db_path
@@ -94,73 +96,114 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         unique_docs.setdefault(sample.get('doc_name', 'unknown'), sample.get('doc_link', ''))
 
     vectordb = None
+    late_index = None
     # We need the dense store if mode is dense/hybrid OR if HyDE is enabled
     need_dense_store = (retrieval_mode in ["dense", "hybrid"]) or use_hyde
+    use_faiss = getattr(experiment, "use_faiss_chunking", False)
 
     if need_dense_store:
-        try:
-            # Initialize Store (Lazy Load)
-            _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
-            
-            # --- VERIFICATION & SELF-HEALING ---
-            if not is_new and vectordb:
-                try:
-                    # Run a dummy query to check if vectors exist and dimensions match
-                    _ = vectordb.similarity_search("sanity_check_query", k=1)
-                    logger.info(f"✓ Vector store sanity check passed.")
-                except Exception as e:
-                    logger.error(f"⚠️ Vector store is corrupt or incompatible (Error: {e}).")
-                    logger.info("   -> Deleting and rebuilding from scratch...")
-                    
-                    _, db_path = get_chroma_db_path(experiment, "all")
-                    if os.path.exists(db_path):
-                        shutil.rmtree(db_path)
-                    
-                    # Re-initialize as new
-                    _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
-                    is_new = True 
-            # ----------------------------------------------
-            
-            # --- Ingestion Loop ---
-            _, db_path = get_chroma_db_path(experiment, "all")
-            meta_path = os.path.join(db_path, "shared_meta.json")
-            available_docs = set()
+        if getattr(experiment, "chunking_strategy", "recursive") == "late":
+            logger.info("Initializing late chunking dense index...")
+            all_pages: List[Any] = []
+            for doc_name, doc_link in unique_docs.items():
+                pdf_docs, src = load_pdf_with_fallback(doc_name, doc_link, getattr(experiment, 'pdf_local_dir', None))
+                for d in pdf_docs or []:
+                    d.metadata.setdefault("doc_name", doc_name)
+                    d.metadata.setdefault("source", src or "pdf")
+                all_pages.extend(pdf_docs or [])
+            if all_pages:
+                late_index = load_late_index_for_scope(experiment, all_pages, scope="all", pdf_dir=Path(experiment.pdf_local_dir))
+            else:
+                logger.warning("Late chunking: no PDF pages loaded. Dense retrieval disabled.")
+                need_dense_store = False
+        elif use_faiss:
+            logger.info("Using FAISS for unified dense retrieval (in-memory).")
+            all_chunks = []
             pdf_source_map = {}
-
-            if not is_new and os.path.exists(meta_path):
-                try:
-                    with open(meta_path, 'r') as f:
-                        meta = json.load(f)
-                        available_docs = set(meta.get("available_docs", []))
-                        pdf_source_map = meta.get("pdf_source_map", {})
-                except Exception: 
-                    pass
-
-            docs_to_process = {k: v for k, v in unique_docs.items() if k not in available_docs}
-            
-            if docs_to_process:
-                logger.info(f"Ingesting {len(docs_to_process)} missing documents into Shared Store...")
-                
-                for doc_name, doc_link in tqdm(docs_to_process.items(), desc="Ingesting PDFs"):
-                    pdf_docs, src = load_pdf_with_fallback(doc_name, doc_link, getattr(experiment, 'pdf_local_dir', None))
-                    pdf_source_map[doc_name] = src
-                    
-                    if pdf_docs:
-                        chunks = experiment._chunk_text_langchain(pdf_docs, metadata={'doc_name': doc_name})
-                        if chunks:
-                            populate_chroma_store(experiment, vectordb, chunks, "all")
-                            available_docs.add(doc_name)
-                
-                save_store_config(experiment, db_path)
-                with open(meta_path, 'w') as f:
-                    json.dump({"available_docs": list(available_docs), "pdf_source_map": pdf_source_map}, f)
-            
+            for doc_name, doc_link in unique_docs.items():
+                pdf_docs, src = load_pdf_with_fallback(doc_name, doc_link, getattr(experiment, 'pdf_local_dir', None))
+                pdf_source_map[doc_name] = src
+                if pdf_docs:
+                    chunks = experiment._chunk_text_langchain(pdf_docs, metadata={'doc_name': doc_name})
+                    if chunks:
+                        all_chunks.extend(chunks)
             _log_pdf_sources(pdf_source_map)
 
-        except Exception as e:
-            logger.error(f"Chroma initialization/ingestion failed: {e}")
-            if retrieval_mode == "dense":
-                return []
+            if all_chunks:
+                try:
+                    vectordb = create_faiss_store(experiment, all_chunks, index_name="unified")
+                except Exception as e:
+                    logger.error(f"FAISS initialization failed: {e}")
+                    if retrieval_mode == "dense":
+                        return []
+            else:
+                logger.error("FAISS dense setup failed: no chunks built.")
+                if retrieval_mode == "dense":
+                    return []
+        else:
+            try:
+                # Initialize Store (Lazy Load)
+                _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
+                
+                # --- VERIFICATION & SELF-HEALING ---
+                if not is_new and vectordb:
+                    try:
+                        # Run a dummy query to check if vectors exist and dimensions match
+                        _ = vectordb.similarity_search("sanity_check_query", k=1)
+                        logger.info(f"✓ Vector store sanity check passed.")
+                    except Exception as e:
+                        logger.error(f"⚠️ Vector store is corrupt or incompatible (Error: {e}).")
+                        logger.info("   -> Deleting and rebuilding from scratch...")
+                        
+                        _, db_path = get_chroma_db_path(experiment, "all")
+                        if os.path.exists(db_path):
+                            shutil.rmtree(db_path)
+                        
+                        # Re-initialize as new
+                        _, vectordb, is_new = build_chroma_store(experiment, "all", lazy_load=True)
+                        is_new = True 
+                # ----------------------------------------------
+                
+                # --- Ingestion Loop ---
+                _, db_path = get_chroma_db_path(experiment, "all")
+                meta_path = os.path.join(db_path, "shared_meta.json")
+                available_docs = set()
+                pdf_source_map = {}
+
+                if not is_new and os.path.exists(meta_path):
+                    try:
+                        with open(meta_path, 'r') as f:
+                            meta = json.load(f)
+                            available_docs = set(meta.get("available_docs", []))
+                            pdf_source_map = meta.get("pdf_source_map", {})
+                    except Exception: 
+                        pass
+
+                docs_to_process = {k: v for k, v in unique_docs.items() if k not in available_docs}
+                
+                if docs_to_process:
+                    logger.info(f"Ingesting {len(docs_to_process)} missing documents into Shared Store...")
+                    
+                    for doc_name, doc_link in tqdm(docs_to_process.items(), desc="Ingesting PDFs"):
+                        pdf_docs, src = load_pdf_with_fallback(doc_name, doc_link, getattr(experiment, 'pdf_local_dir', None))
+                        pdf_source_map[doc_name] = src
+                        
+                        if pdf_docs:
+                            chunks = experiment._chunk_text_langchain(pdf_docs, metadata={'doc_name': doc_name})
+                            if chunks:
+                                populate_chroma_store(experiment, vectordb, chunks, "all")
+                                available_docs.add(doc_name)
+                    
+                    save_store_config(experiment, db_path)
+                    with open(meta_path, 'w') as f:
+                        json.dump({"available_docs": list(available_docs), "pdf_source_map": pdf_source_map}, f)
+                
+                _log_pdf_sources(pdf_source_map)
+
+            except Exception as e:
+                logger.error(f"Chroma initialization/ingestion failed: {e}")
+                if retrieval_mode == "dense":
+                    return []
 
     # =========================================================================
     # PART 2: SPARSE RETRIEVER SETUP (BM25)
@@ -232,7 +275,11 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         
         if use_hyde:
             hypotheticals = _generate_hypotheticals(experiment, question, n=hyde_k)
-            if experiment.embeddings:
+            if late_index is not None and hypotheticals:
+                late_vecs = [late_index.embed_query(h) for h in hypotheticals]
+                if late_vecs:
+                    search_query_vector = np.mean(late_vecs, axis=0)
+            elif experiment.embeddings:
                 embeddings = experiment.embeddings.embed_documents(hypotheticals)
                 if len(embeddings) > 1:
                     search_query_vector = np.mean(embeddings, axis=0).tolist()
@@ -245,7 +292,15 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
         sparse_docs = []
         
         # A. Dense Search
-        if need_dense_store and vectordb:
+        if need_dense_store and late_index is not None:
+            try:
+                if search_query_vector:
+                    dense_docs = late_index.search_by_vector(np.array(search_query_vector), k=candidate_k)
+                else:
+                    dense_docs = late_index.search(question, k=candidate_k)
+            except Exception as e:
+                logger.warning(f"Late chunking retrieval failed for sample {i}: {e}")
+        elif need_dense_store and vectordb:
             try:
                 if search_query_vector:
                     # FIX: Robust Method Calls to avoid AttributeError

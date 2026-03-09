@@ -5,7 +5,7 @@ import json
 from collections import Counter
 
 from src.ingestion.pdf_utils import load_pdf_with_fallback
-from src.retrieval.vectorstore import build_chroma_store, populate_chroma_store, save_store_config, get_chroma_db_path
+from src.retrieval.vectorstore import build_chroma_store, create_faiss_store, populate_chroma_store, save_store_config, get_chroma_db_path
 
 try:
     from langchain.chains import RetrievalQA
@@ -77,19 +77,27 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
     logger.info(f"Collected {len(unique_docs)} unique documents")
 
-    # Initialize Chroma store (lazy load)
-    try:
-        retriever, vectordb, is_new = build_chroma_store(
-            experiment,
-            "all",
-            lazy_load=True,
-        )
-    except Exception as e:
-        logger.error("Chroma build failed for shared store: %s", e)
-        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
-        if hasattr(experiment, "notify_sample_complete"):
-            experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (vector store)")
-        return skipped
+    use_faiss = getattr(experiment, "use_faiss_chunking", False)
+    retriever = None
+    vectordb = None
+    is_new = True
+
+    if use_faiss:
+        logger.info("Using FAISS for shared vector store (in-memory).")
+    else:
+        # Initialize Chroma store (lazy load)
+        try:
+            retriever, vectordb, is_new = build_chroma_store(
+                experiment,
+                "all",
+                lazy_load=True,
+            )
+        except Exception as e:
+            logger.error("Chroma build failed for shared store: %s", e)
+            skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
+            if hasattr(experiment, "notify_sample_complete"):
+                experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (vector store)")
+            return skipped
 
     # Define paths for metadata
     db_name, db_path = get_chroma_db_path(experiment, "all")
@@ -98,7 +106,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
     available_docs = set()
     pdf_source_map = {}
 
-    if not is_new:
+    if not use_faiss and not is_new:
         logger.info("Using existing shared vector store.")
         if os.path.exists(meta_path):
             try:
@@ -118,6 +126,7 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
         else:
             logger.info(f"Ingesting {len(docs_to_process)} missing documents (incremental update)...")
         
+        all_chunks = []
         for i, (doc_name, doc_link) in enumerate(docs_to_process.items()):
             logger.info(f"\nProcessing document {i+1}/{len(docs_to_process)}: {doc_name}")
             
@@ -145,29 +154,47 @@ def run_shared_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
             )
             
             if chunks:
-                added = populate_chroma_store(experiment, vectordb, chunks, db_name)
-                logger.info(f"Added {added} chunks for '{doc_name}'")
+                if use_faiss:
+                    all_chunks.extend(chunks)
+                else:
+                    added = populate_chroma_store(experiment, vectordb, chunks, db_name)
+                    logger.info(f"Added {added} chunks for '{doc_name}'")
                 available_docs.add(doc_name)
             
             # Clear memory
             del pdf_docs
             del chunks
-        
-        # Persist metadata and config
-        save_store_config(experiment, db_path)
-        try:
-            with open(meta_path, 'w') as f:
-                json.dump({
-                    "available_docs": list(available_docs),
-                    "pdf_source_map": pdf_source_map
-                }, f)
-        except Exception as e:
-            logger.warning(f"Failed to save metadata to {meta_path}: {e}")
+
+        if use_faiss and all_chunks:
+            try:
+                vector_store = create_faiss_store(experiment, all_chunks, index_name="shared")
+                retriever = vector_store.as_retriever(search_kwargs={"k": experiment.top_k})
+                logger.info("✓ FAISS shared store created with %s chunks", len(all_chunks))
+            except Exception as exc:
+                logger.error("FAISS shared store creation failed: %s", exc)
+                retriever = None
+        else:
+            # Persist metadata and config
+            save_store_config(experiment, db_path)
+            try:
+                with open(meta_path, 'w') as f:
+                    json.dump({
+                        "available_docs": list(available_docs),
+                        "pdf_source_map": pdf_source_map
+                    }, f)
+            except Exception as e:
+                logger.warning(f"Failed to save metadata to {meta_path}: {e}")
 
     _log_pdf_sources(pdf_source_map)
 
     # Process samples
     results = []
+    if retriever is None:
+        skipped = _create_all_skipped_results(data, experiment.SHARED_VECTOR, experiment=experiment)
+        if hasattr(experiment, "notify_sample_complete"):
+            experiment.notify_sample_complete(count=len(skipped), note="shared store skipped (retriever)")
+        return skipped
+
     for i, sample in enumerate(data):
         logger.info(f"\n--- Sample {i+1}/{len(data)} ---")
         

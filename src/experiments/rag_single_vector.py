@@ -3,7 +3,8 @@ import logging
 from collections import defaultdict
 
 from src.ingestion.pdf_utils import load_pdf_with_fallback
-from src.retrieval.vectorstore import build_chroma_store
+from src.retrieval.vectorstore import build_chroma_store, create_faiss_store
+from src.retrieval.late_chunking import load_late_index_for_scope, LateChunkRetriever
 
 try:
     from langchain.chains import RetrievalQA
@@ -79,25 +80,50 @@ def run_single_vector(experiment, data: List[Dict[str, Any]]) -> List[Dict[str, 
 
         logger.info(f"PDF source: {pdf_source}")
 
-        # Chunk the PDF text
-        documents = experiment._chunk_text_langchain(
-            pdf_docs,
-            metadata={
-                'doc_name': doc_name,
-                'source': 'pdf',
-                'doc_link': doc_link,
-                'pdf_source': pdf_source
-            }
-        )
-
-        try:
-            retriever, _ = build_chroma_store(
-                experiment,
-                doc_name,
-                documents=documents
+        retriever = None
+        if getattr(experiment, "chunking_strategy", "recursive") == "late":
+            try:
+                late_index = load_late_index_for_scope(experiment, pdf_docs, scope=doc_name)
+                retriever = LateChunkRetriever(late_index, experiment.top_k)
+            except Exception as exc:
+                logger.error(f"Late chunking index build failed for '{doc_name}': {exc}")
+        elif getattr(experiment, "use_faiss_chunking", False):
+            documents = experiment._chunk_text_langchain(
+                pdf_docs,
+                metadata={
+                    'doc_name': doc_name,
+                    'source': 'pdf',
+                    'doc_link': doc_link,
+                    'pdf_source': pdf_source
+                }
             )
-        except Exception as exc:
-            logger.error(f"Chroma build failed for '{doc_name}': {exc}")
+            try:
+                vector_store = create_faiss_store(experiment, documents, index_name=doc_name)
+                retriever = vector_store.as_retriever(search_kwargs={"k": experiment.top_k})
+            except Exception as exc:
+                logger.error(f"FAISS build failed for '{doc_name}': {exc}")
+        else:
+            # Chunk the PDF text
+            documents = experiment._chunk_text_langchain(
+                pdf_docs,
+                metadata={
+                    'doc_name': doc_name,
+                    'source': 'pdf',
+                    'doc_link': doc_link,
+                    'pdf_source': pdf_source
+                }
+            )
+
+            try:
+                retriever, _ = build_chroma_store(
+                    experiment,
+                    doc_name,
+                    documents=documents
+                )
+            except Exception as exc:
+                logger.error(f"Chroma build failed for '{doc_name}': {exc}")
+
+        if retriever is None:
             skipped = _create_skipped_results(
                 samples, doc_name, doc_link, pdf_source,
                 experiment.SINGLE_VECTOR, len(results), experiment=experiment

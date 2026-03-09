@@ -77,8 +77,11 @@ def _get_chunk_cache_path(experiment, fingerprint: str) -> str:
     """
     Cache path includes Chunk Size, Overlap, AND Corpus Fingerprint.
     """
+    strategy = getattr(experiment, "chunking_strategy", "recursive")
+    unit = getattr(experiment, "chunking_unit", "chars")
     filename = (
-        f"chunks_sz{experiment.chunk_size}_"
+        f"chunks_{strategy}_{unit}_"
+        f"sz{experiment.chunk_size}_"
         f"ol{experiment.chunk_overlap}_"
         f"fp{fingerprint}.pkl"
     )
