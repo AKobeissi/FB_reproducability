@@ -10,6 +10,8 @@ vectorstores/
 vector_stores1/
 pdfs/
 pdfs/
+pdfs-new/
+pdfs-secqa/
 logs/
 models/
 results/
