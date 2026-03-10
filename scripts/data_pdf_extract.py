@@ -591,16 +591,21 @@ def _render_html_to_pdf(url: str, dest: Path, user_agent: str) -> None:
         )
         page = ctx.new_page()
         page.set_default_timeout(120_000)
-        page.goto(url, wait_until="domcontentloaded", timeout=120_000)
-        page.wait_for_timeout(3_000)
+        # "load" waits for CSS and all images before handing control back;
+        # "domcontentloaded" does not — causing broken pagination and missing images.
+        page.goto(url, wait_until="load", timeout=120_000)
+        # Allow deferred resources (lazy images, web fonts) to fully settle.
+        # 90s covers even heavy 10-K filings; proceed on timeout since "load"
+        # already guarantees layout-critical resources are ready.
         try:
-            page.wait_for_load_state("networkidle", timeout=20_000)
+            page.wait_for_load_state("networkidle", timeout=90_000)
         except Exception:
             pass
         page.pdf(
             path=str(dest),
             format="Letter",
-            print_background=True,
+            print_background=True,      # render background colors and images in tables
+            prefer_css_page_size=True,  # respect the document's own @page CSS rules
             margin={"top": "0.5in", "bottom": "0.5in",
                     "left": "0.5in", "right": "0.5in"},
         )
