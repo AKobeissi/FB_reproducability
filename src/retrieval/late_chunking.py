@@ -297,6 +297,26 @@ def _load_late_model(experiment) -> Tuple[Any, Any, str]:
     if pooling != "mean":
         logger.warning("Late pooling '%s' not supported; defaulting to mean.", pooling)
 
+    # Jina models (v2 and v3) load remote code that imports transformers.onnx,
+    # which was removed in transformers >= 4.30. Inject a stub so it doesn't crash.
+    import sys, types
+    if "transformers.onnx" not in sys.modules:
+        _stub = types.ModuleType("transformers.onnx")
+        class OnnxConfig: pass
+        _stub.OnnxConfig = OnnxConfig
+        sys.modules["transformers.onnx"] = _stub
+
+    # transformers bug on Python 3.13: dot_natural_key returns mixed str/int lists
+    # which can't be compared with < in Python 3.13. Patch to use type-safe tuples.
+    try:
+        import transformers.core_model_loading as _cml
+        _orig_dnk = _cml.dot_natural_key
+        def _safe_dot_natural_key(key):
+            return [(0, p) if isinstance(p, int) else (1, p) for p in _orig_dnk(key)]
+        _cml.dot_natural_key = _safe_dot_natural_key
+    except Exception:
+        pass
+
     device = getattr(experiment, "device", "cpu")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     dtype = torch.float16 if device.startswith("cuda") else torch.float32

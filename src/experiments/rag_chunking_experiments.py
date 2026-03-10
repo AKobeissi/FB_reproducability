@@ -380,7 +380,11 @@ def run_rag_experiment(
     cfg_root = os.path.join(args.output_root, config["name"])
     strategy = config["strategy"]
 
-    # Map our strategy names to what RAGExperiment expects
+    # Map our strategy names to what RAGExperiment / get_splitters expects.
+    # "fixed"  → FixedWindowSplitter
+    # "semantic" → SemanticChunker
+    # "late"   → FixedWindowSplitter (unified pipeline intercepts for true late chunking)
+    # Everything else → CustomChunkerAdapter wired in get_splitters()
     rag_chunking_strategy = config.get("chunking_strategy", "fixed")
 
     # --- Build RAGExperiment ---
@@ -441,6 +445,16 @@ def run_rag_experiment(
             exp_kwargs.pop(key, None)
         exp = RAGExperiment(**exp_kwargs)
 
+    # Tag the experiment so output files and JSON content use the strategy name
+    # instead of the generic "unified" label.
+    exp.experiment_metadata["chunking_config_name"] = config["name"]
+    exp.experiment_metadata["chunking_strategy_label"] = config["strategy"]
+
+    # Expose adaptive/contextual parameters that CustomChunkerAdapter picks up
+    exp.adaptive_min = args.adaptive_min
+    exp.adaptive_max = args.adaptive_max
+    exp.context_budget = args.context_budget
+
     # Set unified pipeline knobs
     exp.unified_use_hyde = args.unified_hyde
     exp.unified_hyde_k = args.unified_hyde_k
@@ -454,13 +468,16 @@ def run_rag_experiment(
     elapsed = time.time() - t0
     logger.info(f"[{strategy}] Completed in {elapsed:.1f}s")
 
-    # Find output files
-    output_file = _latest_file(
-        os.path.join(exp.output_dir, f"{RAGExperiment.UNIFIED}_*.json")
+    # Find output files – search by strategy name first, then fall back to "unified_*"
+    config_name = config["name"]
+    output_file = (
+        _latest_file(os.path.join(exp.output_dir, f"{config_name}_*.json"))
+        or _latest_file(os.path.join(exp.output_dir, f"{RAGExperiment.UNIFIED}_*.json"))
     )
-    scored_file = _latest_file(
-        os.path.join(getattr(exp, "results_dir", exp.output_dir),
-                     f"{RAGExperiment.UNIFIED}_*_scored.json")
+    results_dir = getattr(exp, "results_dir", exp.output_dir)
+    scored_file = (
+        _latest_file(os.path.join(results_dir, f"{config_name}_*_scored.json"))
+        or _latest_file(os.path.join(results_dir, f"{RAGExperiment.UNIFIED}_*_scored.json"))
     )
     return output_file, scored_file
 
@@ -495,7 +512,30 @@ def collect_summary(
         try:
             with open(scored_file) as f:
                 scored = json.load(f)
-            # Extract aggregate metrics
+
+            # ----------------------------------------------------------------
+            # 1. Aggregate retrieval metrics live in evaluation_summary.retrieval
+            #    (page_recall, chunk_recall are ONLY stored there, not per-sample)
+            # ----------------------------------------------------------------
+            ret_summary = {}
+            if isinstance(scored, dict):
+                ret_summary = (
+                    scored.get("evaluation_summary", {}).get("retrieval", {})
+                )
+            for k in [1, 3, 5]:
+                for metric in ("page_recall", "page_hit", "chunk_recall", "chunk_hit",
+                                "doc_recall", "doc_hit", "context_bleu", "context_rougeL"):
+                    key = f"{metric}@{k}"
+                    if key in ret_summary:
+                        row[key] = round(float(ret_summary[key]), 4)
+            if "mrr" in ret_summary:
+                row["mrr"] = round(float(ret_summary["mrr"]), 4)
+
+            # ----------------------------------------------------------------
+            # 2. Per-sample metrics stored in r["retrieval_metrics"] (doc_recall,
+            #    context_bleu, context_rougeL per sample — page/chunk recall are
+            #    not stored per-sample, only in the aggregate above)
+            # ----------------------------------------------------------------
             if isinstance(scored, list):
                 results = scored
             elif isinstance(scored, dict):
@@ -504,32 +544,72 @@ def collect_summary(
                 results = []
 
             if results:
-                # page_recall@k
-                page_recalls = [r.get("page_recall", r.get("page_recall@k", 0)) for r in results if isinstance(r, dict)]
-                if page_recalls:
-                    row["page_recall@k_mean"] = round(np.mean(page_recalls), 4)
-                    row["page_recall@k_std"] = round(np.std(page_recalls), 4)
+                # doc_recall@k from per-sample retrieval_metrics
+                for k in [1, 3, 5]:
+                    vals = [
+                        r.get("retrieval_metrics", {}).get(f"doc_recall@{k}")
+                        for r in results
+                        if isinstance(r, dict)
+                        and r.get("retrieval_metrics", {}).get(f"doc_recall@{k}") is not None
+                    ]
+                    if vals:
+                        row[f"doc_recall@{k}_sample_mean"] = round(np.mean(vals), 4)
 
-                # chunk_recall@k
-                chunk_recalls = [r.get("chunk_recall", r.get("chunk_recall@k", 0)) for r in results if isinstance(r, dict)]
-                if chunk_recalls:
-                    row["chunk_recall@k_mean"] = round(np.mean(chunk_recalls), 4)
+                # context BLEU / ROUGE-L from per-sample retrieval_metrics
+                for k in [1, 3, 5]:
+                    bleus = [
+                        r.get("retrieval_metrics", {}).get(f"context_bleu@{k}")
+                        for r in results
+                        if isinstance(r, dict)
+                        and r.get("retrieval_metrics", {}).get(f"context_bleu@{k}") is not None
+                    ]
+                    if bleus:
+                        row[f"context_bleu@{k}_mean"] = round(np.mean(bleus), 4)
 
-                # doc_recall@k
-                doc_recalls = [r.get("doc_recall", r.get("doc_recall@k", 0)) for r in results if isinstance(r, dict)]
-                if doc_recalls:
-                    row["doc_recall@k_mean"] = round(np.mean(doc_recalls), 4)
+                    rouges = [
+                        r.get("retrieval_metrics", {}).get(f"context_rougeL@{k}")
+                        for r in results
+                        if isinstance(r, dict)
+                        and r.get("retrieval_metrics", {}).get(f"context_rougeL@{k}") is not None
+                    ]
+                    if rouges:
+                        row[f"context_rougeL@{k}_mean"] = round(np.mean(rouges), 4)
 
-                # BLEU / ROUGE (if available from generation eval)
-                bleus = [r.get("bleu", 0) for r in results if isinstance(r, dict) and "bleu" in r]
+                # Generative BLEU / ROUGE-L from per-sample generative_metrics
+                bleus = [
+                    r.get("generative_metrics", {}).get("bleu")
+                    for r in results
+                    if isinstance(r, dict)
+                    and r.get("generative_metrics", {}).get("bleu") is not None
+                ]
                 if bleus:
-                    row["bleu_mean"] = round(np.mean(bleus), 4)
-                rouges = [r.get("rouge_l", r.get("rougeL", 0)) for r in results if isinstance(r, dict) and ("rouge_l" in r or "rougeL" in r)]
+                    row["gen_bleu_mean"] = round(np.mean(bleus), 4)
+
+                rouges = [
+                    r.get("generative_metrics", {}).get(
+                        "rouge_l", r.get("generative_metrics", {}).get("rougeL")
+                    )
+                    for r in results
+                    if isinstance(r, dict)
+                    and (
+                        r.get("generative_metrics", {}).get("rouge_l") is not None
+                        or r.get("generative_metrics", {}).get("rougeL") is not None
+                    )
+                ]
                 if rouges:
-                    row["rouge_l_mean"] = round(np.mean(rouges), 4)
+                    row["gen_rouge_l_mean"] = round(np.mean(rouges), 4)
 
                 # Accuracy (exact match or LLM-judge)
-                accs = [r.get("accuracy", r.get("correct", 0)) for r in results if isinstance(r, dict) and ("accuracy" in r or "correct" in r)]
+                accs = [
+                    r.get("generative_metrics", {}).get("accuracy",
+                           r.get("generative_metrics", {}).get("correct"))
+                    for r in results
+                    if isinstance(r, dict)
+                    and (
+                        r.get("generative_metrics", {}).get("accuracy") is not None
+                        or r.get("generative_metrics", {}).get("correct") is not None
+                    )
+                ]
                 if accs:
                     row["accuracy_mean"] = round(np.mean(accs), 4)
 

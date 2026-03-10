@@ -467,10 +467,17 @@ class ResultsMixin:
 
     def _save_results(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{self.output_dir}/{self.experiment_type}_{timestamp}.json"
+        # Use chunking_config_name (set by rag_chunking_experiments) if available,
+        # so each strategy's output file is named after the strategy rather than
+        # the generic "unified" label.
+        config_name = self.experiment_metadata.get("chunking_config_name", "")
+        file_prefix = config_name if config_name else self.experiment_type
+        filename = f"{self.output_dir}/{file_prefix}_{timestamp}.json"
 
         output_data = {
             'metadata': self.experiment_metadata,
+            # Top-level experiment_name makes the JSON self-identifying
+            'experiment_name': config_name if config_name else self.experiment_type,
             'num_samples': len(self.results),
             'framework': 'LangChain + Chroma',
             'results': self.results
