@@ -297,6 +297,15 @@ def _load_late_model(experiment) -> Tuple[Any, Any, str]:
     if pooling != "mean":
         logger.warning("Late pooling '%s' not supported; defaulting to mean.", pooling)
 
+    # Jina models (v2 and v3) load remote code that imports transformers.onnx,
+    # which was removed in transformers >= 4.30. Inject a stub so it doesn't crash.
+    import sys, types
+    if "transformers.onnx" not in sys.modules:
+        _stub = types.ModuleType("transformers.onnx")
+        class OnnxConfig: pass
+        _stub.OnnxConfig = OnnxConfig
+        sys.modules["transformers.onnx"] = _stub
+
     device = getattr(experiment, "device", "cpu")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     dtype = torch.float16 if device.startswith("cuda") else torch.float32
