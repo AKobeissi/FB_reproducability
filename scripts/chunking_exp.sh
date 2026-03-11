@@ -105,7 +105,7 @@ python "${CHUNKING_SRC}/rag_chunking_experiments.py" \
   --child-overlap     64 \
   --late-chunk-size   512 \
   --late-chunk-overlap 64 \
-  --late-model        jinaai/jina-embeddings-v2-base-en \
+  --late-model        jinaai/jina-embeddings-v3 \
   --late-max-tokens   8192 \
   --late-window-stride 512 \
   --context-budget    128 \

@@ -85,7 +85,7 @@ def load_chunk_files(chunk_dir: str) -> Dict[str, Dict[str, List[dict]]]:
 def load_financebench(fb_path: str) -> List[Dict[str, Any]]:
     """Load FinanceBench samples with evidence info."""
     with open(fb_path) as f:
-        raw = json.load(f)
+        raw = [json.loads(line) for line in f if line.strip()]
 
     # Handle both list and dict formats
     if isinstance(raw, dict):

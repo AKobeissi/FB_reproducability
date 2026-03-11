@@ -569,40 +569,42 @@ def _download_binary(
 
 
 def _render_html_to_pdf(url: str, dest: Path, user_agent: str) -> None:
-    """
-    Last-resort: render an SEC HTML filing to PDF via Playwright.
-    NOTE: page numbers produced this way will NOT match evidence page_num values.
-         A warning is printed so you know which docs fell back to this method.
-    """
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        raise RuntimeError(
-            "playwright not installed. Run: pip install playwright && "
-            "python -m playwright install chromium"
-        )
+        raise RuntimeError("playwright not installed.")
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        ctx     = browser.new_context(
-            user_agent=user_agent,
-            extra_http_headers={"Accept-Encoding": "gzip, deflate"},
-        )
+        ctx = browser.new_context(user_agent=user_agent)
         page = ctx.new_page()
-        page.set_default_timeout(120_000)
-        page.goto(url, wait_until="domcontentloaded", timeout=120_000)
-        page.wait_for_timeout(3_000)
+        
+        # 1. FORCE IMAGES: Emulate screen to capture all visual assets
+        page.emulate_media(media="screen")
+        
+        # 2. FIX OVERFLOW: Inject CSS to handle page breaks properly
+        page.add_style_tag(content="""
+            @media print {
+                hr { page-break-after: always !important; visibility: hidden !important; }
+                .page-break { page-break-after: always !important; }
+            }
+        """)
+
+        page.goto(url, wait_until="load", timeout=120_000)
+        
         try:
-            page.wait_for_load_state("networkidle", timeout=20_000)
+            page.wait_for_load_state("networkidle", timeout=60_000)
         except Exception:
             pass
+
+        # 3. REMOVE MARGINS: Use 0 margins to prevent double-padding
         page.pdf(
             path=str(dest),
             format="Letter",
             print_background=True,
-            margin={"top": "0.5in", "bottom": "0.5in",
-                    "left": "0.5in", "right": "0.5in"},
+            prefer_css_page_size=False,
+            margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
         )
         browser.close()
 

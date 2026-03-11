@@ -270,18 +270,41 @@ def convert_htm_to_pdf(htm_url: str, dest: Path) -> bool:
 
     try:
         dest.parent.mkdir(parents=True, exist_ok=True)
+
+        # Inject <base href> so relative URLs (images, CSS, fonts) resolve
+        # back to the original SEC server rather than the temp file path.
+        html = r.text
+        base_tag = f'<base href="{htm_url}">'
+        html = re.sub(r"(<head[^>]*>)", r"\1" + base_tag, html, count=1, flags=re.IGNORECASE)
+        if base_tag not in html:
+            html = base_tag + html
+
         with tempfile.NamedTemporaryFile(suffix=".html", delete=False, mode="w", encoding="utf-8") as tmp:
-            tmp.write(r.text)
+            tmp.write(html)
             tmp_path = tmp.name
 
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page()
-            page.goto(f"file://{tmp_path}", wait_until="domcontentloaded", timeout=30000)
-            page.pdf(path=str(dest), format="Letter", margin={
-                "top": "15mm", "bottom": "15mm",
-                "left": "15mm", "right": "15mm",
-            })
+            # "load" waits for CSS and images; "domcontentloaded" does not
+            page.goto(f"file://{tmp_path}", wait_until="load", timeout=60_000)
+            # Wait for deferred resources (lazy-loaded images, web fonts) to settle
+            try:
+                page.wait_for_load_state("networkidle", timeout=60_000)
+            except Exception:
+                # Very large filings may never reach true networkidle;
+                # "load" already guarantees CSS/images are ready
+                pass
+            page.pdf(
+                path=str(dest),
+                format="Letter",
+                print_background=True,      # render background colors and images
+                prefer_css_page_size=True,  # respect the document's own @page CSS rules
+                margin={
+                    "top": "15mm", "bottom": "15mm",
+                    "left": "15mm", "right": "15mm",
+                },
+            )
             browser.close()
 
         os.unlink(tmp_path)

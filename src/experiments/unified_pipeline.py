@@ -259,7 +259,7 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     results = experiment._create_skipped_results(data, "unified", "unified", "pdf", "unified", start_id=0)
 
     consecutive_empty_count = 0
-    MAX_EMPTY_STRIKES = 5
+    MAX_EMPTY_STRIKES = len(data)  # never kill experiment early; log instead
 
     for i, sample in enumerate(tqdm(data, desc="Unified Pipeline")):
         question = sample.get("question")
@@ -298,8 +298,9 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                     dense_docs = late_index.search_by_vector(np.array(search_query_vector), k=candidate_k)
                 else:
                     dense_docs = late_index.search(question, k=candidate_k)
+                logger.debug(f"Sample {i}: late_index returned {len(dense_docs)} docs")
             except Exception as e:
-                logger.warning(f"Late chunking retrieval failed for sample {i}: {e}")
+                logger.error(f"Late chunking retrieval FAILED for sample {i}: {e}", exc_info=True)
         elif need_dense_store and vectordb:
             try:
                 if search_query_vector:
