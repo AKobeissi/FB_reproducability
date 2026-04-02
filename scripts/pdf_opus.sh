@@ -1,26 +1,23 @@
 #!/bin/bash -l
 #SBATCH --partition=rali
-#SBATCH --job-name=pdf_collect
-#SBATCH --output=pdf_collect_%j.log
+#SBATCH --job-name=pdf_opus
+#SBATCH --output=pdf_opus_%j.log
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=48:00:00
 
 # =============================================================================
-# pdf_extraction.sh — SLURM job for downloading EDGAR PDFs
+# pdf_opus_extraction.sh — SLURM job for EDGAR → PDF-Opus pipeline
 #
-# Fixes over original:
-#   - Calls pdf_ex.py (not data_pdf_extract.py)
-#   - Installs beautifulsoup4 + lxml if missing (needed for image inlining)
-#   - Playwright chromium install guard
-#   - Supports both finqa_test.jsonl and secqa_test.jsonl in one run
-#   - Skips docs that already have a PDF (idempotent re-runs)
+# Downloads SEC filings and converts them to page-faithful PDFs where each
+# logical page maps to exactly one PDF page.
 #
-# v2 fix (page-break injection):
-#   - pdf_ex.py now uses CSS page-break injection + standard Playwright
-#     pagination instead of "one tall page + pypdf crop".
-#   - Fixes blank/white pages caused by Chromium's internal height limit.
-#   - Fixes overflow where one logical page spanned 2+ PDF pages.
+# Strategy:
+#   - Native PDFs on EDGAR → direct download
+#   - HTM-only filings → page-break detection + CSS injection + Playwright
+#   - Post-processing: blank page removal, validation
+#
+# Output: $SUBMIT_DIR/PDF-Opus/{doc_name}.pdf + manifest.jsonl
 # =============================================================================
 
 set -euo pipefail
@@ -34,6 +31,7 @@ echo "Job:         $SLURM_JOB_ID"
 echo "Node:        $SLURMD_NODENAME"
 echo "Submit dir:  $SUBMIT_DIR"
 echo "Scratch dir: $SCRATCH_DIR"
+echo "Started:     $(date)"
 echo "========================================================="
 
 mkdir -p "$SCRATCH_DIR"
@@ -44,6 +42,9 @@ rsync -a --quiet \
   --exclude '.git' \
   --exclude '__pycache__' \
   --exclude '*.log' \
+  --exclude 'PDF-Opus' \
+  --exclude 'pdfs' \
+  --exclude 'pdfs-extended' \
   "$SUBMIT_DIR/" "$SCRATCH_DIR/"
 
 cd "$SCRATCH_DIR"
@@ -52,85 +53,74 @@ echo "Activating venv: $VENV_PATH"
 source "$VENV_PATH/bin/activate"
 
 # ---------------------------------------------------------------------------
-# Dependency check — install extras needed by the new pdf_ex.py if missing
+# Dependency check
 # ---------------------------------------------------------------------------
 echo "Checking / installing dependencies..."
+
 python -c "import requests" 2>/dev/null || pip install --quiet requests
-
-# beautifulsoup4 + lxml are required for image inlining
-python -c "import bs4" 2>/dev/null || pip install --quiet beautifulsoup4 lxml
-
-# pypdf is required for tall-PDF page cropping
-python -c "import pypdf" 2>/dev/null || pip install --quiet pypdf
-
-# playwright must be installed AND the chromium binary must exist
+python -c "import bs4"      2>/dev/null || pip install --quiet beautifulsoup4 lxml
+python -c "import pypdf"    2>/dev/null || pip install --quiet pypdf
 python -c "import playwright" 2>/dev/null || pip install --quiet playwright
-# Avoid --with-deps on shared clusters (it attempts system package installs)
+
+# Install Chromium browser for Playwright (needed for HTM→PDF conversion)
 python -m playwright install chromium 2>/dev/null || true
 
-# Optional (helps avoid home quota if HF models are cached):
+# Optional: redirect HF caches off home dir (avoid quota issues)
 export HF_HOME="/data/rech/$(whoami)/hf"
 export HF_DATASETS_CACHE="/data/rech/$(whoami)/hf_datasets"
 export TRANSFORMERS_CACHE="/data/rech/$(whoami)/hf_transformers"
-mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$TRANSFORMERS_CACHE"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$TRANSFORMERS_CACHE" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
-# Config — edit these to change which datasets to process
+# Config
 # ---------------------------------------------------------------------------
 
-# Which JSONL files to process (relative to repo root).
-# You can comment out one line if you only want one dataset.
+# JSONL input files (relative to repo root)
 JSONL_FILES=(
   "data/finqa_test.jsonl"
   "data/secqa_test.jsonl"
 )
 
-# Output directory name (PDFs land in $SUBMIT_DIR/$OUT_REL after rsync back)
-OUT_REL="pdfs-extended"
+# Output directory name
+OUT_REL="PDF-Opus"
 
 # ---------------------------------------------------------------------------
 # Validate inputs
 # ---------------------------------------------------------------------------
+JSONL_ARGS=()
 for f in "${JSONL_FILES[@]}"; do
   if [[ ! -f "$SCRATCH_DIR/$f" ]]; then
     echo "[ERROR] Input file not found: $SCRATCH_DIR/$f"
     exit 1
   fi
+  JSONL_ARGS+=("$SCRATCH_DIR/$f")
 done
 
 mkdir -p "$SCRATCH_DIR/$OUT_REL"
 
-declare -a FAILURE_SUMMARY=()
-
 # ---------------------------------------------------------------------------
-# Run — one pass per JSONL so progress is interleaved and failures are clear
+# Run the downloader
 # ---------------------------------------------------------------------------
-for JSONL in "${JSONL_FILES[@]}"; do
-  echo "========================================================"
-  echo "Processing: $JSONL  →  $OUT_REL"
-  echo "Started: $(date)"
-  echo "========================================================"
+echo "========================================================"
+echo "Running EDGAR PDF Opus Downloader"
+echo "Inputs: ${JSONL_FILES[*]}"
+echo "Output: $SCRATCH_DIR/$OUT_REL"
+echo "Started: $(date)"
+echo "========================================================"
 
-  DATASET_TAG=$(basename "$JSONL" .jsonl)
-  FAIL_FILE_BASENAME="failed_downloads_${DATASET_TAG}.txt"
+python -u scripts/pdf_opus.py \
+  --jsonl "${JSONL_ARGS[@]}" \
+  --out_dir "$SCRATCH_DIR/$OUT_REL" \
+  --failed-list "failed_downloads.txt"
 
-  python -u scripts/pdf_ex.py \
-    --jsonl  "$JSONL" \
-    --out_dir "$OUT_REL" \
-    --failed-list "$FAIL_FILE_BASENAME"
+EXIT_CODE=$?
 
-  PASS_CODE=$?
-  echo "Exit code for $JSONL: $PASS_CODE"
-  echo "PDFs so far: $(find "$SCRATCH_DIR/$OUT_REL" -name '*.pdf' | wc -l)"
-
-  FAIL_PATH="$SCRATCH_DIR/$OUT_REL/$FAIL_FILE_BASENAME"
-  if [[ -f "$FAIL_PATH" ]]; then
-    FAIL_COUNT=$(awk 'END{print NR}' "$FAIL_PATH")
-    FAILURE_SUMMARY+=("$FAIL_COUNT failures from $JSONL")
-  else
-    FAILURE_SUMMARY+=("0 failures from $JSONL")
-  fi
-done
+echo "========================================================"
+echo "Download finished at: $(date)"
+echo "Exit code: $EXIT_CODE"
+echo "PDF count: $(find "$SCRATCH_DIR/$OUT_REL" -name '*.pdf' | wc -l)"
+echo "Disk usage: $(du -sh "$SCRATCH_DIR/$OUT_REL" | cut -f1)"
+echo "========================================================"
 
 # ---------------------------------------------------------------------------
 # Copy results back to submit dir
@@ -156,14 +146,18 @@ fi
 # Summary
 # ---------------------------------------------------------------------------
 TOTAL=$(find "$FINAL_DEST" -name '*.pdf' | wc -l)
-FAILED="${FAILURE_SUMMARY[*]:-}"
 
-# Cleanup
+# Cleanup scratch
 rm -rf "$SCRATCH_DIR"
 
 echo "========================================================"
 echo "All done!"
 echo "PDFs saved to : $FINAL_DEST"
 echo "Total PDFs    : $TOTAL"
-[[ -n "$FAILED" ]] && echo "Failures      :$FAILED"
+echo "Manifest      : $FINAL_DEST/manifest.jsonl"
+if [[ -f "$FINAL_DEST/failed_downloads.txt" ]]; then
+  FAIL_COUNT=$(wc -l < "$FINAL_DEST/failed_downloads.txt")
+  echo "Failed        : $FAIL_COUNT (see $FINAL_DEST/failed_downloads.txt)"
+fi
+echo "Finished      : $(date)"
 echo "========================================================"

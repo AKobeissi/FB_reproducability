@@ -302,7 +302,7 @@ def main() -> None:
 
     # Models
     parser.add_argument("--llm-model",        default=RAGExperiment.QWEN_2_5_7B)
-    parser.add_argument("--embedding-model",  default="bge-m3")
+    parser.add_argument("--embedding-model",  default="BAAI/bge-m3")
 
     # Evaluation
     parser.add_argument(

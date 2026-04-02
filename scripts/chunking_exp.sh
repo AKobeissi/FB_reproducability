@@ -15,8 +15,11 @@ SCRATCH_DIR=/Tmp/$(whoami)/${SLURM_JOB_ID}
 # ── Configurable overrides ────────────────────────────────────────────────────
 # Pass strategies as 1st arg:  sbatch run_chunking_sweep.sh "naive recursive semantic"
 # Pass --standalone-only as 2nd arg to skip the full RAG pipeline
+# Pass retrieval mode as 3rd arg: dense|sparse|hybrid|bert
 STRATEGIES="${1:-naive recursive semantic adaptive parent_child table_aware late contextual metadata}"
 STANDALONE_FLAG="${2:-}"
+RETRIEVAL_MODE="${3:-dense}"
+BERT_EMBEDDING_MODEL="${BERT_EMBEDDING_MODEL:-sentence-transformers/bert-base-nli-mean-tokens}"
 
 echo "========================================================="
 echo "Job:         $SLURM_JOB_ID"
@@ -25,6 +28,7 @@ echo "Submit dir:  $SUBMIT_DIR"
 echo "Scratch dir: $SCRATCH_DIR"
 echo "Strategies:  $STRATEGIES"
 echo "Standalone:  ${STANDALONE_FLAG:-no}"
+echo "Retrieval:   ${RETRIEVAL_MODE}"
 echo "========================================================="
 
 mkdir -p "$SCRATCH_DIR"
@@ -111,7 +115,8 @@ python "${CHUNKING_SRC}/rag_chunking_experiments.py" \
   --context-budget    128 \
   --vector-store-dir  "${VECTOR_STORE_DIR}" \
   --use-faiss-chunking \
-  --unified-retrieval dense \
+    --unified-retrieval "${RETRIEVAL_MODE}" \
+    --bert-embedding-model "${BERT_EMBEDDING_MODEL}" \
   --eval-type         both \
   --eval-mode         static \
   ${STANDALONE_FLAG}
