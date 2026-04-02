@@ -139,6 +139,10 @@ def build_strategy_configs(args: argparse.Namespace) -> List[Dict[str, Any]]:
             },
         })
 
+    semantic_embedding_model = args.embedding_model
+    if args.unified_retrieval == "bert":
+        semantic_embedding_model = args.bert_embedding_model
+
     # ---------------------------------------------------------------
     # 3. Semantic
     # ---------------------------------------------------------------
@@ -155,7 +159,7 @@ def build_strategy_configs(args: argparse.Namespace) -> List[Dict[str, Any]]:
                 "similarity_threshold": args.semantic_threshold,
                 "min_sentences": args.semantic_min_sentences,
                 "max_sentences": args.semantic_max_sentences,
-                "embedding_model_name": args.embedding_model,
+                "embedding_model_name": semantic_embedding_model,
             },
         })
 
@@ -388,13 +392,17 @@ def run_rag_experiment(
     rag_chunking_strategy = config.get("chunking_strategy", "fixed")
 
     # --- Build RAGExperiment ---
+    embedding_model = args.embedding_model
+    if args.unified_retrieval == "bert":
+        embedding_model = args.bert_embedding_model
+
     exp_kwargs = dict(
         experiment_type=RAGExperiment.UNIFIED,
         llm_model=args.llm_model,
         chunk_size=config["chunk_size"],
         chunk_overlap=config.get("chunk_overlap", 128),
         top_k=args.top_k,
-        embedding_model=args.embedding_model,
+        embedding_model=embedding_model,
         output_dir=cfg_root,
         vector_store_dir=args.vector_store_dir,
         pdf_local_dir=args.pdf_dir,
@@ -720,9 +728,12 @@ def main():
     parser.add_argument("--unified-hyde", action="store_true")
     parser.add_argument("--unified-hyde-k", type=int, default=3)
     parser.add_argument("--unified-retrieval", default="dense",
-                        choices=["dense", "sparse", "hybrid"])
+                        choices=["dense", "sparse", "hybrid", "bert"])
     parser.add_argument("--unified-rerank", action="store_true")
     parser.add_argument("--unified-reranker-style", default="cross-encoder")
+    parser.add_argument("--bert-embedding-model",
+                        default="sentence-transformers/bert-base-nli-mean-tokens",
+                        help="Embedding model for unified 'bert' retrieval")
 
     args = parser.parse_args()
 

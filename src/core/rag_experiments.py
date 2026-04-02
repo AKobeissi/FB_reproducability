@@ -1263,7 +1263,7 @@ def main():
     parser.add_argument(
         "--colpali-model",
         type=str,
-        default="vidore/colpali-v1.2",
+        default="vidore/colqwen2-v1.0-hf",
         help="ColPali adapter model ID (e.g. vidore/colpali-v1.2).",
     )
     parser.add_argument(
@@ -1303,8 +1303,14 @@ def main():
         "--unified-retrieval",
         type=str,
         default="dense",
-        choices=["dense", "sparse", "hybrid"],
+        choices=["dense", "sparse", "hybrid", "bert"],
         help="[Unified] Retrieval mode."
+    )
+    parser.add_argument(
+        "--bert-embedding-model",
+        type=str,
+        default="sentence-transformers/bert-base-nli-mean-tokens",
+        help="[Unified] Embedding model for BERT retrieval."
     )
     parser.add_argument(
         "--unified-rerank",
@@ -1372,6 +1378,75 @@ def main():
         default=16000,
         help="Max characters in LLM context window (default 16000).",
     )
+    parser.add_argument(
+    "--colqwen2-first-stage-k",
+    type=int,
+    default=20,
+    help="Top pages kept from first-stage ColQwen2 retrieval before reranking.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-top-docs",
+        type=int,
+        default=3,
+        help="Top documents kept after aggregating first-stage page scores.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-pages-per-doc",
+        type=int,
+        default=4,
+        help="Max top pages kept per selected document before neighbor expansion.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-neighbor-window",
+        type=int,
+        default=1,
+        help="Number of neighboring pages to include on each side of a selected page.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-visual-weight",
+        type=float,
+        default=0.65,
+        help="Weight of normalized ColQwen2 visual score in final reranking.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-text-weight",
+        type=float,
+        default=0.25,
+        help="Weight of lightweight text score in final reranking.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-doc-bonus-weight",
+        type=float,
+        default=0.10,
+        help="Bonus weight for pages from top aggregated documents.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-page-batch-size",
+        type=int,
+        default=4,
+        help="Batch size for ColQwen2 page-image embeddings.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-query-batch-size",
+        type=int,
+        default=1,
+        help="Batch size for ColQwen2 query embeddings.",
+    )
+
+    parser.add_argument(
+        "--colqwen2-score-batch-size",
+        type=int,
+        default=64,
+        help="Batch size for chunked query-page scoring if needed.",
+    )
 
 
     args = parser.parse_args()
@@ -1429,13 +1504,17 @@ def main():
         print(f"Running experiment: {args.experiment} | model={label}")
         print("=" * 80)
 
+        selected_embedding_model = args.embedding_model
+        if experiment_type == RAGExperiment.UNIFIED and args.unified_retrieval == "bert":
+            selected_embedding_model = args.bert_embedding_model
+
         experiment = RAGExperiment(
             experiment_type=experiment_type,
             llm_model=model_name,
             chunk_size=args.chunk_size,
             chunk_overlap=args.chunk_overlap,
             top_k=args.top_k,
-            embedding_model=args.embedding_model,
+            embedding_model=selected_embedding_model,
             output_dir=args.output_dir,
             vector_store_dir=args.vector_store_dir,
             pdf_local_dir=args.pdf_dir,
@@ -1477,6 +1556,16 @@ def main():
             colpali_dpi=args.colpali_dpi,
             colpali_top_m=args.colpali_top_m,
             colpali_alpha=args.colpali_alpha,
+            colqwen2_first_stage_k=args.colqwen2_first_stage_k,
+            colqwen2_top_docs=args.colqwen2_top_docs,
+            colqwen2_pages_per_doc=args.colqwen2_pages_per_doc,
+            colqwen2_neighbor_window=args.colqwen2_neighbor_window,
+            colqwen2_visual_weight=args.colqwen2_visual_weight,
+            colqwen2_text_weight=args.colqwen2_text_weight,
+            colqwen2_doc_bonus_weight=args.colqwen2_doc_bonus_weight,
+            colqwen2_page_batch_size=args.colqwen2_page_batch_size,
+            colqwen2_query_batch_size=args.colqwen2_query_batch_size,
+            colqwen2_score_batch_size=args.colqwen2_score_batch_size,
             max_context_chars=args.max_context_chars,
             mc_t=args.mc_t,
             mc_l=args.mc_l,
@@ -1502,7 +1591,16 @@ def main():
         experiment.unified_ot_reg = args.unified_ot_reg
         experiment.unified_ot_iters = args.unified_ot_iters
         experiment.unified_ot_prune_k = args.unified_ot_prune_k
-        
+        experiment.colqwen2_first_stage_k = args.colqwen2_first_stage_k
+        experiment.colqwen2_top_docs = args.colqwen2_top_docs
+        experiment.colqwen2_pages_per_doc = args.colqwen2_pages_per_doc
+        experiment.colqwen2_neighbor_window = args.colqwen2_neighbor_window
+        experiment.colqwen2_visual_weight = args.colqwen2_visual_weight
+        experiment.colqwen2_text_weight = args.colqwen2_text_weight
+        experiment.colqwen2_doc_bonus_weight = args.colqwen2_doc_bonus_weight
+        experiment.colqwen2_page_batch_size = args.colqwen2_page_batch_size
+        experiment.colqwen2_query_batch_size = args.colqwen2_query_batch_size
+        experiment.colqwen2_score_batch_size = args.colqwen2_score_batch_size
         experiment.run_experiment(num_samples=args.num_samples)
 
 

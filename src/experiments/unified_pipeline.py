@@ -55,7 +55,7 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     # --- Configuration Extraction ---
     use_hyde = getattr(experiment, "unified_use_hyde", False)
     hyde_k = getattr(experiment, "unified_hyde_k", 1)
-    retrieval_mode = getattr(experiment, "unified_retrieval", "dense") # dense, sparse, hybrid
+    retrieval_mode = getattr(experiment, "unified_retrieval", "dense") # dense, sparse, hybrid, bert
     use_rerank = getattr(experiment, "unified_use_rerank", False)
     reranker_style = getattr(experiment, "unified_reranker_style", "cross_encoder")
     ot_model = getattr(experiment, "unified_ot_model", experiment.embedding_model)
@@ -71,6 +71,8 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     logger.info(f"Pipeline Configuration:")
     logger.info(f"  [1] HyDE Enabled: {use_hyde} (Generations: {hyde_k})")
     logger.info(f"  [2] Retrieval Mode: {retrieval_mode.upper()} (Candidates: {candidate_k})")
+    if retrieval_mode == "bert":
+        logger.info(f"      BERT Embedding Model: {getattr(experiment, 'embedding_model', 'unknown')}")
     logger.info(f"  [3] Reranking Enabled: {use_rerank}")
     if use_rerank:
         logger.info(f"  [4] Reranker Style: {reranker_style}")
@@ -98,7 +100,7 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     vectordb = None
     late_index = None
     # We need the dense store if mode is dense/hybrid OR if HyDE is enabled
-    need_dense_store = (retrieval_mode in ["dense", "hybrid"]) or use_hyde
+    need_dense_store = (retrieval_mode in ["dense", "hybrid", "bert"]) or use_hyde
     use_faiss = getattr(experiment, "use_faiss_chunking", False)
 
     if need_dense_store:
