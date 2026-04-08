@@ -16,7 +16,7 @@ SCRATCH_DIR=/Tmp/$(whoami)/${SLURM_JOB_ID}
 # Pass strategies as 1st arg:  sbatch run_chunking_sweep.sh "naive recursive semantic"
 # Pass --standalone-only as 2nd arg to skip the full RAG pipeline
 # Pass retrieval mode as 3rd arg: dense|sparse|hybrid|bert
-STRATEGIES="${1:-naive recursive semantic adaptive parent_child table_aware late contextual metadata}"
+STRATEGIES="${1:-naive recursive semantic adaptive parent_child table_aware late contextual metadata structure_aware}"
 STANDALONE_FLAG="${2:-}"
 RETRIEVAL_MODE="${3:-dense}"
 BERT_EMBEDDING_MODEL="${BERT_EMBEDDING_MODEL:-sentence-transformers/bert-base-nli-mean-tokens}"
@@ -113,6 +113,7 @@ python "${CHUNKING_SRC}/rag_chunking_experiments.py" \
   --late-max-tokens   8192 \
   --late-window-stride 512 \
   --context-budget    128 \
+  --structure-min-section-tokens 50 \
   --vector-store-dir  "${VECTOR_STORE_DIR}" \
   --use-faiss-chunking \
     --unified-retrieval "${RETRIEVAL_MODE}" \
