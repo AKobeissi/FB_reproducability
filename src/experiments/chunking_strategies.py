@@ -379,7 +379,8 @@ def chunk_semantic(
     max_sentences: int = 40,
     tokenizer_name: str | None = None,
     embedding_model_name: str = "BAAI/bge-m3",
-) -> List[Chunk]:
+    return_debug: bool = False,
+) -> "List[Chunk] | Tuple[List[Chunk], dict]":
     """
     Semantic chunking: split into sentences, embed each, merge adjacent
     sentences while cosine similarity exceeds threshold.  Cap at max tokens.
@@ -430,11 +431,16 @@ def chunk_semantic(
         else:
             final_groups.append(g)
 
+    # Identify breakpoint sentence indices (where a new group starts)
+    breakpoint_indices = set()
+    for g in final_groups[1:]:
+        if g:
+            breakpoint_indices.add(g[0])
+
     # Build chunks
     chunks: List[Chunk] = []
     for idx, group in enumerate(final_groups):
         text = " ".join(sentences[i] for i in group)
-        # Find char position for page mapping
         first_sent = sentences[group[0]]
         loc = full_text.find(first_sent)
         c_end = loc + len(text) if loc >= 0 else 0
@@ -445,6 +451,16 @@ def chunk_semantic(
             page_nums=pnums, token_count=n_tok, raw_token_count=n_tok,
             strategy="semantic", chunk_index=idx,
         ))
+
+    if return_debug:
+        debug = {
+            "similarities": sims,              # List[float] — cosine sim between adjacent sentences
+            "breakpoint_indices": sorted(breakpoint_indices),  # sentence indices where chunks start
+            "num_sentences": len(sentences),
+            "threshold": similarity_threshold,
+        }
+        return chunks, debug
+
     return chunks
 
 
@@ -666,9 +682,20 @@ def chunk_table_aware(
             ))
             idx += 1
         else:
-            # Chunk non-table text with naive strategy
-            # Build fake page list from this segment
-            sub_pages = [(pnums[0] if pnums else 0, seg_text)]
+            # Chunk non-table text with naive strategy, preserving per-page
+            # boundaries so chunk_naive assigns correct page numbers per chunk.
+            # Reconstruct per-page slices that fall within [c_start, c_end).
+            sub_pages = []
+            for pg_start, pg_end, pg_num in page_char_ranges:
+                slice_start = max(pg_start, c_start)
+                slice_end = min(pg_end, c_end)
+                if slice_end > slice_start:
+                    seg_slice = full_text[slice_start:slice_end]
+                    if seg_slice.strip():
+                        sub_pages.append((pg_num, seg_slice))
+            if not sub_pages:
+                sub_pages = [(pnums[0] if pnums else 0, seg_text)]
+
             sub_chunks = chunk_naive(
                 sub_pages, doc_id=doc_id, chunk_size=chunk_size,
                 chunk_overlap=chunk_overlap, tokenizer_name=tokenizer_name,
@@ -676,7 +703,8 @@ def chunk_table_aware(
             for sc in sub_chunks:
                 sc.strategy = "table_aware"
                 sc.chunk_index = idx
-                sc.page_nums = pnums
+                # Do NOT overwrite sc.page_nums — chunk_naive already set them
+                # correctly from the per-page sub_pages list above.
                 sc.metadata["is_table"] = False
                 idx += 1
             chunks.extend(sub_chunks)
@@ -894,6 +922,136 @@ def chunk_metadata(
 
 
 # ===================================================================
+# STRATEGY 10: Structure-Aware Chunking
+# ===================================================================
+
+# Extended header pattern for SEC 10-K / 10-Q filings
+_STRUCT_HEADER_RE = re.compile(
+    r"^(?:"
+    r"ITEM\s+\d+[A-Z]?\b\.?"           # ITEM 1, ITEM 1A, ...
+    r"|PART\s+[IVX]+"                  # PART I, PART II, ...
+    r"|NOTE\s+\d+"                     # NOTE 1, NOTE 12
+    r"|SCHEDULE\s+[IVX\d]+"            # SCHEDULE II
+    r"|(?:CONSOLIDATED\s+)?(?:BALANCE SHEETS?|STATEMENTS?\s+OF|INCOME|"
+    r"CASH FLOWS?|EQUITY|OPERATIONS|EARNINGS)"
+    r"|MANAGEMENT.S DISCUSSION"
+    r"|RISK FACTORS"
+    r"|SELECTED FINANCIAL DATA"
+    r"|NOTES TO (?:CONSOLIDATED )?FINANCIAL"
+    r"|REPORT OF INDEPENDENT"
+    r"|CRITICAL ACCOUNTING"
+    r"|QUANTITATIVE AND QUALITATIVE"
+    r"|CONTROLS AND PROCEDURES"
+    r"|(?:[A-Z][A-Z\s]{8,}:?\s*$)"     # ALL-CAPS line of 9+ chars (generic header)
+    r")",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def chunk_structure_aware(
+    pages: List[Tuple[int, str]],
+    doc_id: str = "",
+    chunk_size: int = 1024,
+    chunk_overlap: int = 128,
+    min_section_tokens: int = 50,
+    tokenizer_name: str | None = None,
+) -> List[Chunk]:
+    """
+    Structure-aware chunking for SEC financial documents.
+
+    1. Scan page text for section headers (ITEM N, PART I, NOTE N, etc.).
+    2. Split the document at those boundaries — each section becomes a unit.
+    3. If a section exceeds chunk_size tokens, further split it recursively
+       while keeping the section header as a context prefix.
+    4. Tiny sections (< min_section_tokens) are merged with the previous chunk.
+
+    Each chunk carries its section header in metadata["section_header"].
+    """
+    full_text = ""
+    page_char_ranges: List[Tuple[int, int, int]] = []
+    for pnum, ptxt in pages:
+        start = len(full_text)
+        full_text += ptxt + "\n"
+        page_char_ranges.append((start, len(full_text), pnum))
+
+    # Locate all header positions
+    header_positions: List[Tuple[int, str]] = []
+    for m in _STRUCT_HEADER_RE.finditer(full_text):
+        header_positions.append((m.start(), m.group(0).strip()))
+
+    # Deduplicate adjacent headers (same char pos ± 5)
+    deduped: List[Tuple[int, str]] = []
+    for pos, hdr in header_positions:
+        if deduped and abs(pos - deduped[-1][0]) < 5:
+            continue
+        deduped.append((pos, hdr))
+    header_positions = deduped
+
+    # Build section spans: (start_char, end_char, header_text)
+    section_spans: List[Tuple[int, int, str]] = []
+    if not header_positions:
+        section_spans = [(0, len(full_text), "")]
+    else:
+        # Text before first header
+        if header_positions[0][0] > 0:
+            section_spans.append((0, header_positions[0][0], ""))
+        for i, (pos, hdr) in enumerate(header_positions):
+            end = header_positions[i + 1][0] if i + 1 < len(header_positions) else len(full_text)
+            section_spans.append((pos, end, hdr))
+
+    # Build chunks
+    chunks: List[Chunk] = []
+    chunk_idx = 0
+
+    for sec_start, sec_end, section_hdr in section_spans:
+        sec_text = full_text[sec_start:sec_end].strip()
+        if not sec_text:
+            continue
+
+        pnums = _pages_for_char_range(sec_start, sec_end, page_char_ranges)
+        n_tok = _count_tokens(sec_text, tokenizer_name)
+
+        if n_tok <= chunk_size:
+            # Section fits in one chunk
+            if n_tok >= min_section_tokens:
+                chunks.append(Chunk(
+                    text=sec_text, raw_text=sec_text, doc_id=doc_id,
+                    page_nums=pnums, token_count=n_tok, raw_token_count=n_tok,
+                    strategy="structure_aware", chunk_index=chunk_idx,
+                    metadata={"section_header": section_hdr, "is_full_section": True},
+                ))
+                chunk_idx += 1
+            elif chunks:
+                # Merge tiny section into previous chunk
+                prev = chunks[-1]
+                merged = prev.raw_text + "\n" + sec_text
+                prev.raw_text = merged
+                prev.text = merged
+                prev.token_count = _count_tokens(merged, tokenizer_name)
+                prev.raw_token_count = prev.token_count
+                prev.page_nums = sorted(set(prev.page_nums + pnums))
+        else:
+            # Section too large: split recursively, keep header as prefix
+            sub_pages = [(pnums[0] if pnums else 0, sec_text)]
+            sub_chunks = chunk_recursive(
+                sub_pages, doc_id=doc_id,
+                chunk_size=chunk_size, chunk_overlap=chunk_overlap,
+                tokenizer_name=tokenizer_name,
+            )
+            for sc in sub_chunks:
+                sc.strategy = "structure_aware"
+                sc.chunk_index = chunk_idx
+                sc.page_nums = pnums
+                sc.metadata["section_header"] = section_hdr
+                sc.metadata["is_full_section"] = False
+                chunk_idx += 1
+            chunks.extend(sub_chunks)
+
+    # Attach similarity scores for external use (empty for this strategy)
+    return chunks
+
+
+# ===================================================================
 # Registry / dispatcher
 # ===================================================================
 
@@ -907,6 +1065,7 @@ STRATEGY_REGISTRY: Dict[str, Callable] = {
     "late": chunk_late,
     "contextual": chunk_contextual,
     "metadata": chunk_metadata,
+    "structure_aware": chunk_structure_aware,
 }
 
 

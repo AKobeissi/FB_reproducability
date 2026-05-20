@@ -115,10 +115,13 @@ def rerank_predictions(
 
         # Attach reranker score and re-sort
         for chunk, score in zip(chunks, scores):
+            chunk["_dense_score"]    = chunk.get("_score")   # preserve original dense score
             chunk["_reranker_score"] = float(score)
             chunk["_score"]          = float(score)  # overwrite for consistency
 
         chunks.sort(key=lambda c: c["_reranker_score"], reverse=True)
+        for i, chunk in enumerate(chunks):
+            chunk["rank"] = i + 1   # update rank to reflect post-reranker position
         sample["retrieved_chunks"] = chunks
 
     return results

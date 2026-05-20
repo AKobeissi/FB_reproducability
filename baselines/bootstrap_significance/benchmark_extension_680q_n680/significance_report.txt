@@ -1,0 +1,255 @@
+Bootstrap Significance Report — Benchmark Extension (680q) (n=680)
+Generated: 2026-04-27 15:53
+Bootstrap resamples: 10,000   Seed: 42
+Significance level: α=0.05  (Holm-Bonferroni corrected)
+
+Rank  Method                                        PageRec@5          n
+------------------------------------------------------------------------
+1     oracle page                                   0.9985           680
+2     oracle doc                                    0.4294           680
+3     hybrid 25 75                                  0.3971           680
+4     hybrid 50 50                                  0.3971           680
+5     hybrid 75 25                                  0.3971           680
+6     bm25                                          0.3515           680
+7     multi hyde ft reranker                        0.3368           680
+8     parent child                                  0.3324           680
+9     dense bge m3                                  0.3191           680
+10    query expansion                               0.3176           680
+11    multi hyde                                    0.3118           680
+12    dense bge m3 ft reranker                      0.3088           680
+13    hyde                                          0.3044           680
+14    multi hyde reranker                           0.3000           680
+15    bge reranker                                  0.2912           680
+16    dense bge base                                0.2618           680
+17    splade                                        0.2176           680
+18    dense investopedia                            0.0412           680
+
+────────────────────────────────────────────────────────────────────────
+SIGNIFICANT DIFFERENCES (adj. p < 0.05, Holm-Bonferroni)
+────────────────────────────────────────────────────────────────────────
+  oracle page > oracle doc
+    Δ=+0.5691   raw p=0.0000   adj p=0.0000
+  oracle page > hybrid 25 75
+    Δ=+0.6015   raw p=0.0000   adj p=0.0000
+  oracle page > hybrid 50 50
+    Δ=+0.6015   raw p=0.0000   adj p=0.0000
+  oracle page > hybrid 75 25
+    Δ=+0.6015   raw p=0.0000   adj p=0.0000
+  oracle page > bm25
+    Δ=+0.6471   raw p=0.0000   adj p=0.0000
+  oracle page > multi hyde ft reranker
+    Δ=+0.6618   raw p=0.0000   adj p=0.0000
+  oracle page > parent child
+    Δ=+0.6662   raw p=0.0000   adj p=0.0000
+  oracle page > dense bge m3
+    Δ=+0.6794   raw p=0.0000   adj p=0.0000
+  oracle page > query expansion
+    Δ=+0.6809   raw p=0.0000   adj p=0.0000
+  oracle page > multi hyde
+    Δ=+0.6868   raw p=0.0000   adj p=0.0000
+  oracle page > dense bge m3 ft reranker
+    Δ=+0.6897   raw p=0.0000   adj p=0.0000
+  oracle page > hyde
+    Δ=+0.6941   raw p=0.0000   adj p=0.0000
+  oracle page > multi hyde reranker
+    Δ=+0.6985   raw p=0.0000   adj p=0.0000
+  oracle page > bge reranker
+    Δ=+0.7074   raw p=0.0000   adj p=0.0000
+  oracle page > dense bge base
+    Δ=+0.7368   raw p=0.0000   adj p=0.0000
+  oracle page > splade
+    Δ=+0.7809   raw p=0.0000   adj p=0.0000
+  oracle page > dense investopedia
+    Δ=+0.9574   raw p=0.0000   adj p=0.0000
+  oracle doc > bm25
+    Δ=+0.0779   raw p=0.0004   adj p=0.0264
+  oracle doc > multi hyde ft reranker
+    Δ=+0.0926   raw p=0.0000   adj p=0.0000
+  oracle doc > parent child
+    Δ=+0.0971   raw p=0.0000   adj p=0.0000
+  oracle doc > dense bge m3
+    Δ=+0.1103   raw p=0.0000   adj p=0.0000
+  oracle doc > query expansion
+    Δ=+0.1118   raw p=0.0000   adj p=0.0000
+  oracle doc > multi hyde
+    Δ=+0.1176   raw p=0.0000   adj p=0.0000
+  oracle doc > dense bge m3 ft reranker
+    Δ=+0.1206   raw p=0.0000   adj p=0.0000
+  oracle doc > hyde
+    Δ=+0.1250   raw p=0.0000   adj p=0.0000
+  oracle doc > multi hyde reranker
+    Δ=+0.1294   raw p=0.0000   adj p=0.0000
+  oracle doc > bge reranker
+    Δ=+0.1382   raw p=0.0000   adj p=0.0000
+  oracle doc > dense bge base
+    Δ=+0.1676   raw p=0.0000   adj p=0.0000
+  oracle doc > splade
+    Δ=+0.2118   raw p=0.0000   adj p=0.0000
+  oracle doc > dense investopedia
+    Δ=+0.3882   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > parent child
+    Δ=+0.0647   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > dense bge m3
+    Δ=+0.0779   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > query expansion
+    Δ=+0.0794   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > multi hyde
+    Δ=+0.0853   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > dense bge m3 ft reranker
+    Δ=+0.0882   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > hyde
+    Δ=+0.0926   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > multi hyde reranker
+    Δ=+0.0971   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > bge reranker
+    Δ=+0.1059   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > dense bge base
+    Δ=+0.1353   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > splade
+    Δ=+0.1794   raw p=0.0000   adj p=0.0000
+  hybrid 25 75 > dense investopedia
+    Δ=+0.3559   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > parent child
+    Δ=+0.0647   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > dense bge m3
+    Δ=+0.0779   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > query expansion
+    Δ=+0.0794   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > multi hyde
+    Δ=+0.0853   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > dense bge m3 ft reranker
+    Δ=+0.0882   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > hyde
+    Δ=+0.0926   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > multi hyde reranker
+    Δ=+0.0971   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > bge reranker
+    Δ=+0.1059   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > dense bge base
+    Δ=+0.1353   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > splade
+    Δ=+0.1794   raw p=0.0000   adj p=0.0000
+  hybrid 50 50 > dense investopedia
+    Δ=+0.3559   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > parent child
+    Δ=+0.0647   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > dense bge m3
+    Δ=+0.0779   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > query expansion
+    Δ=+0.0794   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > multi hyde
+    Δ=+0.0853   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > dense bge m3 ft reranker
+    Δ=+0.0882   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > hyde
+    Δ=+0.0926   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > multi hyde reranker
+    Δ=+0.0971   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > bge reranker
+    Δ=+0.1059   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > dense bge base
+    Δ=+0.1353   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > splade
+    Δ=+0.1794   raw p=0.0000   adj p=0.0000
+  hybrid 75 25 > dense investopedia
+    Δ=+0.3559   raw p=0.0000   adj p=0.0000
+  bm25 > dense bge base
+    Δ=+0.0897   raw p=0.0000   adj p=0.0000
+  bm25 > splade
+    Δ=+0.1338   raw p=0.0000   adj p=0.0000
+  bm25 > dense investopedia
+    Δ=+0.3103   raw p=0.0000   adj p=0.0000
+  multi hyde ft reranker > dense bge base
+    Δ=+0.0750   raw p=0.0000   adj p=0.0000
+  multi hyde ft reranker > splade
+    Δ=+0.1191   raw p=0.0000   adj p=0.0000
+  multi hyde ft reranker > dense investopedia
+    Δ=+0.2956   raw p=0.0000   adj p=0.0000
+  parent child > dense bge base
+    Δ=+0.0706   raw p=0.0001   adj p=0.0067
+  parent child > splade
+    Δ=+0.1147   raw p=0.0000   adj p=0.0000
+  parent child > dense investopedia
+    Δ=+0.2912   raw p=0.0000   adj p=0.0000
+  dense bge m3 > splade
+    Δ=+0.1015   raw p=0.0000   adj p=0.0000
+  dense bge m3 > dense investopedia
+    Δ=+0.2779   raw p=0.0000   adj p=0.0000
+  query expansion > splade
+    Δ=+0.1000   raw p=0.0000   adj p=0.0000
+  query expansion > dense investopedia
+    Δ=+0.2765   raw p=0.0000   adj p=0.0000
+  multi hyde > splade
+    Δ=+0.0941   raw p=0.0000   adj p=0.0000
+  multi hyde > dense investopedia
+    Δ=+0.2706   raw p=0.0000   adj p=0.0000
+  dense bge m3 ft reranker > splade
+    Δ=+0.0912   raw p=0.0000   adj p=0.0000
+  dense bge m3 ft reranker > dense investopedia
+    Δ=+0.2676   raw p=0.0000   adj p=0.0000
+  hyde > splade
+    Δ=+0.0868   raw p=0.0000   adj p=0.0000
+  hyde > dense investopedia
+    Δ=+0.2632   raw p=0.0000   adj p=0.0000
+  multi hyde reranker > splade
+    Δ=+0.0824   raw p=0.0000   adj p=0.0000
+  multi hyde reranker > dense investopedia
+    Δ=+0.2588   raw p=0.0000   adj p=0.0000
+  bge reranker > splade
+    Δ=+0.0735   raw p=0.0000   adj p=0.0000
+  bge reranker > dense investopedia
+    Δ=+0.2500   raw p=0.0000   adj p=0.0000
+  dense bge base > dense investopedia
+    Δ=+0.2206   raw p=0.0000   adj p=0.0000
+  splade > dense investopedia
+    Δ=+0.1765   raw p=0.0000   adj p=0.0000
+
+────────────────────────────────────────────────────────────────────────
+BORDERLINE (0.05 ≤ adj. p < 0.10)
+────────────────────────────────────────────────────────────────────────
+  hybrid 25 75 > bm25
+    Δ=+0.0456   raw p=0.0012   adj p=0.0768
+  hybrid 50 50 > bm25
+    Δ=+0.0456   raw p=0.0012   adj p=0.0768
+  hybrid 75 25 > bm25
+    Δ=+0.0456   raw p=0.0012   adj p=0.0768
+  dense bge m3 > dense bge base
+    Δ=+0.0574   raw p=0.0010   adj p=0.0650
+  query expansion > dense bge base
+    Δ=+0.0559   raw p=0.0014   adj p=0.0854
+
+────────────────────────────────────────────────────────────────────────
+FULL PAIRWISE TABLE (sorted by |Δ|, top 30 pairs)
+────────────────────────────────────────────────────────────────────────
+  Method A                                   Method B                                          Δ    raw p    adj p   sig
+  ------------------------------------------------------------------------------------------------------------------------
+  oracle page                                dense investopedia                          +0.9574   0.0000   0.0000   ***
+  oracle page                                splade                                      +0.7809   0.0000   0.0000   ***
+  oracle page                                dense bge base                              +0.7368   0.0000   0.0000   ***
+  oracle page                                bge reranker                                +0.7074   0.0000   0.0000   ***
+  oracle page                                multi hyde reranker                         +0.6985   0.0000   0.0000   ***
+  oracle page                                hyde                                        +0.6941   0.0000   0.0000   ***
+  oracle page                                dense bge m3 ft reranker                    +0.6897   0.0000   0.0000   ***
+  oracle page                                multi hyde                                  +0.6868   0.0000   0.0000   ***
+  oracle page                                query expansion                             +0.6809   0.0000   0.0000   ***
+  oracle page                                dense bge m3                                +0.6794   0.0000   0.0000   ***
+  oracle page                                parent child                                +0.6662   0.0000   0.0000   ***
+  oracle page                                multi hyde ft reranker                      +0.6618   0.0000   0.0000   ***
+  oracle page                                bm25                                        +0.6471   0.0000   0.0000   ***
+  oracle page                                hybrid 25 75                                +0.6015   0.0000   0.0000   ***
+  oracle page                                hybrid 50 50                                +0.6015   0.0000   0.0000   ***
+  oracle page                                hybrid 75 25                                +0.6015   0.0000   0.0000   ***
+  oracle page                                oracle doc                                  +0.5691   0.0000   0.0000   ***
+  oracle doc                                 dense investopedia                          +0.3882   0.0000   0.0000   ***
+  hybrid 25 75                               dense investopedia                          +0.3559   0.0000   0.0000   ***
+  hybrid 50 50                               dense investopedia                          +0.3559   0.0000   0.0000   ***
+  hybrid 75 25                               dense investopedia                          +0.3559   0.0000   0.0000   ***
+  bm25                                       dense investopedia                          +0.3103   0.0000   0.0000   ***
+  multi hyde ft reranker                     dense investopedia                          +0.2956   0.0000   0.0000   ***
+  parent child                               dense investopedia                          +0.2912   0.0000   0.0000   ***
+  dense bge m3                               dense investopedia                          +0.2779   0.0000   0.0000   ***
+  query expansion                            dense investopedia                          +0.2765   0.0000   0.0000   ***
+  multi hyde                                 dense investopedia                          +0.2706   0.0000   0.0000   ***
+  dense bge m3 ft reranker                   dense investopedia                          +0.2676   0.0000   0.0000   ***
+  hyde                                       dense investopedia                          +0.2632   0.0000   0.0000   ***
+  multi hyde reranker                        dense investopedia                          +0.2588   0.0000   0.0000   ***

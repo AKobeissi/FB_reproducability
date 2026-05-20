@@ -105,17 +105,22 @@ class RetrievalEvaluator:
         return scores['rougeL'].fmeasure
 
         
-    def compute_metrics(self, samples: List[Dict[str, Any]], k_values: List[int] = [1, 3, 5, 10]) -> Dict[str, Any]:
+    def compute_metrics(self, samples: List[Dict[str, Any]], k_values: List[int] = [1, 3, 5, 10, 20]) -> Dict[str, Any]:
         """
         Compute retrieval metrics for a list of samples.
+        Precision@k is defined at the chunk level: fraction of the k retrieved chunks
+        that are relevant at the doc / page / evidence level respectively.
         """
         metrics = {
             "doc_hit": {k: [] for k in k_values},
             "doc_recall": {k: [] for k in k_values},
+            "doc_precision": {k: [] for k in k_values},
             "page_hit": {k: [] for k in k_values},
             "page_recall": {k: [] for k in k_values},
+            "page_precision": {k: [] for k in k_values},
             "chunk_hit": {k: [] for k in k_values}, # Matches gold evidence
             "chunk_recall": {k: [] for k in k_values},
+            "chunk_precision": {k: [] for k in k_values},
             "ref_answer_hit": {k: [] for k in k_values}, # Matches reference answer
             "mrr": [],
             "context_bleu": {k: [] for k in k_values},
@@ -271,16 +276,20 @@ class RetrievalEvaluator:
                 doc_hits = sum(1 for x in k_retrieved if x['doc_match'])
                 doc_hit_val = 1 if doc_hits > 0 else 0
                 metrics["doc_hit"][k].append(doc_hit_val)
-                
+
                 # Doc Recall: Intersection of (Normalized Retrieved @ K) and (Normalized Gold)
                 doc_recall_val = len(retrieved_docs_k.intersection(gold_docs)) / len(gold_docs) if gold_docs else 0
                 metrics["doc_recall"][k].append(doc_recall_val)
+
+                # Doc Precision: fraction of k retrieved chunks that come from a gold doc
+                doc_precision_val = doc_hits / k if k > 0 else 0.0
+                metrics["doc_precision"][k].append(doc_precision_val)
 
                 # PAGE
                 page_hits = sum(1 for x in k_retrieved if x['page_match'])
                 page_hit_val = 1 if page_hits > 0 else 0
                 metrics["page_hit"][k].append(page_hit_val)
-                
+
                 retrieved_pages_k = set()
                 for i in range(min(k, len(retrieved))):
                     m = retrieved[i].get("metadata", {})
@@ -288,9 +297,13 @@ class RetrievalEvaluator:
                     p_num = m.get("page")
                     if d_name and p_num is not None:
                         retrieved_pages_k.add((self._normalize_doc_name(d_name), str(p_num).strip()))
-                
+
                 page_recall_val = len(retrieved_pages_k.intersection(gold_pages)) / len(gold_pages) if gold_pages else 0
                 metrics["page_recall"][k].append(page_recall_val)
+
+                # Page Precision: fraction of k retrieved chunks that come from a gold page
+                page_precision_val = page_hits / k if k > 0 else 0.0
+                metrics["page_precision"][k].append(page_precision_val)
 
                 # CHUNK (Gold Evidence)
                 chunk_hits = sum(1 for x in k_retrieved if x['chunk_match'])
@@ -309,6 +322,10 @@ class RetrievalEvaluator:
                 
                 chunk_recall_val = found_segments / len(gold_texts) if gold_texts else 0
                 metrics["chunk_recall"][k].append(chunk_recall_val)
+
+                # Chunk Precision: fraction of k retrieved chunks that match any gold evidence
+                chunk_precision_val = chunk_hits / k if k > 0 else 0.0
+                metrics["chunk_precision"][k].append(chunk_precision_val)
 
                 # Reference Answer Inclusion
                 ref_hits = sum(1 for x in k_retrieved if x['ref_match'])

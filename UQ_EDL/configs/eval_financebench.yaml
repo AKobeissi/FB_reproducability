@@ -1,0 +1,15 @@
+defaults:
+  - base
+
+experiment_name: eval_financebench
+dataset: financebench
+
+eval:
+  top_k_rerank: [20, 50, 100]
+  recall_at_k: [1, 3, 5, 10]
+  mrr_k: 10
+  ndcg_k: [5, 10]
+  map_k: 10
+  ece_bins: [10, 15]
+  coverage_levels: [1.0, 0.9, 0.8, 0.7, 0.6, 0.5]
+  ranking_betas: [0.0, 0.1, 0.25, 0.5, 1.0]

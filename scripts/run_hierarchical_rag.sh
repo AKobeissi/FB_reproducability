@@ -10,16 +10,35 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # Hierarchical RAG: Learned Page Scorer + Chunk Re-Retrieval
 #
-# Runs both hierarchical algorithms on FinanceBench 150:
-#   1. hier_ft_page_chunk        — fine-tuned page index → chunk re-retrieval
-#   2. hier_bm25_ft_rerank_chunk — BM25 recall + neural rerank → chunk retrieval
+# Runs all five hierarchical algorithms on FinanceBench 150:
+#   1. hier_ft_page_chunk          — fine-tuned page index → chunk re-retrieval
+#   2. hier_bm25_ft_rerank_chunk   — BM25 recall + neural rerank → chunk retrieval
+#   3. hier_multi_hyde_ce_chunk    — MultiHyDE + FT cross-encoder on pages → chunk
+#   4. hier_doc_first_ce_chunk     — Doc-first + exhaustive CE page rank → chunk
+#   5. hier_hybrid_page_ce_chunk   — BM25+MultiHyDE hybrid page recall → FT CE at
+#                                    CHUNK level (targets PageRec@5 > 0.553)
+#
+# Algorithm 5 design rationale:
+#   All prior algos apply CE at page level then fall back to bi-encoder for final
+#   chunk selection — this is the precision leak vs the flat baseline.
+#   Fix: BM25+MultiHyDE RRF fusion gives a high-recall page pool (~30 pages →
+#   ~180 chunks), then FT CE scores every (query, chunk) pair directly.
+#   CE now operates at the same granularity as the flat baseline but sees 9×
+#   more candidates → higher recall ceiling with the same precision mechanism.
 #
 # GPU memory plan (RTX 3090 / L40S both supported):
-#   BGE-M3 inference: ~2 GB
-#   No Qwen / cross-encoder loaded unless --generate is passed.
+#   BGE-M3 inference + cross-encoder: ~4 GB
+#   HyDE (Qwen 7B 4-bit): ~4.5 GB, freed before retrieval
+#   If hyde_cache.json already exists (from baselines run), Qwen is NOT loaded.
+#
+# To run only Algorithm 5:
+#   sbatch scripts/run_hierarchical_rag.sh --variants hier_hybrid_page_ce_chunk
+#
+# To tune the hybrid pool size (default N_pages=30):
+#   sbatch scripts/run_hierarchical_rag.sh --variants hier_hybrid_page_ce_chunk --N-pages-a5 40
 #
 # To add answer generation (needs more VRAM / time):
-#   sbatch run_hierarchical_rag.sh --generate
+#   sbatch scripts/run_hierarchical_rag.sh --generate
 # ──────────────────────────────────────────────────────────────────────────────
 
 set -euo pipefail
@@ -54,11 +73,20 @@ python hierarchical_rag/hierarchical_rag.py \
     --finqa-path    data/finqa_test_gold_pages.jsonl \
     --finqa-pdf-dir Final-PDF \
     --ft-model      models/fin_adapted_biencoder_bge_m3 \
+    --ce-model      checkpoints/ft_cross_encoder \
+    --hyde-cache    baselines/hyde_cache.json \
     --results-dir   hierarchical_rag/results \
     --vs-dir        hierarchical_rag/vector_store \
-    --M  20 \
-    --N  50 \
-    --k  5 \
+    --M         20 \
+    --N         50 \
+    --N-ce      50 \
+    --M-ce      10 \
+    --N-doc      5 \
+    --M-doc     10 \
+    --N-bm25-a5 50 \
+    --N-dense-a5 50 \
+    --N-pages-a5 30 \
+    --k          5 \
     "$@"
 
 echo ""

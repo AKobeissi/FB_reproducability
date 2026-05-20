@@ -1,0 +1,165 @@
+LEXICAL MISMATCH ANALYSIS REPORT — FinanceBench + FinQA (Benchmark Extension)
+===========================================================================
+Total queries analysed: 653
+  FinanceBench : 150
+  FinQA        : 503
+
+── COMBINED OVERALL ──
+  oov_rate    : mean=0.5114  median=0.5000  std=0.2107  min=0.0000  max=1.0000
+  jaccard     : mean=0.0440  median=0.0372  std=0.0374  min=0.0000  max=0.5000
+  coverage    : mean=0.4886  median=0.5000  std=0.2107  min=0.0000  max=1.0000
+  jsd         : mean=0.9192  median=0.9285  std=0.0529  min=0.5660  max=1.0000
+
+── BY DATASET ──
+  [financebench]  n=150
+    oov_rate    : mean=0.6842  median=0.7000  std=0.1896
+    jaccard     : mean=0.0332  median=0.0309  std=0.0252
+    coverage    : mean=0.3158  median=0.3000  std=0.1896
+    jsd         : mean=0.9403  median=0.9501  std=0.0462
+  [finqa]  n=503
+    oov_rate    : mean=0.4599  median=0.4545  std=0.1882
+    jaccard     : mean=0.0472  median=0.0391  std=0.0397
+    coverage    : mean=0.5401  median=0.5455  std=0.1882
+    jsd         : mean=0.9129  median=0.9218  std=0.0532
+
+── DATASET COMPARISON — Mann-Whitney U ──
+  oov_rate    : MW-U=60349  p=0.0000  ***
+  jaccard     : MW-U=27780  p=0.0000  ***
+  coverage    : MW-U=15101  p=0.0000  ***
+  jsd         : MW-U=50366  p=0.0000  ***
+
+── BY QUESTION TYPE ──
+  [domain-relevant]  n=50
+    oov_rate    : mean=0.7005  median=0.7000  std=0.2094
+    jaccard     : mean=0.0206  median=0.0162  std=0.0164
+    coverage    : mean=0.2995  median=0.3000  std=0.2094
+    jsd         : mean=0.9619  median=0.9702  std=0.0338
+  [finqa]  n=503
+    oov_rate    : mean=0.4599  median=0.4545  std=0.1882
+    jaccard     : mean=0.0472  median=0.0391  std=0.0397
+    coverage    : mean=0.5401  median=0.5455  std=0.1882
+    jsd         : mean=0.9129  median=0.9218  std=0.0532
+  [metrics-generated]  n=50
+    oov_rate    : mean=0.7467  median=0.7500  std=0.1269
+    jaccard     : mean=0.0472  median=0.0489  std=0.0217
+    coverage    : mean=0.2533  median=0.2500  std=0.1269
+    jsd         : mean=0.9216  median=0.9258  std=0.0421
+  [novel-generated]  n=50
+    oov_rate    : mean=0.6054  median=0.6250  std=0.1968
+    jaccard     : mean=0.0318  median=0.0261  std=0.0288
+    coverage    : mean=0.3946  median=0.3750  std=0.1968
+    jsd         : mean=0.9375  median=0.9514  std=0.0523
+
+── BY DOC TYPE ──
+  [10k]  n=615
+    oov_rate    : mean=0.5061  median=0.5000  std=0.2105
+    jaccard     : mean=0.0445  median=0.0380  std=0.0377
+    coverage    : mean=0.4939  median=0.5000  std=0.2105
+    jsd         : mean=0.9186  median=0.9272  std=0.0528
+  [10q]  n=15
+    oov_rate    : mean=0.6580  median=0.6667  std=0.1531
+    jaccard     : mean=0.0227  median=0.0200  std=0.0122
+    coverage    : mean=0.3420  median=0.3333  std=0.1531
+    jsd         : mean=0.9518  median=0.9638  std=0.0324
+  [8k]  n=9
+    oov_rate    : mean=0.4199  median=0.3333  std=0.2576
+    jaccard     : mean=0.0559  median=0.0508  std=0.0510
+    coverage    : mean=0.5801  median=0.6667  std=0.2576
+    jsd         : mean=0.8935  median=0.9084  std=0.0836
+  [Earnings]  n=14
+    oov_rate    : mean=0.6457  median=0.6458  std=0.1284
+    jaccard     : mean=0.0370  median=0.0309  std=0.0199
+    coverage    : mean=0.3543  median=0.3542  std=0.1284
+    jsd         : mean=0.9302  median=0.9397  std=0.0385
+
+── BY QUESTION TYPE × DOC TYPE (OOV Rate) ──
+                                mean  count
+question_type     doc_type                 
+domain-relevant   10k       0.698065     48
+                  10q       0.758333      2
+finqa             10k       0.459852    503
+metrics-generated 10k       0.746744     50
+novel-generated   10k       0.649835     14
+                  10q       0.642552     13
+                  8k        0.419921      9
+                  Earnings  0.645707     14
+
+════════════════════════════════════════════════════════════════════════════════
+QUALITATIVE: EXTREME MISMATCH EXAMPLES
+════════════════════════════════════════════════════════════════════════════════
+
+── Highest OOV Rate (most mismatch) ──
+  [financebench | domain-relevant | 10k | American Express]
+  Q: What are the geographies that American Express primarily operates in as of 2022?
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['american', 'express', 'geographies', 'operates']
+
+  [financebench | domain-relevant | 10k | AMD]
+  Q: Does AMD have a reasonably healthy liquidity profile based on its quick ratio for FY22? If the quick ratio is not releva
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amd', 'fy22', 'healthy', 'liquidity', 'measure', 'profile', 'quick', 'ratio']
+
+  [financebench | domain-relevant | 10k | American Express]
+  Q: Does AMEX have an improving operating margin profile as of 2022? If operating margin is not a useful metric for a compan
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amex', 'company', 'improving', 'like', 'margin', 'metric', 'operating', 'profile']
+
+  [financebench | domain-relevant | 10k | American Express]
+  Q: What drove gross margin change as of the FY2022 for American Express? If gross margin is not a useful metric for a compa
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['american', 'change', 'company', 'drove', 'express', 'fy2022', 'gross', 'like']
+
+  [financebench | metrics-generated | 10k | Best Buy]
+  Q: In agreement with the information outlined in the income statement, what is the FY2015 - FY2017 3 year average net profi
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['agreement', 'average', 'best', 'buy', 'decimal', 'fy2015', 'fy2017', 'income']
+
+
+── Lowest OOV Rate (most overlap) ──
+  [finqa | finqa | 10k | JKHY_2019_10K]
+  Q: What was the five-year total return for Jack Henry & Associates during the year 2019?
+  oov=0.000  jaccard=0.075  coverage=1.000  jsd=0.912
+
+  [finqa | finqa | 10k | HOLX_2009_10K]
+  Q: What was the total fair value of non-vested shares for Hologic as of September 26, 2009?
+  oov=0.000  jaccard=0.038  coverage=1.000  jsd=0.930
+
+  [finqa | finqa | 10k | HOLX_2009_10K]
+  Q: What was the total fair value of non-vested shares for Hologic in the year 2009 as of September 27, 2008?
+  oov=0.000  jaccard=0.044  coverage=1.000  jsd=0.922
+
+  [finqa | finqa | 10k | GPN_2018_10K]
+  Q: What was the value in thousands of unvested restricted stock and performance awards at the weighted-average grant-date f
+  oov=0.000  jaccard=0.125  coverage=1.000  jsd=0.775
+
+  [finqa | finqa | 10k | GPN_2018_10K]
+  Q: What was the value in thousands of unvested restricted stock and performance awards at the weighted-average grant-date f
+  oov=0.062  jaccard=0.133  coverage=0.938  jsd=0.780
+  Query-exclusive tokens: ['according']
+
+
+── Highest JSD (most divergence) ──
+  [finqa | finqa | 10k | UAA_2016_10K]
+  Q: How did Under Armour's inventories change in percentage terms between the years 2015 and 2016?
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ["armour's", 'between', 'change', 'inventories', 'percentage', 'terms', 'under', 'years']
+
+  [financebench | metrics-generated | 10k | Best Buy]
+  Q: In agreement with the information outlined in the income statement, what is the FY2015 - FY2017 3 year average net profi
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['agreement', 'average', 'best', 'buy', 'decimal', 'fy2015', 'fy2017', 'income']
+
+  [financebench | domain-relevant | 10k | American Express]
+  Q: Does AMEX have an improving operating margin profile as of 2022? If operating margin is not a useful metric for a compan
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amex', 'company', 'improving', 'like', 'margin', 'metric', 'operating', 'profile']
+
+  [financebench | domain-relevant | 10k | Johnson & Johnson]
+  Q: What drove gross margin change as of FY2022 for JnJ? If gross margin is not a useful metric for a company like this, the
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['change', 'company', 'drove', 'fy2022', 'gross', 'jnj', 'like', 'margin']
+
+  [financebench | domain-relevant | 10k | AMD]
+  Q: Does AMD have a reasonably healthy liquidity profile based on its quick ratio for FY22? If the quick ratio is not releva
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amd', 'fy22', 'healthy', 'liquidity', 'measure', 'profile', 'quick', 'ratio']

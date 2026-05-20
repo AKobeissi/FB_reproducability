@@ -1,0 +1,33 @@
+defaults:
+  - base
+
+experiment_name: evidential_cross_encoder
+model_type: evidential_cross_encoder
+
+model:
+  backbone: BAAI/bge-reranker-v2-m3
+  max_length: 512
+  use_metadata: true
+
+training:
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  batch_size: 8
+  gradient_accumulation_steps: 4
+  epochs: 3
+  warmup_ratio: 0.1
+  fp16: true
+  seed: 42
+  loss: edl
+  negative_ratio: 6
+  eval_steps: 200
+  save_steps: 500
+  logging_steps: 50
+
+edl:
+  lambda_kl: 0.001
+  annealing_ratio: 0.2
+  ranking_score: p_minus_uncertainty
+  beta: 0.25
+
+ranking_betas: [0.0, 0.1, 0.25, 0.5, 1.0]

@@ -50,20 +50,22 @@ OUTPUT_DIR        = PROJECT_ROOT / "outputs/llm_scaling"
 MAIN_K            = 5    # top-k chunks to pass to generator
 # Token budget reserved for context.  The remainder of the 4096-token window
 # covers: system prompt (~50 tok), question (~60 tok), chat-template overhead
-# (~30 tok), and max_new_tokens (200).  3700 is conservative but fits the
-# median full context (≈3 650 tok) and is well within the L40S memory budget.
-MAX_CONTEXT_TOKENS = 3700
+# (~30 tok), and max_new_tokens (350).  3600 is conservative but fits the
+# median full context (≈3 550 tok) and is well within the L40S memory budget.
+MAX_CONTEXT_TOKENS = 3600
 
 MODELS = [
     "Qwen/Qwen2.5-3B-Instruct",
     "Qwen/Qwen2.5-7B-Instruct",
     "Qwen/Qwen2.5-14B-Instruct",
+    "Qwen/Qwen2.5-72B-Instruct",
 ]
 
 MODEL_LABELS = {
     "Qwen/Qwen2.5-3B-Instruct":  "Qwen2.5-3B",
     "Qwen/Qwen2.5-7B-Instruct":  "Qwen2.5-7B",
     "Qwen/Qwen2.5-14B-Instruct": "Qwen2.5-14B",
+    "Qwen/Qwen2.5-72B-Instruct": "Qwen2.5-72B",
 }
 
 QUESTION_TYPES = ["metrics-generated", "domain-relevant", "novel-generated"]
@@ -146,7 +148,7 @@ def generate_with_model(samples: List[Dict], model_name: str) -> List[Dict]:
             with torch.no_grad():
                 out = model.generate(
                     **inputs,
-                    max_new_tokens=200,
+                    max_new_tokens=350,
                     temperature=0.1,
                     do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
@@ -188,17 +190,110 @@ def _extract_main_number(text: str) -> Optional[float]:
         return None
 
 
+def _extract_all_numbers(text: str) -> list:
+    """Return all numbers found in text after stripping currency symbols."""
+    text = re.sub(r"[$,€£%()]", "", text)
+    matches = re.findall(r"-?\d[\d,]*\.?\d*", text)
+    out = []
+    for m in matches:
+        try:
+            out.append(float(m.replace(",", "")))
+        except ValueError:
+            pass
+    return out
+
+
+# Scale words → multiplier.  Ordered longest-first to avoid partial matches.
+_SCALE_PATTERNS: List[tuple] = [
+    (re.compile(r"\btrillion[s]?\b",  re.I), 1e12),
+    (re.compile(r"\bbillion[s]?\b|\bbn\b|\bbln\b",  re.I), 1e9),
+    (re.compile(r"\bmillion[s]?\b|\bmm\b|\bmln\b",  re.I), 1e6),
+    (re.compile(r"\bthousand[s]?\b|\bk\b",           re.I), 1e3),
+]
+
+
+def _scaled_value(raw_number: float, text: str) -> float:
+    """
+    Apply the first scale word found in text to raw_number.
+    e.g. _scaled_value(8.70, "8.70 billion") → 8.70e9
+         _scaled_value(8738, "8,738 million") → 8.738e9
+         _scaled_value(1577, "$1,577")        → 1577   (no scale word)
+    """
+    for pattern, factor in _SCALE_PATTERNS:
+        if pattern.search(text):
+            return raw_number * factor
+    return raw_number
+
+
 def numeric_match(pred: str, ref: str, rtol: float = 0.03) -> float:
-    pn, rn = _extract_main_number(pred), _extract_main_number(ref)
-    if pn is None or rn is None:
+    """
+    Checks whether ANY number in pred matches the reference number within rtol.
+
+    Two comparison strategies are tried for each candidate number:
+      1. Scale-normalised: both values are multiplied by their respective scale
+         words before comparing.  Handles "$8.70 billion" vs "8,738 million"
+         (both normalize to ~8.70e9, within 0.5%).
+      2. Raw (fallback): compare the bare extracted numbers directly, for cases
+         where neither text contains an explicit scale word.
+
+    A match on either strategy counts as correct.
+    """
+    ref_raw = _extract_main_number(ref)
+    if ref_raw is None:
         return 0.0
-    if rn == 0:
-        return 1.0 if pn == 0 else 0.0
-    return 1.0 if abs(pn - rn) / abs(rn) <= rtol else 0.0
+    ref_scaled = _scaled_value(ref_raw, ref)
+
+    pred_nums = _extract_all_numbers(pred)
+    if not pred_nums:
+        return 0.0
+
+    for p_raw in pred_nums:
+        p_scaled = _scaled_value(p_raw, pred)
+
+        # Strategy 1 — scale-normalised comparison
+        # Only use when at least one side has a scale word (otherwise scaling
+        # noise can create false positives between e.g. 100 and 100,000)
+        ref_has_scale = any(pat.search(ref)  for pat, _ in _SCALE_PATTERNS)
+        pred_has_scale = any(pat.search(pred) for pat, _ in _SCALE_PATTERNS)
+        if ref_has_scale or pred_has_scale:
+            denom = abs(ref_scaled) if ref_scaled != 0 else 1.0
+            if abs(p_scaled - ref_scaled) / denom <= rtol:
+                return 1.0
+
+        # Strategy 2 — raw comparison (handles "$8.70" vs "8.738" rounding)
+        if ref_raw == 0:
+            if p_raw == 0:
+                return 1.0
+        else:
+            if abs(p_raw - ref_raw) / abs(ref_raw) <= rtol:
+                return 1.0
+
+    return 0.0
 
 
 def exact_match(pred: str, ref: str) -> float:
     return 1.0 if _normalize(pred) == _normalize(ref) else 0.0
+
+
+def squad_f1(pred: str, ref: str) -> float:
+    """
+    Token-level F1 from SQuAD evaluation — harmonic mean of precision and recall
+    over shared tokens after normalisation.  More reliable than ROUGE-L for short
+    financial answers because it is symmetric: a short correct answer inside a
+    long explanation still scores well, and it does not penalise word reordering.
+    """
+    pred_tokens = _normalize(pred).split()
+    ref_tokens  = _normalize(ref).split()
+    if not pred_tokens or not ref_tokens:
+        return 0.0
+    from collections import Counter
+    common = Counter(pred_tokens) & Counter(ref_tokens)
+    n_common = sum(common.values())
+    if n_common == 0:
+        return 0.0
+    precision = n_common / len(pred_tokens)
+    recall    = n_common / len(ref_tokens)
+    return 2 * precision * recall / (precision + recall)
 
 
 def compute_metrics(samples: List[Dict], bert_scorer=None) -> Dict:
@@ -214,6 +309,7 @@ def compute_metrics(samples: List[Dict], bert_scorer=None) -> Dict:
     smooth = SmoothingFunction().method1 if _has_nltk else None
 
     rouge1_scores, rouge2_scores, rougeL_scores = [], [], []
+    squad_f1_scores = []
     bleu4_scores = []
     em_scores = []
     numeric_scores = []
@@ -228,6 +324,7 @@ def compute_metrics(samples: List[Dict], bert_scorer=None) -> Dict:
             rouge1_scores.append(r["rouge1"].fmeasure)
             rouge2_scores.append(r["rouge2"].fmeasure)
             rougeL_scores.append(r["rougeL"].fmeasure)
+            squad_f1_scores.append(squad_f1(gen, ref))
             em_scores.append(exact_match(gen, ref))
 
             if _has_nltk:
@@ -244,6 +341,7 @@ def compute_metrics(samples: List[Dict], bert_scorer=None) -> Dict:
             rouge1_scores.append(0.0)
             rouge2_scores.append(0.0)
             rougeL_scores.append(0.0)
+            squad_f1_scores.append(0.0)
             em_scores.append(0.0)
             if _has_nltk:
                 bleu4_scores.append(0.0)
@@ -259,6 +357,7 @@ def compute_metrics(samples: List[Dict], bert_scorer=None) -> Dict:
         "rouge1":        _mean(rouge1_scores),
         "rouge2":        _mean(rouge2_scores),
         "rougeL":        _mean(rougeL_scores),
+        "squad_f1":      _mean(squad_f1_scores),
         "exact_match":   _mean(em_scores),
         "numeric_match": _mean(numeric_scores),
         "n_samples":     len(samples),
@@ -303,6 +402,120 @@ def compute_breakdown(samples: List[Dict], bert_scorer=None) -> Dict[str, Dict]:
     for s in samples:
         groups[s.get("question_type", "unknown")].append(s)
     return {qt: compute_metrics(gs, bert_scorer) for qt, gs in groups.items()}
+
+
+def annotate_samples_with_metrics(
+    samples: List[Dict], bert_scorer=None
+) -> List[Dict]:
+    """
+    Attach per-sample evaluation metrics to each sample dict under the key
+    'eval_metrics'.  This makes the prediction JSON human-readable: you can
+    open any prediction file and immediately see how each answer scored and
+    why it may have failed.
+
+    Fields added per sample
+    -----------------------
+    rouge1, rouge2, rougeL  — lexical overlap (unreliable for short numeric answers)
+    squad_f1                — symmetric token F1 (SQuAD-style); more robust than ROUGE
+    bleu4                   — n-gram precision
+    bertscore_f1            — semantic similarity (negative = worse than average)
+    exact_match             — normalised string equality
+    numeric_match           — any number in prediction within 3% of reference number
+                              (fixed: scans ALL numbers, not just the first one)
+    ref_number              — the number extracted from the reference answer
+    pred_numbers            — all numbers found in the generated answer
+    is_refusal              — True if model said "cannot determine"
+    answer_words            — word count of the generated answer (0 = empty)
+    """
+    from rouge_score import rouge_scorer as rs_module
+    try:
+        from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+        _has_nltk = True
+        smooth = SmoothingFunction().method1
+    except ImportError:
+        _has_nltk = False
+        smooth = None
+
+    rouge_scorer_obj = rs_module.RougeScorer(
+        ["rouge1", "rouge2", "rougeL"], use_stemmer=True
+    )
+
+    # Compute BERTScore in one batch for all valid pairs
+    bs_per_sample = [None] * len(samples)
+    if bert_scorer is not None:
+        preds     = [s.get("generated_answer", "").strip() for s in samples]
+        refs      = [s.get("reference_answer",  "").strip() for s in samples]
+        valid_idx = [i for i, (p, r) in enumerate(zip(preds, refs)) if p and r]
+        if valid_idx:
+            try:
+                _, _, F1 = bert_scorer.score(
+                    [preds[i] for i in valid_idx],
+                    [refs[i]  for i in valid_idx],
+                    verbose=False, batch_size=32,
+                )
+                for i, f1 in zip(valid_idx, F1.tolist()):
+                    bs_per_sample[i] = float(f1)
+            except Exception as e:
+                logger.warning(f"Per-sample BERTScore failed: {e}")
+
+    for idx, s in enumerate(samples):
+        gen = s.get("generated_answer", "").strip()
+        ref = s.get("reference_answer",  "").strip()
+
+        is_refusal   = "cannot determine" in gen.lower()
+        answer_words = len(gen.split()) if gen else 0
+
+        if gen and ref:
+            r       = rouge_scorer_obj.score(ref, gen)
+            r1      = r["rouge1"].fmeasure
+            r2      = r["rouge2"].fmeasure
+            rl      = r["rougeL"].fmeasure
+            sq_f1   = squad_f1(gen, ref)
+            em      = exact_match(gen, ref)
+
+            if _has_nltk:
+                rt = _normalize(ref).split()
+                pt = _normalize(gen).split()
+                b4 = sentence_bleu([rt], pt, smoothing_function=smooth) if rt and pt else 0.0
+            else:
+                b4 = None
+        else:
+            r1 = r2 = rl = sq_f1 = em = b4 = 0.0
+
+        # Numeric fields — expose raw and scaled values for manual inspection
+        ref_num_raw    = _extract_main_number(ref)
+        ref_num_scaled = _scaled_value(ref_num_raw, ref) if ref_num_raw is not None else None
+        pred_nums_raw  = _extract_all_numbers(gen)
+        pred_nums_scaled = [_scaled_value(p, gen) for p in pred_nums_raw]
+
+        if s.get("question_type") == "metrics-generated":
+            nm = numeric_match(gen, ref)
+        else:
+            nm = None   # not applicable
+
+        eval_metrics: Dict = {
+            "rouge1":             round(r1,     4),
+            "rouge2":             round(r2,     4),
+            "rougeL":             round(rl,     4),
+            "squad_f1":           round(sq_f1,  4),
+            "exact_match":        int(em),
+            "numeric_match":      nm,
+            # Numeric debugging — lets you see why a match passed or failed
+            "ref_number":         ref_num_raw,
+            "ref_number_scaled":  ref_num_scaled,
+            "pred_numbers":       pred_nums_raw[:5],
+            "pred_numbers_scaled": pred_nums_scaled[:5],
+            "is_refusal":         is_refusal,
+            "answer_words":       answer_words,
+        }
+        if b4 is not None:
+            eval_metrics["bleu4"] = round(b4, 4)
+        if bs_per_sample[idx] is not None:
+            eval_metrics["bertscore_f1"] = round(bs_per_sample[idx], 4)
+
+        s["eval_metrics"] = eval_metrics
+
+    return samples
 
 
 # ---------------------------------------------------------------------------
@@ -354,7 +567,7 @@ def build_oracle_samples(base_samples: List[Dict], gold_evidence: Dict[str, str]
 # ---------------------------------------------------------------------------
 
 def print_table(all_metrics: Dict[str, Dict]) -> None:
-    cols = ["rougeL", "rouge1", "rouge2", "bertscore_f1", "exact_match", "numeric_match"]
+    cols = ["rougeL", "squad_f1", "rouge1", "bertscore_f1", "exact_match", "numeric_match"]
     header = f"{'Model':<22}" + "".join(f"  {c:>14}" for c in cols)
     print("\n" + "=" * len(header))
     print(header)
@@ -469,10 +682,31 @@ def save_plots(all_metrics: Dict[str, Dict], breakdown: Dict[str, Dict[str, Dict
 # ---------------------------------------------------------------------------
 
 def main():
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    plots_dir = OUTPUT_DIR / "plots"
-    preds_dir = OUTPUT_DIR / "predictions"
-    oracle_dir = OUTPUT_DIR / "oracle_predictions"
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--retrieval-file", type=Path, default=RETRIEVAL_FILE,
+                        help="Pre-computed retrieval JSON (default: dense BGE-M3)")
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR,
+                        help="Where to write outputs (default: outputs/llm_scaling)")
+    parser.add_argument("--model-filter", type=str, default=None,
+                        help="Comma-separated model labels to run (e.g. 'Qwen2.5-72B'). "
+                             "Skipped models still appear in summary if predictions exist.")
+    args = parser.parse_args()
+
+    retrieval_file = args.retrieval_file
+    output_dir     = args.output_dir
+
+    # Build the set of labels we are allowed to *generate* for.
+    # If --model-filter is not set, all models are eligible.
+    allowed_labels: set = (
+        {l.strip() for l in args.model_filter.split(",")}
+        if args.model_filter else set(MODEL_LABELS.values())
+    )
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    plots_dir = output_dir / "plots"
+    preds_dir = output_dir / "predictions"
+    oracle_dir = output_dir / "oracle_predictions"
     preds_dir.mkdir(parents=True, exist_ok=True)
     oracle_dir.mkdir(parents=True, exist_ok=True)
 
@@ -496,13 +730,13 @@ def main():
         logger.warning(f"BERTScore disabled: {e}")
 
     # Load pre-computed retrieval results (fixed across all models)
-    logger.info(f"Loading retrieval results from {RETRIEVAL_FILE}")
-    if not RETRIEVAL_FILE.exists():
+    logger.info(f"Loading retrieval results from {retrieval_file}")
+    if not retrieval_file.exists():
         raise FileNotFoundError(
-            f"Retrieval file not found: {RETRIEVAL_FILE}\n"
-            "Run the dense BGE-M3 baseline first (scripts/run_baselines.sh)."
+            f"Retrieval file not found: {retrieval_file}\n"
+            "Run the retrieval baseline first."
         )
-    base_samples = json.load(open(RETRIEVAL_FILE))
+    base_samples = json.load(open(retrieval_file))
     logger.info(f"Loaded {len(base_samples)} samples.")
 
     # Build oracle-context samples (gold evidence instead of retrieved chunks)
@@ -523,11 +757,18 @@ def main():
         if pred_file.exists():
             logger.info(f"Found existing predictions for {label}, loading…")
             samples = json.load(open(pred_file))
+        elif label not in allowed_labels:
+            logger.info(f"Skipping generation for {label} (not in --model-filter).")
+            continue
         else:
             samples = generate_with_model(base_samples, model_name)
-            with open(pred_file, "w") as f:
-                json.dump(samples, f, indent=2)
-            logger.info(f"Saved predictions: {pred_file}")
+
+        # Annotate with per-sample metrics (always refresh so eval_metrics
+        # reflects any changes to metric functions)
+        samples = annotate_samples_with_metrics(samples, bert_scorer)
+        with open(pred_file, "w") as f:
+            json.dump(samples, f, indent=2)
+        logger.info(f"Saved annotated predictions: {pred_file}")
 
         all_metrics[label]   = compute_metrics(samples, bert_scorer)
         all_breakdown[label] = compute_breakdown(samples, bert_scorer)
@@ -544,11 +785,16 @@ def main():
             if oracle_pred_file.exists():
                 logger.info(f"Found existing oracle predictions for {label}, loading…")
                 oracle_preds = json.load(open(oracle_pred_file))
+            elif label not in allowed_labels:
+                logger.info(f"Skipping oracle generation for {label} (not in --model-filter).")
+                continue
             else:
                 oracle_preds = generate_with_model(oracle_samples, model_name)
-                with open(oracle_pred_file, "w") as f:
-                    json.dump(oracle_preds, f, indent=2)
-                logger.info(f"Saved oracle predictions: {oracle_pred_file}")
+
+            oracle_preds = annotate_samples_with_metrics(oracle_preds, bert_scorer)
+            with open(oracle_pred_file, "w") as f:
+                json.dump(oracle_preds, f, indent=2)
+            logger.info(f"Saved annotated oracle predictions: {oracle_pred_file}")
 
             oracle_metrics[label]   = compute_metrics(oracle_preds, bert_scorer)
             oracle_breakdown[label] = compute_breakdown(oracle_preds, bert_scorer)
@@ -579,25 +825,25 @@ def main():
             )
 
     # Save JSON outputs
-    with open(OUTPUT_DIR / "summary.json", "w") as f:
+    with open(output_dir / "summary.json", "w") as f:
         json.dump(all_metrics, f, indent=2)
-    with open(OUTPUT_DIR / "breakdown_by_qtype.json", "w") as f:
+    with open(output_dir / "breakdown_by_qtype.json", "w") as f:
         json.dump(all_breakdown, f, indent=2)
 
     if oracle_metrics:
-        with open(OUTPUT_DIR / "oracle_summary.json", "w") as f:
+        with open(output_dir / "oracle_summary.json", "w") as f:
             json.dump(oracle_metrics, f, indent=2)
-        with open(OUTPUT_DIR / "oracle_breakdown_by_qtype.json", "w") as f:
+        with open(output_dir / "oracle_breakdown_by_qtype.json", "w") as f:
             json.dump(oracle_breakdown, f, indent=2)
 
     # CSV for easy import
-    cols = ["rouge1", "rouge2", "rougeL", "bleu4", "bertscore_f1",
+    cols = ["rouge1", "rouge2", "rougeL", "squad_f1", "bleu4", "bertscore_f1",
             "exact_match", "numeric_match", "n_samples", "n_metrics_qs"]
     csv_lines = ["model," + ",".join(cols)]
     for label, m in all_metrics.items():
         row = [label] + [str(m.get(c, "")) for c in cols]
         csv_lines.append(",".join(row))
-    with open(OUTPUT_DIR / "summary.csv", "w") as f:
+    with open(output_dir / "summary.csv", "w") as f:
         f.write("\n".join(csv_lines) + "\n")
 
     if oracle_metrics:
@@ -605,13 +851,13 @@ def main():
         for label, m in oracle_metrics.items():
             row = [label] + [str(m.get(c, "")) for c in cols]
             oracle_csv.append(",".join(row))
-        with open(OUTPUT_DIR / "oracle_summary.csv", "w") as f:
+        with open(output_dir / "oracle_summary.csv", "w") as f:
             f.write("\n".join(oracle_csv) + "\n")
 
     # Plots
     save_plots(all_metrics, all_breakdown, plots_dir)
 
-    logger.info(f"All results saved to {OUTPUT_DIR}")
+    logger.info(f"All results saved to {output_dir}")
 
 
 if __name__ == "__main__":

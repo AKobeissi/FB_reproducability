@@ -11,6 +11,7 @@ Methods
   dense_bge_m3          Dense BGE-M3 (baseline)
   bm25                  BM25 sparse retrieval
   splade                SPLADE sparse retrieval
+  colqwen2_visual       ColQwen2 page-level visual retrieval (no chunk index)
   hybrid_50_50          Dense + BM25 RRF, alpha=0.50
   hybrid_75_25          Dense + BM25 RRF, alpha=0.75 (dense-heavy)
   hybrid_25_75          Dense + BM25 RRF, alpha=0.25 (sparse-heavy)
@@ -74,9 +75,15 @@ logger = logging.getLogger("baselines")
 # Constants
 # ---------------------------------------------------------------------------
 EMBED_MODEL   = "BAAI/bge-m3"
+BGE_BASE_MODEL = "BAAI/bge-base-en-v1.5"
+INVESTOPEDIA_MODEL = "FinLang/finance-embeddings-investopedia"
+MPNET_MODEL   = "sentence-transformers/all-mpnet-base-v2"
 QWEN_MODEL    = "Qwen/Qwen2.5-7B-Instruct"
 RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
 SPLADE_MODEL  = "naver/splade-cocondenser-ensembledistil"
+COLBERT_MODEL         = "colbert-ir/colbertv2.0"
+COLBERT_QUERY_MAX_LEN = 64
+COLBERT_DOC_MAX_LEN   = 128
 
 # All sizes are in TOKENS (BGE-M3 tokenizer), not characters.
 CHUNK_SIZE    = 1024   # tokens
@@ -100,24 +107,36 @@ QUESTION_TYPES = ["metrics-generated", "domain-relevant", "novel-generated"]
 # Variant definitions
 # ---------------------------------------------------------------------------
 VARIANTS = [
-    {"name": "dense_bge_m3",        "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "bm25",                "index": "bm25",  "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "splade",              "index": "splade","hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "hybrid_50_50",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.50, "parent_child": False, "qexp": False},
-    {"name": "hybrid_75_25",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.75, "parent_child": False, "qexp": False},
-    {"name": "hybrid_25_75",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.25, "parent_child": False, "qexp": False},
-    {"name": "parent_child",        "index": "parent_child","hyde_n": 0, "rerank": False, "alpha": None, "parent_child": True, "qexp": False},
-    {"name": "query_expansion",     "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": True},
-    {"name": "hyde",                "index": "dense", "hyde_n": 1, "rerank": False, "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "multi_hyde",          "index": "dense", "hyde_n": 3, "rerank": False, "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "bge_reranker",        "index": "dense", "hyde_n": 0, "rerank": True,  "alpha": None, "parent_child": False, "qexp": False},
-    {"name": "multi_hyde_reranker", "index": "dense", "hyde_n": 3, "rerank": True,  "alpha": None, "parent_child": False, "qexp": False},
+    {"name": "dense_bge_m3",        "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "dense_bge_base",      "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": BGE_BASE_MODEL},
+    {"name": "dense_investopedia",  "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": INVESTOPEDIA_MODEL},
+    {"name": "dense_mpnet",         "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": MPNET_MODEL},
+    {"name": "bm25",                "index": "bm25",  "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "splade",              "index": "splade","hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "colqwen2_visual",     "index": "colqwen2", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "hybrid_50_50",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.50, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "hybrid_75_25",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.75, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "hybrid_25_75",        "index": "hybrid","hyde_n": 0, "rerank": False, "alpha": 0.25, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "parent_child",        "index": "parent_child","hyde_n": 0, "rerank": False, "alpha": None, "parent_child": True, "qexp": False, "embed_model": None},
+    {"name": "query_expansion",     "index": "dense", "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": True,  "embed_model": None},
+    {"name": "hyde",                "index": "dense", "hyde_n": 1, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "multi_hyde",          "index": "dense", "hyde_n": 3, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None},
+    {"name": "bge_reranker",        "index": "dense",    "hyde_n": 0, "rerank": True,  "alpha": None, "parent_child": False, "qexp": False, "embed_model": None, "colbert_rerank": False},
+    {"name": "multi_hyde_reranker", "index": "dense",    "hyde_n": 3, "rerank": True,  "alpha": None, "parent_child": False, "qexp": False, "embed_model": None, "colbert_rerank": False},
+    # ColBERT / late-interaction variants
+    {"name": "colbert_reranker",      "index": "dense",    "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None, "colbert_rerank": True},
+    {"name": "colbert_retriever",     "index": "colbert",  "hyde_n": 0, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None, "colbert_rerank": False},
+    {"name": "colbert_hyde_reranker", "index": "dense",    "hyde_n": 3, "rerank": False, "alpha": None, "parent_child": False, "qexp": False, "embed_model": None, "colbert_rerank": True},
 ]
 
 VARIANT_LABELS = {
     "dense_bge_m3":        "Dense BGE-M3",
+    "dense_bge_base":      "Dense BGE-Base",
+    "dense_investopedia":  "Dense Investopedia",
+    "dense_mpnet":         "Dense MPNet (all-mpnet-base-v2)",
     "bm25":                "BM25",
     "splade":              "SPLADE",
+    "colqwen2_visual":     "ColQwen2 Visual Pages",
     "hybrid_50_50":        "Hybrid RRF 50/50",
     "hybrid_75_25":        "Hybrid RRF 75/25 (dense-heavy)",
     "hybrid_25_75":        "Hybrid RRF 25/75 (sparse-heavy)",
@@ -127,6 +146,9 @@ VARIANT_LABELS = {
     "multi_hyde":          "Multi-HyDE",
     "bge_reranker":        "BGE-M3 + ReRanker",
     "multi_hyde_reranker": "BGE-M3 + Multi-HyDE + ReRanker",
+    "colbert_reranker":      "BGE-M3 + ColBERT Reranker",
+    "colbert_retriever":     "ColBERT First-Stage Retriever",
+    "colbert_hyde_reranker": "Multi-HyDE + ColBERT Reranker",
 }
 
 # ---------------------------------------------------------------------------
@@ -239,15 +261,29 @@ def _get_or_create_chroma(persist_dir: str, collection_name: str, embed_fn):
     )
 
 
+def _collection_name_for_model(embed_model_name: str) -> str:
+    """Derive a stable ChromaDB collection name from a model identifier."""
+    # Preserve the original collection name for the default BGE-M3 model so
+    # any existing cached index is reused without rebuilding.
+    if embed_model_name == EMBED_MODEL:
+        return "baselines_dense_tok1024_ol128"
+    tag = re.sub(r"[^a-z0-9]", "_", embed_model_name.lower().split("/")[-1])
+    return f"baselines_dense_{tag}_tok1024_ol128"
+
+
 def build_dense_index(samples: List[Dict], pdf_dir: str, vs_dir: str,
-                      collection_name: str = "baselines_dense_tok1024_ol128") -> "chromadb.Collection":
+                      embed_model_name: str = EMBED_MODEL,
+                      collection_name: Optional[str] = None) -> "chromadb.Collection":
     """
     Build (or load) ChromaDB with RecursiveCharacterTextSplitter chunks.
     Returns the chromadb Collection.
     """
     from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
-    ef = SentenceTransformerEmbeddingFunction(model_name=EMBED_MODEL, device="cuda")
+    if collection_name is None:
+        collection_name = _collection_name_for_model(embed_model_name)
+
+    ef = SentenceTransformerEmbeddingFunction(model_name=embed_model_name, device="cuda")
     collection = _get_or_create_chroma(vs_dir, collection_name, ef)
 
     # Check which docs are already indexed
@@ -858,6 +894,165 @@ def apply_reranker(sample: Dict, candidates: List[Dict],
 
 
 # ---------------------------------------------------------------------------
+# 5b. ColBERT (late-interaction) helpers
+# ---------------------------------------------------------------------------
+
+def _colbert_encode_chunks(texts: List[str], tokenizer, model,
+                           device: str, doc_max_len: int,
+                           batch_size: int = 32) -> List["torch.Tensor"]:
+    """Encode texts → list of float16 tensors [n_toks, dim] (non-padding tokens only)."""
+    import torch
+    import torch.nn.functional as F
+    all_embs: List[torch.Tensor] = []
+    for start in range(0, len(texts), batch_size):
+        batch = texts[start : start + batch_size]
+        enc = tokenizer(batch, return_tensors="pt", padding=True,
+                        truncation=True, max_length=doc_max_len)
+        enc = {k: v.to(device) for k, v in enc.items()}
+        with torch.no_grad():
+            emb = model(**enc).last_hidden_state        # [B, S, D]
+        emb = F.normalize(emb, p=2, dim=-1)
+        mask = enc["attention_mask"].bool()              # [B, S]
+        for i in range(len(batch)):
+            tok_emb = emb[i][mask[i]].cpu().half()      # [n_toks, D]
+            all_embs.append(tok_emb)
+    return all_embs
+
+
+def build_colbert_retriever_index(
+    chunks: List[Dict], tokenizer, model, device: str,
+    cache_path: Optional[str] = None,
+) -> Tuple["torch.Tensor", "torch.Tensor", List[Dict]]:
+    """
+    Encode every chunk into per-token embeddings and pack into a dense tensor.
+    Returns (token_store [N, doc_max_len, D] float16,
+             pad_mask    [N, doc_max_len] bool,
+             chunks      List[Dict])
+    both on CPU.  Persists to cache_path if given.
+    """
+    import torch
+    if cache_path and os.path.exists(cache_path):
+        state = torch.load(cache_path, weights_only=False, map_location="cpu")
+        logger.info(f"ColBERT token index loaded from cache: {cache_path} "
+                    f"({len(state['chunks'])} chunks)")
+        return state["token_store"], state["pad_mask"], state["chunks"]
+
+    logger.info(f"Encoding {len(chunks)} chunks for ColBERT retriever index…")
+    texts = [c["text"] for c in chunks]
+    tok_embs = _colbert_encode_chunks(texts, tokenizer, model, device,
+                                      COLBERT_DOC_MAX_LEN)
+
+    D = tok_embs[0].shape[-1]
+    N = len(tok_embs)
+    token_store = torch.zeros(N, COLBERT_DOC_MAX_LEN, D, dtype=torch.float16)
+    pad_mask    = torch.zeros(N, COLBERT_DOC_MAX_LEN, dtype=torch.bool)
+    for i, emb in enumerate(tok_embs):
+        n = min(emb.shape[0], COLBERT_DOC_MAX_LEN)
+        token_store[i, :n] = emb[:n]
+        pad_mask[i, :n]    = True
+
+    if cache_path:
+        os.makedirs(os.path.dirname(cache_path) or ".", exist_ok=True)
+        torch.save({"token_store": token_store, "pad_mask": pad_mask,
+                    "chunks": chunks}, cache_path)
+        logger.info(f"ColBERT token index saved: {cache_path}")
+
+    return token_store, pad_mask, chunks
+
+
+def retrieve_colbert(
+    sample: Dict, tokenizer, model, device: str,
+    token_store: "torch.Tensor", pad_mask: "torch.Tensor",
+    chunks: List[Dict],
+    k: int = MAIN_K, doc_filter: Optional[List[str]] = None,
+    search_batch: int = 512,
+) -> List[Dict]:
+    """MaxSim first-stage retrieval over the ColBERT token-embedding store."""
+    import torch
+    import torch.nn.functional as F
+
+    q_enc = tokenizer(sample["question"], return_tensors="pt",
+                      truncation=True, max_length=COLBERT_QUERY_MAX_LEN)
+    q_enc = {kk: vv.to(device) for kk, vv in q_enc.items()}
+    with torch.no_grad():
+        q_emb = model(**q_enc).last_hidden_state.squeeze(0)   # [q_len, D]
+    q_mask = q_enc["attention_mask"].squeeze(0).bool()
+    q_emb  = F.normalize(q_emb, p=2, dim=-1)[q_mask].float() # [n_q_toks, D]
+
+    allowed    = set(doc_filter) if doc_filter else None
+    valid_idxs = [i for i, c in enumerate(chunks)
+                  if allowed is None or c["doc_name"] in allowed]
+    if not valid_idxs:
+        return []
+
+    scores = torch.zeros(len(valid_idxs))
+    for start in range(0, len(valid_idxs), search_batch):
+        batch_idxs = valid_idxs[start : start + search_batch]
+        D_t = token_store[batch_idxs].to(device).float()   # [B, doc_len, D]
+        M_t = pad_mask[batch_idxs].to(device)               # [B, doc_len]
+        sim = torch.einsum("qd,bsd->qbs", q_emb, D_t)      # [q_len, B, doc_len]
+        sim = sim.masked_fill(~M_t.unsqueeze(0), -1e4)
+        batch_scores = sim.max(dim=-1).values.sum(dim=0).cpu()
+        scores[start : start + len(batch_idxs)] = batch_scores
+
+    topk = torch.topk(scores, min(k, len(valid_idxs))).indices.tolist()
+    results: List[Dict] = []
+    for rank, rel_idx in enumerate(topk, start=1):
+        c = chunks[valid_idxs[rel_idx]]
+        results.append({
+            "text":     c["text"],
+            "metadata": {"doc_name": c["doc_name"], "page": int(c.get("page", -1))},
+            "_score":   float(scores[rel_idx]),
+            "rank":     rank,
+        })
+    return results
+
+
+def apply_colbert_reranker(
+    sample: Dict, candidates: List[Dict],
+    tokenizer, model, device: str,
+    k: int = MAIN_K,
+) -> List[Dict]:
+    """Rerank candidates with ColBERT MaxSim token-level scoring."""
+    import torch
+    import torch.nn.functional as F
+
+    if not candidates:
+        return []
+
+    q_enc = tokenizer(sample["question"], return_tensors="pt",
+                      truncation=True, max_length=COLBERT_QUERY_MAX_LEN)
+    q_enc = {kk: vv.to(device) for kk, vv in q_enc.items()}
+    with torch.no_grad():
+        q_emb = model(**q_enc).last_hidden_state.squeeze(0)
+    q_mask = q_enc["attention_mask"].squeeze(0).bool()
+    q_emb  = F.normalize(q_emb, p=2, dim=-1)[q_mask].float()  # [n_q_toks, D]
+
+    doc_texts = [c["text"][:2048] for c in candidates]
+    d_enc = tokenizer(doc_texts, return_tensors="pt", padding=True,
+                      truncation=True, max_length=COLBERT_DOC_MAX_LEN)
+    d_enc = {kk: vv.to(device) for kk, vv in d_enc.items()}
+    with torch.no_grad():
+        d_emb = model(**d_enc).last_hidden_state             # [N, doc_len, D]
+    d_mask = d_enc["attention_mask"].bool()
+    d_emb  = F.normalize(d_emb, p=2, dim=-1).float()
+
+    sim    = torch.einsum("qd,nsd->qns", q_emb, d_emb)      # [q_len, N, doc_len]
+    sim    = sim.masked_fill(~d_mask.unsqueeze(0), -1e4)
+    scores = sim.max(dim=-1).values.sum(dim=0).cpu()          # [N]
+
+    ranked  = sorted(zip(scores.tolist(), candidates),
+                     key=lambda x: x[0], reverse=True)
+    results = []
+    for rank, (score, c) in enumerate(ranked[:k], start=1):
+        c = dict(c)
+        c["rank"]          = rank
+        c["_rerank_score"] = float(score)
+        results.append(c)
+    return results
+
+
+# ---------------------------------------------------------------------------
 # 6. Generation (Phase 4) — Qwen alone on GPU
 # ---------------------------------------------------------------------------
 
@@ -904,7 +1099,7 @@ def generate_answers_for_variant(samples: List[Dict]) -> List[Dict]:
         try:
             with torch.no_grad():
                 out = model.generate(
-                    **inputs, max_new_tokens=200,
+                    **inputs, max_new_tokens=350,
                     temperature=0.1, do_sample=False,
                     pad_token_id=tokenizer.eos_token_id,
                 )
@@ -1404,6 +1599,28 @@ def parse_args():
                    help="Run only the NER-filtered variants (implies --ner-filter)")
     p.add_argument("--ner-top-k",     type=int, default=3,
                    help="Number of candidate docs returned by NER filter (default 3)")
+    p.add_argument("--colqwen2-model", type=str, default="vidore/colqwen2-v1.0-hf",
+                   help="Hugging Face model id for the ColQwen2 page retriever")
+    p.add_argument("--colqwen2-dpi", type=int, default=150,
+                   help="DPI used when rendering PDF pages for ColQwen2")
+    p.add_argument("--colqwen2-page-batch-size", type=int, default=4,
+                   help="Page image batch size for ColQwen2 indexing")
+    p.add_argument("--colqwen2-score-batch-size", type=int, default=64,
+                   help="Number of page embeddings scored at once per query")
+    p.add_argument("--colqwen2-first-stage-k", type=int, default=50,
+                   help="Global top-k pages used for document selection before reranking")
+    p.add_argument("--colqwen2-top-docs", type=int, default=3,
+                   help="Number of documents retained after ColQwen2 first-stage retrieval")
+    p.add_argument("--colqwen2-pages-per-doc", type=int, default=8,
+                   help="Top pages kept per selected document before neighbor expansion")
+    p.add_argument("--colqwen2-neighbor-window", type=int, default=1,
+                   help="Number of neighboring pages added on each side of retained pages")
+    p.add_argument("--colqwen2-visual-weight", type=float, default=0.50,
+                   help="Weight of normalized ColQwen2 similarity in final page ranking")
+    p.add_argument("--colqwen2-text-weight", type=float, default=0.40,
+                   help="Weight of lightweight text overlap reranking in final page ranking")
+    p.add_argument("--colqwen2-doc-bonus-weight", type=float, default=0.10,
+                   help="Weight of document-level prior in final ColQwen2 page ranking")
     return p.parse_args()
 
 
@@ -1461,7 +1678,7 @@ def main():
     logger.info(f"  Variants        : {[v['name'] for v in active_variants]}")
     logger.info(f"  NER doc filter  : {'enabled' if use_ner else 'disabled'}")
     logger.info(f"  Chunking        : RecursiveToken size={CHUNK_SIZE}tok overlap={CHUNK_OVERLAP}tok (BGE-M3 tokenizer)")
-    logger.info(f"  Embed model     : {EMBED_MODEL}")
+    logger.info(f"  Embed models    : {list(dict.fromkeys((v.get('embed_model') or EMBED_MODEL) for v in active_variants if v['index'] in ('dense','hybrid','parent_child')))}")
     logger.info(f"  Generator       : {QWEN_MODEL} (4-bit, {'disabled' if args.skip_generation else 'enabled'})")
     logger.info(f"  Output          : {output_dir}")
     logger.info("=" * 70)
@@ -1506,18 +1723,39 @@ def main():
     needs_dense  = any(v["index"] in ("dense", "hybrid", "parent_child") for v in active_variants)
     needs_bm25   = any(v["index"] in ("bm25", "hybrid") for v in active_variants)
     needs_splade = any(v["index"] == "splade" for v in active_variants)
+    needs_colqwen2 = any(v["index"] == "colqwen2" for v in active_variants)
     needs_pc     = any(v["parent_child"] for v in active_variants)
     needs_rerank = any(v["rerank"] for v in active_variants)
     needs_hyde   = any(v["hyde_n"] > 0 for v in active_variants)
+    needs_colbert_retriever = any(v["index"] == "colbert" for v in active_variants)
+    needs_colbert_rerank    = any(v.get("colbert_rerank") for v in active_variants)
+    needs_colbert           = needs_colbert_retriever or needs_colbert_rerank
+
+    # Collect the set of embedding models that need a dense index
+    # (None in embed_model means the default EMBED_MODEL)
+    dense_embed_models: List[str] = []
+    if needs_dense:
+        seen_em: set = set()
+        for v in active_variants:
+            if v["index"] in ("dense", "hybrid", "parent_child"):
+                em = v.get("embed_model") or EMBED_MODEL
+                if em not in seen_em:
+                    dense_embed_models.append(em)
+                    seen_em.add(em)
 
     # ----------------------------------------------------------------
     # PHASE 1: Build indexes
     # ----------------------------------------------------------------
     logger.info("\n>>> PHASE 1: Building indexes")
 
-    dense_collection = None
-    if needs_dense:
-        dense_collection = build_dense_index(samples_raw, pdf_dir, vs_dir)
+    # Map embed_model_name → ChromaDB collection
+    dense_collections: Dict[str, "chromadb.Collection"] = {}
+    for em in dense_embed_models:
+        dense_collections[em] = build_dense_index(samples_raw, pdf_dir, vs_dir,
+                                                   embed_model_name=em)
+
+    # Convenience alias for the default model (used by hybrid/parent_child/qexp/hyde)
+    dense_collection = dense_collections.get(EMBED_MODEL)
 
     bm25_chunks, bm25_index = None, None
     if needs_bm25:
@@ -1532,6 +1770,66 @@ def main():
     pc_collection, parent_map = None, {}
     if needs_pc:
         pc_collection, parent_map = build_parent_child_index(samples_raw, pdf_dir, vs_dir)
+
+    colqwen2_retriever = None
+    if needs_colqwen2:
+        from baselines.colqwen2_visual_retriever import ColQwen2VisualRetriever
+
+        colqwen2_retriever = ColQwen2VisualRetriever(
+            pdf_dir=pdf_dir,
+            cache_dir=os.path.join(vs_dir, "colqwen2"),
+            model_name=args.colqwen2_model,
+            dpi=args.colqwen2_dpi,
+            page_batch_size=args.colqwen2_page_batch_size,
+            score_batch_size=args.colqwen2_score_batch_size,
+            first_stage_k=args.colqwen2_first_stage_k,
+            top_docs=args.colqwen2_top_docs,
+            pages_per_doc=args.colqwen2_pages_per_doc,
+            neighbor_window=args.colqwen2_neighbor_window,
+            visual_weight=args.colqwen2_visual_weight,
+            text_weight=args.colqwen2_text_weight,
+            doc_bonus_weight=args.colqwen2_doc_bonus_weight,
+        )
+        colqwen2_retriever.build_or_load_index()
+
+    # ColBERT model + optional token-embedding store for first-stage retrieval
+    colbert_tok        = None
+    colbert_model_obj  = None
+    colbert_device     = None
+    colbert_token_store: Optional["torch.Tensor"] = None
+    colbert_pad_mask:   Optional["torch.Tensor"] = None
+    colbert_chunks_ref: Optional[List[Dict]] = None
+
+    if needs_colbert:
+        import torch
+        from transformers import AutoTokenizer, AutoModel
+        colbert_device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Loading ColBERT model: {COLBERT_MODEL}")
+        colbert_tok       = AutoTokenizer.from_pretrained(COLBERT_MODEL)
+        colbert_model_obj = AutoModel.from_pretrained(COLBERT_MODEL).to(colbert_device).eval()
+
+        if needs_colbert_retriever:
+            # Corpus: reuse BM25 chunks if already built, else chunk from scratch
+            if bm25_chunks is not None:
+                corpus = [{"text": c["text"], "doc_name": c["doc_name"],
+                           "page": c.get("page", -1)} for c in bm25_chunks]
+            else:
+                splitter    = make_recursive_splitter()
+                corpus      = []
+                unique_docs = {s["doc_name"]: s["doc_link"] for s in samples_raw}
+                for doc_name, doc_link in tqdm(unique_docs.items(),
+                                               desc="Chunking for ColBERT index"):
+                    pages = load_pdf(doc_name, doc_link, pdf_dir)
+                    if pages:
+                        corpus.extend(chunk_docs(pages, splitter))
+
+            colbert_cache = os.path.join(
+                vs_dir, "colbert",
+                f"token_idx_sz{CHUNK_SIZE}_ol{CHUNK_OVERLAP}.pt"
+            )
+            colbert_token_store, colbert_pad_mask, colbert_chunks_ref = \
+                build_colbert_retriever_index(corpus, colbert_tok, colbert_model_obj,
+                                             colbert_device, cache_path=colbert_cache)
 
     # ----------------------------------------------------------------
     # PHASE 2: HyDE pre-generation (Qwen alone on GPU)
@@ -1554,8 +1852,6 @@ def main():
     logger.info("\n>>> PHASE 3: Retrieval")
     from sentence_transformers import SentenceTransformer, CrossEncoder
 
-    embed_model = SentenceTransformer(EMBED_MODEL, device="cuda")
-
     cross_encoder = None
     if needs_rerank:
         logger.info(f"Loading cross-encoder: {RERANKER_MODEL}")
@@ -1566,93 +1862,157 @@ def main():
 
     MAX_K = max(K_VALUES)  # retrieve enough chunks for all @k values
 
-    for var, is_ner_run in tqdm(run_plan, desc="Variants"):
-        name = var["name"]
+    # Group run_plan by embed_model so we load each SentenceTransformer once.
+    # Variants that don't use dense retrieval (bm25, splade) get grouped under
+    # a sentinel key so they still run in a single pass.
+    _SPARSE_KEY  = "__sparse__"
+    _COLBERT_KEY = "__colbert__"
+    _COLQWEN2_KEY = "__colqwen2__"
 
-        pred_path = os.path.join(output_dir, "predictions", f"{name}_retrieval.json")
-        if args.resume and os.path.exists(pred_path):
-            with open(pred_path) as f:
-                retrieval_results[name] = json.load(f)
-            logger.info(f"  [{name}] Loaded from cache")
-            continue
+    def _run_em(var):
+        if var["index"] in ("bm25", "splade"):
+            return _SPARSE_KEY
+        if var["index"] == "colbert":
+            return _COLBERT_KEY
+        if var["index"] == "colqwen2":
+            return _COLQWEN2_KEY
+        return var.get("embed_model") or EMBED_MODEL
 
-        logger.info(f"\n  Running retrieval: {name} (NER={'on' if is_ner_run else 'off'})")
-        samples = copy.deepcopy(samples_raw)
-        t0 = time.time()
+    # Build ordered list of (embed_model_key, [(var, is_ner_run), ...])
+    em_groups: Dict[str, List[tuple]] = {}
+    for item in run_plan:
+        key = _run_em(item[0])
+        em_groups.setdefault(key, []).append(item)
 
-        for sample in samples:
-            q = sample["question"]
-            n_hyps = var["hyde_n"]
-            hyps = hyde_cache_data.get(q, [])[:n_hyps] if n_hyps > 0 else []
+    for em_key, em_run_plan in em_groups.items():
+        # Load the SentenceTransformer for this group
+        if em_key == _SPARSE_KEY:
+            embed_model = None
+        elif em_key == _COLBERT_KEY:
+            embed_model = None  # ColBERT variants use colbert_model_obj directly
+        elif em_key == _COLQWEN2_KEY:
+            embed_model = None
+        else:
+            logger.info(f"\n>>> Loading embed model: {em_key}")
+            embed_model = SentenceTransformer(em_key, device="cuda")
 
-            # NER doc filter: predict target documents from the query alone
-            doc_filter: Optional[List[str]] = None
-            if is_ner_run and ner_filter is not None:
-                doc_filter = ner_filter.predict_target_docs(q, top_k=args.ner_top_k)
+        # Pick the right dense collection for this embed model
+        _dense_col = dense_collections.get(em_key, dense_collection)
 
-            # Retrieve at least MAX_K results so @k=10,20 are meaningful
-            candidate_k = max(CANDIDATE_K, MAX_K) if var["rerank"] else MAX_K
+        for var, is_ner_run in tqdm(em_run_plan, desc=f"Variants [{em_key}]"):
+            name = var["name"]
 
-            # ---------- Select retrieval strategy ----------
-            if var["index"] == "bm25":
-                chunks = retrieve_bm25(sample, bm25_chunks, bm25_index,
-                                       k=MAX_K, doc_filter=doc_filter)
+            pred_path = os.path.join(output_dir, "predictions", f"{name}_retrieval.json")
+            if args.resume and os.path.exists(pred_path):
+                with open(pred_path) as f:
+                    retrieval_results[name] = json.load(f)
+                logger.info(f"  [{name}] Loaded from cache")
+                continue
 
-            elif var["index"] == "splade":
-                chunks = retrieve_splade(sample, splade_model, splade_tokenizer,
-                                         splade_chunks, splade_postings,
-                                         k=MAX_K, doc_filter=doc_filter)
+            logger.info(f"\n  Running retrieval: {name} (NER={'on' if is_ner_run else 'off'})")
+            samples = copy.deepcopy(samples_raw)
+            t0 = time.time()
 
-            elif var["index"] == "hybrid":
-                alpha = var["alpha"]
-                chunks = retrieve_hybrid(
-                    sample, embed_model, dense_collection,
-                    bm25_chunks, bm25_index,
-                    dense_weight=alpha, sparse_weight=(1.0 - alpha),
-                    k=MAX_K, candidate_k=candidate_k,
-                    doc_filter=doc_filter,
-                )
+            for sample in samples:
+                q = sample["question"]
+                n_hyps = var["hyde_n"]
+                hyps = hyde_cache_data.get(q, [])[:n_hyps] if n_hyps > 0 else []
 
-            elif var["parent_child"]:
-                chunks = retrieve_parent_child(
-                    sample, embed_model, pc_collection, parent_map,
-                    k=MAX_K, doc_filter=doc_filter)
+                # NER doc filter: predict target documents from the query alone
+                doc_filter: Optional[List[str]] = None
+                if is_ner_run and ner_filter is not None:
+                    doc_filter = ner_filter.predict_target_docs(q, top_k=args.ner_top_k)
 
-            elif var["qexp"]:
-                chunks = retrieve_dense_query_expansion(
-                    sample, embed_model, dense_collection,
-                    k=candidate_k, doc_filter=doc_filter)
+                # Retrieve at least MAX_K results so @k=10,20 are meaningful
+                needs_big_pool = var["rerank"] or var.get("colbert_rerank", False)
+                candidate_k = max(CANDIDATE_K, MAX_K) if needs_big_pool else MAX_K
 
-            elif n_hyps > 0:
-                chunks = retrieve_hyde(
-                    sample, embed_model, dense_collection, hyps,
-                    k=candidate_k, candidate_k=candidate_k,
-                    doc_filter=doc_filter)
+                # ---------- Select retrieval strategy ----------
+                if var["index"] == "colbert":
+                    chunks = retrieve_colbert(
+                        sample, colbert_tok, colbert_model_obj, colbert_device,
+                        colbert_token_store, colbert_pad_mask, colbert_chunks_ref,
+                        k=MAX_K, doc_filter=doc_filter,
+                    )
 
-            else:  # plain dense
-                q_emb = embed_model.encode([q], normalize_embeddings=True)[0]
-                chunks = _chroma_query(dense_collection, q_emb, candidate_k,
-                                       where=_make_chroma_where(doc_filter))
+                elif var["index"] == "colqwen2":
+                    chunks = colqwen2_retriever.search(
+                        q,
+                        top_k=MAX_K,
+                        doc_filter=doc_filter,
+                    )
 
-            # ---------- Optional reranking ----------
-            if var["rerank"] and cross_encoder is not None and chunks:
-                chunks = apply_reranker(sample, chunks, cross_encoder, k=MAX_K)
-            else:
-                chunks = chunks[:MAX_K]
+                elif var["index"] == "bm25":
+                    chunks = retrieve_bm25(sample, bm25_chunks, bm25_index,
+                                           k=MAX_K, doc_filter=doc_filter)
 
-            sample["retrieved_chunks"] = chunks
+                elif var["index"] == "splade":
+                    chunks = retrieve_splade(sample, splade_model, splade_tokenizer,
+                                             splade_chunks, splade_postings,
+                                             k=MAX_K, doc_filter=doc_filter)
 
-        elapsed = time.time() - t0
-        logger.info(f"  [{name}] {len(samples)} questions in {elapsed:.1f}s")
+                elif var["index"] == "hybrid":
+                    alpha = var["alpha"]
+                    chunks = retrieve_hybrid(
+                        sample, embed_model, _dense_col,
+                        bm25_chunks, bm25_index,
+                        dense_weight=alpha, sparse_weight=(1.0 - alpha),
+                        k=MAX_K, candidate_k=candidate_k,
+                        doc_filter=doc_filter,
+                    )
 
-        retrieval_results[name] = samples
-        with open(pred_path, "w") as f:
-            json.dump(samples, f)
+                elif var["parent_child"]:
+                    chunks = retrieve_parent_child(
+                        sample, embed_model, pc_collection, parent_map,
+                        k=MAX_K, doc_filter=doc_filter)
 
-    # Free embedding / reranker before generation
-    del embed_model
+                elif var["qexp"]:
+                    chunks = retrieve_dense_query_expansion(
+                        sample, embed_model, _dense_col,
+                        k=candidate_k, doc_filter=doc_filter)
+
+                elif n_hyps > 0:
+                    chunks = retrieve_hyde(
+                        sample, embed_model, _dense_col, hyps,
+                        k=candidate_k, candidate_k=candidate_k,
+                        doc_filter=doc_filter)
+
+                else:  # plain dense
+                    q_emb = embed_model.encode([q], normalize_embeddings=True)[0]
+                    chunks = _chroma_query(_dense_col, q_emb, candidate_k,
+                                           where=_make_chroma_where(doc_filter))
+
+                # ---------- Optional reranking ----------
+                if var.get("colbert_rerank") and colbert_tok is not None and chunks:
+                    chunks = apply_colbert_reranker(
+                        sample, chunks, colbert_tok, colbert_model_obj,
+                        colbert_device, k=MAX_K,
+                    )
+                elif var["rerank"] and cross_encoder is not None and chunks:
+                    chunks = apply_reranker(sample, chunks, cross_encoder, k=MAX_K)
+                else:
+                    chunks = chunks[:MAX_K]
+
+                sample["retrieved_chunks"] = chunks
+
+            elapsed = time.time() - t0
+            logger.info(f"  [{name}] {len(samples)} questions in {elapsed:.1f}s")
+
+            retrieval_results[name] = samples
+            with open(pred_path, "w") as f:
+                json.dump(samples, f)
+
+        # Free this embed model before loading the next one
+        if embed_model is not None:
+            del embed_model
+            import torch
+            torch.cuda.empty_cache()
+
+    # Free reranker before generation
     if cross_encoder is not None:
         del cross_encoder
+    if colqwen2_retriever is not None:
+        colqwen2_retriever.free()
     import torch
     torch.cuda.empty_cache()
 

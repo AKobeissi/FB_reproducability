@@ -4,8 +4,8 @@
 #SBATCH --output=colpali_%j.log
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:ls40:1
-#SBATCH --mem=48G
-#SBATCH --time=24:00:00
+#SBATCH --mem=64G
+#SBATCH --time=96:00:00
 
 
 SUBMIT_DIR=$SLURM_SUBMIT_DIR
@@ -79,13 +79,14 @@ python src/core/rag_experiments.py qwen \
   --embedding-model   bge-m3 \
   --colpali-model     vidore/colpali-v1.2 \
   --colpali-dpi       150 \
-  --colpali-top-m     20 \
-  --colpali-alpha     0.35 \
+  --colpali-top-m     50 \
+  --colpali-alpha     0.50 \
   --top-k             5 \
   --max-new-tokens    512 \
   --max-context-chars 16000 \
   --eval-type         both \
-  --eval-mode         static
+  --eval-mode         static \
+  --use-all-pdfs
 
 EXIT_CODE=$?
 echo "Experiment finished (exit code: ${EXIT_CODE}) at $(date)"

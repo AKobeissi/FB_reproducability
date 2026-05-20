@@ -101,7 +101,13 @@ def load_financebench(fb_path: str) -> List[Dict[str, Any]]:
             "question": s.get("question", ""),
             "answer": s.get("answer", ""),
             "doc_id": s.get("doc_name", s.get("doc_id", s.get("ticker", ""))),
-            "evidence_text": s.get("evidence", s.get("evidence_text", "")),
+            "evidence_text": (
+                s["evidence"][0].get("evidence_text", "")
+                if isinstance(s.get("evidence"), list) and s["evidence"]
+                else s.get("evidence_text", s.get("evidence", ""))
+                if isinstance(s.get("evidence"), str)
+                else ""
+            ),
             "evidence_page": s.get("evidence_page_num",
                                    s.get("page_num",
                                           s.get("evidence_page", None))),

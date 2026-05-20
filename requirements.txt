@@ -37,5 +37,12 @@ peft
 colpali-engine>=0.3.0,<0.4.0
 Pillow
 einops
+# Modality-fusion RAG dependencies
+marker-pdf          # Open-source PDF → Markdown extraction (Variant A)
+pdfplumber          # Fallback table+text extraction (Variant A)
+pdf2image           # Optional: PDF → image (PyMuPDF is preferred; needs poppler)
+qwen-vl-utils       # Required for Qwen2-VL image processing in visual RAG pipeline
+byaldi              # Local multi-modal indexer wrapping ColPali/ColQwen (visual RAG)
+# NOTE: colpali-engine 0.3.x requires transformers < 5.0.0 (KeyError 'llava' in transformers 5.x PEFT adapter loader)
 # Note: Some packages (faiss, bitsandbytes, torch) have CPU/GPU variants
 # and additional system requirements. Adjust accordingly.

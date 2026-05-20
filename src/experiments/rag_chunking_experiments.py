@@ -274,6 +274,24 @@ def build_strategy_configs(args: argparse.Namespace) -> List[Dict[str, Any]]:
             },
         })
 
+    # ---------------------------------------------------------------
+    # 10. Structure-Aware
+    # ---------------------------------------------------------------
+    if "structure_aware" in args.strategies:
+        configs.append({
+            "name": f"structure_aware_tok{BASELINE_SIZE}_ov{BASELINE_OVERLAP}",
+            "strategy": "structure_aware",
+            "chunking_strategy": "structure_aware",
+            "chunking_unit": "tokens",
+            "chunk_size": BASELINE_SIZE,
+            "chunk_overlap": BASELINE_OVERLAP,
+            "chunker_kwargs": {
+                "chunk_size": BASELINE_SIZE,
+                "chunk_overlap": BASELINE_OVERLAP,
+                "min_section_tokens": args.structure_min_section_tokens,
+            },
+        })
+
     return configs
 
 
@@ -662,7 +680,7 @@ def main():
     parser.add_argument("--strategies", nargs="+",
                         default=["naive", "recursive", "semantic", "adaptive",
                                  "parent_child", "table_aware", "late",
-                                 "contextual", "metadata"],
+                                 "contextual", "metadata", "structure_aware"],
                         choices=list(STRATEGY_REGISTRY.keys()),
                         help="Which strategies to run")
     parser.add_argument("--num-samples", type=int, default=None,
@@ -707,6 +725,10 @@ def main():
     # --- Contextual ---
     parser.add_argument("--context-budget", type=int, default=128,
                         help="Token budget for context prefix in contextual chunking")
+
+    # --- Structure-Aware ---
+    parser.add_argument("--structure-min-section-tokens", type=int, default=50,
+                        help="Min tokens for a section to be kept as its own chunk (structure_aware)")
 
     # --- RAGExperiment parameters ---
     parser.add_argument("--embedding-model", default="BAAI/bge-m3")

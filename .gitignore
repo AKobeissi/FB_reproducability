@@ -1,38 +1,100 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
+
+# Virtual environments
 .venv/
 venv/
+
+# Environment variables (NEVER commit secrets)
+.env
+
+# IDE / OS / tooling
 .DS_Store
 .idea/
 .vscode/
-vector_stores/
-vectorstores/
-vector_stores1/
-pdfs/
+.claude/
+*.swp
+*.swo
+
+# --- Large generated artifacts (not committed) ---
+
+# PDF document collections
 pdfs/
 Final-PDF/
 pdfs-new/
-PDF-Opus/
-PDF-Opus-v2/
-pdfs-extended-v4/
 pdf2/
 pdfff/
+pdfs-extended-v4/
+pdf-ext-v3/
 pdfs-secqa/
-logs/
+PDF-Opus/
+PDF-Opus-v2/
+
+# Vector stores and indices
+vector_stores/
+vectorstores/
+vector_stores1/
+.byaldi/
+.clip_index/
+.sec_cache/
+
+# Trained models and checkpoints
 models/
-results/
+checkpoints/
+
+# Experiment outputs and results
 outputs/
-.env
+results/
+
+# Logs (runtime job outputs)
+logs/
+*.log
+slurm-*.out
+slurm-*.err
+*.out
+*.err
+
+# Data caches and binary artifacts
 *.sqlite3
 *.bin
-*.csv
-*.log
 *.pickle
-__pycache__/
-.ipynb_checkpoints/
-GITIGNORE
-# generated artifacts
-analysis/**/embeddings/
 *.npy
 *.npz
-EOF
+
+# Generated reports and figures
+*.csv
+*.html
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# Misc garbage
+__quota_test__
+=*
+
+# Sub-project outputs
+UQ_EDL/results/
+UQ_EDL/data/
+domain_adapted_retrieval/results/
+hierarchical_rag/
+hierarchical_rag_aug/
+modality_fusion_rag/
+scratch/
+aggregated_results/
+finqa/
+from_scratch/results/
+evaluation_results/
+
+# Claude auto-memory (written by Claude Code, not user content)
+memory/

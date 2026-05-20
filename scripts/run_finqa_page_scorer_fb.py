@@ -534,14 +534,28 @@ def run(args):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     logger.info(f"Device: {device}")
 
+    variant   = args.variant
     scorer    = load_scorer_model(Path(args.model_path), device)
     tokenizer = scorer.tokenizer
 
     reranker = None
-    if args.use_reranker:
+    if variant == "ft_reranker":
+        logger.info(f"Loading FT cross-encoder: {args.ft_reranker_path} ...")
+        reranker = CrossEncoder(args.ft_reranker_path, device=device)
+        logger.info("✓ FT cross-encoder loaded")
+    elif variant == "original" and args.use_reranker:
         logger.info(f"Loading cross-encoder: {args.reranker_model} ...")
         reranker = CrossEncoder(args.reranker_model, device=device, trust_remote_code=True)
         logger.info("✓ Cross-encoder loaded")
+
+    chunk_model = scorer
+    chunk_tokenizer = tokenizer
+    if variant == "base_chunk":
+        logger.info("Loading base BGE-M3 for chunk retrieval ...")
+        chunk_model = SentenceTransformer("BAAI/bge-m3", device=device)
+        chunk_model.max_seq_length = BGE_MAX_SEQ_LENGTH
+        chunk_tokenizer = chunk_model.tokenizer
+        logger.info("✓ Base BGE-M3 chunk model loaded")
 
     logger.info("Loading FinanceBench dataset ...")
     df = FinanceBenchLoader().load_data()
@@ -580,7 +594,8 @@ def run(args):
             logger.warning(f"  PDF not found: {doc_name}")
     logger.info(f"  {len(docs)} PDFs found")
 
-    cache_dir  = Path(args.output_dir) / "index_cache"
+    base_out  = Path(args.output_dir)
+    cache_dir = base_out / "index_cache"
     page_index, page_meta = build_or_load_page_index(
         docs, scorer, cache_dir,
         model_tag  = Path(args.model_path).name,
@@ -603,13 +618,16 @@ def run(args):
         else:
             top_pages = top_pages[:args.rerank_k]
 
-        top_chunks = retrieve_chunks_from_pages(
-            question, top_pages, scorer, tokenizer,
-            chunk_tokens=args.chunk_tokens, overlap_tokens=args.overlap_tokens,
-            chunk_k=args.chunk_k,
-        )
-
-        context = "\n\n".join(c["text"] for c in top_chunks)
+        if variant == "ft_reranker":
+            top_chunks = []
+            context = "\n\n".join(p["text"] for p in top_pages)
+        else:
+            top_chunks = retrieve_chunks_from_pages(
+                question, top_pages, chunk_model, chunk_tokenizer,
+                chunk_tokens=args.chunk_tokens, overlap_tokens=args.overlap_tokens,
+                chunk_k=args.chunk_k,
+            )
+            context = "\n\n".join(c["text"] for c in top_chunks)
         prompt  = build_prompt(question, context, args.max_context_chars)
         answer  = generator(prompt)
 
@@ -626,8 +644,8 @@ def run(args):
             "final_prompt":       prompt,
             "context_length":     len(context),
             "generation_length":  len(answer),
-            "num_retrieved":      len(top_chunks),
-            "experiment_type":    "finqa_learned_page_scorer",
+            "num_retrieved":      len(top_chunks) if top_chunks else len(top_pages),
+            "experiment_type":    f"finqa_page_scorer_{variant}",
             "vector_store_type":  "faiss_global",
             "pdf_source":         str(pdf_dir),
             "retrieved_pages": [
@@ -653,33 +671,39 @@ def run(args):
         logger.info(f"  {metric:<26}: {val:.4f}")
     logger.info("=" * 66)
 
-    out_dir  = Path(args.output_dir)
+    _framework_desc = {
+        "original":    "FT BGE-M3 (LoRA) page scorer + BGE reranker + FT BGE-M3 chunk retrieval",
+        "base_chunk":  "FT BGE-M3 (LoRA) page scorer + no reranker + base BGE-M3 chunk retrieval",
+        "ft_reranker": "FT BGE-M3 (LoRA) page scorer + FT cross-encoder reranker + no chunk retrieval",
+    }
+    out_dir  = base_out / variant
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"finqa_scorer_{timestamp}.json"
+    out_path = out_dir / f"finqa_scorer_{variant}_{timestamp}.json"
 
     payload = {
         "metadata": {
-            "experiment_type":  "finqa_learned_page_scorer",
+            "experiment_type":  f"finqa_page_scorer_{variant}",
+            "variant":          variant,
             "model_path":       args.model_path,
             "max_seq_length":   BGE_MAX_SEQ_LENGTH,
             "llm":              args.llm,
             "page_k":           args.page_k,
             "rerank_k":         args.rerank_k,
-            "use_reranker":     args.use_reranker,
-            "reranker_model":   args.reranker_model,
-            "chunk_k":          args.chunk_k,
-            "chunk_tokens":     args.chunk_tokens,
-            "overlap_tokens":   args.overlap_tokens,
+            "reranker":         (args.ft_reranker_path if variant == "ft_reranker"
+                                 else (args.reranker_model if variant == "original" and args.use_reranker
+                                       else None)),
+            "chunk_model":      (None if variant == "ft_reranker"
+                                 else ("base_bge_m3" if variant == "base_chunk" else "ft_bge_m3")),
+            "chunk_k":          args.chunk_k if variant != "ft_reranker" else None,
+            "chunk_tokens":     args.chunk_tokens if variant != "ft_reranker" else None,
+            "overlap_tokens":   args.overlap_tokens if variant != "ft_reranker" else None,
             "n_questions":      len(results),
             "n_docs":           len(docs),
             "created_at":       timestamp,
         },
         "aggregate_stats": agg,
         "num_samples":     len(results),
-        "framework": (
-            "FinQA LoRA scorer (BGE-M3, max_seq=2048) + "
-            "cross-encoder reranking + token-based chunks"
-        ),
+        "framework":       _framework_desc[variant],
         "results": results,
     }
 
@@ -744,6 +768,14 @@ def main():
                         help="Instruction prefix prepended to queries before encoding. "
                              "Must match the prefix used during training. "
                              "BGE-M3 recommended: 'Represent this sentence for searching relevant passages: '")
+    parser.add_argument("--variant",
+                        choices=["original", "base_chunk", "ft_reranker"],
+                        default="original",
+                        help="original: FT bi-encoder + BGE reranker + FT chunk retrieval. "
+                             "base_chunk: FT bi-encoder + no reranker + base BGE-M3 chunk retrieval. "
+                             "ft_reranker: FT bi-encoder + FT cross-encoder reranker + no chunk retrieval.")
+    parser.add_argument("--ft-reranker-path", default="checkpoints/ft_cross_encoder",
+                        help="Path to fine-tuned CrossEncoder checkpoint (used by --variant ft_reranker).")
     args = parser.parse_args()
 
     if not Path(args.pdf_dir).exists():

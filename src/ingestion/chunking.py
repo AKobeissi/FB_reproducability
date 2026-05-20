@@ -290,7 +290,39 @@ def get_splitters(experiment):
         except ImportError as e:
             logger.warning(f"Could not import chunk_metadata ({e}). Falling through to default.")
 
-    # --- 9. Token-based Chunking (default for recursive and unrecognised strategies) ---
+    # --- 9. Structure-Aware Chunking ---
+    # Splits on SEC/financial section headers (ITEM N, PART I, NOTE N, etc.),
+    # then sub-splits oversized sections recursively.
+    if strategy == "structure_aware":
+        try:
+            from src.experiments.chunking_strategies import chunk_structure_aware
+            parent_splitter = CustomChunkerAdapter(
+                chunk_structure_aware,
+                chunk_size=experiment.chunk_size,
+                chunk_overlap=experiment.chunk_overlap,
+                min_section_tokens=getattr(experiment, "structure_min_section_tokens", 50),
+                tokenizer_name=getattr(experiment, "chunk_tokenizer_name", None),
+            )
+            return parent_splitter, None
+        except ImportError as e:
+            logger.warning(f"Could not import chunk_structure_aware ({e}). Falling through to default.")
+
+    # --- 10. Late Chunking (fixed boundaries; embedding handled by long-context model) ---
+    # NOTE: In the unified pipeline, late chunking bypasses get_splitters entirely and
+    # uses LateChunkIndex directly.  This block handles only the rare non-unified path
+    # (e.g., standalone chunk analysis).  Must be checked BEFORE the token-based fallback
+    # to avoid loading an unnecessary tokenizer.
+    if strategy == "late":
+        tokenizer_name = getattr(experiment, "chunk_tokenizer_name", None)
+        parent_splitter = FixedWindowSplitter(
+            chunk_size=experiment.chunk_size,
+            chunk_overlap=experiment.chunk_overlap,
+            unit="tokens",
+            tokenizer_name=tokenizer_name,
+        )
+        return parent_splitter, None
+
+    # --- 11. Token-based Chunking (default for recursive and unrecognised strategies) ---
     if unit == "tokens":
         try:
             explicit_tokenizer = getattr(experiment, "chunk_tokenizer_name", None)
@@ -329,17 +361,6 @@ def get_splitters(experiment):
         except Exception as e:
             print(f"Warning: Tokenizer load failed for '{target_model}' ({e}). Falling back to chars.")
             unit = "chars"
-
-    # --- 10. Late Chunking (fixed boundaries; embedding handled by long-context model) ---
-    if strategy == "late":
-        tokenizer_name = getattr(experiment, "chunk_tokenizer_name", None)
-        parent_splitter = FixedWindowSplitter(
-            chunk_size=experiment.chunk_size,
-            chunk_overlap=experiment.chunk_overlap,
-            unit="tokens",
-            tokenizer_name=tokenizer_name,
-        )
-        return parent_splitter, None
 
     # --- 11. Hierarchical Chunking (legacy "hierarchical" strategy name) ---
     if strategy == "hierarchical":

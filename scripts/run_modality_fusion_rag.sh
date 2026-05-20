@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:ls40:1
 #SBATCH --mem=60G
-#SBATCH --time=48:00:00
+#SBATCH --time=96:00:00
 
 # ─── Modality-Fusion Hierarchical RAG  (NER doc-filter, no oracle labels) ─────
 #
@@ -117,6 +117,10 @@ python3 -c "import spacy; spacy.load('en_core_web_sm')" 2>/dev/null || {
 # ── Run the experiment ────────────────────────────────────────────────────────
 # Default: NER-based doc filtering (no oracle labels).
 # Add --oracle-doc-filter to compare with the oracle baseline.
+# Write VLM cache directly to persistent SUBMIT_DIR so every completed doc
+# is immediately durable — survives a hard SIGKILL with no rsync needed.
+mkdir -p "$SUBMIT_DIR/modality_fusion_rag/cache"
+
 python3 modality_fusion_rag.py \
   --data-path     data/financebench_open_source.jsonl \
   --doc-info-path data/financebench_document_information.jsonl \
@@ -124,7 +128,7 @@ python3 modality_fusion_rag.py \
   --ft-model      models/fin_adapted_biencoder_bge_m3 \
   --results-dir   modality_fusion_rag/results \
   --vs-dir        modality_fusion_rag/vector_store \
-  --cache-dir     modality_fusion_rag/cache \
+  --cache-dir     "$SUBMIT_DIR/modality_fusion_rag/cache" \
   --k        5 \
   --k-text   100 \
   --k-table  100 \

@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:ls40:1
 
-#SBATCH --mem=48G
-#SBATCH --time=24:00:00
+#SBATCH --mem=80G
+#SBATCH --time=96:00:00
 
 # =============================================================================
 # run_colqwen2_page.sh  —  SLURM job for the ColQwen2 page retrieval experiment
@@ -78,16 +78,17 @@ python src/core/rag_experiments.py qwen --experiment colpali_page \
   --colpali-dpi 150 \
   --top-k 5 \
   --max-context-chars 16000 \
-  --colqwen2-first-stage-k 50 \
-  --colqwen2-top-docs 3 \
-  --colqwen2-pages-per-doc 8 \
+  --colqwen2-first-stage-k 100 \
+  --colqwen2-top-docs 5 \
+  --colqwen2-pages-per-doc 10 \
   --colqwen2-neighbor-window 1 \
-  --colqwen2-visual-weight 0.50 \
-  --colqwen2-text-weight 0.40 \
+  --colqwen2-visual-weight 0.55 \
+  --colqwen2-text-weight 0.35 \
   --colqwen2-doc-bonus-weight 0.10 \
   --colqwen2-page-batch-size 4 \
   --colqwen2-query-batch-size 1 \
-  --colqwen2-score-batch-size 64
+  --colqwen2-score-batch-size 64 \
+  --use-all-pdfs
 
 EXIT_CODE=$?
 

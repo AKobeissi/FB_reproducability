@@ -636,6 +636,7 @@ def apply_lora(
     )
     hf_model   = model[0].auto_model
     peft_model = get_peft_model(hf_model, lora_config)
+    peft_model.enable_input_require_grads()
     model[0].auto_model = peft_model
 
     trainable, total = peft_model.get_nb_trainable_parameters()

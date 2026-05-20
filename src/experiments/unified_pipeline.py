@@ -65,8 +65,9 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
     ot_iters = getattr(experiment, "unified_ot_iters", 40)
     ot_prune_k = getattr(experiment, "unified_ot_prune_k", 20)
     
-    # Heuristic: If reranking, fetch more candidates
-    candidate_k = experiment.top_k * 4 if use_rerank else experiment.top_k
+    # Always retrieve enough candidates to cover all k_values in evaluation
+    _max_eval_k = 20  # max k in K_VALUES = [1, 3, 5, 10, 20]
+    candidate_k = max(experiment.top_k * 4, _max_eval_k) if use_rerank else max(experiment.top_k, _max_eval_k)
     
     logger.info(f"Pipeline Configuration:")
     logger.info(f"  [1] HyDE Enabled: {use_hyde} (Generations: {hyde_k})")
@@ -401,7 +402,7 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                             d.metadata['rerank_score'] = float(s)
                             scored.append(d)
                         scored.sort(key=lambda x: x.metadata['rerank_score'], reverse=True)
-                        final_retrieved_docs = scored[:experiment.top_k]
+                        final_retrieved_docs = scored[:_max_eval_k]
                         scores = None
                     else:
                         scores = ce_reranker.predict(pairs, batch_size=8, show_progress_bar=False)
@@ -411,17 +412,17 @@ def run_unified_pipeline(experiment, data: List[Dict[str, Any]]) -> List[Dict[st
                         for d, s in zip(valid_docs, scores):
                             d.metadata['rerank_score'] = float(s)
                             scored.append(d)
-                    
+
                         # Sort by new score
                         scored.sort(key=lambda x: x.metadata['rerank_score'], reverse=True)
-                        final_retrieved_docs = scored[:experiment.top_k]
+                        final_retrieved_docs = scored[:_max_eval_k]
                 except Exception as e:
                     logger.warning(f"Reranking failed sample {i}: {e}")
-                    final_retrieved_docs = final_retrieved_docs[:experiment.top_k]
+                    final_retrieved_docs = final_retrieved_docs[:_max_eval_k]
             else:
-                 final_retrieved_docs = final_retrieved_docs[:experiment.top_k]
+                 final_retrieved_docs = final_retrieved_docs[:_max_eval_k]
         else:
-             final_retrieved_docs = final_retrieved_docs[:experiment.top_k]
+             final_retrieved_docs = final_retrieved_docs[:_max_eval_k]
 
         # Format for output
         formatted_chunks = []

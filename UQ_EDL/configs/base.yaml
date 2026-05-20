@@ -1,0 +1,39 @@
+project_name: evidential-finance-reranker
+seed: 42
+
+paths:
+  parent_data: ../data
+  parent_pdfs_finqa: ../pdfs-extended-v4
+  parent_pdfs_fb: ../pdfs
+  processed_pages: data/processed/pages
+  processed_pairs: data/processed/pairs
+  processed_candidates: data/processed/candidates
+  processed_splits: data/processed/splits
+  results: results
+  models: results/runs
+
+data:
+  finqa_gold_pages: ../data/finqa_test_gold_pages.jsonl
+  finqa_test: ../data/finqa_test.jsonl
+  financebench: ../data/financebench_open_source.jsonl
+  financebench_docinfo: ../data/financebench_document_information.jsonl
+
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  split_by: company
+
+  max_page_tokens: 512
+  min_page_chars: 50
+  evidence_align_threshold: 0.40
+
+  negative_ratio: 6
+  top_k_candidates: 100
+  hard_neg_ratio: 3
+
+retrieval:
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  dense_model: BAAI/bge-m3
+  dense_batch_size: 32
+  top_k: 100

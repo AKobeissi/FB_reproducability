@@ -35,8 +35,8 @@ LR=2e-5
 LORA_R=16
 LORA_ALPHA=32
 HARD_NEGS=3        # same-document hard negatives per positive
-CROSS_DOC_NEGS=0   # cross-doc negs disabled — baseline reproduces original behaviour
-LOSS_SCALE=20.0    # original scale
+CROSS_DOC_NEGS=2   # cross-doc negs: closes train/test gap (global FAISS index at eval)
+LOSS_SCALE=50.0    # sharpened scale: cleaner gradient when cosine scores compressed near 1.0
  
 # ─────────────────────────────────────────────────────────────────────────────
 # Inference hyperparameters
@@ -110,7 +110,7 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 echo ""
 echo ">>> STAGE 1: LoRA fine-tuning"
-echo "    max_seq=2048, batch=${BATCH_SIZE}×${GRAD_ACCUM}=effective $((BATCH_SIZE*GRAD_ACCUM)), hard_negs=${HARD_NEGS}"
+echo "    max_seq=2048, batch=${BATCH_SIZE}×${GRAD_ACCUM}=effective $((BATCH_SIZE*GRAD_ACCUM)), hard_negs=${HARD_NEGS}+${CROSS_DOC_NEGS}xdoc, loss_scale=${LOSS_SCALE}, bm25_negs=ON"
 echo "========================================================="
  
 python src/training/train_finqa_page_scorer.py \
@@ -125,7 +125,8 @@ python src/training/train_finqa_page_scorer.py \
     --lora-alpha       "${LORA_ALPHA}" \
     --hard-negatives   "${HARD_NEGS}" \
     --cross-doc-negs   "${CROSS_DOC_NEGS}" \
-    --loss-scale       "${LOSS_SCALE}"
+    --loss-scale       "${LOSS_SCALE}" \
+    --use-bm25-hard-negs
  
 if [ $? -ne 0 ]; then
     echo "[ERROR] Training failed — aborting."

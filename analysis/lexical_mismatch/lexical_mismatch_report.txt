@@ -1,0 +1,143 @@
+LEXICAL MISMATCH ANALYSIS REPORT — FinanceBench
+============================================================
+Total queries analysed: 150
+
+── OVERALL ──
+  oov_rate    : mean=0.6842  median=0.7000  std=0.1896  min=0.1111  max=1.0000
+  jaccard     : mean=0.0332  median=0.0309  std=0.0252  min=0.0000  max=0.1765
+  coverage    : mean=0.3158  median=0.3000  std=0.1896  min=0.0000  max=0.8889
+  jsd         : mean=0.9403  median=0.9501  std=0.0462  min=0.7313  max=1.0000
+
+── BY QUESTION TYPE ──
+  [domain-relevant]  n=50
+    oov_rate    : mean=0.7005  median=0.7000  std=0.2094
+    jaccard     : mean=0.0206  median=0.0162  std=0.0164
+    coverage    : mean=0.2995  median=0.3000  std=0.2094
+    jsd         : mean=0.9619  median=0.9702  std=0.0338
+  [metrics-generated]  n=50
+    oov_rate    : mean=0.7467  median=0.7500  std=0.1269
+    jaccard     : mean=0.0472  median=0.0489  std=0.0217
+    coverage    : mean=0.2533  median=0.2500  std=0.1269
+    jsd         : mean=0.9216  median=0.9258  std=0.0421
+  [novel-generated]  n=50
+    oov_rate    : mean=0.6054  median=0.6250  std=0.1968
+    jaccard     : mean=0.0318  median=0.0261  std=0.0288
+    coverage    : mean=0.3946  median=0.3750  std=0.1968
+    jsd         : mean=0.9375  median=0.9514  std=0.0523
+
+── BY DOC TYPE ──
+  [10k]  n=112
+    oov_rate    : mean=0.7138  median=0.7273  std=0.1782
+    jaccard     : mean=0.0323  median=0.0320  std=0.0233
+    coverage    : mean=0.2862  median=0.2727  std=0.1782
+    jsd         : mean=0.9438  median=0.9545  std=0.0429
+  [10q]  n=15
+    oov_rate    : mean=0.6580  median=0.6667  std=0.1531
+    jaccard     : mean=0.0227  median=0.0200  std=0.0122
+    coverage    : mean=0.3420  median=0.3333  std=0.1531
+    jsd         : mean=0.9518  median=0.9638  std=0.0324
+  [8k]  n=9
+    oov_rate    : mean=0.4199  median=0.3333  std=0.2576
+    jaccard     : mean=0.0559  median=0.0508  std=0.0510
+    coverage    : mean=0.5801  median=0.6667  std=0.2576
+    jsd         : mean=0.8935  median=0.9084  std=0.0836
+  [Earnings]  n=14
+    oov_rate    : mean=0.6457  median=0.6458  std=0.1284
+    jaccard     : mean=0.0370  median=0.0309  std=0.0199
+    coverage    : mean=0.3543  median=0.3542  std=0.1284
+    jsd         : mean=0.9302  median=0.9397  std=0.0385
+
+── BY QUESTION TYPE × DOC TYPE ──
+                                mean  count
+question_type     doc_type                 
+domain-relevant   10k       0.698065     48
+                  10q       0.758333      2
+metrics-generated 10k       0.746744     50
+novel-generated   10k       0.649835     14
+                  10q       0.642552     13
+                  8k        0.419921      9
+                  Earnings  0.645707     14
+
+════════════════════════════════════════════════════════════════════════════════
+QUALITATIVE: EXTREME MISMATCH EXAMPLES
+════════════════════════════════════════════════════════════════════════════════
+
+── Highest OOV Rate (most mismatch) ──
+  [metrics-generated | 10k | CVS Health]
+  Q: What is the FY2018 fixed asset turnover ratio for CVS Health? Fixed asset turnover ratio is defined as: FY2018 revenue /...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['asked', 'asset', 'average', 'balance', 'between', 'calculate', 'clearly', 'cvs']
+
+  [metrics-generated | 10k | Best Buy]
+  Q: In agreement with the information outlined in the income statement, what is the FY2015 - FY2017 3 year average net profi...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['agreement', 'average', 'best', 'buy', 'decimal', 'fy2015', 'fy2017', 'income']
+
+  [domain-relevant | 10k | Johnson & Johnson]
+  Q: What drove gross margin change as of FY2022 for JnJ? If gross margin is not a useful metric for a company like this, the...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['change', 'company', 'drove', 'fy2022', 'gross', 'jnj', 'like', 'margin']
+
+  [domain-relevant | 10k | AMD]
+  Q: Does AMD have a reasonably healthy liquidity profile based on its quick ratio for FY22? If the quick ratio is not releva...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amd', 'fy22', 'healthy', 'liquidity', 'measure', 'profile', 'quick', 'ratio']
+
+  [domain-relevant | 10k | American Express]
+  Q: What are the geographies that American Express primarily operates in as of 2022?...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['american', 'express', 'geographies', 'operates']
+
+
+── Lowest OOV Rate (most overlap) ──
+  [novel-generated | 8k | PepsiCo]
+  Q: By how much did Pepsico increase its unsecured five year revolving credit agreement on May 26, 2023?...
+  oov=0.111  jaccard=0.069  coverage=0.889  jsd=0.731
+  Query-exclusive tokens: ['much']
+
+  [novel-generated | 8k | Johnson & Johnson]
+  Q: What is the amount of the cash proceeds that JnJ realised from the separation of Kenvue (formerly Consumer Health busine...
+  oov=0.231  jaccard=0.072  coverage=0.769  jsd=0.899
+  Query-exclusive tokens: ['amount', 'realised', 'segment']
+
+  [novel-generated | 8k | PepsiCo]
+  Q: At the Pepsico AGM held on May 3, 2023, what was the outcome of the shareholder vote on the shareholder proposal for a c...
+  oov=0.250  jaccard=0.176  coverage=0.750  jsd=0.814
+  Query-exclusive tokens: ['agm', 'held', 'outcome']
+
+  [domain-relevant | 10k | CVS Health]
+  Q: Has CVS Health paid dividends to common shareholders in Q2 of FY2022?...
+  oov=0.250  jaccard=0.039  coverage=0.750  jsd=0.909
+  Query-exclusive tokens: ['fy2022', 'q2']
+
+  [novel-generated | 8k | Johnson & Johnson]
+  Q: What is the amount of the gain accruing to JnJ as a result of the separation of its Consumer Health business segment, as...
+  oov=0.273  jaccard=0.058  coverage=0.727  jsd=0.922
+  Query-exclusive tokens: ['accruing', 'amount', 'segment']
+
+
+── Highest JSD (most distribution divergence) ──
+  [domain-relevant | 10k | American Express]
+  Q: Does AMEX have an improving operating margin profile as of 2022? If operating margin is not a useful metric for a compan...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amex', 'company', 'improving', 'like', 'margin', 'metric', 'operating', 'profile']
+
+  [domain-relevant | 10k | Johnson & Johnson]
+  Q: What drove gross margin change as of FY2022 for JnJ? If gross margin is not a useful metric for a company like this, the...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['change', 'company', 'drove', 'fy2022', 'gross', 'jnj', 'like', 'margin']
+
+  [domain-relevant | 10k | American Express]
+  Q: What drove gross margin change as of the FY2022 for American Express? If gross margin is not a useful metric for a compa...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['american', 'change', 'company', 'drove', 'express', 'fy2022', 'gross', 'like']
+
+  [metrics-generated | 10k | Best Buy]
+  Q: In agreement with the information outlined in the income statement, what is the FY2015 - FY2017 3 year average net profi...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['agreement', 'average', 'best', 'buy', 'decimal', 'fy2015', 'fy2017', 'income']
+
+  [domain-relevant | 10k | AMD]
+  Q: Does AMD have a reasonably healthy liquidity profile based on its quick ratio for FY22? If the quick ratio is not releva...
+  oov=1.000  jaccard=0.000  coverage=0.000  jsd=1.000
+  Query-exclusive tokens: ['amd', 'fy22', 'healthy', 'liquidity', 'measure', 'profile', 'quick', 'ratio']

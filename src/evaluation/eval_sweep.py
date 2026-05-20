@@ -45,7 +45,7 @@ def evaluate_sweep(input_path: str, output_dir: str):
         
         # Compute metrics for this specific configuration
         # The evaluator expects a list of samples, which matches your JSON structure per config
-        metrics = evaluator.compute_metrics(samples)
+        metrics = evaluator.compute_metrics(samples, k_values=[1, 3, 5, 10, 20])
         
         sweep_metrics[config_name] = metrics
         

@@ -1,0 +1,25 @@
+defaults:
+  - base
+
+experiment_name: cross_encoder_baseline
+model_type: cross_encoder
+
+model:
+  backbone: BAAI/bge-reranker-v2-m3
+  max_length: 512
+  use_metadata: true
+
+training:
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  batch_size: 8
+  gradient_accumulation_steps: 4
+  epochs: 3
+  warmup_ratio: 0.1
+  fp16: true
+  seed: 42
+  loss: cross_entropy
+  negative_ratio: 6
+  eval_steps: 200
+  save_steps: 500
+  logging_steps: 50

@@ -832,7 +832,7 @@ class RAGExperiment(
             self.logger.info("Running Retrieval Evaluation...")
             try:
                 ret_evaluator = RetrievalEvaluator()
-                ret_metrics = ret_evaluator.compute_metrics(samples, k_values=[1, 3, 5, self.top_k])
+                ret_metrics = ret_evaluator.compute_metrics(samples, k_values=[1, 3, 5, 10, 20])
                 
                 if "evaluation_summary" not in data:
                     data["evaluation_summary"] = {}

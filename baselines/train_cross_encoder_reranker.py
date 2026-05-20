@@ -57,7 +57,7 @@ CHECKPOINT   = PROJECT_ROOT / "checkpoints/ft_cross_encoder"
 BASE_MODEL   = "BAAI/bge-reranker-v2-m3"
 MAX_LENGTH   = 512
 EPOCHS       = 3
-BATCH_SIZE   = 32
+BATCH_SIZE   = 32   # 32 × 512 tokens in FP16 ≈ 18 GB; L40S (46 GB) has plenty of headroom
 LR           = 2e-5
 WARMUP_RATIO = 0.1
 SEED         = 42
@@ -269,9 +269,33 @@ def main():
         output_path=str(CHECKPOINT),
         save_best_model=True,
         show_progress_bar=True,
+        use_amp=True,   # FP16 mixed-precision — halves activation memory, fits on 24 GB GPUs
     )
 
-    logger.info(f"Best model saved to: {CHECKPOINT}")
+    # sentence-transformers v4 CrossEncoder.fit() uses SaveModelCallback which
+    # may not fire when the evaluator callback triggers on_evaluate without
+    # passing `model` through the HF Trainer callback chain.  Explicitly save
+    # the final trained model here to guarantee the checkpoint exists.
+    logger.info("Explicitly saving final model to: %s", CHECKPOINT)
+    model.save(str(CHECKPOINT))
+
+    # Ensure the saved config.json has a `model_type` key that AutoConfig can
+    # recognise.  sentence-transformers may write a minimal config that omits
+    # this field; patch it in from the base model when necessary.
+    _config_path = CHECKPOINT / "config.json"
+    if _config_path.exists():
+        import json as _json
+        _cfg = _json.loads(_config_path.read_text())
+        if not _cfg.get("model_type"):
+            from transformers import AutoConfig as _AC
+            _base_type = _AC.from_pretrained(BASE_MODEL).model_type
+            _cfg["model_type"] = _base_type
+            _config_path.write_text(_json.dumps(_cfg, indent=2))
+            logger.info("Patched checkpoint config.json with model_type=%s", _base_type)
+        else:
+            logger.info("Checkpoint config.json already has model_type=%s", _cfg["model_type"])
+    else:
+        logger.warning("No config.json found at %s after save — Stage 2 may fail", _config_path)
 
 
 if __name__ == "__main__":
