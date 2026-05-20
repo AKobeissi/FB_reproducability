@@ -78,6 +78,7 @@ slurm-*.err
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+thesis.txt
 
 # Misc garbage
 __quota_test__
